@@ -926,7 +926,7 @@ class Root:
 
         self.umount ()
         self.unlock ()
-        return True
+        return
         
     # private methods
     def _setup_prep (self):
