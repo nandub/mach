@@ -3,6 +3,14 @@
 	* scripts/mach.in (rebuild): Prepend a dot to the string which is
 	used to determine whether the release "disttag" already exists.
 
+	* scripts/mach.in (build): Let SRPM build failure error fall
+	through here.
+
+2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+
+	* scripts/mach.in (rebuild): Raise an error instead of returning
+	false when an SRPM build fails.
+
 2003-11-29  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in (main): Add --canonify option; it outputs
