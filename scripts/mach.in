@@ -103,6 +103,7 @@ except IOError:
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
 qfmt = '"%{name}-%{version}-%{release}\n"'
 
+
 ### objects
 class Spec:
     def __init__ (self, path):
@@ -421,16 +422,17 @@ class Root:
 
     # run apt from outside the root on the root
     # FIXME: virtualize this
-    # FIXME: provide a way to not catch output so it can be run on a chroot
-    # line interactively
     # if message is specified, it will be printed, and newline-terminated
     # properly
     # if no message specified, then it's up to caller
-    def aptget (self, arg, message = None, progress = False):
+    def aptget (self, arg, message = None,
+                progress = False, interactive = False):
         "run apt-get (arg) from outside the root on the root"
         self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-get'], conf, arg)
+        if interactive:
+            return os.system (command)
         if message: self.stdout (message)
         if progress: self.stdout (' ...')
         (status, output) = do_with_output (command, progress)
@@ -438,6 +440,9 @@ class Root:
         self.umount ()
         if status != 0:
             raise self.Error, "Could not apt-get %s" % arg
+
+    def intaptget (self, arg):
+        self.aptget (arg, interactive = True)
 
     def aptcache (self, arg, progress = False):
         "run apt-cache (arg) from outside the root on the root"
@@ -531,9 +536,14 @@ class Root:
     def build (self, arg):
         "build from a set of spec files by packaging them up as src.rpm and "
         "passing them to rebuild"
+
+        if not arg:
+            raise self.Error, 'Please supply .spec files to build'
+        
         # check if we can build here yet
         if not self.get_state ('build'):
             self.setup ('build')
+
         self.lock ()
         
         srpms = [] # resulting set of srpms
@@ -579,12 +589,13 @@ class Root:
             for file in files:
                 debug ("Getting file %s into SOURCES" % file)
                 # sanity check the given file using "file"
-                command = "file -b -i -z %s" % file
-		if file[-7:] == ".tar.gz":
-                    line = os.popen (command).readline ().rstrip ()
-                    if not line[:17] == 'application/x-tar':
-                        raise self.Error, "file doesn't think %s is a tar.gz !" % file
-		# didn't seem to work on MPlayer 0.91 tar.bz2 :(
+                # crap, this completely hangs on fedora core 0.94 :(
+#                command = "file -b -i -z %s" % file
+#		if file[-7:] == ".tar.gz":
+#                    line = os.popen (command).readline ().rstrip ()
+#                    if not line[:17] == 'application/x-tar':
+#                        raise self.Error, "file doesn't think %s is a tar.gz !" % file
+#		# didn't seem to work on MPlayer 0.91 tar.bz2 :(
 		#if file[-8:] == ".tar.bz2":
                 #    line = os.popen (command).readline ()
                 #    if not line == 'application/x-tar       gnu (application/octet-stream)':
@@ -604,7 +615,7 @@ class Root:
                                 "Creating .src.rpm",
                                   True)
             except:
-                raise self.Error, 'error: could not build .src.rpm'
+                raise self.Error, 'could not build .src.rpm'
                 return False
             (n, v, r) = spec.nvr ()
             srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
@@ -696,6 +707,9 @@ class Root:
         self.unlock ()
      
     def rebuild (self, arg):
+        if not arg:
+            raise self.Error, 'Please supply .src.rpm files to build'
+
         (options, paths) = self.splitargsrpms (arg)
         self.setup ('build')
         self.lock ()
@@ -918,6 +932,7 @@ class Root:
                    os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
             
         print "Build done."
+        self.unlock ()
         return True
 
         # sign all packages at once so we only need the passphrase once
@@ -928,6 +943,36 @@ class Root:
         self.umount ()
         self.unlock ()
         return
+
+    def status (self, args):
+        if not os.path.exists (get_config_dir (self.config, 'state')):
+            print "+ %s is cleared" % self.root
+            return
+        
+        lockedness = "unlocked"
+        if self.get_state ('lock'): lockedness = "unlocked"
+        # output of du -B M is inconsistent
+        command = "%s %s du / --max-depth=0 | tail -n 1 | cut -f 1" % (config['chroot'], self.rootdir)
+        
+        diskusage = string.atoi (string.strip (commands.getoutput (command))) / 1024.0
+        print "+ %s (%s, %d MB)" % (self.root, lockedness, diskusage)
+        resultdir = get_config_dir (self.config, 'result')
+        for dir in os.listdir (resultdir):
+            # get disk usage
+            command = "du --max-depth=0 -c %s | tail -n 1 | cut -f 1" % (os.path.join (resultdir, dir, '*.rpm'))
+            diskusage = string.strip (commands.getoutput (command))
+            # get signature
+            command = "rpm -qip %s | grep Signature" % os.path.join (resultdir, dir, '*.src.rpm')
+            output = string.strip (commands.getoutput (command))
+            # get last word
+            signature = output.split ()[-1]
+            signedness = None
+            if signature == "(none)":
+                signedness = "unsigned"
+            else:
+                signedness = "signed with %s" % signature
+             
+            print "  - %s: %s K, %s " % (dir, diskusage, signedness)
         
     # private methods
     def _setup_prep (self):
@@ -1423,10 +1468,15 @@ def sanity_check (config):
     # we're fine
     return True
 
-   
-# give a status of each of the roots
-def status (config, args):
-    print "FIXME: write me" 
+# print out status for each of the roots set up
+def status (config):
+    statedir = config['dirs']['states']
+    dirs = os.listdir (statedir)
+    for dir in dirs:
+        # only give status if it's a known root dir
+        config['root'] = dir
+        root = Root (config)
+        root.status (None)
 
 # main function
 def main (config, args):
@@ -1530,9 +1580,14 @@ def main (config, args):
     root = Root (config)
     output = ""
     if command in allowed_commands:
-        # this is silly but what can we do about it ?
-        if command == "apt-get": command = "aptget"
+        # no '-' allowed is silly but what can we do about it ?
+        # this is also a good place to intercept commands that need to
+        # be interactive
+        if command == "apt-get": command = "intaptget"
         if command == "apt-cache": command = "aptcache"
+        if command == "status":
+            status (config)
+            return
 
         if not command in Root.__dict__.keys():
             sys.stderr.write ("No %s method defined\n" % command)
@@ -1543,7 +1598,7 @@ def main (config, args):
         except Root.Locked:
             sys.stderr.write ("Root is locked.  Use -f to override lock.\n")
         except Root.Error, message:
-            sys.stderr.write ("%s\n" % message)
+            sys.stderr.write ("ERROR: %s\n" % message)
             root.unlock ()
             sys.exit (1)
         except Root.ReturnValue, retval:
@@ -1576,6 +1631,6 @@ if __name__ == '__main__':
         while running:
             sys.stdout.write ("> ")
             command = sys.stdin.readline ()
-            main (string.split (command))
+            main (config, string.split (command))
 
     

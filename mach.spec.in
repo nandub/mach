@@ -40,6 +40,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
+install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach
 install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/states
 install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/roots
 install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/packages
@@ -81,6 +82,7 @@ fi
 %dir %{_sysconfdir}/mach
 %config %{_sysconfdir}/mach/conf
 %config %{_sysconfdir}/mach/dist
+%attr(-,mach,mach) %dir %{_localstatedir}/lib/mach
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/states
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/roots
 # %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach

@@ -57,9 +57,9 @@ check_dir_allowed (const char *allowed, const char *given)
   if (strncmp (given, allowed, strlen (allowed)) != 0)
     error ("%s: not under allowed directory (%s)", given, allowed);
 
-  /* does it try to fool us by using . or .. ? */
-  if (strstr (given, ".") != NULL)
-    error ("%s: contains '.'", given);
+  /* does it try to fool us by using .. ? */
+  if (strstr (given, "..") != NULL)
+    error ("%s: contains '..'", given);
 
   /* does it try to fool us into following symlinks by having a trailing / ? */
   last = given[strlen (given) - 1];
