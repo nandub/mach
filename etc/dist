@@ -618,7 +618,6 @@ aliases['yellowdog-30-ppc-updates-freshrpms'] = ('yd30ufr', )
 ### SuSE Linux 8.1 flavours
 aptsources['suse-81-i386'] = {
     'base':          'rpm ' + suse + ' 8.1-i386 base',
-    'extra':         'rpm ' + suse + ' 8.1-i386 extra',
     'functronics':   'rpm ' + suse + ' 8.1-i386 funktronics',
     'gnome2':        'rpm ' + suse + ' 8.1-i386 gnome2',
     'kde':           'rpm ' + suse + ' 8.1-i386 kde',
@@ -627,12 +626,10 @@ aptsources['suse-81-i386'] = {
     'mozilla':       'rpm ' + suse + ' 8.1-i386 mozilla',
     'packman-i686':  'rpm ' + suse + ' 8.1-i386 packman-i686',
     'packman':       'rpm ' + suse + ' 8.1-i386 packman',
-    'security-prpm': 'rpm ' + suse + ' 8.1-i386 security-prpm',
     'security':      'rpm ' + suse + ' 8.1-i386 security',
     'suse-people':   'rpm ' + suse + ' 8.1-i386 suse-people',
-    'suser-kpietrz': 'rpm ' + suse + ' 8.1-i386 suser-kpietrz',
+    'suser-rbos':    'rpm ' + suse + ' 8.1-i386 suser-rbos',
     'suser-tcousin': 'rpm ' + suse + ' 8.1-i386 suser-tcousin',
-    'update-prpm':   'rpm ' + suse + ' 8.1-i386 update-prpm',
     'update':        'rpm ' + suse + ' 8.1-i386 update',
     'usr-local-bin': 'rpm ' + suse + ' 8.1-i386 usr-local-bin',
     'wine':          'rpm ' + suse + ' 8.1-i386 wine',
@@ -643,35 +640,40 @@ aptsources['suse-81-i386'] = {
 packages['suse-81-i386'] = {
     'dir':      'suse-81-i386',
     'minimal':	'bash glibc',
-    'base':	'fileutils findutils openssh-server',
+    'base':	'fileutils findutils openssh',
     'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
 }
+config['suse-81-i386'] = {}
+aliases['suse-81-i386'] = ('suse81', )
 
 # SuSE Linux 8.1 full, all updates
 packages['suse-81-i386-full'] = packages['suse-81-i386']
 sourceslist['suse-81-i386-full'] = {
     'suse-81-i386': aptsources['suse-81-i386'].keys(),
 }
+config['suse-81-i386-full'] = {}
+aliases['suse-81-i386-full'] = ('suse81f', )
 
 
 ### SuSE Linux 8.2 flavours
 aptsources['suse-82-i386'] = {
     'base':          'rpm ' + suse + ' 8.2-i386 base',
-    'extra':         'rpm ' + suse + ' 8.2-i386 extra',
+    'funktronics':   'rpm ' + suse + ' 8.2-i386 funktronics',
     'kde':           'rpm ' + suse + ' 8.2-i386 kde',
+    'kde3-stable':   'rpm ' + suse + ' 8.2-i386 kde3-stable',
     'mantel-kernel': 'rpm ' + suse + ' 8.2-i386 mantel-kernel',
     'mozilla':       'rpm ' + suse + ' 8.2-i386 mozilla',
     'packman-i686':  'rpm ' + suse + ' 8.2-i386 packman-i686',
     'packman':       'rpm ' + suse + ' 8.2-i386 packman',
-    'security-prpm': 'rpm ' + suse + ' 8.2-i386 security-prpm',
     'security':      'rpm ' + suse + ' 8.2-i386 security',
     'suse-people':   'rpm ' + suse + ' 8.2-i386 suse-people',
-    'suser-kpietrz': 'rpm ' + suse + ' 8.2-i386 suser-kpietrz',
+    'suse-projects': 'rpm ' + suse + ' 8.2-i386 suse-projects',
+    'suser-ollakka': 'rpm ' + suse + ' 8.2-i386 suser-ollakka',
+    'suser-rbos':    'rpm ' + suse + ' 8.2-i386 suser-rbos',
     'suser-tcousin': 'rpm ' + suse + ' 8.2-i386 suser-tcousin',
-    'update-prpm':   'rpm ' + suse + ' 8.2-i386 update-prpm',
     'update':        'rpm ' + suse + ' 8.2-i386 update',
     'usr-local-bin': 'rpm ' + suse + ' 8.2-i386 usr-local-bin',
     'xfree86':       'rpm ' + suse + ' 8.2-i386 xfree86',
@@ -681,18 +683,23 @@ aptsources['suse-82-i386'] = {
 packages['suse-82-i386'] = {
     'dir':      'suse-82-i386',
     'minimal':	'bash glibc',
-    'base':	'fileutils findutils openssh-server',
+    'base':	'coreutils findutils openssh openssl=0.9.6i aaa_base ' +
+                'pam-modules',
     'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': ('base',)
 }
+config['suse-82-i386'] = {}
+aliases['suse-82-i386'] = ('suse82', )
 
 # SuSE Linux 8.2 full, all updates
 packages['suse-82-i386-full'] = packages['suse-82-i386']
 sourceslist['suse-82-i386-full'] = {
     'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }
+config['suse-82-i386-full'] = {}
+aliases['suse-82-i386-full'] = ('suse82f', )
 
 
 ### Dave/Dina
