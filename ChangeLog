@@ -2,6 +2,7 @@
 
 	* scripts/mach.in: fix some places where / was forgotten now that
                            $HOME is set
+                           clear RPM::Pre-Install-Pkgs so GPG's aren't checked
 	* src/mach-helper.c: (do_command): added HOME env var because fc-cache
                              segfaults if it's not set
 
