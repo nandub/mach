@@ -1,3 +1,7 @@
+2003-12-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+        * configure.in: release 0.4.3, "Hot Water"
+
 2003-12-11  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * src/mach-helper.c: fix strstr comparison warnings
