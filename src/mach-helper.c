@@ -135,7 +135,9 @@ check_file_allowed (const char *allowed, const char *given)
 void
 do_command (const char *filename, char *const argv[])
 {
-  /* do not trust user environment */
+  /* do not trust user environment;
+   * copy over allowed env vars, after setting PATH and HOME ourselves
+   */
   char *env[3 + ALLOWED_ENV_SIZE] = {
     [0] = "PATH=/bin:/usr/bin:/usr/sbin",
     [1] = "HOME=/root"
@@ -144,6 +146,8 @@ do_command (const char *filename, char *const argv[])
   char **arg;
   size_t idx=2;
   size_t i;
+  char *envvar;
+  char *ld_preload;
 
   /* elevate privileges */
   setreuid (geteuid (), geteuid ());
@@ -156,6 +160,14 @@ do_command (const char *filename, char *const argv[])
     printf ("%s ", *arg);
   printf ("\n");
   */
+
+  /* add LD_PRELOAD for our selinux lib if MACH_LD_PRELOAD is set */
+  envvar = getenv ("MACH_LD_PRELOAD");
+  if (envvar != 0)
+  {
+    ld_preload = strdup("LD_PRELOAD=" LIBDIR "/libselinux-mach.so");
+    env[idx++] = ld_preload;
+  }
 
   for (i = 0; i < ALLOWED_ENV_SIZE; ++i)
   {
@@ -360,6 +372,8 @@ main (int argc, char *argv[])
     do_apt_get (argc, argv);
   else if (strncmp ("mknod", argv[1], 5) == 0)
     do_mknod (argc, argv);
+  else if (strncmp ("env", argv[1], 3) == 0)
+    do_command ("/bin/env", &(argv[1]));
   else
   {
     error ("Command %s not recognized !\n", argv[1]);

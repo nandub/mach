@@ -3,6 +3,9 @@ AC_INIT(README)
 AS_VERSION(mach, MACH, 0, 4, 6, 1)
 AC_SUBST(RELEASE, $MACH_RELEASE)
 
+AC_PROG_LIBTOOL
+AM_DISABLE_STATIC
+
 AC_CONFIG_SRCDIR([src/mach-helper.c])
 AM_CONFIG_HEADER(config.h)
 
@@ -21,6 +24,11 @@ AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AC_DEFINE_UNQUOTED(LOCALSTATEDIR, "$LOCALSTATEDIR",
     [Location of local state files])
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
+
+AS_AC_EXPAND(LIBDIR, $libdir)
+AC_DEFINE_UNQUOTED(LIBDIR, "$LIBDIR",
+    [Location of libraries])
+AC_MSG_NOTICE(Using libdir $LIBDIR)
 
 dnl rootsdir
 AC_ARG_ENABLE(rootsdir,
@@ -106,6 +114,27 @@ AC_ARG_WITH(defaultroot,
 )
 AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
 AC_MSG_NOTICE(Using default root $DEFAULTROOT)
+
+AC_MSG_CHECKING([if the system is running selinux])
+if test -d /selinux
+then
+  detect_selinux=yes
+else
+  detect_selinux=no
+fi
+AC_MSG_RESULT($detect_selinux)
+
+AC_ARG_ENABLE(selinux,
+  AC_HELP_STRING([--enable-selinux], [enable support for selinux hosts]),
+    enable_selinux=$enableval,enable_selinux=$detect_selinux
+)
+AC_MSG_NOTICE(Compiling with SELinux support: $enable_selinux)
+
+AM_CONDITIONAL(SELINUX_ENABLED, test "x$enable_selinux" = "xyes")
+
+AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
+AC_MSG_NOTICE(Using default root $DEFAULTROOT)
+
 
 AS_AC_EXPAND(SBINDIR, $sbindir)
 AC_MSG_NOTICE(Placing mach-helper in $SBINDIR)
