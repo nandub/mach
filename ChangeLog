@@ -1,3 +1,9 @@
+2004-01-09  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* configure.in: Use AC_ARG_ENABLE instead of AC_ARG_WITH as it
+	is semantically better for build options and makes the options
+	actually work as documented.
+
 2004-01-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* Makefile.am:
