@@ -43,9 +43,10 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach
-install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/states
-install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/roots
+install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach
+install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/states
+install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/roots
+install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/tmp/mach
 install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/packages
 install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/archives
 
