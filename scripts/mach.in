@@ -1371,7 +1371,7 @@ def main (config, args):
     #except:
     #    debug ("no files override")
 
-    if config[root]:
+    if config.has_key (root):
         for key in config[root].keys ():
             debug ("setting config['%s'] to %s" % (key, config[root][key]))
             config[key] = config[root][key]
