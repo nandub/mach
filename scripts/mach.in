@@ -128,7 +128,10 @@ class Spec:
         # FIXME: in the future make this non-greedy or something
         matchstr = re.compile ("^(.*)%{(.*)}(.*)$")
         for tag in self.vars.keys ():
-            match = matchstr.search (self.vars[tag])
+            try:
+                match = matchstr.search (self.vars[tag])
+            except TypeError:
+                sys.stderr.write ("Error on searching for tag %s with value %s" % (tag, self.vars[tag]))
             if match:
                 expand = match.expand ("\\2")
                 debug ("Need to expand tag %s inside tag %s (%s)" % (expand, tag, self.vars[tag]))
@@ -141,16 +144,19 @@ class Spec:
 
     def tag (self, which):
         "Get the given (unique) tag from the spec file as a string"
+        # if we already have it, return it
         if self.vars.has_key (which):
             return self.vars[which]
 
-        matchstr = re.compile ("^" + which + r"\d*:\s*(.*)", re.I)
+        # if we don't, look for it in the file
+        matchstr = re.compile ("^" + which + r"\d*\s*:\s*(.*)", re.I)
         for line in self.content:
             match = matchstr.search (line)
             if match:
                 value = match.expand ("\\1")
                 self.vars[which] = value
                 return value
+        sys.stderr.write ("WARNING: didn't find tag %s in spec file\n" % which)
         return None
 
     def tags (self, which):
@@ -760,17 +766,21 @@ class Root:
         # loop over all package names
         for name in order:
             srpmname = pkgs[name]['srpmname']
-            print "Building %s" % srpmname
-            sys.stdout.write ('Installing BuildRequires ...')
-            try:
-                self.aptget ('install -y %s' % string.join (pkgs[name]['buildreqs']), True)
-            except Root.Error:
-                sys.stderr.write ('Cannot build %s\n' % srpmname)
-                #continue
-                #FIXME: error code was never returned
-                #raise self.Error, "something went wrong building SRPM"
-                self.unlock()
-                sys.exit (1)
+            # install buildrequires if there are
+            if 'buildrequires' in pkgs[name].keys ():
+                buildreqs = string.join (pkgs[name]['buildrequires'])
+                print "Building %s" % srpmname
+                debug ("BuildRequires: %s" % buildreqs)
+                sys.stdout.write ('Installing BuildRequires ...')
+                try:
+                    self.aptget ('install -y %s' % buildreqs, True)
+                except Root.Error:
+                    sys.stderr.write ('Cannot build %s\n' % srpmname)
+                    #continue
+                    #FIXME: error code was never returned
+                    #raise self.Error, "something went wrong building SRPM"
+                    self.unlock()
+                    sys.exit (1)
 
             # get the name and create the place where to store results
             h = pkgs[name]['header']
