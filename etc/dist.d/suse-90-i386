@@ -10,26 +10,8 @@
 ### SuSE Linux 9.0 flavours
 aptsources['suse-90-i386'] = {
     'base':              'rpm ' + suse + ' SuSE/9.0-i386 base',
-    'funktronics':       'rpm ' + suse + ' SuSE/9.0-i386 funktronics',
-    'gnome2':            'rpm ' + suse + ' SuSE/9.0-i386 gnome2',
-    'kde':               'rpm ' + suse + ' SuSE/9.0-i386 kde',
-    'kernel-of-the-day': 'rpm ' + suse + ' SuSE/9.0-i386 kernel-of-the-day',
-    'mozilla':           'rpm ' + suse + ' SuSE/9.0-i386 mozilla',
-    'packman-i686':      'rpm ' + suse + ' SuSE/9.0-i386 packman-i686',
-    'packman':           'rpm ' + suse + ' SuSE/9.0-i386 packman',
     'security':          'rpm ' + suse + ' SuSE/9.0-i386 security',
-    'suse-people':       'rpm ' + suse + ' SuSE/9.0-i386 suse-people',
-    'suse-projects':     'rpm ' + suse + ' SuSE/9.0-i386 suse-projects',
-    'suser-kpietrz':     'rpm ' + suse + ' SuSE/9.0-i386 suser-kpietrz',
-    'suser-ollakka':     'rpm ' + suse + ' SuSE/9.0-i386 suser-ollakka',
-    'suser-rbos':        'rpm ' + suse + ' SuSE/9.0-i386 suser-rbos',
-    'suser-sbarnin':     'rpm ' + suse + ' SuSE/9.0-i386 suser-sbarnin',
-    'suser-scorot':      'rpm ' + suse + ' SuSE/9.0-i386 suser-scorot',
-    'suser-tcousin':     'rpm ' + suse + ' SuSE/9.0-i386 suser-tcousin',
     'update':            'rpm ' + suse + ' SuSE/9.0-i386 update',
-    'usr-local-bin':     'rpm ' + suse + ' SuSE/9.0-i386 usr-local-bin',
-    'wine':              'rpm ' + suse + ' SuSE/9.0-i386 wine',
-    'xfree86':           'rpm ' + suse + ' SuSE/9.0-i386 xfree86',
 }
 
 # SuSE Linux 9.0
@@ -52,11 +34,3 @@ sourceslist['suse-90-i386-updates'] = {
 }
 config['suse-90-i386-updates'] = {}
 aliases['suse-90-i386-updates'] = ('suse9u', 'suse90u', )
-
-# SuSE Linux 9.0, full
-packages['suse-90-i386-full'] = packages['suse-90-i386']
-sourceslist['suse-90-i386-full'] = {
-    'suse-90-i386': aptsources['suse-90-i386'].keys(),
-}
-config['suse-90-i386-full'] = {}
-aliases['suse-90-i386-full'] = ('suse9f', 'suse90f', )

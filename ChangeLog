@@ -2,6 +2,10 @@
 
 	* etc/dist.d/*: Remove rpm-devel from all "build" package sets.
 
+	* etc/dist.d/suse-*: Remove everything but base, security and
+	update components (ie. the "full" flavour no longer exists).
+	Other components change and disappear too often to be useful here.
+
 2004-07-10  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: Fix urlgrab exception handling and syntax,
