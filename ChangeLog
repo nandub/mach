@@ -3,6 +3,11 @@
 	* Makefile.am: Add ACLOCAL_AMFLAGS so the auto* system can be
 	(re)created with "autoreconf -i -f".
 
+2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+
+	* scripts/mach.in: Allow defining additional macros with
+	config['macros'].
+
 2003-12-27  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: Make the rpmbuild command inside roots
