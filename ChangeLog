@@ -1,6 +1,8 @@
 2003-06-04  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * etc/conf.in: initialize dist-specific configs
+        * scripts/mach.in: use gpg-agent to clearsign, sign all packages 
+                           in one go, delete old signed md5sums
 
 2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
 

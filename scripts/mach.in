@@ -663,6 +663,9 @@ class Root:
     
         # now build
         self.mount ()
+       
+        resultdirs = [] # will contain each of the resultdir's for this build
+        # loop over all package names
         for name in order:
             srpmname = pkgs[name]['srpmname']
             print "Building %s" % srpmname
@@ -739,7 +742,7 @@ class Root:
             # output = string.replace (output, '=(none):', '=');
             #sys.stdout.write ("Installing built RPMS and dependencies ...")
             #self.aptget ("install -y %s" % output, True)
-            print "Collecting results from %s" % srpm
+            print "Collecting results of build %s" % srpm
             rpms.append (srpm)
             for file in rpms:
                 path = self.rootdir + file
@@ -750,25 +753,46 @@ class Root:
             # update internal apt repo
             self.aptget ("update")
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
-            # sign packages and md5sum them
-            # FIXME: integrate with agent or do everything at the end
-            if self.config['sign']:
-                cmd = 'rpm --addsign %s/*.rpm' % resultdir
-                debug ("running %s" % cmd)
-                os.system (cmd)
+            resultdirs.append (resultdir)
+
+        # md5sum packages
+        for resultdir in resultdirs:
+	    cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
+            debug ("running %s" % cmd)
+            os.system (cmd)
+        # now sign packages if requested
+        if self.config['sign']:
+            print "Signing built packages ..."
+            cmd = 'rpm --addsign %s' % string.join (resultdirs, '/*.rpm ') + '/*.rpm' 
+            debug ("running %s" % cmd)
+            os.system (cmd)
+            #FIXME: sadly, we cannot clearsign multiple files ?
+            print "clearsigning md5sums ..."
+            for resultdir in resultdirs:
+                if os.file.exists (os.path.join (resultdir, 'md5sum.asc')):
+                    os.unlink (os.path.join (resultdir, 'md5sum.asc'))
 		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
-		cmd = 'gpg --clearsign %s/md5sum' % resultdir
+		cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
-            if self.config['collect']:
+
+         # now collect stuff to . if requested
+         if self.config['collect']:
+            for resultdir in resultdirs:
                for x in glob.glob (os.path.join (resultdir, '*.rpm')):
                    os.system ('mv %s %s' % (x, os.path.basename (x)))
                for x in glob.glob (os.path.join (resultdir, '*')):
                    os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
             
         print "Build done."
+
+        # sign all packages at once so we only need the passphrase once
+        # FIXME: repeat if fail
+
+        # collect all packages if requested
+
         self.umount ()
         self.unlock ()
         
