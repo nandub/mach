@@ -820,9 +820,9 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
             srpmname = pkgs[name]['srpmname']
             # install buildrequires if there are
             debug ("Building %s with package stuff %s" % (name, pkgs[name].keys ()))
-            if 'buildreqs' in pkgs[name].keys ():
+            print "Building %s" % srpmname
+            if pkgs[name].has_key ('buildreqs') and pkgs[name]['buildreqs']:
                 buildreqs = string.join (pkgs[name]['buildreqs'])
-                print "Building %s" % srpmname
                 debug ("BuildRequires: %s" % buildreqs)
                 try:
         	    self.aptget ("update")
@@ -834,6 +834,8 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
                 except Root.Error:
                     raise self.Error, 'could not install buildreqs %s' % buildreqs
                     #continue
+            else:
+                debug ("No BuildRequires for %s." % srpmname)
 
             # get the name and create the place where to store results
             h = pkgs[name]['header']
