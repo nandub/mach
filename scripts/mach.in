@@ -601,7 +601,7 @@ class Root:
                 # sanity check the given file using "file"
                 command = "file -b -i -z %s" % file
 		if file[-7:] == ".tar.gz":
-                    line = os.popen (command).readline ()
+                    line = os.popen (command).readline ().rstrip ()
                     if not line == 'application/x-tar (application/x-gzip)':
                         raise self.Error, "file doesn't think %s is a tar.gz !" % file
 		# didn't seem to work on MPlayer 0.91 tar.bz2 :(
