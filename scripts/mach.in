@@ -25,34 +25,34 @@ usage = 'usage: mach [mach-options] command [command-options-and-arguments]'
 help = '''Make a chroot and do stuff in it.
 
 Mach options:
-  -v, --version			print mach version
-  -r, --root=ROOT		specify a root to work in
-  -d, --debug			turn on debugging
-  -f, --force			override root lock
-  -k, --keep			do not revert buildroot to initial package list
-  -s, --sign			sign packages after build
-  -c, --collect			collect packages and relevant files to .
-  -q, --quiet			no spinners, minimal output
-  --release=(tag)		add given tag to release tag
-  --no-scripts			don\'t run post build scripts
-  --canonify			just output the canonical root name and exit
+  -v, --version         print mach version
+  -r, --root=ROOT       specify a root to work in
+  -d, --debug           turn on debugging
+  -f, --force           override root lock
+  -k, --keep            do not revert buildroot to initial package list
+  -s, --sign            sign packages after build
+  -c, --collect         collect packages and relevant files to .
+  -q, --quiet           no spinners, minimal output
+  --release=(tag)       add given tag to release tag
+  --no-scripts          don\'t run post build scripts
+  --canonify            just output the canonical root name and exit
 
 Commands:
-  apt-get			run host\'s apt-get on target root
-  apt-cache                     run host\'s apt-cache on target root
-  build				build from (set of) .spec file(s)
+  apt-get           run host\'s apt-get on target root
+  apt-cache         run host\'s apt-cache on target root
+  build             build from (set of) .spec file(s)
                                 (passes options given to rpmbuild)
-  chroot			chroot into root
-  clean				totally cleans the root
-  rebuild			rebuild a (set of) .src.rpm(s)
+  chroot            chroot into root
+  clean             totally cleans the root
+  rebuild           rebuild a (set of) .src.rpm(s)
                                 (passes options given to rpmbuild)
-  setup				sets up the root for a particular purpose
+  setup             sets up the root for a particular purpose
         prep                         preparation before package install
         minimal                      minimal set of rpms (bash, glibc)
         base                         base set of rpms for minimal functionality
         build                        everything to build rpms
-  status			show status of mach roots
-  unlock			override root lock
+  status            show status of mach roots
+  unlock            override root lock
 '''
 
 # list of allowed commands
@@ -152,8 +152,8 @@ class Spec:
         self.options = options
 
         debug ("Spec.__init__: opening spec %s" % path)
-	# check if the spec file has a %prep section
-        command = "grep '%%prep' %s" % path	
+        # check if the spec file has a %prep section
+        command = "grep '%%prep' %s" % path
         (status, output) = commands.getstatusoutput (command)
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
@@ -161,7 +161,7 @@ class Spec:
             raise self.Error, "spec file %s does not have a %%prep section" % self.path
         # check for syntax errors in the spec file first
         command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, path)
-	    debug ("Spec:__init__: command: %s" % command)
+        debug ("Spec:__init__: command: %s" % command)
         (status, output) = commands.getstatusoutput (command)
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
@@ -695,12 +695,12 @@ class Root:
                 # sanity check the given file using "file"
                 # crap, this completely hangs on fedora core 0.94 :(
 #                command = "file -b -i -z %s" % file
-#		if file[-7:] == ".tar.gz":
+#                if file[-7:] == ".tar.gz":
 #                    line = os.popen (command).readline ().rstrip ()
 #                    if not line[:17] == 'application/x-tar':
 #                        raise self.Error, "file doesn't think %s is a tar.gz !" % file
-#		# didn't seem to work on MPlayer 0.91 tar.bz2 :(
-		#if file[-8:] == ".tar.bz2":
+#       # didn't seem to work on MPlayer 0.91 tar.bz2 :(
+        #if file[-8:] == ".tar.bz2":
                 #    line = os.popen (command).readline ()
                 #    if not line == 'application/x-tar       gnu (application/octet-stream)':
                 #        raise self.Error, "file doesn't think %s is a tar.bz2 !" % file
@@ -750,7 +750,7 @@ class Root:
         sys.stdout.write ("Brutishly removing %s ..." % self.rootdir)
         (status, output) = do_with_output (command, True)
         if status != 0:
-    	    raise self.Error, "Could not remove %s" % self.rootdir
+            raise self.Error, "Could not remove %s" % self.rootdir
 
     def clean (self, args = []):
         "clean out the root"
@@ -836,7 +836,7 @@ class Root:
         # get pkgs and collect info
         pkgs = {}
         for path in paths:
-    	# resolve path to basename (without dirs)
+            # resolve path to basename (without dirs)
             srpmname = os.path.basename (path)
             newpath = os.path.join (self.rootdir, 'tmp', srpmname)
             try:
@@ -924,7 +924,7 @@ class Root:
                 #FIXME: we filter out packages here that can have multiple
                 #versions, and expect the user to install them manually
                 #this works around kernel and kernel-source buildreqs
-		# command to use to find out if a buildreq is already satisfied
+                # command to use to find out if a buildreq is already satisfied
                 debug ("Package buildrequires before filtering: %s" % pkgs[name]['buildreqs'])
                 chkcmd = "rpm --root=%s -q --whatprovides '%%s'" % self.rootdir
                 candidates = pkgs[name]['buildreqs']
@@ -933,11 +933,11 @@ class Root:
                     if cand == "kernel":
                         print "Warning: make sure you have manually installed the right kernel rpm"
                         print "         and that you are building with --keep"
-			            continue
+                        continue
                     elif cand == "kernel-source":
                         print "Warning: make sure you have manually installed the right kernel-source rpm"
                         print "         and that you are building with --keep"
-			            continue
+                        continue
                     #FIXME: if an older version of a buildrequire is already
                     #installed, it will get filtered even though we need the
                     #newer version
@@ -954,7 +954,7 @@ class Root:
                     create_sources_list (config, srcs)
 
                     try:
-        	            self.aptget (["update", ])
+                        self.aptget (["update", ])
                     except Root.Error:
                         raise self.Error, 'could not update apt'
                     try:
@@ -1120,7 +1120,7 @@ class Root:
 
         # md5sum packages and spec file
         for resultdir in resultdirs:
-	        cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
+            cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
             debug ("running %s" % cmd)
             os.system (cmd)
         # now sign packages if requested
@@ -1134,11 +1134,11 @@ class Root:
             for resultdir in resultdirs:
                 if os.path.exists (os.path.join (resultdir, 'md5sum.asc')):
                     os.unlink (os.path.join (resultdir, 'md5sum.asc'))
-		        cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
+                cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
                 # FIXME: figure out the proper way to use an agent here
-		        cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
+                cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
@@ -1147,7 +1147,7 @@ class Root:
             for resultdir in resultdirs:
                 cmd = '%s %s' % (self.config['script-success'], resultdir)
                 debug ("running %s" % cmd)
-		        os.system (cmd)
+                os.system (cmd)
 
         # now collect stuff to . if requested
         if self.config['collect']:
@@ -1262,8 +1262,8 @@ class Root:
         debug (command)
         os.system (command)
 
-	    # check if our rpm understands --promoteepoch
-	    command = ('rpm --promoteepoch')
+        # check if our rpm understands --promoteepoch
+        command = ('rpm --promoteepoch')
         status = os.system (command)
         epochopt = ''
         if os.WIFEXITED (status) and os.WEXITSTATUS (status) == 0:
