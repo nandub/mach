@@ -24,6 +24,11 @@ as well.
 -------------------------------
 Included at this moment is the necessary information to set up :
 
+Red Hat 7.0 and 7.1
+  - standard
+  - updated
+  - with FreshRPMS
+
 Red Hat 7.2 and 7.3
   - standard
   - updated
@@ -36,6 +41,8 @@ Red Hat 8.0 and 9
   - with FreshRPMS
   - with Fedora stable, testing and unstable
 
+Fedora Core 0.94 (Severn Beta 2)
+
 Dave/Dina
   - fridge
   - oven
@@ -43,6 +50,11 @@ Dave/Dina
 SuSE 8.1 and 8.2
   - base
   - full + updates
+
+Yellowdog 2.3 and 3.0
+  - standard
+  - updated
+  - with FreshRPMS
 
 Some handy features of mach include
   - "caching" of downloaded packages using the build hosts's apt
@@ -202,7 +214,13 @@ DNS.
   have happen if the server is not somewhere in your physical neighbourhood.
   This is the reason why openssh-server is listed in the base install.
 
-11. ADDING A DISTRIBUTION
+11. MAILING LIST
+----------------
+A mailing list has been set up for discussion of mach use and development.
+Check http://lists.sourceforge.net/lists/listinfo/mach-devel for information.
+The list is low-volume.
+
+12. ADDING A DISTRIBUTION
 -------------------------
 - Check both dist and conf in sysconfdir/mach and copy from another target.
   Change as required.
@@ -211,7 +229,7 @@ DNS.
   See if the installation of base packages works well by doing
   mach -r (dist) setup base
 
-12. DISCLAIMER
+13. DISCLAIMER
 --------------
 mach is offered under the GPL without any warranty whatsoever.
 Let me know where the documentation is lacking, so I can improve on that.
