@@ -88,7 +88,7 @@ Some handy features of mach include
   chmod u+s $(prefix)/bin/mach-helper
 
 - do not start to tweak stuff all in the source code just yet; mach is picky
-  about it's setup if you start to hack it.
+  about its setup if you start to hack it.
 
 6. SETTING IT UP
 ----------------
@@ -150,12 +150,17 @@ DNS.
        mach apt-get -y install (requires)
     and run the build again, with the -k option (for "keep packages")
 
+- You can build multiple spec files or src.rpms, just try
+       mach build *.spec
+  or
+       mach build *.src.rpm
+
 - To clean the buildroot, run
     mach clean
 
 8. SECURITY
 -----------
-- By nature mach needs root privileges for some of it's operations.
+- By nature mach needs root privileges for some of its operations.
   All operations that it needs this for are done through the mach-helper
   binary, which is suid.  The source code for this binary is deliberately
   kept both simple and very minimal.  The goal here is to make it absolutely
@@ -188,6 +193,8 @@ DNS.
   can cause rpm to hang.  If this happens, you should kill -9 the stalling
   rpm process, chroot into the root, run "rm -rf /var/lib/rpm/__*" and retry.
   had given.
+  I'm interested on feedback running mach on RH8.0, I have no such system
+  around anymore.
 - for now, report them to me personally at thomas (at) apestaart (dot) org
 - mounting /proc into the root system can cause problems.  For example,
   removing openssh-server from the root will cause it to kill your build host's
