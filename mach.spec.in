@@ -48,7 +48,7 @@ install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/archives
 
 %pre
 # create user and group mach
-/usr/sbin/useradd -M mach 2> /dev/null || true
+/usr/sbin/useradd mach 2> /dev/null || true
 
 %preun
 if [ "$1" == 0 ];

@@ -63,7 +63,9 @@ GETTING STARTED - RPM INSTALL
   Go ahead, don't be scared, it's built with mach.
 
 - After installing, you need to add all users that are going to build through
-  mach to the "mach" group in /etc/group
+  mach to the "mach" group in /etc/group, and (possibly) log out and log back
+  in so that this change gets registered.  You can check if your user
+  is in this group by trying "groups (user)"
 
 GETTING STARTED - SOURCE INSTALL
 --------------------------------
