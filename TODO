@@ -13,6 +13,8 @@
 * MEDIUM:	make sure we don't rebuild binary rpms :)
 * EASY:		allow people to specify an alternate location for a root
 * EASY:		bash completion
+* MEDIUM:	when installing buildreqs, don't fail on kernel related stuff
+		(due to # silliness) but do fail on others
 * HARD:		integrate ccache building
 * HARD:		integrate distcc support
 * EASY:		make proc mounting an option, document the issues with it
