@@ -1,3 +1,12 @@
+2004-05-05  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-development-i386:
+          add fedora.us/livna
+	* mach.spec.in:
+          add rpmbuild since we use it for expanding
+	* scripts/mach.in:
+          add a debug statement
+
 2004-04-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: remove the buildrequire checking commands, since
