@@ -29,7 +29,7 @@ AC_MSG_NOTICE(Using rootsdir $ROOTSDIR)
 
 dnl archivesdir
 AC_ARG_WITH(archivesdir,
-  AC_HELP_STRING([--enable-archivesdir=PATH], [create roots in PATH]),
+  AC_HELP_STRING([--enable-archivesdir=PATH], [store archives in PATH]),
   [ archivesdir=$withval ],
   [ archivesdir=$localstatedir/cache/mach/archives]
 )
@@ -38,7 +38,7 @@ AC_MSG_NOTICE(Using archivesdir $ARCHIVESDIR)
 
 dnl statesdir
 AC_ARG_WITH(statesdir,
-  AC_HELP_STRING([--enable-statesdir=PATH], [create roots in PATH]),
+  AC_HELP_STRING([--enable-statesdir=PATH], [use states in PATH]),
   [ statesdir=$withval ],
   [ statesdir=$localstatedir/lib/mach/states]
 )
