@@ -1,3 +1,7 @@
+2003-11-29  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/conf.in: Make fedora-1-i386 the default root.
+
 2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in: Some small corrections to fix the syntax
