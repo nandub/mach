@@ -24,5 +24,6 @@ Makefile
 scripts/Makefile
 scripts/mach
 etc/Makefile
+etc/conf
 mach.spec
 )

@@ -1,5 +1,14 @@
 2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
 
+	* configure.in:
+	* etc/Makefile.am:
+	* etc/conf:
+	* etc/conf.in: autogenerate conf from conf.in
+	* mach.spec.in: make all dirs FHS-compliant
+	* scripts/mach.in: make all dirs FHS-compliant
+
+2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
+
 	* etc/conf: add /usr/bin/apt-sigchecker as generated files, default
                     to letting everything pass
 	* scripts/mach.in: add function to regenerate any file in
