@@ -22,7 +22,7 @@ packages['davedina-00-fridge'] = {
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
-sourceslist['davedina-00-oven'] = {
+sourceslist['davedina-00-fridge'] = {
     'davedina-00': ('os', 'fridge', ),
 }
 
