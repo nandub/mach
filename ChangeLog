@@ -1,5 +1,11 @@
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+          remove proxy from generated apt.conf so system proxy can be used
+          add pipeline depth 0 (Enrico Scholz)
+
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* src/mach-helper.c: (check_file_allowed), (do_command):
           allow certain env vars to be passed through (patch from Enrico Scholz)
 

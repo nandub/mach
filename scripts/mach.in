@@ -1229,7 +1229,7 @@ APT {
 Acquire {
     Retries "0";
     Http {
-        Proxy ""; // http://user:pass@host:port/
+        Pipeline-Depth "0";
     }
 };
 
