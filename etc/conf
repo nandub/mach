@@ -11,19 +11,13 @@ config['spinner'] = {
     'point':        ".:¨:",
 }
 
-config['files'] = {}
-# /etc/resolv.conf
-config['files']['/etc/resolv.conf'] = '''
+config['files'] = {
+    '/etc/resolv.conf': '''
 nameserver 192.168.001.001
 nameserver 157.193.40.42
 search 4fm.be onshuis
-'''
-
-# /etc/hosts
-config['files']['/etc/hosts'] = '''
+''',
+    '/etc/hosts': '''
 127.0.0.1 thocra localhost.localdomain
-'''
-
-config['files']['/etc/.bashrc'] = '''
-PS1=[mach] 
-'''
+''',
+}
