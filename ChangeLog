@@ -2,6 +2,10 @@
 
 	* etc/conf.in: Make fedora-1-i386 the default root.
 
+	* scripts/mach.in (rebuild): Improve release mangling regexp,
+	it is now less likely to mangle other stuff than the actual release
+	tag, and tolerates trailing whitespace.
+
 2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in: Some small corrections to fix the syntax
