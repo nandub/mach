@@ -22,3 +22,5 @@
 * MEDIUM:	add e2fs target which makes the root into a filesystem file
 * MEDIUM:	make output of rpm and apt-get and friends immediately available
 * MEDIUM:	make default buildroot dependant on target distro
+* MEDIUM:	figure out what to do with check for release name mangling
+                in the fedora.us fedora 1 case where "1" is used as disttag
