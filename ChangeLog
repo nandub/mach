@@ -1,8 +1,6 @@
 2003-12-04  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-	reviewed by: <delete if not using a buddy>
-
-	* etc/conf.in: rename default root to fedoracore-1
+	* etc/conf.in: rename default root to fedora-1-i386-core
 	* etc/dist: add/fix fedora core 1 roots
 	* scripts/mach.in: parse name/version/release based on rpm options
 
