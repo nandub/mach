@@ -6,16 +6,19 @@
 # each actual dist has a packages dict for bootstrap packages and
 # a sourceslist dict referencing aptsources lines to use
 
-# download locations for all bootstrap packages
-rpmfind = 'ftp://rpmfind.net/linux/redhat/'
-freshrpms = 'http://ayo.freshrpms.net/redhat/'
-gwdg = 'http://ftp.gwdg.de/pub/linux/suse/apt/SuSE/'
-jpackage = 'http://dl.sf.net/jpackage/direct_download/1.5/'
+
+# Base download locations.
+redhat    = 'http://ayo.freshrpms.net/redhat'
+suse      = 'http://ftp.gwdg.de/pub/linux/suse/apt/SuSE'
+jpackage  = 'http://dl.sf.net/jpackage/direct_download/1.5'
+fedora    = 'http://download.fedora.us/fedora'
+gstreamer = 'http://gstreamer.net/releases/redhat'
+
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
-    'os':      'rpm http://ayo.freshrpms.net redhat/7.2/i386 os',
-    'updates': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 updates',
+    'os':               'rpm ' + redhat + ' 7.2/i386 os',
+    'updates':          'rpm ' + redhat + ' 7.2/i386 updates',
     'jpackage-generic': 'rpm ' + jpackage + ' generic free',
     'jpackage-rh72':    'rpm ' + jpackage + ' redhat-7.2 free',
 }
@@ -31,11 +34,7 @@ sourceslist['redhat-72-i386'] = {
 }
 
 # Red Hat Linux 7.2, updates (rpm 4.0.4)
-packages['redhat-72-i386-updates'] = {
-    'dir':      'redhat-72-i386',
-    'build':        packages['redhat-72-i386']['build'],
-}
-
+packages['redhat-72-i386-updates'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-updates'] = {
     'redhat-72-i386': ('os', 'updates', )
 }
@@ -49,8 +48,8 @@ sourceslist['redhat-72-i386-jpackage'] = {
 
 ### Red Hat Linux 7.3 flavours
 aptsources['redhat-73-i386'] = {
-    'os': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 os',
-    'updates': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 updates',
+    'os':               'rpm ' + redhat + ' 7.3/i386 os',
+    'updates':          'rpm ' + redhat + ' 7.3/i386 updates',
     'jpackage-generic': 'rpm ' + jpackage + ' generic free',
     'jpackage-rh73':    'rpm ' + jpackage + ' redhat-7.3 free',
 }
@@ -80,22 +79,15 @@ sourceslist['redhat-73-i386-jpackage'] = {
 
 ### Red Hat Linux 8.0 flavours
 aptsources['redhat-80-i386'] = {
-    'os': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 os',
-    'updates': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 updates',
-    'gstreamer':
-        'rpm http://gstreamer.net/releases/redhat redhat-80-i386 redhat',
-    'gstreamer-deps':
-        'rpm http://gstreamer.net/releases/redhat redhat-80-i386 deps',
-    'fedora-stable': 
-        'rpm http://download.fedora.us fedora/redhat/8.0/i386 stable',
-    'fedora-testing':
-        'rpm http://download.fedora.us fedora/redhat/8.0/i386 testing',
-    'fedora-unstable': 
-        'rpm http://download.fedora.us fedora/redhat/8.0/i386 unstable',
-    'jpackage-generic':
-        'rpm ' + jpackage + ' generic free',
-    'jpackage-rh80':
-        'rpm ' + jpackage + ' redhat-8.0 free',
+    'os':               'rpm ' + redhat + ' 8.0/i386 os',
+    'updates':          'rpm ' + redhat + ' 8.0/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer + ' redhat-80-i386 redhat',
+    'gstreamer-deps':   'rpm ' + gstreamer + ' redhat-80-i386 deps',
+    'fedora-stable':    'rpm ' + fedora + ' redhat/8.0/i386 stable',
+    'fedora-testing':   'rpm ' + fedora + ' redhat/8.0/i386 testing',
+    'fedora-unstable':  'rpm ' + fedora + ' redhat/8.0/i386 unstable',
+    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
+    'jpackage-rh80':    'rpm ' + jpackage + ' redhat-8.0 free',
 }
 
 # Red Hat Linux 8.0
@@ -131,12 +123,10 @@ sourceslist['redhat-80-i386-fedora-stable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable')
 }
 packages['redhat-80-i386-fedora-stable']['build'] = packages['redhat-80-i386']['build'] + ' gcc-c++ redhat-rpm-config'
-
 packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
 sourceslist['redhat-80-i386-fedora-testing'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
 }
-
 packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
 sourceslist['redhat-80-i386-fedora-unstable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
@@ -152,22 +142,15 @@ sourceslist['redhat-80-i386-jpackage'] = {
 
 ### Red Hat Linux 9 flavours
 aptsources['redhat-9-i386'] = {
-    'os': 'rpm http://ayo.freshrpms.net redhat/9/i386 os',
-    'updates': 'rpm http://ayo.freshrpms.net redhat/9/i386 updates',
-    'gstreamer':
-        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 redhat',
-    'gstreamer-deps':
-        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 deps',
-    'fedora-stable': 
-        'rpm http://download.fedora.us fedora/redhat/9/i386 stable',
-    'fedora-testing':
-        'rpm http://download.fedora.us fedora/redhat/9/i386 testing',
-    'fedora-unstable': 
-        'rpm http://download.fedora.us fedora/redhat/9/i386 unstable',
-    'jpackage-generic':
-        'rpm ' + jpackage + ' generic free',
-    'jpackage-rh9':
-        'rpm ' + jpackage + ' redhat-9 free',
+    'os':               'rpm ' + redhat + ' 9/i386 os',
+    'updates':          'rpm ' + redhat + ' 9/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer + ' redhat-9-i386 redhat',
+    'gstreamer-deps':   'rpm ' + gstreamer + ' redhat-9-i386 deps',
+    'fedora-stable':    'rpm ' + fedora + ' redhat/9/i386 stable',
+    'fedora-testing':   'rpm ' + fedora + ' redhat/9/i386 testing',
+    'fedora-unstable':  'rpm ' + fedora + ' redhat/9/i386 unstable',
+    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
+    'jpackage-rh9':     'rpm ' + jpackage + ' redhat-9 free',
 }
 
 #   Red Hat Linux 9
@@ -203,12 +186,10 @@ packages['redhat-9-i386-fedora-stable']['build'] = packages['redhat-9-i386']['bu
 sourceslist['redhat-9-i386-fedora-stable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable')
 }
-
 packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386-fedora-stable']
 sourceslist['redhat-9-i386-fedora-testing'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
 }
-
 packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testing']
 sourceslist['redhat-9-i386-fedora-unstable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
@@ -224,26 +205,26 @@ sourceslist['redhat-9-i386-jpackage'] = {
 
 ### SuSE Linux 8.1 flavours
 aptsources['suse-81-i386'] = {
-    'base':          'rpm ' + gwdg + ' 8.1-i386 base',
-    'extra':         'rpm ' + gwdg + ' 8.1-i386 extra',
-    'functronics':   'rpm ' + gwdg + ' 8.1-i386 funktronics',
-    'gnome2':        'rpm ' + gwdg + ' 8.1-i386 gnome2',
-    'kde':           'rpm ' + gwdg + ' 8.1-i386 kde',
-    'kde3-stable':   'rpm ' + gwdg + ' 8.1-i386 kde3-stable',
-    'mantel-kernel': 'rpm ' + gwdg + ' 8.1-i386 mantel-kernel',
-    'mozilla':       'rpm ' + gwdg + ' 8.1-i386 mozilla',
-    'packman-i686':  'rpm ' + gwdg + ' 8.1-i386 packman-i686',
-    'packman':       'rpm ' + gwdg + ' 8.1-i386 packman',
-    'security-prpm': 'rpm ' + gwdg + ' 8.1-i386 security-prpm',
-    'security':      'rpm ' + gwdg + ' 8.1-i386 security',
-    'suse-people':   'rpm ' + gwdg + ' 8.1-i386 suse-people',
-    'suser-kpietrz': 'rpm ' + gwdg + ' 8.1-i386 suser-kpietrz',
-    'suser-tcousin': 'rpm ' + gwdg + ' 8.1-i386 suser-tcousin',
-    'update-prpm':   'rpm ' + gwdg + ' 8.1-i386 update-prpm',
-    'update':        'rpm ' + gwdg + ' 8.1-i386 update',
-    'usr-local-bin': 'rpm ' + gwdg + ' 8.1-i386 usr-local-bin',
-    'wine':          'rpm ' + gwdg + ' 8.1-i386 wine',
-    'xfree86':       'rpm ' + gwdg + ' 8.1-i386 xfree86',
+    'base':          'rpm ' + suse + ' 8.1-i386 base',
+    'extra':         'rpm ' + suse + ' 8.1-i386 extra',
+    'functronics':   'rpm ' + suse + ' 8.1-i386 funktronics',
+    'gnome2':        'rpm ' + suse + ' 8.1-i386 gnome2',
+    'kde':           'rpm ' + suse + ' 8.1-i386 kde',
+    'kde3-stable':   'rpm ' + suse + ' 8.1-i386 kde3-stable',
+    'mantel-kernel': 'rpm ' + suse + ' 8.1-i386 mantel-kernel',
+    'mozilla':       'rpm ' + suse + ' 8.1-i386 mozilla',
+    'packman-i686':  'rpm ' + suse + ' 8.1-i386 packman-i686',
+    'packman':       'rpm ' + suse + ' 8.1-i386 packman',
+    'security-prpm': 'rpm ' + suse + ' 8.1-i386 security-prpm',
+    'security':      'rpm ' + suse + ' 8.1-i386 security',
+    'suse-people':   'rpm ' + suse + ' 8.1-i386 suse-people',
+    'suser-kpietrz': 'rpm ' + suse + ' 8.1-i386 suser-kpietrz',
+    'suser-tcousin': 'rpm ' + suse + ' 8.1-i386 suser-tcousin',
+    'update-prpm':   'rpm ' + suse + ' 8.1-i386 update-prpm',
+    'update':        'rpm ' + suse + ' 8.1-i386 update',
+    'usr-local-bin': 'rpm ' + suse + ' 8.1-i386 usr-local-bin',
+    'wine':          'rpm ' + suse + ' 8.1-i386 wine',
+    'xfree86':       'rpm ' + suse + ' 8.1-i386 xfree86',
 }
 
 # SuSE Linux 8.1
@@ -265,22 +246,22 @@ sourceslist['suse-81-i386'] = {
 
 ### SuSE Linux 8.2 flavours
 aptsources['suse-82-i386'] = {
-    'base':          'rpm ' + gwdg + ' 8.2-i386 base',
-    'extra':         'rpm ' + gwdg + ' 8.2-i386 extra',
-    'kde':           'rpm ' + gwdg + ' 8.2-i386 kde',
-    'mantel-kernel': 'rpm ' + gwdg + ' 8.2-i386 mantel-kernel',
-    'mozilla':       'rpm ' + gwdg + ' 8.2-i386 mozilla',
-    'packman-i686':  'rpm ' + gwdg + ' 8.2-i386 packman-i686',
-    'packman':       'rpm ' + gwdg + ' 8.2-i386 packman',
-    'security-prpm': 'rpm ' + gwdg + ' 8.2-i386 security-prpm',
-    'security':      'rpm ' + gwdg + ' 8.2-i386 security',
-    'suse-people':   'rpm ' + gwdg + ' 8.2-i386 suse-people',
-    'suser-kpietrz': 'rpm ' + gwdg + ' 8.2-i386 suser-kpietrz',
-    'suser-tcousin': 'rpm ' + gwdg + ' 8.2-i386 suser-tcousin',
-    'update-prpm':   'rpm ' + gwdg + ' 8.2-i386 update-prpm',
-    'update':        'rpm ' + gwdg + ' 8.2-i386 update',
-    'usr-local-bin': 'rpm ' + gwdg + ' 8.2-i386 usr-local-bin',
-    'xfree86':       'rpm ' + gwdg + ' 8.2-i386 xfree86',
+    'base':          'rpm ' + suse + ' 8.2-i386 base',
+    'extra':         'rpm ' + suse + ' 8.2-i386 extra',
+    'kde':           'rpm ' + suse + ' 8.2-i386 kde',
+    'mantel-kernel': 'rpm ' + suse + ' 8.2-i386 mantel-kernel',
+    'mozilla':       'rpm ' + suse + ' 8.2-i386 mozilla',
+    'packman-i686':  'rpm ' + suse + ' 8.2-i386 packman-i686',
+    'packman':       'rpm ' + suse + ' 8.2-i386 packman',
+    'security-prpm': 'rpm ' + suse + ' 8.2-i386 security-prpm',
+    'security':      'rpm ' + suse + ' 8.2-i386 security',
+    'suse-people':   'rpm ' + suse + ' 8.2-i386 suse-people',
+    'suser-kpietrz': 'rpm ' + suse + ' 8.2-i386 suser-kpietrz',
+    'suser-tcousin': 'rpm ' + suse + ' 8.2-i386 suser-tcousin',
+    'update-prpm':   'rpm ' + suse + ' 8.2-i386 update-prpm',
+    'update':        'rpm ' + suse + ' 8.2-i386 update',
+    'usr-local-bin': 'rpm ' + suse + ' 8.2-i386 usr-local-bin',
+    'xfree86':       'rpm ' + suse + ' 8.2-i386 xfree86',
 }
 
 # SuSE Linux 8.2
@@ -315,4 +296,3 @@ sourceslist['davedina-oven'] = {
     'redhat-9-i386': ('os',),
     'davedina': ('fridge', 'oven',),
 }
-
