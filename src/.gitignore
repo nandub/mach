@@ -2,3 +2,6 @@ Makefile
 Makefile.in
 .deps
 mach-helper
+.libs
+*.la
+*.lo

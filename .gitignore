@@ -43,3 +43,4 @@ mkinstalldirs
 stamp-h1
 *.gz
 *.bz2
+libtool
