@@ -235,7 +235,6 @@ class Spec:
                 command = "rpmbuild -bp --nodeps --force --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
                 debug (command)
                 result[tag] = commands.getoutput (command)
-	print result
         return result
 
     def sources (self):
