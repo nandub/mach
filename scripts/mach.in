@@ -861,11 +861,14 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
             # mangle spec file if requested
             if self.config['release']:
                 # first check if it doesn't already comply !
-                debug ("self.rootdir: %s" % self.rootdir)
+                # FIXME: since fedora.us now uses .1 as a disttag,
+                # this checking breaks, so we disable it for now
+                #debug ("self.rootdir: %s" % self.rootdir)
                 spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
                 release = spec.tag ("release")
                 debug ("Release of spec file to mangle is %s" % release)
-                if not release.endswith ('.' + self.config['release']):
+                #if not release.endswith ('.' + self.config['release']):
+                if 1:
                     command = 'sed -e "s,^\\\\(Release\\\\s*:.*[^\\\\s]\\\\)\\\\s*$,\\\\1.%s,i" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
                     self.do_chroot (command)
