@@ -486,10 +486,7 @@ def setup_prep (config, args):
 
     debug ("Creating config files")
     for filename in config['files'].keys ():
-        ensure_dir (os.path.dirname (root + filename))
-        file = open (root + filename, 'w')
-        file.write (config['files'][filename])
-        file.close ()
+        config_recreate (config, root + filename)
 
     ensure_dir (root + '/var/tmp')
     os.system ('rpm --root %s --initdb' % root)
@@ -499,8 +496,9 @@ def setup_prep (config, args):
 # recreate a given file listed in config['files']
 def config_recreate (config, filename):
     root = get_config_dir (config, 'root')
-    debug ("Recreating %s from config" % filename)
     if config['files'].has_key (filename):
+        debug ("Recreating %s from config" % filename)
+        ensure_dir (os.path.dirname (root + filename))
         file = open (root + filename, 'w')
         file.write (config['files'][filename])
         file.close ()
@@ -528,7 +526,6 @@ def install (config, set):
     do_progress (command)
     open (statefile, 'w')
     return True
-
     
 # forcibly install a set of inconsistent base packages
 def setup_base (config, args):
