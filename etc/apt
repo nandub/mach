@@ -1,0 +1,39 @@
+# dict of apt-get sources.list lines
+aptsources['redhat-9-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/9/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/9/i386 updates',
+    'gstreamer': 'rpm http://gstreamer.net/releases/redhat redhat-9-i386 redhat',
+    'gstreamer-deps': 'rpm http://gstreamer.net/releases/redhat redhat-9-i386 deps',
+}
+aptsources['redhat-80-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 updates',
+    'gstreamer': 'rpm http://gstreamer.net/releases/redhat redhat-80-i386 redhat',
+    'gstreamer-deps': 'rpm http://gstreamer.net/releases/redhat redhat-80-i386 deps',
+}
+# configuration of each target root
+sourceslist['redhat-9-i386'] = {
+    'redhat-9-i386': ('os', )
+}
+sourceslist['redhat-9-i386-updates'] = {
+    'redhat-9-i386': ('os', 'updates', )
+}
+sourceslist['redhat-9-i386-gstreamer'] = {
+    'redhat-9-i386': ('os', 'updates', 'gstreamer-deps', 'gstreamer')
+}
+sourceslist['redhat-9-i386-gstreamer-deps'] = {
+    'redhat-9-i386': ('os', 'updates', 'gstreamer-deps')
+}
+
+sourceslist['redhat-80-i386'] = {
+    'redhat-80-i386': ('os', )
+}
+sourceslist['redhat-80-i386-updates'] = {
+    'redhat-80-i386': ('os', 'updates', )
+}
+sourceslist['redhat-80-i386-gstreamer'] = {
+    'redhat-80-i386': ('os', 'updates', 'gstreamer-deps', 'gstreamer')
+}
+sourceslist['redhat-80-i386-gstreamer-deps'] = {
+    'redhat-80-i386': ('os', 'updates', 'gstreamer-deps')
+}

@@ -1,0 +1,109 @@
+# mach packages
+
+# package set
+packages['redhat-9-i386'] = {}
+packages['redhat-9-i386']['base'] = (
+    'glibc-2.3.2-11.9.i386.rpm',
+    'mktemp-1.5-18.i386.rpm',
+    'libtermcap-2.0.8-35.i386.rpm',
+    'bash-2.05b-20.i386.rpm',
+    'zlib-1.1.4-8.i386.rpm',
+    'info-4.3-5.i386.rpm',
+    'termcap-11.0.1-16.noarch.rpm',
+    'libacl-2.2.3-1.i386.rpm',
+    'libattr-2.2.0-1.i386.rpm',
+    'findutils-4.1.7-9.i386.rpm',
+    'grep-2.5.1-7.i386.rpm',
+    'pcre-3.9-10.i386.rpm',
+    'coreutils-4.5.3-19.i386.rpm',
+    'setup-2.5.25-1.noarch.rpm',
+    'shadow-utils-4.0.3-6.i386.rpm',
+    'util-linux-2.11y-9.i386.rpm',
+    'filesystem-2.2.1-3.i386.rpm',
+    'bzip2-1.0.2-8.i386.rpm',
+    'bzip2-libs-1.0.2-8.i386.rpm',
+    'sed-4.0.5-1.i386.rpm',
+    'dev-3.3.2-5.i386.rpm',
+    'popt-1.8-0.69.i386.rpm',
+    'rpm-4.2-0.69.i386.rpm',
+    'file-3.39-9.i386.rpm',
+    'gawk-3.1.1-9.i386.rpm',
+    'ncurses-5.3-4.i386.rpm',
+    'elfutils-libelf-0.76-3.i386.rpm',
+)
+
+packages['redhat-9-i386']['apt'] = (
+    'libstdc++-3.2.2-5.i386.rpm',
+    'gdbm-1.8.0-20.i386.rpm',
+    'gnupg-1.2.1-3.i386.rpm',
+    'gcc-3.2.2-5.i386.rpm',
+    'libgcc-3.2.2-5.i386.rpm',
+    'pam-0.75-48.i386.rpm',
+    'glibc-common-2.3.2-11.9.i386.rpm',
+    'apt-0.5.5cnc5-fr2.i386.rpm',
+)
+
+packages['redhat-80-i386'] = {}
+packages['redhat-80-i386']['base'] = (
+    'sh-utils-2.0.12-3.i386.rpm',
+    'glibc-2.2.93-5.i386.rpm',
+    'mktemp-1.5-16.i386.rpm',
+    'libtermcap-2.0.8-31.i386.rpm',
+    'bash-2.05b-5.i386.rpm',
+    'info-4.2-5.i386.rpm',
+    'termcap-11.0.1-13.noarch.rpm',
+    'libacl-2.0.11-2.i386.rpm',
+    'libattr-2.0.8-3.i386.rpm',
+    'setup-2.5.20-1.noarch.rpm',
+    'shadow-utils-20000902-12.i386.rpm',
+    'util-linux-2.11r-10.i386.rpm',
+    'grep-2.5.1-4.i386.rpm',
+    'fileutils-4.1.9-11.i386.rpm',
+    'filesystem-2.1.6-5.noarch.rpm',
+    'bzip2-1.0.2-5.i386.rpm',
+    'bzip2-libs-1.0.2-5.i386.rpm',
+    'rpm-4.1-1.06.i386.rpm',
+    'popt-1.7-1.06.i386.rpm',
+    'findutils-4.1.7-7.i386.rpm',
+    'file-3.37-8.i386.rpm',
+    'gawk-3.1.1-4.i386.rpm',
+    'ncurses-5.2-28.i386.rpm',
+    'textutils-2.0.21-5.i386.rpm',
+    'zlib-1.1.4-4.i386.rpm',
+)
+
+packages['redhat-80-i386']['apt'] = (
+    'libstdc++-3.2-7.i386.rpm',
+    'gdbm-1.8.0-18.i386.rpm',
+    'gnupg-1.0.7-6.i386.rpm',
+    'gcc-3.2-7.i386.rpm',
+    'libgcc-3.2-7.i386.rpm',
+    'sed-3.02-13.i386.rpm',
+    'pam-0.75-40.i386.rpm',
+    'libelf-0.8.2-2.i386.rpm',
+    'glibc-common-2.2.93-5.i386.rpm',
+    'apt-0.5.5cnc4.1-fr1.20030325a.0.rh80.4.i386.rpm',
+)
+
+# download location
+rpmfind = 'ftp://rpmfind.net/linux/redhat/'
+freshrpms = 'http://ayo.freshrpms.net/redhat/'
+apt = 'http://thomas.apestaart.org/download/mach/apt/'
+
+packages['redhat-9-i386']['download'] = {
+    '': freshrpms + '9/i386/RPMS.os',
+    'apt-0.5.5cnc5-fr2.i386.rpm': apt,
+}
+
+packages['redhat-80-i386']['download'] = {
+  '': freshrpms + '8.0/i386/RPMS.os',
+  'apt-0.5.5cnc4.1-fr1.20030325a.0.rh80.4.i386.rpm': apt,
+}
+
+# copies
+
+packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
+packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
+packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
+packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
+
