@@ -43,6 +43,8 @@ done
 '''
 }
 
+config['script-success'] = "echo Results:"
+
 # Additional macros
 #config['macros'] = {
 #    'packager': 'Packager Name <packager@email>',

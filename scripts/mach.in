@@ -105,7 +105,7 @@ except IOError:
     pass
 
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
-qfmt = '"%{name}-%{version}-%{release}\n"'
+qfmt = '%{name}-%{version}-%{release}\n'
 
 # build user/group inside chroot
 builduser = '@BUILDUSER@'
@@ -547,15 +547,15 @@ class Root:
             print "Not removing packages from root."
             return
         root = self.rootdir
-        cmd = 'rpm --root %s -qa --qf %s \
-               | diff - %s > /dev/null 2>&1' % (root, qfmt, listfile)
+        cmd = "rpm --root %s -qa --qf '%s' \
+               | diff - %s > /dev/null 2>&1" % (root, qfmt, listfile)
         debug ("running " + cmd)
         if os.system (cmd) == 0:
             # no differences
             return True
-        cmd = "rpm --root %s -qa --qf %s \
+        cmd = "rpm --root %s -qa --qf '%s' \
                | grep -v -f %s - \
-               | tr '\n' ' '" % (root, qfmt, listfile)
+               | tr \"\n\" \" \"" % (root, qfmt, listfile)
         packages = commands.getoutput (cmd)
         # FIXME: how many ? print the number
         if not packages:
@@ -1245,7 +1245,7 @@ Dir {
 
         self.stdout ("Making snapshot ...\n")
         # FIXME: use _with_output for this
-        output = self.rpm (["-qa", "--qf", qfmt, ])
+        output = self.rpm (['-qa', '--qf', qfmt, ])
         self.set_state ('build', output)
         self.umount ()
 
