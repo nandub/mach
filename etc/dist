@@ -434,7 +434,7 @@ config['redhat-9-i386-jpackage'] = {}
 aliases['redhat-9-i386-jpackage'] = ('rh9jpp', 'rh90jpp')
 
 
-### Fedora 1 Core flavours
+### Fedora Core 1 flavours
 aptsources['fedora-1-i386'] = {
     'core':             'rpm ' + fedora   + ' 1/i386 core',
     'updates':          'rpm ' + fedora   + ' 1/i386 updates',
@@ -442,9 +442,11 @@ aptsources['fedora-1-i386'] = {
     'fedora-testing':   'rpm ' + fedoraus + ' fedora/1/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus + ' fedora/1/i386 unstable',
     'freshrpms':        'rpm ' + fedora   + ' 1/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
+    'jpackage-fc1':     'rpm ' + jpackage + ' fedora-1 free',
 }
 
-#   Fedora 1 Core
+# Fedora Core 1
 packages['fedora-1-i386-core'] = {
     'dir':      'fedoracore-1-i386',
     'minimal':	'bash glibc',
@@ -458,7 +460,7 @@ sourceslist['fedora-1-i386-core'] = {
 config['fedora-1-i386-core'] = {}
 aliases['fedora-1-i386-core'] = ('f1c', 'fc1', )
 
-# Fedora 1 Core with updates
+# Fedora Core 1 with updates
 packages['fedora-1-i386-updates'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-updates'] = {
     'fedora-1-i386': ('core', 'updates', )
@@ -466,7 +468,7 @@ sourceslist['fedora-1-i386-updates'] = {
 config['fedora-1-i386-updates'] = {}
 aliases['fedora-1-i386-updates'] = ('f1u', )
 
-# Fedora 1 Core with GStreamer
+# Fedora Core 1 with GStreamer
 packages['fedora-1-i386-gstreamer'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-gstreamer'] = {
     'fedora-1-i386': ('os', 'gstreamer-deps', 'gstreamer')
@@ -481,7 +483,7 @@ sourceslist['fedora-1-i386-gstreamer-deps'] = {
 config['fedora-1-i386-gstreamer-deps'] = {}
 aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', 'f1gd')
 
-# Fedora 1 Core with fedora.us
+# Fedora Core 1 with fedora.us
 packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy ()
 packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-1-i386-fedora-stable'] = {
@@ -505,13 +507,21 @@ sourceslist['fedora-1-i386-fedora-unstable'] = {
 config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing']
 aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
 
-# Fedora 1 Core with freshrpms
+# Fedora Core 1 with freshrpms
 packages['fedora-1-i386-freshrpms'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-freshrpms'] = {
     'fedora-1-i386': ('core', 'freshrpms', )
 }
 config['fedora-1-i386-freshrpms'] = {}
 aliases['fedora-1-i386-freshrpms'] = ('f1fr', )
+
+# Fedora Core 1 with JPackage
+packages['fedora-1-i386-jpackage'] = packages['fedora-1-i386-updates']
+sourceslist['fedora-1-i386-jpackage'] = {
+    'fedora-1-i386': ('core', 'updates', 'jpackage-generic', 'jpackage-fc1', ),
+}
+config['fedora-1-i386-jpackage'] = {}
+aliases['fedora-1-i386-jpackage'] = ('fc1jpp', )
 
 
 ### Yellow Dog Linux 2.3 flavours

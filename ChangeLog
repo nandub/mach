@@ -1,25 +1,29 @@
+2003-12-17  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist: Add JPackage for Fedora Core 1.
+
 2003-12-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * configure.in: release 0.4.3, "Hot Water"
+	* configure.in: release 0.4.3, "Hot Water"
 
 2003-12-11  Thomas Vander Stichele <thomas at apestaart dot org>
 
-        * src/mach-helper.c: fix strstr comparison warnings
+	* src/mach-helper.c: fix strstr comparison warnings
 	* scripts/mach.in: try removing kernel from allowed duplicates
-          to fix the "can't install kernel" problem for only one kernel
+	to fix the "can't install kernel" problem for only one kernel
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * scripts/mach.in: catch CycleError and explain what happens
+	* scripts/mach.in: catch CycleError and explain what happens
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * scripts/mach.in: also pass rpm build options to .src.rpm building
+	* scripts/mach.in: also pass rpm build options to .src.rpm building
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * scripts/mach.in: applied patch from Panu Matilainen to add
-          number of CPU's on host to rpmbuild incantation
+	* scripts/mach.in: applied patch from Panu Matilainen to add
+	number of CPU's on host to rpmbuild incantation
 
 2003-12-04  Thomas Vander Stichele  <thomas at apestaart dot org>
 
@@ -29,7 +33,7 @@
 
 2003-12-02  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * scripts/mach.in: Fix some code style issues
+	* scripts/mach.in: Fix some code style issues
 
 2003-12-01  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 

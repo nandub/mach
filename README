@@ -32,21 +32,22 @@ Red Hat 7.0 and 7.1
 Red Hat 7.2 and 7.3
   - standard
   - updated
-  - with JPackage
   - with FreshRPMS
+  - with JPackage
 
 Red Hat 8.0 and 9
   - standard
   - updated
-  - with JPackage
-  - with FreshRPMS
   - with fedora.us stable, testing and unstable
+  - with FreshRPMS
+  - with JPackage
 
 Fedora 1
   - Core
   - updated
-  - with FreshRPMS
   - with fedora.us stable, testing and unstable
+  - with FreshRPMS
+  - with JPackage
 
 Dave/Dina
   - fridge
