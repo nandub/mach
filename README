@@ -155,6 +155,13 @@ TIPS & TRICKS
   which causes /home/mach/roots on my big home disk to be mounted again
   on /var/lib/mach/roots.
 
+- mach uses the host's rpm binary to manipulate the database inside the root.
+  A lot of fiddling went into this; I could find of no other way to guarantee
+  it works reliably for all target platforms.
+  As a side effect, you will have to manipulate the target's rpm database
+  using rpm and apt from outside the host.
+  The easiest way to do this is to use mach to operate on it; for example,
+  mach rpm -Uhv (rpm) will install the given rpm in the target's system.
 
 BUGS
 ----
