@@ -4,6 +4,10 @@
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+        * scripts/mach.in: catch CycleError and explain what happens
+
+2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
         * scripts/mach.in: also pass rpm build options to .src.rpm building
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
