@@ -1,3 +1,7 @@
+2003-06-02  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in: added signing and collecting of packages
+
 2003-05-29  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in: fix setup not handling arg properly
