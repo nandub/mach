@@ -5,6 +5,8 @@
 2003-12-11  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * src/mach-helper.c: fix strstr comparison warnings
+	* scripts/mach.in: try removing kernel from allowed duplicates
+          to fix the "can't install kernel" problem for only one kernel
 
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
