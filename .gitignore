@@ -26,3 +26,11 @@ _$*
 *.ln
 core
 # CVS default ignores end
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+autoregen.sh
+config.*
+configure
+mach.spec
