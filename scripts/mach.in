@@ -77,6 +77,7 @@ config = {
   'rm': '@SBINDIR@/mach-helper rm',
   'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
+  'mknod': '@SBINDIR@/mach-helper mknod',
 
   # root_*: commands run inside the build root
   'root_rpmbuild': 'rpmbuild',
@@ -1232,9 +1233,8 @@ class Root:
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
         ensure_dir (os.path.join (self.rootdir, 'dev'))
-        #FIXME: create /dev/null or install dev rpm later on
-        #os.system ('%s %s c 1 3' % (config['mknod'],
-        #                            os.path.join (self.rootdir, 'dev', 'null'))
+        os.system ('%s %s -m 666 c 1 3' % (config['mknod'],
+            os.path.join (self.rootdir, 'dev', 'null'))
         ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
