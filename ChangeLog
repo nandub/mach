@@ -1,3 +1,7 @@
+2003-12-11  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * src/mach-helper.c: fix strstr comparison warnings
+
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
         * scripts/mach.in: also pass rpm build options to .src.rpm building
