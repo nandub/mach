@@ -29,3 +29,6 @@
 		in file libc.so.6 with link time reference
 		SuSE 8.1 would need the pam-modules package in "base" but
 		installing it fails due to the same relocation error.
+* MEDIUM:	"rpm -q --specfile" should be run inside the build root (or
+		perhaps using "rpm --root" would suffice) in order to
+		properly use distro/root specific macros.
