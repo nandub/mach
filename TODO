@@ -18,3 +18,4 @@
 * MEDIUM:	make sure we don't rebuild binary rpms :)
 * EASY:		allow people to specify an alternate location for a root
 * EASY:		bash completion
+* EASY:		unlock root on ctrl-c interrupt

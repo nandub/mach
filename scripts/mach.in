@@ -796,13 +796,17 @@ class Root:
                 try:
         	    self.aptget ("update")
                     self.aptget ('install -y %s' % buildreqs, True)
+                    # FIXME: build-dep would be nice but only works on a pkg
+                    # in the rpm-src tree apparently
+                    #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
                 except Root.Error:
                     sys.stderr.write ('Cannot build %s\n' % srpmname)
+                    sys.stderr.write ('ERROR: could not install buildreqs %s, expect a build failure' % buildreqs)
                     #continue
                     #FIXME: error code was never returned
                     #raise self.Error, "something went wrong building SRPM"
-                    self.unlock()
-                    sys.exit (1)
+                    #self.unlock()
+                    #sys.exit (1)
 
             # get the name and create the place where to store results
             h = pkgs[name]['header']
