@@ -824,9 +824,8 @@ class Root:
             newpath = os.path.join (self.rootdir, 'tmp', srpmname)
             try:
                 urlgrab (path, newpath)
-            except IOError:
+            except:
                 raise self.Error, "Can't find %s" % path
-                return False
             srpm = SRPM (newpath, join_quoted (options))
 
             spec = srpm.specname
@@ -1467,8 +1466,9 @@ def urlgrab (url, filename):
     opener = urllib.URLopener ()
     try:
         (t, h) = opener.retrieve (url, filename)
-    except (IOError, errno, errmsg):
-        sys.stderr.write ("Couldn't retrieve %s - %s\n" % (url, errmsg))
+    except IOError, e:
+        sys.stderr.write ("Couldn't retrieve %s:\n%s\n" % (url, e))
+        raise e
 
     d = None
     try:

@@ -1,3 +1,8 @@
+2004-07-10  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in: Fix urlgrab exception handling and syntax,
+	we may get a HTTPException which does not fit into a 2-tuple.
+
 2004-07-05  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/Makefile.am: Include suse-90-i386 in dist.
