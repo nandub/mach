@@ -32,8 +32,8 @@ sourceslist['redhat-80-i386-updates'] = {
     'redhat-80-i386': ('os', 'updates', )
 }
 sourceslist['redhat-80-i386-gstreamer'] = {
-    'redhat-80-i386': ('os', 'updates', 'gstreamer-deps', 'gstreamer')
+    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
 }
 sourceslist['redhat-80-i386-gstreamer-deps'] = {
-    'redhat-80-i386': ('os', 'updates', 'gstreamer-deps')
+    'redhat-80-i386': ('os', 'gstreamer-deps')
 }

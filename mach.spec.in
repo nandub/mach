@@ -3,7 +3,7 @@ Version:        @VERSION@
 Release:        @RELEASE@
 Summary:        make a chroot.
 
-Group:          System
+Group:          Applications/System
 License:	GPL
 URL:            http://thomas.apestaart.org/projects/mach
 Source:         %{name}-%{version}.tar.gz
@@ -55,6 +55,17 @@ install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/result
 #      < %{_datadir}/%{name}/sudoers.patch > /dev/null 2>&1
 #[ $? == 0 ] || \
 #  echo "Adding mach commands to %{_sysconfdir}/sudoers failed !"
+
+%preun
+if [ "$1" = 1 ];
+then
+  # last removal
+  # be a good boy and clean out the dirs we filled with junk
+  rm -rf %{_localstatedir}/cache/mach/*
+  rm -rf %{_localstatedir}/tmp/mach/packages/*
+  rm -rf %{_localstatedir}/tmp/mach/roots/*
+  rm -rf %{_localstatedir}/tmp/mach/result/*
+fi
 
 %postun
 if [ "$1" = 0 ];

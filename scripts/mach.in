@@ -4,7 +4,7 @@
 #
 # script to set up a chroot using packages and optionally perform builds in it
 
-import sys, os, getopt, string, commands, urllib, shutil
+import sys, os, getopt, string, commands, urllib, shutil, time, fcntl
 import rpm # FIXME: find out what rpm version we need !
 
 # make sure True and False constants exist
@@ -29,6 +29,7 @@ Commands:
   rebuild			rebuild a .src.rpm
   setup				sets up the root for a particular purpose
   status			show status of mach roots
+  unlock			override root lock
 '''
 
 # read default configuration
@@ -40,6 +41,7 @@ config = {
   'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
 
   'force': 0,
+  'check': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
   'chroot': 'sudo /usr/sbin/chroot',
@@ -68,16 +70,63 @@ file = '@SYSCONFDIR@/mach/apt'
 execfile (file)
 
 # list of allowed commands
-allowed_commands = ('chroot', 'clean', 'rebuild', 'setup', 'status')
+allowed_commands = ('check', 'chroot', 'clean', 'rebuild', 'setup', 'status',
+                    'unlock')
 
 ### helper functions
 
-# execute the given command in the chroot
-def do_chroot (config, command):
+# run a command, opening a pty and returning fd and pid
+def pty_popen (cmd):
+    pid, fd = os.forkpty ()
+    if pid == 0:
+        os.execl ('/bin/sh', 'sh', '-c', cmd)
+    else:
+        return os.fdopen (fd), pid
+
+# run a command and give a progress spinner that regularly advances
+# delta gives the number of secs between each spin iteration
+# jump is the number of iterations before jumping one dot further
+def do_progress (cmd, delta = 0.1, jump = 60):
+    progress = '/-\|'
+    i = 0
+    timestamp = time.time ()
+    running = 1
+    output = []
+    (fdin, pid) = pty_popen (cmd)
+    fcntl.fcntl (fdin, fcntl.F_SETFL, os.O_NONBLOCK) # don't block input
+    sys.stdout.write ('|')
+    while running:
+        try:
+            block = fdin.read ()
+            output.append (block)
+        except IOError:
+            pass
+        if time.time () > timestamp + delta:
+            timestamp = time.time ()
+            i = i + 1
+            sys.stdout.write ('\b' + progress[i % len (progress)])
+            if (i > jump):
+                i = 0
+                sys.stdout.write ('\b.-')
+            sys.stdout.flush ()
+        time.sleep (0.1)
+        try:
+            (dip, status) = os.waitpid (pid, os.WNOHANG)
+        except OSError:
+            running = 0
+    if (status != 0):
+        sys.stdout.write ('\b!\n')
+        print string.join (output)
+    else: 
+        sys.stdout.write ('\b.\n')
+    return status
+
+# execute the given command in the chroot; possibly with progress bar
+def do_chroot (config, command, progress = False):
     root = get_config_dir (config, 'root')
     cmd = '%s %s %s' % (config['chroot'], root, command)
     debug ("Executing %s" % cmd)
-    return os.system (cmd)
+    return do_progress (cmd)
 
 # get a header from a path to a local src.rpm; or False if no header
 def get_header (path):
@@ -195,6 +244,24 @@ def get_state (config, state):
         return statedir + '/' + state
     return
 
+# check the given package list and remove all packages that aren't in this list
+def check_package_list (config, list):
+    debug ("checking package list against snapshot")
+    root = get_config_dir (config, 'root')
+    cmd = 'rpm --root %s -qa | diff - %s > /dev/null 2>&1' % (root, list)
+    debug ("running " + cmd)
+    if os.system (cmd) == 0:
+        # no differences
+        return True
+    cmd = "rpm --root %s -qa | grep -v -f %s - | tr '\n' ' '" % (root, list)
+    packages = commands.getoutput (cmd)
+    # FIXME: how many ?
+    sys.stdout.write ("Removing packages ...")
+    if not do_chroot (config, "rpm -ev " + packages, True):
+        sys.stderr.write ("Error removing packages\n")
+        return False
+    return True
+
 # prepare a given root if not done yet; this ensures that a number of necessary
 # files exist in the root
 def setup_prep (config, args):
@@ -227,10 +294,12 @@ def setup_prep (config, args):
 # install a set of packages
 # called by base and apt
 def install (config, set):
+    debug ("Installing package set %s" % set)
     statefile = get_config_dir (config, 'state') + '/' + set
+    debug ("Checking statefile %s" % statefile)
     if os.path.exists (statefile):
+        debug ("statefile exists")
         return True
-    print "Installing %s packages ..." % set
     root = get_config_dir (config, 'root')
     debug ("Root dir %s" % root)
     ensure_dir (root + '/var/lib/rpm')
@@ -240,7 +309,8 @@ def install (config, set):
                                + config['packagedir'] + '/')
     command = '%s --root %s -Uhv %s --nodeps --noorder --replacepkgs' % (config ['rpm'], root, rpms)
     debug ("Executing %s" % command)
-    os.system (command)
+    sys.stdout.write ("Installing %s packages ..." % set)
+    do_progress (command)
     open (statefile, 'w')
     return True
 
@@ -252,16 +322,16 @@ def setup_base (config, args):
 # install packages needed for apt and force an apt-update
 def setup_apt (config, args):
     if not install (config, 'apt'):
+        debug ("oops: couldn't install apt packages")
         return False
     # trigger an apt-get update
-    root = get_config_dir (config, 'root')
-
-def setup_root (config, args):
     mount (config, args)
     rootdir = get_config_dir (config, 'root')
     create_sources_list (config, get_sources_list (config))
-    os.system ('%s %s apt-get update' % (config['chroot'], rootdir))
-    os.system ('%s %s apt-get -f upgrade -y' % (config['chroot'], rootdir))
+    sys.stdout.write ('Updating apt ...')
+    do_progress ('%s %s apt-get update' % (config['chroot'], rootdir))
+    sys.stdout.write ('Forcing consistency ...')
+    do_progress ('%s %s apt-get -f upgrade -y' % (config['chroot'], rootdir))
     umount (config, args)
     return True
 
@@ -269,11 +339,13 @@ def setup_root (config, args):
 def setup_build (config, args):
     statefile = get_config_dir (config, 'state') + '/build'
     if os.path.exists (statefile):
-        return True
+        # see if we need to revert to the given state
+        return check_package_list (config, statefile)
     mount (config, args)
     root = get_config_dir (config, 'root')
-    # install pacakges
-    os.system ('%s %s apt-get install -y rpm-devel rpm-build make gcc tar gzip patch unzip diffutils' % (config['chroot'], root))
+    # install packages
+    sys.stdout.write ('Installing rpm build packages ...')
+    do_chroot (config, 'apt-get install -y rpm-devel rpm-build make gcc tar gzip patch unzip diffutils', True)
     # create dir structure and rpmmacros
     macros = open (root + '/tmp/macros', 'w')
     macros.write ('%_topdir /usr/src/rpm')
@@ -315,15 +387,23 @@ def umount (config, args):
     os.remove (mountfile)
 
 # check if everything is in order to actually do stuff
-def check (config):
+def sanity_check (config):
     # check if partial dir exists
     partial = config['aptcachedir'] + '/partial'
     if not os.path.exists (partial):
         os.makedirs (partial) 
+    return True
 
 def check_packages (config):
+    # if we already checked once, then we'll assume it's fine unless
+    # a check was forced with -c or --check
+    # FIXME: this doesn't survive mach clean, is that a problem ?
+    checkfile = get_config_dir (config, 'state') + '/check'
+    if os.path.exists (checkfile) and not config['check']:
+        return True
+
     # check if all packages are present
-    print "Checking bootstrap packages..."
+    print "Checking bootstrap packages ..."
     for pkg in config['packages']['base'] + config['packages']['apt']:
         path = config['packagedir'] + '/' + pkg
         if not config['packages']['download'].has_key (pkg):
@@ -344,10 +424,18 @@ def check_packages (config):
             if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
                 sys.stderr.write ('error: failed downloading %s\n' % url)
                 return False
+    open (checkfile, 'w')
     return True
  
  
 # implementation of commands
+
+# forcibly check packages
+def check (config, args):
+    # force package check
+    config['check'] = 1
+    if check_packages (config):
+        print "Everything ok."
 
 # chroot into root
 def chroot (config, args):
@@ -371,9 +459,8 @@ def clean (config, args):
     os.system ("rm -rf %s" % statedir)
     # get a list of files and dirs in the root
     files = string.join (os.listdir (rootdir))
-    command = "%s %s rm -rf %s" % (config['chroot'], rootdir, files)
-    debug ("executing %s" % command)
-    os.system (command)
+    sys.stdout.write ('Cleaning out root ...')
+    do_chroot (config, 'rm -rf %s' % files, True)
     os.rmdir (rootdir)
 
 # rebuild a src rpm
@@ -391,7 +478,9 @@ def rebuild (config, args):
     for path in args:
 	# resolve path to basename (without dirs)
         srpm = os.path.basename (path)
+        print "Processing %s" % srpm
         newpath = root + '/tmp/' + srpm
+        print "Getting %s" % srpm
         urllib.urlretrieve (path, newpath)
 
         # figure out the build requirements
@@ -401,7 +490,9 @@ def rebuild (config, args):
         if buildreqs == False:
             unlock (config, args)
             return False
-        do_chroot (config, 'apt-get install -y %s' % string.join (buildreqs))
+        sys.stdout.write ('Installing BuildRequires ...')
+        do_chroot (config, 'apt-get install -y %s' % string.join (buildreqs),
+                   True)
 
         # get the name and create the place where to store results
         name = header[rpm.RPMTAG_NAME]
@@ -411,8 +502,9 @@ def rebuild (config, args):
         resultdir = get_config_dir (config, 'result') + '/' + fullname
         ensure_dir (resultdir)
         # rebuild binary rpm from the src rpm
-        if do_chroot (config, 'rpmbuild --rebuild /tmp/%s > %s 2>&1'
-                              % (srpm, resultdir + '/rpm.log')):
+        sys.stdout.write ("Building %s ..." % srpm)
+        if do_chroot (config, 'rpmbuild --rebuild /tmp/%s 2>&1 | tee %s'
+                              % (srpm, resultdir + '/rpm.log'), True):
             sys.stderr.write ("ERROR: something went wrong building this one\n")
             sys.stderr.write ("ERROR: last 10 lines of build log:\n")
             command = 'tail -n 10 %s/rpm.log' % resultdir
@@ -420,25 +512,36 @@ def rebuild (config, args):
             unlock (config, args)
             return False
         # reinstall and repackage src rpm
+        sys.stdout.write ("Repackaging %s ..." % srpm)
         do_chroot (config, 'rpm -Uhv /tmp/%s' % srpm)
-        if do_chroot (config, 'rpmbuild -ba /usr/src/rpm/SPECS/%s >> %s 2>&1'
-                              % (spec, resultdir + '/rpm.log')):
+        if do_chroot (config, 'rpmbuild -bs /usr/src/rpm/SPECS/%s >> %s 2>&1'
+                              % (spec, resultdir + '/rpm.log'), True):
             print "ERROR: something went wrong repackaging SRPM"
 
         # analyze log file and move all of the rpms listed as Wrote:
         rpms = get_rpms_from_log (resultdir + '/rpm.log')
+        print "Collecting results from %s" % srpm
         for file in rpms:
             # FIXME: a more python-like solution ?
             shutil.copy (root + '/' + file, resultdir)
             do_chroot (config, 'rm ' + file)
         print "Build of %s succeeded." % fullname
         
+    print "Build done."
     unlock (config, args)
     return True
 
 # setup chroot
 def setup (config, args):
-    targets = ('base', 'apt', 'root', 'build')
+    targets = ('prep', 'base', 'apt', 'build')
+    if not args:
+        args = ['build',] # default to build
+
+    # see if something real given to setup
+    if args[0] not in targets:
+        sys.stderr.write ("error: don't know how to setup %s" % args[0])
+        unlock (config, args)
+
     debug ("locking root")
     if not lock (config, args):
         return False
@@ -447,15 +550,11 @@ def setup (config, args):
         unlock (config, args)
         sys.exit (1)
 
-    # see if something was given to setup
-    if args[0] not in targets:
-        sys.stderr.write ("error: don't know how to setup %s" % args[0])
-        unlock (config, args)
         return False
 
     for target in targets:
         debug ("setting up target %s" % target)
-        if not globals ()['setup_' target] (config, args):
+        if not globals ()['setup_' + target] (config, args):
             sys.stderr.write ("error: couldn't setup target %s\n" % target)
             unlock (config, args)
             return False
@@ -532,7 +631,7 @@ def main (config, args):
     config['root'] = root
 
     # check if everything is ready to go
-    check (config)
+    sanity_check (config)
 
     # DEBUG DEBUG DEBUG:
     #get_sources_list (config)
@@ -548,11 +647,7 @@ def main (config, args):
     debug ("running %s" % command)
     
     if command in allowed_commands:
-        try:
-            globals ()[command] (config, args)
-        except KeyError:
-            unlock (config, args)
-            raise SystemExit, "Command '%s' not implemented." % command
+        globals ()[command] (config, args)
     else:
         sys.stderr.write ("No command '%s'\n" % command)
     #try:
