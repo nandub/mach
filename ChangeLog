@@ -8,6 +8,10 @@
 	* scripts/mach.in (_setup_build): Ensure that /etc/rpm exists so
 	copying our macros works as expected.
 
+	* scripts/mach.in (rebuild): Don't bother ordering the order and
+	interdependencies for packages from the CLI if only one is given;
+	avoids one potentially troublesome "rpm --specfile" call.
+
 2003-12-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Don't fail if package has no build

@@ -767,53 +767,56 @@ class Root:
             pkgs[name]['spec'] = spec
      
         # now figure out build order based on buildrequires of each pkg
-        deps = [] # list of pkg, dep pairs
-        for pkg in pkgs.keys ():
-            debug ("Processing %s for build order" % pkgs[pkg]['srpmname'])
-            # get results from this package
-            results = pkgs[pkg]['srpm'].results ()
-            # figure out the build requirements and add
-            # pkg -> (results) and buildreq -> (results) to chain
-            for result in results:
-                if result != pkg:
-                    debug ("adding %s depends on pkg %s" % (result, pkg))
-                    deps.append ((result, pkg))
-                if not pkgs[pkg]['buildreqs']: continue
-                for buildreq in pkgs[pkg]['buildreqs']:
-                    if (result == buildreq):
-                        sys.stderr.write ("WARNING: package %s BuildRequires: itself, packaging error !" % result)
-                    else:
-                        debug ("adding %s depends on buildreq %s" % (result, buildreq))
-                        deps.append ((result, buildreq))
-    
-        debug ("topological input: ")
-        debug (deps)
-        debug ("topological output: ")
-        try:
-            sorted = topological_sort (deps)
-        except CycleError:
-            sys.stderr.write ('''
-ERROR: You've hit a dependency loop in the packages you are trying to build.
-       This means that the BuildRequires: of the various packages form a loop.
-       You can work around this by breaking the loop in two pieces, and first
-       building the one chain, then the other, then the one again based on
-       the other's new packages.''')
+        if len(pkgs) > 1:
+            deps = [] # list of pkg, dep pairs
+            for pkg in pkgs.keys ():
+                debug ("Processing %s for build order" % pkgs[pkg]['srpmname'])
+                # get results from this package
+                results = pkgs[pkg]['srpm'].results ()
+                # figure out the build requirements and add
+                # pkg -> (results) and buildreq -> (results) to chain
+                for result in results:
+                    if result != pkg:
+                        debug ("adding %s depends on pkg %s" % (result, pkg))
+                        deps.append ((result, pkg))
+                    if not pkgs[pkg]['buildreqs']: continue
+                    for buildreq in pkgs[pkg]['buildreqs']:
+                        if (result == buildreq):
+                            sys.stderr.write ("WARNING: package %s BuildRequires: itself, packaging error !" % result)
+                        else:
+                            debug ("adding %s depends on buildreq %s" % (result, buildreq))
+                            deps.append ((result, buildreq))
 
-            exit (config)
-        sorted.reverse ()
-        debug ("order %s" % sorted)
-        # now scrub packages not up for build from order
-        order = []
-        for pkg in sorted:
-            if pkg in pkgs.keys ():
-                order.append (pkg)
-        debug ("(without packages up for build) order %s" % order)
-    
-        # now make sure all packages given are up for build
-        for pkg in pkgs.keys ():
-            if pkg not in order:
-                order.append (pkg)
-        debug ("(with all packages up for build) order %s" % order)
+            debug ("topological input: ")
+            debug (deps)
+            debug ("topological output: ")
+            try:
+                sorted = topological_sort (deps)
+            except CycleError:
+                sys.stderr.write ('''
+    ERROR: You've hit a dependency loop in the packages you are trying to build.
+           This means that the BuildRequires: of the various packages form a loop.
+           You can work around this by breaking the loop in two pieces, and first
+           building the one chain, then the other, then the one again based on
+           the other's new packages.''')
+
+                exit (config)
+            sorted.reverse ()
+            debug ("order %s" % sorted)
+            # now scrub packages not up for build from order
+            order = []
+            for pkg in sorted:
+                if pkg in pkgs.keys ():
+                    order.append (pkg)
+            debug ("(without packages up for build) order %s" % order)
+
+            # now make sure all packages given are up for build
+            for pkg in pkgs.keys ():
+                if pkg not in order:
+                    order.append (pkg)
+            debug ("(with all packages up for build) order %s" % order)
+        else:
+            order = pkgs
     
         # now build
         self.mount ()
