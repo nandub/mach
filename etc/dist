@@ -289,22 +289,27 @@ aliases['redhat-80-i386-gstreamer-deps'] = ('rh8gd', 'rh80gd')
 packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386-updates'].copy ()
 packages['redhat-80-i386-fedora-stable']['build'] = packages['redhat-80-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['redhat-80-i386-fedora-stable'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable')
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-updates']['redhat-80-i386'] +
+    ('fedora-stable', )
 }
 config['redhat-80-i386-fedora-stable']  = { 'release': 'rh80' }
 aliases['redhat-80-i386-fedora-stable'] = ('rh8fs', 'rh80fs')
 
 packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
 sourceslist['redhat-80-i386-fedora-testing'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-fedora-stable']['redhat-80-i386'] +
+    ('fedora-testing', )
 }
 config['redhat-80-i386-fedora-testing']  = config['redhat-80-i386-fedora-stable']
 aliases['redhat-80-i386-fedora-testing'] = ('rh8ft', 'rh80ft')
 
 packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
 sourceslist['redhat-80-i386-fedora-unstable'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
-                      'fedora-unstable')
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-fedora-testing']['redhat-80-i386'] +
+    ('fedora-unstable', )
 }
 config['redhat-80-i386-fedora-unstable']   = config['redhat-80-i386-fedora-testing']
 aliases['redhat-80-i386-fedora-unstable']  = ('rh8fu', 'rh80fu')
@@ -389,22 +394,27 @@ aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', 'rh90gd')
 packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386-updates'].copy ()
 packages['redhat-9-i386-fedora-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['redhat-9-i386-fedora-stable'] = {
-    'redhat-9-i386': ('os', 'updates', 'fedora-stable')
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-updates']['redhat-9-i386'] +
+    ('fedora-stable', )
 }
 config['redhat-9-i386-fedora-stable']  = { 'release': 'rh90' }
 aliases['redhat-9-i386-fedora-stable'] = ('rh9fs', 'rh90fs')
 
 packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386-fedora-stable']
 sourceslist['redhat-9-i386-fedora-testing'] = {
-    'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-fedora-stable']['redhat-9-i386'] +
+    ('fedora-testing', )
 }
 config['redhat-9-i386-fedora-testing']  = config['redhat-9-i386-fedora-stable']
 aliases['redhat-9-i386-fedora-testing'] = ('rh9ft', 'rh90ft')
 
 packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testing']
 sourceslist['redhat-9-i386-fedora-unstable'] = {
-    'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
-                      'fedora-unstable')
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-fedora-testing']['redhat-9-i386'] +
+    ('fedora-unstable', )
 }
 config['redhat-9-i386-fedora-unstable']  = config['redhat-9-i386-fedora-testing']
 aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', 'rh90fu')
@@ -487,22 +497,27 @@ aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', 'f1gd')
 packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy ()
 packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-1-i386-fedora-stable'] = {
-    'fedora-1-i386': ('core', 'updates', 'fedora-stable')
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
+    ('fedora-stable', )
 }
 config['fedora-1-i386-fedora-stable']  = { 'release': '1' }
 aliases['fedora-1-i386-fedora-stable'] = ('f1fs', )
 
 packages['fedora-1-i386-fedora-testing'] = packages['fedora-1-i386-fedora-stable']
 sourceslist['fedora-1-i386-fedora-testing'] = {
-    'fedora-1-i386': ('core', 'updates', 'fedora-stable', 'fedora-testing')
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-fedora-stable']['fedora-1-i386'] +
+    ('fedora-testing', )
 }
 config['fedora-1-i386-fedora-testing']  = config['fedora-1-i386-fedora-stable']
 aliases['fedora-1-i386-fedora-testing'] = ('f1ft', )
 
 packages['fedora-1-i386-fedora-unstable'] = packages['fedora-1-i386-fedora-testing']
 sourceslist['fedora-1-i386-fedora-unstable'] = {
-    'fedora-1-i386': ('core', 'updates', 'fedora-stable', 'fedora-testing',
-                      'fedora-unstable')
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-fedora-testing']['fedora-1-i386'] +
+    ('fedora-unstable', )
 }
 config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing']
 aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
