@@ -1,4 +1,6 @@
-configdir = $(sysconfdir)/mach
-config_DATA = conf dist
+SUBDIRS = dist.d
 
-EXTRA_DIST = conf.in dist
+configdir = $(sysconfdir)/mach
+config_DATA = conf location
+
+EXTRA_DIST = conf.in location

@@ -107,11 +107,12 @@ fi
 dnl output stuff
 AC_OUTPUT(
 Makefile
-scripts/Makefile
-scripts/mach
 etc/Makefile
-src/Makefile
 etc/conf
+etc/dist.d/Makefile
 m4/Makefile
 mach.spec
+scripts/Makefile
+scripts/mach
+src/Makefile
 )

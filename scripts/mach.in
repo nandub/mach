@@ -85,17 +85,31 @@ DEBUG = 0
 file = '@SYSCONFDIR@/mach/conf'
 execfile (file)
 
-# read apt information
-aptsources = {}
-#file = '@SYSCONFDIR@/mach/apt'
-#execfile (file)
-
 # read dist information
+
+# clear stuff
+aptsources = {}
 packages = {}
 sourceslist = {}
 aliases = {}
-file = '@SYSCONFDIR@/mach/dist'
-execfile (file)
+
+# first, get locations
+file = '@SYSCONFDIR@/mach/location'
+try:
+    execfile (file)
+except:
+    sys.stderr.write ("Could not read location file %s\n" % file)
+    sys.exit (1)
+
+
+# next, get all of the dist.d files
+dists = os.listdir ('@SYSCONFDIR@/mach/dist.d')
+for file in dists:
+    try:
+        execfile (os.path.join ('@SYSCONFDIR@', 'mach', 'dist.d', file))
+    except:
+        sys.stderr.write ("Could not read dist file %s\n" % file)
+        sys.exit (1)
 
 # read user configuration
 file = os.path.join (os.environ['HOME'], '.machrc')
@@ -1264,21 +1278,36 @@ clear Dir::Bin::scripts; // do not execute lua scripts
     def _setup_base (self):
         self._install ('base')
 
-    def __writeMacros(self, file):
-        for mac in self.config.get('macros', {}).items():
-            file.write('%%%-19s %s\n' % (mac))
-
     def _check_revert_build (self):
         # see if we need to revert to the build package list
         statefile = os.path.join (self.statedir, 'build')
         self.check_package_list (statefile)
 
+    def _write_macros(self, file):
+        # write macros from configuration to given file
+        for mac in self.config.get ('macros', {}).items ():
+            file.write ('%%%-19s %s\n' % (mac))
+
     def _setup_build (self):
         "set up a root for rpm building"
+        # first do the stuff that we want to ensure gets done very time,
+        # for example when config file has changed
+
+        # create rpm macros
+        debug ("writing macros file")
+        macros = open (self.rootdir + '/tmp/macros', 'w')
+        macros.write ("%_topdir /usr/src/rpm\n")
+        macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
+        macros.write ("%_unpackaged_files_terminate_build 1\n")
+        macros.write ("%_missing_doc_files_terminate_build 1\n")
+        self._write_macros (macros)
+        macros.close ()
+        self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
+
+        # now check if we're already good
         if self.get_state ('build'):
             self._check_revert_build ()
             return
-        #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         # install packages
         self._install ('build')
@@ -1288,15 +1317,7 @@ clear Dir::Bin::scripts; // do not execute lua scripts
         self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
         self.do_chroot ("chown -R %s:%s /usr/src/rpm" % (builduser, buildgroup), fatal = True)
         self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % builduser, fatal = True)
-         # create dir structure and rpmmacros
-        macros = open (self.rootdir + '/tmp/macros', 'w')
-        macros.write ("%_topdir /usr/src/rpm\n")
-        macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
-        macros.write ("%_unpackaged_files_terminate_build 1\n")
-        macros.write ("%_missing_doc_files_terminate_build 1\n")
-        self.__writeMacros (macros)
-        macros.close ()
-        self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
+        # create dir structure
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
             self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' %s" %
                             (dir, builduser), fatal = True)

@@ -1,6 +1,19 @@
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+          move creation of macros file to before build state check,
+          so it always gets rebuilt
+	* configure.in:
+	* etc/Makefile.am:
+	* etc/location:
+	* etc/dist.d:
+	* mach.spec.in:
+          split up dist configuration file in location file with d/l
+          locations, and dist.d dist definition directory
+
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
           patch from Erik LaBianca to check for already satisfied
           buildrequires, and to strip rpmbuild() instead of (), so
           perl buildrequires can work
