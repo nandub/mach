@@ -14,6 +14,9 @@ BuildRequires:  zlib-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  freetype-devel
 BuildRequires:	SDL-devel
+# XFree86-devel is missing in SDL-devel in RH72
+BuildRequires:	XFree86-devel
+
 # the libtool in the tarball has a problem with installing binaries linked
 # against the included library
 BuildRequires:	libtool
