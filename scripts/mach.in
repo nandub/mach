@@ -1260,6 +1260,7 @@ APT {
         Fix-Broken "false";
         Ignore-Missing "false";
         Compile "false";
+        Archive-Cleanup "false";
     };
 };
 

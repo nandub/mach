@@ -1,5 +1,9 @@
 2004-07-27  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in (_setup_prep): Set Archive-Cleanup in apt.conf
+	to false in order to prevent apt > 0.5.15cnc6's "smart archive
+	cleaner" from removing cached packages.  Thanks to Panu Matilainen.
+
 	* etc/dist.d/*: Remove rpm-devel from all "build" package sets.
 
 	* etc/dist.d/suse-*: Remove everything but base, security and
