@@ -438,6 +438,7 @@ def rebuild (config, args):
 
 # setup chroot
 def setup (config, args):
+    targets = ('base', 'apt', 'root', 'build')
     debug ("locking root")
     if not lock (config, args):
         return False
@@ -445,17 +446,35 @@ def setup (config, args):
     if not check_packages (config):
         unlock (config, args)
         sys.exit (1)
-    debug ("running prep")
-    setup_prep (config, args)
-    debug ("running base")
-    setup_base (config, args)
-    debug ("running apt")
-    setup_apt (config, args)
-    debug ("running root")
-    setup_root (config, args)
-    debug ("running build")
-    setup_build (config, args)
-    debug ("unlocking root")
+
+    # see if something was given to setup
+    if args[0] not in targets:
+        sys.stderr.write ("error: don't know how to setup %s" % args[0])
+        unlock (config, args)
+        return False
+
+    for target in targets:
+        debug ("setting up target %s" % target)
+        if not globals ()['setup_' target] (config, args):
+            sys.stderr.write ("error: couldn't setup target %s\n" % target)
+            unlock (config, args)
+            return False
+        if args[0] == target:
+            break
+
+#    debug ("running prep")
+#    setup_prep (config, args)
+#    debug ("running base")
+#    setup_base (config, args)
+#    if (args[0] == base):
+#        return True
+#    debug ("running apt")
+#    setup_apt (config, args)
+#    debug ("running root")
+#    setup_root (config, args)
+#    debug ("running build")
+#    setup_build (config, args)
+#    debug ("unlocking root")
     if not unlock (config, args):
         return False
     return True
