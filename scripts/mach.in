@@ -1610,9 +1610,11 @@ def main (config, args):
         except Root.Error, message:
             sys.stderr.write ("%s\n" % message)
             root.unlock ()
+            sys.exit (1)
         except Root.ReturnValue, retval:
             sys.stderr.write ("Return value: %s\n" % retval)
             root.unlock ()
+            sys.exit (retval)
         if output:
             print output
     else:
