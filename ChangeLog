@@ -1,3 +1,9 @@
+2003-11-21  Ville Skyttä <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in (rebuild): Use a login shell in order to get a
+	sane vanilla environment (eg. /usr/X11R6/bin in $PATH).
+	Kudos to Enrico Scholz.
+
 2003-11-16  Ville Skyttä <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add a bunch of aliases for RH 8.0 and 9 repos.

@@ -848,8 +848,9 @@ class Root:
             command = 'rm /tmp/%s' % specfile
             self.do_chroot (command)
 
-            # rebuild from spec inside chroot
-            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' machbuild" % (string.join (options), specfile)
+            # rebuild from spec inside chroot, note: using a login shell
+            # in order to get a vanilla default environment
+            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (string.join (options), specfile)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding %s" % srpmname,
                                                True)
