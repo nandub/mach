@@ -199,7 +199,10 @@ class SRPM:
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
         # remove non-packagey things from buildreqs
         # currently removes everything containing ( or /
-        return filter(lambda x: not re.search("[(/]", x), buildreqs)
+        if buildreqs:
+            return filter(lambda x: not re.search("[(/]", x), buildreqs)
+        else:
+            return None
 
     def results (self):
         "returns a list of packages that can be built out if this src.rpm"
