@@ -226,7 +226,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
         retval = os.WEXITSTATUS (status)
     if (retval != 0):
         sys.stdout.write ('\b!\n')
-        sys.stderr.write ('error:\n %s\n' % string.join (output[-10:-1], "\n"))
+        sys.stderr.write ('error:\n %s\n' % string.join (output, "\n"))
     else: 
         sys.stdout.write ('\b.\n')
     return (retval, string.join (output, '\n') + '\n')
@@ -537,11 +537,17 @@ def setup_consistency (config, args):
     mount (config, args)
     rootdir = get_config_dir (config, 'root')
     srcs = get_sources_list (config)
-    srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
-    create_sources_list (config, srcs)
+    # first create a sources.list with only the first sources line
+    # this ensures glibc doesn't get upgraded from underneath apt
+    create_sources_list (config, (srcs[0], ))
     sys.stdout.write ('Updating apt ...')
     do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
     sys.stdout.write ('Forcing consistency ...')
+    do_chroot (config, "/bin/bash -c '%s -f upgrade -y'" % aptget, True)
+    create_sources_list (config, srcs)
+    sys.stdout.write ('Updating apt ...')
+    do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
+    sys.stdout.write ('Upgrading ...')
     do_chroot (config, "/bin/bash -c '%s -f upgrade -y'" % aptget, True)
     open (statefile, 'w')
     return True
@@ -586,6 +592,11 @@ def setup_build (config, args):
             sys.stdout.write ("error: could not create /usr/src/rpm/%s\n" % dir)
             unlock (config, args)
             sys.exit (1)
+
+    # this ensures that locally built RPMS are already used for apt-get
+    srcs = get_sources_list (config)
+    srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
+    create_sources_list (config, srcs) 
     for dir in ('RPMS', 'SRPMS'):
         if do_chroot (config, 'ln -s %s /usr/src/rpm/%s.mach-local' % (dir, dir)) != 0:
             sys.stdout.write ("error: could not create symlink /usr/src/rpm/%s.mach-local" % dir)
@@ -766,7 +777,9 @@ def check (config, args):
 def chroot (config, args):
     rootdir = get_config_dir (config, 'root')
     print "Entering %s" % config['root']
+    mount (config, args)
     os.system ("%s %s %s" % (config['chroot'], rootdir, string.join (args)))
+    mount (config, args)
     
 # clean up chroot
 def clean (config, args):
