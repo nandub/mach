@@ -443,7 +443,7 @@ def lock (config):
     return True
         
 # unlock a given root; removes lock file in the statedir under root
-def unlock (config):
+def unlock (config, notused=0):
     statedir = get_config_dir (config, 'state')
     lockpath = statedir + '/lock'
     if os.path.exists (lockpath):
