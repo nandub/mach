@@ -10,11 +10,14 @@
 rpmfind = 'ftp://rpmfind.net/linux/redhat/'
 freshrpms = 'http://ayo.freshrpms.net/redhat/'
 gwdg = 'http://ftp.gwdg.de/pub/linux/suse/apt/SuSE/'
+jpackage = 'http://dl.sf.net/jpackage/direct_download/1.5/'
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
     'os':      'rpm http://ayo.freshrpms.net redhat/7.2/i386 os',
     'updates': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 updates',
+    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
+    'jpackage-rh72':    'rpm ' + jpackage + ' redhat-7.2 free',
 }
 
 #   Red Hat Linux 7.2
@@ -37,11 +40,19 @@ sourceslist['redhat-72-i386-updates'] = {
     'redhat-72-i386': ('os', 'updates', )
 }
 
+# Red Hat Linux 7.2 with JPackage
+packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates']
+sourceslist['redhat-72-i386-jpackage'] = {
+    'redhat-72-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh72', )
+}
+
 
 ### Red Hat Linux 7.3 flavours
 aptsources['redhat-73-i386'] = {
     'os': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 os',
     'updates': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 updates',
+    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
+    'jpackage-rh73':    'rpm ' + jpackage + ' redhat-7.3 free',
 }
 
 # Red Hat Linux 7.3
@@ -60,6 +71,13 @@ sourceslist['redhat-73-i386-updates'] = {
     'redhat-73-i386': ('os', 'updates', )
 }
 
+# Red Hat Linux 7.3 with JPackage
+packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
+sourceslist['redhat-73-i386-jpackage'] = {
+    'redhat-73-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh73', )
+}
+
+
 ### Red Hat Linux 8.0 flavours
 aptsources['redhat-80-i386'] = {
     'os': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 os',
@@ -74,6 +92,10 @@ aptsources['redhat-80-i386'] = {
         'rpm http://download.fedora.us fedora/redhat/8.0/i386 testing',
     'fedora-unstable': 
         'rpm http://download.fedora.us fedora/redhat/8.0/i386 unstable',
+    'jpackage-generic':
+        'rpm ' + jpackage + ' generic free',
+    'jpackage-rh80':
+        'rpm ' + jpackage + ' redhat-8.0 free',
 }
 
 # Red Hat Linux 8.0
@@ -121,6 +143,12 @@ sourceslist['redhat-80-i386-fedora-unstable'] = {
                       'fedora-unstable')
 }
 
+# Red Hat Linux 8.0 with JPackage
+packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
+sourceslist['redhat-80-i386-jpackage'] = {
+    'redhat-80-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh80', ),
+}
+
 
 ### Red Hat Linux 9 flavours
 aptsources['redhat-9-i386'] = {
@@ -136,6 +164,10 @@ aptsources['redhat-9-i386'] = {
         'rpm http://download.fedora.us fedora/redhat/9/i386 testing',
     'fedora-unstable': 
         'rpm http://download.fedora.us fedora/redhat/9/i386 unstable',
+    'jpackage-generic':
+        'rpm ' + jpackage + ' generic free',
+    'jpackage-rh9':
+        'rpm ' + jpackage + ' redhat-9 free',
 }
 
 #   Red Hat Linux 9
@@ -181,6 +213,12 @@ packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testi
 sourceslist['redhat-9-i386-fedora-unstable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
+}
+
+# Red Hat Linux 9 with JPackage
+packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
+sourceslist['redhat-9-i386-jpackage'] = {
+    'redhat-9-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh9', ),
 }
 
 
