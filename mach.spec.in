@@ -59,8 +59,10 @@ if [ "$1" == 0 ];
 then
   # last removal
   # be a good boy and clean out the dirs we filled with junk
-  rm -rf %{_localstatedir}/lib/mach/states
-  rm -rf %{_localstatedir}/lib/mach/roots
+  rm -rf %{_localstatedir}/lib/mach/states/*
+  rm -rf %{_localstatedir}/lib/mach/roots/*
+  rmdir %{_localstatedir}/lib/mach/states > /dev/null 2>&1 || :
+  rmdir %{_localstatedir}/lib/mach/roots > /dev/null 2>&1 || :
   rm -rf %{_localstatedir}/tmp/mach
   rm -rf %{_localstatedir}/cache/mach
 fi
