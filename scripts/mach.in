@@ -598,6 +598,17 @@ class Root:
             # copy all necessary files to /tmp in root, then chroot to mv them 
             for file in files:
                 debug ("Getting file %s into SOURCES" % file)
+                # sanity check the given file using "file"
+                command = "file -b -i -z %s" % file
+		if file[-7:] == ".tar.gz":
+                    line = os.popen (command).readline ()
+                    if not line == 'application/x-tar (application/x-gzip)':
+                        raise self.Error, "file doesn't think %s is a tar.gz !" % file
+		# didn't seem to work on MPlayer 0.91 tar.bz2 :(
+		#if file[-8:] == ".tar.bz2":
+                #    line = os.popen (command).readline ()
+                #    if not line == 'application/x-tar       gnu (application/octet-stream)':
+                #        raise self.Error, "file doesn't think %s is a tar.bz2 !" % file
                 shutil.copy2 (file, os.path.join (self.rootdir, 'tmp'))
                 self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
@@ -783,6 +794,7 @@ class Root:
                 debug ("BuildRequires: %s" % buildreqs)
                 sys.stdout.write ('Installing BuildRequires ...')
                 try:
+        	    self.aptget ("update")
                     self.aptget ('install -y %s' % buildreqs, True)
                 except Root.Error:
                     sys.stderr.write ('Cannot build %s\n' % srpmname)
