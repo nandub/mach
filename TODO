@@ -33,3 +33,6 @@
 * EASY:		change --enable- to --with- in configure ?
 * MEDIUM:	check if we can have the actual rpmbuild command use
 	 	--root instead of doing it ourselves
+* MEDIUM:	<ensc> thomasvs: perhpas by adding '--promoteepoch' when it
+                is needed for the roots; but this is not backward compatible
+                and you must detect if rpm is supporting this option
