@@ -1,3 +1,10 @@
+2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
+
+	* scripts/mach.in: fix some places where / was forgotten now that
+                           $HOME is set
+	* src/mach-helper.c: (do_command): added HOME env var because fc-cache
+                             segfaults if it's not set
+
 2003-06-02  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in: added signing and collecting of packages

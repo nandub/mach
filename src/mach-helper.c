@@ -122,7 +122,9 @@ void
 do_command (const char *filename, char *const argv[])
 {
   /* do not trust user environment */
-  char *env[] = { "PATH=/bin:/usr/bin:/usr/sbin", NULL };
+  char *env[] = { "PATH=/bin:/usr/bin:/usr/sbin",
+                  "HOME=/root",
+                  NULL };
   int retval;
   char **arg;
 
