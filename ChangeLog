@@ -1,3 +1,14 @@
+2004-01-30  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* README:
+	* etc/dist:
+	  add RH80/9 with livna
+
+2004-01-30  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist:
+          add Fedora 1 Core with livna
+
 2004-01-09  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* configure.in: Use AC_ARG_ENABLE instead of AC_ARG_WITH as it
