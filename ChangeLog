@@ -5,6 +5,10 @@
 		- added KeyboardInterrupt to catch ctrl-c
                 - reinstate proc
                 - remove bootstrap checks and code
+		- make minimal and base targets
+                - remove consistency target
+                - check for su before chrooting
+	* etc/dist: add/fix minimal, base and build package sets
 
 2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
 

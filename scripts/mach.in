@@ -43,8 +43,8 @@ Commands:
                                 (passes options given to rpmbuild)
   setup				sets up the root for a particular purpose
         prep                         preparation before package install
-        base                         base set of rpms
-        consistency                  internally consistent install
+        minimal                      minimal set of rpms (bash, glibc)
+        base                         base set of rpms for minimal functionality
         build                        everything to build rpms
   status			show status of mach roots
   unlock			override root lock
@@ -516,11 +516,10 @@ class Root:
                | grep -v -f %s - \
                | tr '\n' ' '" % (root, qfmt, listfile)
         packages = commands.getoutput (cmd)
-        # FIXME: how many ?
-        sys.stdout.write ("Removing packages ...")
+        # FIXME: how many ? print the number
         if not packages:
-           print
            return True
+        sys.stdout.write ("Removing packages ...")
         self.rpm ("-ev %s" % packages, self.progress ())
         return True
     
@@ -652,12 +651,22 @@ class Root:
 
     # chroot into root
     def chroot (self, arg):
-        print "Entering %s" % self.rootdir
         self.mount ()
-        if arg:
-             os.system ("%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, arg))
+        # a minimal system might not have su, yikes
+        if not os.path.exists (os.path.join (self.rootdir, 'bin', 'su')):
+            if arg:
+                print "No su in root, can't execute %s" %arg
+                return
+            else:
+                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, arg)
+                print "Entering %s, type exit to leave." % self.rootdir
+        elif arg:
+             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, arg)
         else:
-             os.system ("%s %s su - root" % (self.config['chroot'], self.rootdir))
+             cmd = "%s %s su - root" % (self.config['chroot'], self.rootdir)
+             print "Entering %s, type exit to leave." % self.rootdir
+        debug ("running %s" % cmd)
+        os.system (cmd)
         self.umount ()
      
     def setup (self, arg):
@@ -667,9 +676,7 @@ class Root:
             target = arg
         else:
             target = 'build' # default to build
-        # FIXME: we dropped base
-        # targets = ('prep', 'base', 'consistency', 'build')
-        targets = ('prep', 'consistency', 'build')
+        targets = ('prep', 'minimal', 'base', 'build')
     
         # see if something real given to setup
         if target not in targets:
@@ -923,7 +930,7 @@ class Root:
     # private methods
     def _setup_prep (self):
         "prepares a given root if not done yet; this ensures that a number"
-        "continue of necessary files exist in the root"
+        "of necessary files exist in the root"
         if self.get_state ('prep'):
             debug ("target prep already set up")
             return
@@ -994,37 +1001,27 @@ Dir {
 }
 '''
         self.set_state ("apt.conf", conf)
+
+        # create sources.list, run apt-get update
+        srcs = get_sources_list (config)
+        create_sources_list (config, srcs)
+        self.aptget ("update", "Updating apt sources",
+                     self.progress ())
     
         # write state file
         self.set_state ("prep")
     
-    def _setup_base (self):
+    def _setup_minimal (self):
         # FIXME: right now we only create these once; shouldn't we redo this
         # every time or something ?
         debug ("Creating config files")
         for filename in self.config['files'].keys ():
             self.config_recreate (filename)
 
+        self._install ('minimal')
+
+    def _setup_base (self):
         self._install ('base')
-    def _setup_consistency (self):
-        "forces consistency on root by triggering an apt-get update"
-        if self.get_state ('consistency'):
-            debug ("target consistency already set up")
-            return
-        self.mount ()
-
-        rootdir = self.rootdir
-        srcs = get_sources_list (config)
-
-        # FIXME: twolevel glibc install would still be useful IMO
-        # first create a sources.list with only the first sources line
-        # this ensures glibc doesn't get upgraded from underneath apt
-        create_sources_list (config, srcs)
-        self.aptget ("update", "Updating apt using all sources",
-                     self.progress ())
-        self.aptget ("-f upgrade -y", 'Forcing consistency and upgrading',
-                     self.progress ())
-        self.set_state ('consistency')
 
     def _setup_build (self):
         "set up a root for rpm building"
@@ -1037,13 +1034,7 @@ Dir {
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         # install packages
-        self.aptget ('install -y glibc bash',
-                     'Installing glibc and bash', self.progress ())
-        # FIXME: here we can put other packages that should be basic,
-        # like findutils and so on
-        self.aptget ('install -y %s' % self.config['packages']['build'],
-                     'Installing rpm build packages',
-                     self.progress ())
+        self._install ('build')
         #FIXME: add mach user and group
         self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
         self.do_chroot ("echo machbuild::500:mach >> /etc/group")
@@ -1079,31 +1070,21 @@ Dir {
         self.umount ()
     
     def _install (self, set):
-        "installs the given set of packages into the root.  Packages live "
-        "in packagesdir.  This is used by _setup_base and _setup_apt"
+        "installs the given set of packages into the root."
+        "Packages in this set are defined in dist."
         debug ("_install (%s)" % set)
         if self.get_state (set): return
         debug ("Installing set of packages in %s" % set)
-        # expand path for each package and install all of them at once
-        # a roundabout way to prefix each rpm in the list with the path
-        rpms = string.join (('', ) + self.config['packages'][set],
-                            ' ' + self.packagesdir + '/')
-        #command = '%s --root %s -Uhv %s --nodeps --noorder --replacepkgs' % (config ['rpm'], root, rpms)
-        # if config['rpm'] has sudo, that's one too many for cleanliness
-        # FIXME: this is a terribly dangerous hack.  We use chroot / so that we
-        # can execute an arbitrary command (in this case, the extracted rpm)
-        # with root privileges.  Please move this to a mach-helper binary !
-        #command = "%s / /bin/bash -c 'export LD_ASSUME_KERNEL=2.2.5 && %s --root %s -Uhv %s --nodeps --noorder --replacepkgs'" % (config['chroot'], get_rpm (config), root, rpms)
+        try:
+            rpms = self.config['packages'][set]
+	except KeyError:
+            raise self.Error, "Package set '%s' not defined for this distribution !" % set
+
         if rpms:
-            command = "%s --root %s -Uhv %s --nodeps --noorder --replacepkgs" % (self.config['rpm'], self.rootdir, rpms)
-            debug ("Executing %s" % command)
-            self.stdout ("Installing %s packages ..." % set)
-            (status, output) = do_progress (command)
-            #print "DEBUG: status %d output %s\n" % (status, output)
-            if status != 0:
-                raise self.Error, "Could not install package set %s, status %s" % (set, status)
+            self.aptget ('install -y %s' % rpms,
+                         'Installing %s set of packages' % set, True)
         else:
-            print "No packages in %s set" % set
+            print "No packages in %s set" % rpms
         self.set_state (set)
      
 ### helper functions
@@ -1419,35 +1400,6 @@ def get_state (config, state):
         return statedir + '/' + state
     return
 
-# check the given package list file
-# remove all packages that aren't in this list file
-def check_package_list (config, list):
-    debug ("checking package list against snapshot")
-    if config.has_key ('keep'):
-        print "Not removing packages from root."
-        return True
-    root = get_config_dir (config, 'root')
-    cmd = 'rpm --root %s -qa --qf %s | diff - %s > /dev/null 2>&1' % (root,
-                                                                      qfmt,
-                                                                      list)
-    debug ("running " + cmd)
-    if os.system (cmd) == 0:
-        # no differences
-        return True
-    cmd = "rpm --root %s -qa --qf %s | grep -v -f %s - | tr '\n' ' '" % (root,
-                                                                         qfmt,
-                                                                         list)
-    packages = commands.getoutput (cmd)
-    progress = True
-    if config['quiet']: progress = False
-    # FIXME: how many ?
-    sys.stdout.write ("Removing packages ...")
-    if not packages:
-       print
-       return True
-    self.rpm ("-ev %s" % packages, progress)
-    return True
-
 # check if everything is in order to actually do stuff
 def sanity_check (config):
     # check if we're in the mach group
@@ -1580,7 +1532,7 @@ def main (config, args):
         try:
             output = Root.__dict__[command] (root, args)
         except Root.Locked:
-            sys.stderr.write ("Root is locked.  Use -f to override lock\n")
+            sys.stderr.write ("Root is locked.  Use -f to override lock.\n")
         except Root.Error, message:
             sys.stderr.write ("%s\n" % message)
             root.unlock ()
