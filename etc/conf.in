@@ -1,0 +1,39 @@
+# mach system configuration file                                 -*- python -*-
+
+# spinner theme
+config['spinner'] = {
+    'wheel':      '/-\|',
+    'blip':       '.o0O0o',
+    'corner':     '<^>v',
+    'text':       '<-WORKING->',
+    'subliminal': '<- send us lots of money ->',
+    'quote':      '´''"''`',
+    'point':      ".:¨:",
+}
+
+# directories used
+config['dirs'] = {
+    'states':   '@LOCALSTATEDIR@/lib/mach/states',
+    'roots':    '@LOCALSTATEDIR@/lib/mach/roots',
+    'results':  '@LOCALSTATEDIR@/tmp/mach',
+    'tmps':     '@LOCALSTATEDIR@/tmp/mach/tmp',
+    'packages': '@LOCALSTATEDIR@/cache/mach/packages',
+    'aptcache': '@LOCALSTATEDIR@/cache/mach/archives',
+}
+
+
+# files created in the root
+config['files'] = {
+    '/etc/resolv.conf': '''
+nameserver 192.168.001.001
+nameserver 157.193.40.42
+search 4fm.be onshuis
+''',
+    '/etc/hosts': '''
+127.0.0.1 thocra localhost.localdomain
+''',
+    '/usr/bin/apt-sigchecker': '''#!/bin/bash
+while read p; do
+done
+'''
+}

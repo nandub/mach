@@ -1,4 +1,4 @@
 configdir = $(sysconfdir)/mach
-config_DATA = packages conf apt
+config_DATA = apt conf packages
 
-EXTRA_DIST = $(config_DATA)
+EXTRA_DIST = apt conf.in packages
