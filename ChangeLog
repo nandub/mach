@@ -1,41 +1,41 @@
-2003-11-21  Ville Skyttä <ville dot skytta at iki dot fi>
+2003-11-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Use a login shell in order to get a
 	sane vanilla environment (eg. /usr/X11R6/bin in $PATH).
 	Kudos to Enrico Scholz.
 
-2003-11-16  Ville Skyttä <ville dot skytta at iki dot fi>
+2003-11-16  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add a bunch of aliases for RH 8.0 and 9 repos.
 
-2003-11-13  Ville Skyttä <ville dot skytta at iki dot fi>
+2003-11-13  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add Fedora Core 1, remove 0.9x betas.
 	* etc/dist: Add fedora-rpmdevtools to fedora.us build packages,
 	remove explicit gcc-c++ and redhat-rpm-config.
 
-2003-10-21  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-10-21  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: move initialization of config per dist to dist
 	* etc/dist: add Fedora Core 0.95
 
-2003-10-13  Ville Skyttä <ville dot skytta at iki dot fi>
+2003-10-13  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Make fedora(.us) repos for RH 8.0 and 9 inherit from
 	updates, add gcc-c++ and redhat-rpm-config to build packages.
 
-2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-10-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: add sh-utils to 7.0 so su works
 	* scripts/mach.in: make runs of apt-get from outside check for base
 
-2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-10-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: patch from Matthias Saou
 	  - add RH70, RH71, RH72
 	  - add YD23, YD30
 
-2003-10-04  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-10-04  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - make apt-get from command line run interactively
@@ -45,28 +45,28 @@
 	  - check for not properly built src.rpm
 	  - change permissions on copied sources
 
-2003-10-03  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-10-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* mach.spec.in: dirs permissions fixes
 	* scripts/mach.in: unlock root on successful build
 	* src/mach-helper.c: only refuse ".." in mach-helper
 	* etc/dist: add Fedora Core 0.94
 
-2003-09-17  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* mach.spec.in: fix up spec file
 
-2003-09-08  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.ac: 0.4.0 release
 
-2003-09-07  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-07  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	* etc/dist:
 	  - allow shortcut aliases in -r, for example rh9
 
-2003-09-07  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-07  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - refactor splitargs code
@@ -78,54 +78,54 @@
 	  - check for su before chrooting
 	* etc/dist: add/fix minimal, base and build package sets
 
-2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: implemented -q, --quiet
 
-2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* tests/*: start creating torture tests for mach
 
-2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-09-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - remove use agent for signing until we figure it out
 	  - also copy and md5sum spec file to results dir
 
-2003-08-17  Ville Skyttä <ville dot skytta at iki dot fi>
+2003-08-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist:
 	  - Add JPackage configuration for RH 7.2 - 9.
 	  - Use base URLs for easier configurability.
 
-2003-08-17  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - do tar.gz checking
 	  - apt-get update before installing buildrequires
 
-2003-08-16  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: fix %define scan
 
-2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - hack around spec file extraction from src.rpm
 	  - filter out buildrequires: requiring package under build
 
-2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
 	  - fix KeyError catching for other errors
 	  - fix KeyError in variable expansion
 
-2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: reorder some build orders, should standardize
 	this in general
 
-2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: removing all base and apt from Red Hat targets
 	* scripts/mach.in:
@@ -135,34 +135,34 @@
 	  - only mangle spec release if it doesn't match yet
 	  - don't GPG check when installing to satisfy buildreqs
 
-2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: clean up Axel Thimm's bits to make mach work
 	without sets of base/apt packages
 
-2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: add _bruteclean to use mach-helper to remove
 	a root in case it can't remove itself
 
-2003-08-07  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-07  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: don't fail unlock if not locked
 	* src/mach-helper.c: print out root files should be under when failing
 
-2003-08-01  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-01  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: various small fixes from Axel Thimm
 
-2003-08-01  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-08-01  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* mach.spec.in: patch from Axel Thimm to fix small issues
 
-2003-07-24  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-07-24  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: use machbuild in place of mach inside build root
 
-2003-07-18  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-07-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: fix case when src.rpm/spec has no BuildRequires:
 
@@ -170,12 +170,12 @@
 
 	* scripts/mach.in: pass on options from build/rebuild to rpmbuild
 
-2003-07-15  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-07-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
 	* scripts/mach.in: check for suidness of mach-helper binary
 
-2003-07-10  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-07-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: added pam rpm to base of rh72 dists so that shell utils
 	work
@@ -197,43 +197,43 @@
 	* etc/dist: Add sh-utils to redhat-72-i386* and redhat-73-i386
 	base packages in order to be able to 'su' in the chroot.
 
-2003-06-04  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-06-04  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/conf.in: initialize dist-specific configs
 	* scripts/mach.in: use gpg-agent to clearsign, sign all packages 
 	in one go, delete old signed md5sums
 
-2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-06-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: implement config[target] specific config,
 	remove chrootcmds, implement release mangling with --release
 	* etc/conf.in: remove chrootcmds, add release mangling for fedora
 
-2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-06-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: fix some places where / was forgotten now that
 	$HOME is set, clear RPM::Pre-Install-Pkgs so GPG's aren't checked
 	* src/mach-helper.c (do_command): added HOME env var because fc-cache
 	segfaults if it's not set
 
-2003-06-02  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-06-02  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: added signing and collecting of packages
 
-2003-05-29  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: fix setup not handling arg properly
 
-2003-05-25  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-25  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: do proper build ordering by parsing specfiles
 	for their generated results
 
-2003-05-24  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: lots of bugfixes
 
-2003-05-22  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/mach-helper.c: created
 	* scripts/mach.in: make use of mach-helper
@@ -247,7 +247,7 @@
 	* scripts/mach.in: reworked large parts, started objectifying Root,
 	use host's apt and rpm to manipulate root packages
 
-2003-05-13  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: use rpm2cpio to extract an rpm matching the target
 	platform to install packages with.  This also uses a nasty chroot
@@ -265,7 +265,7 @@
 	Implement configurable per-distro build packages, and add
 	Fedora ones to default packages config.
 
-2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
 	* etc/Makefile.am:
@@ -274,14 +274,14 @@
 	* mach.spec.in: make all dirs FHS-compliant
 	* scripts/mach.in: make all dirs FHS-compliant
 
-2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/conf: add /usr/bin/apt-sigchecker as generated files, default
 	to letting everything pass
 	* scripts/mach.in: add function to regenerate any file in
 	config['files'] and use it for apt-sigchecker
 
-2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* add global /bin/bash -c '...' wrapping
 	* use LD_ASSUME_KERNEL=2.2.5 for any installing/querying;
@@ -293,7 +293,7 @@
 	which will confuse mach.
 	* Add (X)Emacs python mode cookies to config files.
 
-2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* added .machrc in home dir parsing
 
