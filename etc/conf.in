@@ -42,14 +42,10 @@ done
 '''
 }
 
-# commands used inside the chroot
-config['chrootcmds'] = {
-    'apt-get': 'apt-get',
-    'rpm': 'rpm',
-}
-
-# overrides for rh9 flavours
-chrootcmds['redhat-9-i386'] = {
-    'apt-get': 'export LD_ASSUME_KERNEL=2.2.5 && apt-get',
-    'rpm': 'export LD_ASSUME_KERNEL=2.2.5 && rpm',
-}
+# release mangling for fedora trees
+config['redhat-9-i386-fedora-stable']    = { 'release': 'rh90' }
+config['redhat-9-i386-fedora-testing']   = { 'release': 'rh90' }
+config['redhat-9-i386-fedora-unstable']  = { 'release': 'rh90' }
+config['redhat-80-i386-fedora-stable']   = { 'release': 'rh80' }
+config['redhat-80-i386-fedora-testing']  = { 'release': 'rh80' }
+config['redhat-80-i386-fedora-unstable'] = { 'release': 'rh80' }

@@ -27,6 +27,7 @@ Global options:
   -k, --keep			do not revert buildroot to initial package list
   -s, --sign			sign packages after build
   -c, --collect			collect packages and relevant files to .
+  --release=(tag)		add given tag to release tag
 
 Commands:
   apt-get			run host's apt-get on target root
@@ -51,6 +52,7 @@ config = {
   'check': 0,
   'sign': 0,
   'collect': 0,
+  'release': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
   'chroot': '/usr/sbin/mach-helper chroot',
@@ -64,7 +66,6 @@ config = {
 DEBUG = 0
 
 # read system-wide configuration
-chrootcmds = {}
 file = '@SYSCONFDIR@/mach/conf'
 execfile (file)
 
@@ -511,14 +512,15 @@ class Root:
     
             # copy files to /tmp in root, then chroot to mv them 
             for file in files:
+                debug ("Getting file %s into SOURCES" % file)
                 shutil.copy2 (file, os.path.join (self.rootdir, 'tmp'))
                 self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
                                 os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
-                shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
-                self.do_chroot ("cd / && mv %s %s " % (
-                                os.path.join ('tmp', os.path.basename (specfile)),
-                                os.path.join ('usr', 'src', 'rpm', 'SPECS')))
+            shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
+            self.do_chroot ("cd / && mv %s %s " % (
+                            os.path.join ('tmp', os.path.basename (specfile)),
+                            os.path.join ('usr', 'src', 'rpm', 'SPECS')))
             self.stdout ("Creating .src.rpm ...")
             try:
                 self.do_chroot ("cd / && rpmbuild -bs --nodeps %s" \
@@ -676,7 +678,12 @@ class Root:
             name = h[rpm.RPMTAG_NAME]
             version = h[rpm.RPMTAG_VERSION]
             release = h[rpm.RPMTAG_RELEASE]
-            fullname = '%s-%s-%s' % (name, version, release)
+            # if the release tag needs mangling, do it here as well
+            if self.config['release']:
+                fullname = '%s-%s-%s.%s' % (name, version, release,
+                                            self.config['release'])
+            else:
+                fullname = '%s-%s-%s' % (name, version, release)
             resultdir = os.path.join (self.resultdir, fullname)
             ensure_dir (resultdir)
             # rebuild binary rpm from the src rpm
@@ -686,6 +693,16 @@ class Root:
             # install the src.rpm
             self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' mach" % srpmname)
             spec = pkgs[name]['spec']
+
+            # mangle spec file if requested
+            if self.config['release']:
+                command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (spec, spec)
+                self.do_chroot (command)
+                command = 'sed -e "s,Release.*,&.%s,g" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], spec, spec)
+                self.do_chroot (command)
+                command = 'rm /tmp/%s' % spec
+                self.do_chroot (command)
+
             # rebuild from spec inside chroot
             command = "su -c 'rpmbuild -ba --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % spec
             (status, output) = self.do_chroot (command, True)
@@ -1303,7 +1320,7 @@ def main (config, args):
     try:
         opts, args = getopt.getopt (args, 'r:hdfksc',
                                     ['root=', 'help', 'debug', 'force', 'keep',
-                                     'sign', 'collect'])
+                                     'sign', 'collect', 'release='])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1332,6 +1349,8 @@ def main (config, args):
             config['sign'] = 1
         elif opt in ('-c', '--collect'):
             config['collect'] = 1
+        elif opt == '--release':
+            config['release'] = arg
 
     # pull in root-specific configuration
     # FIXME: even nicer would be if we could just do config[rootname] = ...
@@ -1348,10 +1367,14 @@ def main (config, args):
         sys.stderr.write ('No sources information found for %s\n' % root)
         sys.exit (1)
     try:
-        config['chrootcmds'] = chrootcmds[root]
         config['files'] = files[root]
     except:
-        debug ("no chrootcmds or files override")
+        debug ("no files override")
+
+    if config[root]:
+        for key in config[root].keys ():
+            debug ("setting config['%s'] to %s" % (key, config[root][key]))
+            config[key] = config[root][key]
 
     # debug output options
     debug ("root: %s" % root)
@@ -1395,7 +1418,7 @@ def main (config, args):
             sys.stderr.write ("Root is locked.  Use -f to override lock\n")
         except Root.Error, message:
             sys.stderr.write ("%s\n" % message)
-        except ReturnValue, retval:
+        except Root.ReturnValue, retval:
             sys.stderr.write ("Return value: %s\n" % retval)
         if output:
             print output
