@@ -4,7 +4,7 @@
 #
 # script to set up a chroot using packages and optionally perform builds in it
 
-import sys, os, getopt, string, commands, urllib, shutil, time, fcntl
+import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
 
 # make sure True and False constants exist
@@ -21,6 +21,7 @@ Global options:
   -r, --root=ROOT		specify a root to work in
   -d, --debug			turn on debugging
   -f, --force			override root lock
+  -k, --keep			do not revert buildroot to initial package list
 
 Commands:
   chroot			chroot into root
@@ -38,6 +39,7 @@ config = {
   'rootsdir': '@LOCALSTATEDIR@/tmp/mach/roots',
   'resultsdir': '@LOCALSTATEDIR@/tmp/mach/result',
   'packagedir': '@LOCALSTATEDIR@/tmp/mach/packages',
+  'tmpsdir': '@LOCALSTATEDIR@/tmp/mach/tmp',
   'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
 
   'force': 0,
@@ -70,9 +72,78 @@ file = '@SYSCONFDIR@/mach/apt'
 execfile (file)
 
 # list of allowed commands
-allowed_commands = ('check', 'chroot', 'clean', 'rebuild', 'setup', 'status',
-                    'unlock')
+allowed_commands = ('build', 'check', 'chroot', 'clean', 'rebuild',
+                    'setup', 'status', 'unlock')
 
+### objects
+class Spec:
+    def __init__ (self, path):
+        self.path = path
+        self.content = []
+        self.vars = {}
+        self.content = open (self.path).readlines ()
+        for which in ['name', 'version', 'release']:
+            self.vars[which] = self.tag (which)
+
+    def tag (self, which):
+        "Get the given (unique) tag from the spec file as a string"
+        if self.vars.has_key (which):
+            return self.vars[which]
+
+        matchstr = re.compile ("^" + which + r"\d*:\s*(.*)", re.I)
+        for line in self.content:
+            match = matchstr.search (line)
+            if match:
+                value = match.expand ("\\1")
+                self.vars[which] = value
+                return value
+        return None
+
+    def tags (self, which):
+        "Get all given tags from the spec file as a list"
+        result = []
+        matchstr = re.compile ("^" + which + r"\d*:\s*(.*)", re.I)
+        for line in self.content:
+            match = matchstr.search (line)
+            if match:
+                value = match.expand ("\\1")
+                result.append (value)
+        return result
+
+    # this is done quick and dirty, could be optimized more
+    def expand (self, expression):
+        "expand a line from a spec file using vars from the spec file"
+        for variable in self.vars.keys ():
+            expression = string.replace (expression, "%{" + variable + "}",
+                                         self.vars[variable])
+        #print "DEBUG: expanded to %s" % expression
+        return expression
+
+    def nvr (self):
+        "return name, version, release triplet"
+        return (self.vars['name'], self.vars['version'], self.vars['release'])
+ 
+
+    # make this private
+    def sourcespatches (self, which):
+        result = {}
+        matchstr = re.compile ("^(" + which + r"\d*):\s*(.*)")
+        for line in self.content:
+            match = matchstr.search (line)
+            if match:
+                tag = match.expand ("\\1")
+                value = match.expand ("\\2")
+                result[tag] = self.expand (value)
+        return result
+ 
+    def sources (self):
+           # parse the spec file for all Source: files
+           return self.sourcespatches ("Source")
+
+    def patches (self):
+           # parse the spec file for all Source: files
+           return self.sourcespatches ("Patch")
+ 
 ### helper functions
 
 # run a command, opening a pty and returning fd and pid
@@ -86,6 +157,7 @@ def pty_popen (cmd):
 # run a command and give a progress spinner that regularly advances
 # delta gives the number of secs between each spin iteration
 # jump is the number of iterations before jumping one dot further
+# return the return status of the app
 def do_progress (cmd, delta = 0.1, jump = 60):
     progress = '/-\|'
     i = 0
@@ -122,6 +194,7 @@ def do_progress (cmd, delta = 0.1, jump = 60):
     return status
 
 # execute the given command in the chroot; possibly with progress bar
+# return return value of actual shell command
 def do_chroot (config, command, progress = False):
     root = get_config_dir (config, 'root')
     cmd = '%s %s %s' % (config['chroot'], root, command)
@@ -296,6 +369,9 @@ def get_state (config, state):
 # check the given package list and remove all packages that aren't in this list
 def check_package_list (config, list):
     debug ("checking package list against snapshot")
+    if config.has_key ('keep'):
+        print "Not removing packages from root."
+        return True
     root = get_config_dir (config, 'root')
     cmd = 'rpm --root %s -qa | diff - %s > /dev/null 2>&1' % (root, list)
     debug ("running " + cmd)
@@ -306,7 +382,7 @@ def check_package_list (config, list):
     packages = commands.getoutput (cmd)
     # FIXME: how many ?
     sys.stdout.write ("Removing packages ...")
-    if not do_chroot (config, "rpm -ev " + packages, True):
+    if do_chroot (config, "rpm -ev " + packages, True) != 0:
         sys.stderr.write ("Error removing packages\n")
         return False
     return True
@@ -326,6 +402,8 @@ def setup_prep (config, args):
     ensure_dir (root + '/etc')
     open (root + '/etc/mtab', 'w')
     open (root + '/etc/fstab', 'w')
+
+    
 
     for filename in config['files'].keys ():
         file = open (root + filename, 'w')
@@ -399,6 +477,11 @@ def setup_build (config, args):
     os.system ('%s %s mv /tmp/macros /etc/rpm' % (config['chroot'], root))
     for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
         os.system ('%s %s mkdir -p /usr/src/rpm/%s' % (config['chroot'], root, dir))
+    #FIXME: add mach user and group
+    do_chroot (config,
+               "echo 'mach:!!:500:500::/usr/src/rpm:/bin/bash' >> /etc/passwd")
+    do_chroot (config,
+               "echo 'mach::500:mach' >> /etc/group")
     # make a snapshot
     command = '%s %s rpm -qa' % (config['chroot'], root)
     file = open (statefile, 'w')
@@ -476,6 +559,87 @@ def check_packages (config):
  
  
 # implementation of commands
+
+# build from a set of spec files
+# do this by packaging them up as src.rpms and then passing them on to the
+# rebuild section
+def build (config, args):
+    # check if we can build here yet
+    #if not get_state (config, 'build'):
+    # trigger a cleanout of build root
+    #if not setup (config, ["build"]):
+    #    return False
+    if not lock (config, args):
+        return False
+    
+    root = get_config_dir (config, 'root')
+    tmp = get_config_dir (config, 'tmp')
+    srpms = [] # resulting set of srpms
+    # check if the spec files exist and if we can parse the files necessary
+    for specfile in args:
+        if not os.path.exists (specfile):
+            sys.stderr.write ('Spec %s does not exist !' % specfile)
+            return False
+        print "Building .src.rpm from %s" % os.path.basename (specfile)
+        spec = Spec (specfile)
+        (n, v, r) = spec.nvr ()
+        downloads = spec.sources ().values () + spec.patches ().values ()
+        # which paths will we check for already existing files ?
+        # FIXME: add a temp stuff path somewhere instead of using current
+        tmppath = "%s/%s-%s-%s" % (tmp, n, v, r)
+        ensure_dir (tmppath)
+        paths = ['tmppath', '.', os.path.dirname (specfile)]
+        # check if the files mentioned aren't already on-disk
+        files = []
+        for download in downloads:
+            found = 0
+            filename = os.path.basename (download)
+            for path in paths:
+                filepath = path + '/' + filename
+                if os.path.exists (filepath):
+                    print "Using %s" % filepath
+                    files.append (filepath)
+                    found = 1
+            if not found:
+                print "Downloading %s ..." % download
+                filepath = tmppath + "/" + filename
+                if not urllib.urlretrieve (download, filepath):
+                    sys.stderr.write ("Could not download %s !\n" % download)
+                    return False
+                files.append (filepath)
+                print "Using %s" % filepath
+
+        for file in files:
+            shutil.copy (file, root + '/tmp')
+            do_chroot (config, "mv /tmp/" + os.path.basename (file)
+                                          + " /usr/src/rpm/SOURCES")
+            shutil.copy (specfile, root + '/tmp')
+            do_chroot (config, "mv /tmp/" + os.path.basename (specfile)
+                                          + " /usr/src/rpm/SPECS")
+        # we were stupid enough to think we couldn't build an src.rpm without
+        # installing buildreqs.  of course, --nodeps takes care of that
+        #buildreqs = spec.tags ("BuildRequires")
+        #packages = []
+        #for buildreq in buildreqs:
+        #    package = string.split (buildreq, " ")[0]
+        #    packages.append (package)
+        #sys.stdout.write ("Installing BuildRequires ...")
+        #do_chroot (config, "apt-get -y install %s" % string.join (packages, " "), True)
+
+        do_chroot (config, "rpmbuild -bs --nodeps /usr/src/rpm/SPECS/"
+                           + os.path.basename (specfile) + "> /dev/null 2>&1")
+        (n, v, r) = spec.nvr ()
+        srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
+        debug ("DEBUG: resulting srpm: %s" % srpmname)
+        shutil.copy (root + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
+        srpms.append (srpmname)
+
+    # ready to build them all
+    print "Rebuilding generated .src.rpm's: %s " % string.join (srpms)
+    rebuild (config, srpms)
+            
+        
+
 
 # forcibly check packages
 def check (config, args):
@@ -563,8 +727,14 @@ def rebuild (config, args):
     debug ("DEBUG: topological input: ")
     debug (deps)
     debug ("DEBUG: topological output: ")
-    order = topological_sort (deps)
-    order.reverse ()
+    sorted = topological_sort (deps)
+    sorted.reverse ()
+    debug ("DEBUG: order %s" % sorted)
+    # now scrub packages not up for build from order
+    order = []
+    for pkg in sorted:
+        if pkg in pkgs.keys ():
+            order.append (pkg)
     debug ("order %s" % order)
 
     for name in order:
@@ -674,8 +844,8 @@ def status (config, args):
 def main (config, args):
     global DEBUG # we might change it
     try:
-        opts, args = getopt.getopt (args, 'r:hdf',
-                                    ['root=', 'help', 'debug', 'force'])
+        opts, args = getopt.getopt (args, 'r:hdfk',
+                                    ['root=', 'help', 'debug', 'force', 'keep'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -698,6 +868,8 @@ def main (config, args):
             DEBUG = 1
         elif opt in ('-f', '--force'):
             config['force'] = 1
+        elif opt in ('-k', '--keep'):
+            config['keep'] = 1
 
     # pull in root-specific configuration
     try:
