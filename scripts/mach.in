@@ -569,8 +569,7 @@ def umount (config, args):
 def sanity_check (config):
     # check if partial dir exists
     partial = config['aptcachedir'] + '/partial'
-    if not os.path.exists (partial):
-        os.makedirs (partial) 
+    ensure_dir (partial)
     return True
 
 def check_packages (config):
