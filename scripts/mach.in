@@ -334,7 +334,7 @@ class Root:
     # default here assures that state files are never empty
     def set_state (self, which, content = ""):
         "Creates the state file and fill it with given contents."
-        #FIXME: if we do want Error, wat about apt.conf ?
+        #FIXME: if we do want Error, what about apt.conf ?
         #"raises Error if it already existed."
         if not content: content = which
         path = os.path.join (self.statedir, which)
@@ -920,7 +920,7 @@ class Root:
 		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
-                # FIXME: figure out the proper way tu use an agent here
+                # FIXME: figure out the proper way to use an agent here
 		cmd = 'gpg --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
