@@ -81,7 +81,7 @@ except IOError:
     pass
 
 # list of allowed commands
-allowed_commands = ('apt-get', 'apt-cache', 'build', 'check', 'chroot', 'clean', 'rebuild',
+allowed_commands = ('apt-get', 'apt-cache', 'build', 'check', 'chroot', 'clean', 'rebuild', 'rpm',
                     'setup', 'status', 'unlock')
 
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
@@ -331,23 +331,22 @@ class Root:
             print "Not removing packages from root."
             return
         root = self.rootdir
-        cmd = 'rpm --root %s -qa --qf %s | diff - %s > /dev/null 2>&1' % (root,
-                                                                          qfmt,
-                                                                          list)
+        cmd = 'rpm --root %s -qa --qf %s \
+               | diff - %s > /dev/null 2>&1' % (root, qfmt, listfile)
         debug ("running " + cmd)
         if os.system (cmd) == 0:
             # no differences
             return True
-        cmd = "rpm --root %s -qa --qf %s | grep -v -f %s - | tr '\n' ' '" % (root,
-                                                                             qfmt,
-                                                                             list)
+        cmd = "rpm --root %s -qa --qf %s \
+               | grep -v -f %s - \
+               | tr '\n' ' '" % (root, qfmt, listfile)
         packages = commands.getoutput (cmd)
         # FIXME: how many ?
         sys.stdout.write ("Removing packages ...")
         if not packages:
            print "Error: packages was empty"
            return True
-        self.rpm ("-ev %s" % packages, True)
+        self.rpm ("-ev %s" % packages)
         return True
     
 
@@ -624,7 +623,6 @@ class Root:
         print "Build done."
         self.umount ()
         self.unlock ()
-        return True
         
     # private methods
     def _setup_prep (self):
@@ -640,16 +638,16 @@ class Root:
         #FIXME: create /dev/null or install dev rpm later on
         #os.system ('%s %s c 1 3' % (config['mknod'],
         #                            os.path.join (self.rootdir, 'dev', 'null'))
-        ensure_dir (os.path.join (self.root, 'etc'))
-        open (os.path.join (self.root, 'etc', 'mtab'), 'w')
-        open (os.path.join (self.root, 'etc', 'fstab'), 'w')
+        ensure_dir (os.path.join (self.rootdir, 'etc'))
+        open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
+        open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
     
         debug ("Creating config files")
         for filename in config['files'].keys ():
-            config_recreate (config, filename)
+            config_recreate (self.config, filename)
     
-        ensure_dir (os.path.join (self.root, 'tmp'))
-        ensure_dir (os.path.join (self.root, 'var', 'tmp'))
+        ensure_dir (os.path.join (self.rootdir, 'tmp'))
+        ensure_dir (os.path.join (self.rootdir, 'var', 'tmp'))
         # create a custom apt.conf file
         root = self.rootdir
         conf = '''
@@ -737,7 +735,7 @@ Dir {
         self.mount ()
         #FIXME: this ought to be done in a cleaner way
         try:
-            distspecific = config['packages']['build']
+            distspecific = self.config['packages']['build']
         except KeyError:
             distspecific = ''
         # install packages
@@ -745,15 +743,11 @@ Dir {
         packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
         self.aptget ('install -y %s %s' % (packages, distspecific))
         #FIXME: add mach user and group
-        if do_chroot (config, "echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd") != 0:
-            sys.stdout.write ("error: could not add mach user to /etc/passwd\n")
-            exit (config)
-        if do_chroot (config, "echo mach::500:mach >> /etc/group") != 0:
-            sys.stdout.write ("error: could not add mach group to /etc/group\n")
-            exit (config)
-        do_chroot (config, "mkdir -p /usr/src/rpm")
-        do_chroot (config, "chown -R mach:mach /usr/src/rpm")
-        do_chroot (config, "su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
+        self.do_chroot ("echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
+        self.do_chroot ("echo mach::500:mach >> /etc/group")
+        self.do_chroot ("mkdir -p /usr/src/rpm")
+        self.do_chroot ("chown -R mach:mach /usr/src/rpm")
+        self.do_chroot ("su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
          # create dir structure and rpmmacros
         macros = open (self.rootdir + '/tmp/macros', 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
@@ -761,25 +755,19 @@ Dir {
         macros.write ("%_unpackaged_files_terminate_build 1\n")
         macros.write ("%_missing_doc_files_terminate_build 1\n")
         macros.close ()
-        if do_chroot (config, 'mv /tmp/macros /etc/rpm') != 0:
-            sys.stdout.write ("error: could not create /etc/rpm\n")
-            exit (config)
+        self.do_chroot ('mv /tmp/macros /etc/rpm')
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            if do_chroot (config, "su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir) != 0:
-                sys.stdout.write ("error: could not create /usr/src/rpm/%s\n" % dir)
-                exit (config)
+            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir)
     
         # this ensures that locally built RPMS are already used for apt-get
-        srcs = get_sources_list (config)
+        srcs = get_sources_list (self.config)
         # FIXME: if we use external apt then this path should be changed ?
         # FIXME: and if not ?
         #srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
         srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % self.rootdir)
-        create_sources_list (config, srcs) 
+        create_sources_list (self.config, srcs) 
         for dir in ('RPMS', 'SRPMS'):
-            if do_chroot (config, 'ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir)) != 0:
-                sys.stdout.write ("error: could not create symlink /usr/src/rpm/%s.mach-local" % dir)
-                exit (config)
+            self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir))
         self.aptget ("update")
 
         sys.stdout.write ("Making snapshot ...")
@@ -1282,6 +1270,8 @@ def main (config, args):
             config['keep'] = 1
 
     # pull in root-specific configuration
+    # FIXME: even nicer would be if we could just do config[rootname] = ...
+    # and copy that over
     try:
         config['packages'] = packages[root]
     except KeyError:
@@ -1295,8 +1285,9 @@ def main (config, args):
         sys.exit (1)
     try:
         config['chrootcmds'] = chrootcmds[root]
+        config['files'] = files[root]
     except:
-        debug ("no chrootcmds override")
+        debug ("no chrootcmds or files override")
 
     # debug output options
     debug ("root: %s" % root)
@@ -1327,16 +1318,19 @@ def main (config, args):
     debug ("main: running %s" % command)
     
     root = Root (config)
+    output = ""
     if command in allowed_commands:
         # this is silly but what can we do about it ?
         if command == "apt-get": command = "aptget"
         if command == "apt-cache": command = "aptcache"
         try:
-            Root.__dict__[command] (root, args)
+            output = Root.__dict__[command] (root, args)
         except KeyError:
             sys.stderr.write ("No %s method defined\n" % command)
         except Root.Locked:
-            sys.stderr.write ("Root is locked.  Use -f to override lock")
+            sys.stderr.write ("Root is locked.  Use -f to override lock\n")
+        if output:
+            print output
     else:
         sys.stderr.write ("No such command '%s'\n" % command)
     #try:
