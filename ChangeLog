@@ -1,3 +1,9 @@
+2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * etc/dist: patch from Matthias Saou
+          - add RH70, RH71, RH72
+          - add YD23, YD30
+
 2003-10-04  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in:
