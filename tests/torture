@@ -20,7 +20,5 @@ do
 done
 if test x$failed != x;
 then
-  echo Failed distro's:$failed
+  echo "Failed distros:$failed"
 fi
-
-
