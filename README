@@ -37,12 +37,15 @@ Red Hat 7.2 and 7.3
 
 Red Hat 8.0 and 9
   - standard
+  - updated
   - with JPackage
   - with FreshRPMS
-  - with Fedora stable, testing and unstable
+  - with fedora.us stable, testing and unstable
 
-Fedora Core 0.94 (Severn Beta 2)
-Fedora Core 0.95 (Severn Beta 3)
+Fedora Core 1
+  - standard
+  - updated
+  - with fedora.us stable, testing and unstable
 
 Dave/Dina
   - fridge
