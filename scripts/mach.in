@@ -1119,7 +1119,7 @@ class Root:
                 debug ("running %s" % cmd)
                 os.system (cmd)
                 # FIXME: figure out the proper way to use an agent here
-		cmd = 'gpg --clearsign %s/md5sum' % resultdir
+		cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
