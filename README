@@ -1,10 +1,11 @@
 mach - make a chroot
 --------------------
 
-WHAT IS IT ?
-
+1. WHAT IS IT ?
+---------------
 mach allows you to set up clean roots from scratch for any distribution or 
 distribution variation supported.
+
 This clean build root can be used for several goals :
 - making clean packages
 - set up chroots for services to run it
@@ -19,61 +20,63 @@ Currently, mach works for rpm-based distributions that can work with apt
 for rpm - hopefully this will be extended to other types of package manager
 as well.
 
+2. WHAT DISTROS ARE SUPPORTED ?
+-------------------------------
 Included at this moment is the necessary information to set up :
 
 Red Hat 7.2 and 7.3
   - standard
   - updated
   - with JPackage
+  - with FreshRPMS
 
 Red Hat 8.0 and 9
   - standard
   - with JPackage
+  - with FreshRPMS
+  - with Fedora stable, testing and unstable
 
-Dave/Dina (temporarily removed, FIXME)
+Dave/Dina
   - fridge
   - oven
-
-Fedora 8.0 and 9
-  - stable
-  - testing
-  - unstable
 
 SuSE 8.1 and 8.2
   - base
   - full + updates
 
 Some handy features of mach include
-  - "caching" of downloaded packages by mounting the archives dir into
+  - "caching" of downloaded packages using the build hosts's apt
     the build root
+  - ensures clean packages by reverting to the base set of build packages
   - uses apt to resolve dependencies
   - parsing of BuildRequires to install necessary packages for building
   - build ordering when doing multiple builds
   - support for flavours of distribution
   - multiple build roots
   - locking of buildroot to avoid concurrent builds
+  - optional signing of built packages
 
-REQUIREMENTS
-------------
+3. REQUIREMENTS
+---------------
 - A Linux kernel that can do bind mounts (>= 2.2.0 if I'm correct)
 - rpm (>= 4.1 + gpg and cpio if you want GPG)
 - python
+- apt
 - sudo
 - lots of disk space
 - good faith
 
-GETTING STARTED - RPM INSTALL
------------------------------
+4. GETTING STARTED - RPM INSTALL
+--------------------------------
 - The easiest way to install mach is to just install the RPM.
-  Go ahead, don't be scared, it's built with mach.
-
 - After installing, you need to add all users that are going to build through
   mach to the "mach" group in /etc/group, and (possibly) log out and log back
   in so that this change gets registered.  You can check if your user
   is in this group by trying "groups (user)"
+- You can also build with the new "mach user" by su-ing to mach
 
-GETTING STARTED - SOURCE INSTALL
---------------------------------
+5. GETTING STARTED - SOURCE INSTALL
+-----------------------------------
 - If you insist on running from source, do
   ./configure
   make
@@ -84,14 +87,17 @@ GETTING STARTED - SOURCE INSTALL
 - you have to setuid the mach-helper binary.
   chmod u+s $(prefix)/bin/mach-helper
 
-SETTING IT UP
--------------
+- do not start to tweak stuff all in the source code just yet; mach is picky
+  about it's setup if you start to hack it.
+
+6. SETTING IT UP
+----------------
 - configuration files are stored in $(sysconfdir)/mach
   dist contains the list of packages for each distro target, as well
   as download locations for various packages.
   conf contains configuration data, like hosts and resolv.conf files
-  
-- you can override any configuration variable by putting it in
+- It is advised you do not hand-edit these files.  Instead, you can
+  override any configuration variable by putting it in
   ~/.machrc
 
 - you can add dist-specific configurations by creating a dict in ~/.machrc
@@ -115,13 +121,13 @@ This ensures that all packages appear to be built on the host mach.onshuis,
 and ensures that it can look up hosts through localhost DNS and one outside
 DNS.
 
-USING IT
---------
+7. USING IT
+-----------
 - run mach --help for a list of commands you can use.
 - Now for the actual work.  If everything is configured properly, you can now
   do
-    mach setup
-  and the build root for the default dist should be created for you.
+    mach setup base
+  and a base root for the default distribution should be created for you.
   run
     mach chroot
   and poke around a little.
@@ -130,24 +136,35 @@ USING IT
   mach build (spec file name)
 
   If the Source: and Patch: lines contain a proper URL, mach will automatically
-  download them and build the package
+  download them and build the package.
 
 - To build a package from a .src.rpm file, run
   mach rebuild (src.rpm)
   You can specify an http:// or ftp:// file here, and it will be downloaded
   and built automatically.
 
+- If the build fails because it needs other packages to build and they weren't
+  mentioned in the spec file, you can either:
+  - change the spec file and add the BuildRequires:
+  - install the packages through mach
+       mach apt-get -y install (requires)
+    and run the build again, with the -k option (for "keep packages")
+
 - To clean the buildroot, run
     mach clean
 
-TIPS & TRICKS
--------------
+8. SECURITY
+-----------
+- By nature mach needs root privileges for some of it's operations.
+  All operations that it needs this for are done through the mach-helper
+  binary, which is suid.  The source code for this binary is deliberately
+  kept both simple and very minimal.  The goal here is to make it absolutely
+  clear what mach can and cannot do as root.
+- If you find any security problems with this, PLEASE let me know.  I don't
+  have a lot of experience with secure programming and can use help there.
 
-- When stuff goes wrong when installing a build root, check to see what went
-  wrong.  Then when you find the problem, fix it, and clean the build root.
-  If this complains about not being able to run rm because no base is installed
-  in the chroot, you might have to su to root and clear out the root yourself.
-
+9. TIPS & TRICKS
+----------------
 - mach tries to adhere to the FHS.  It uses a lot of disk space by nature.
   You might not have as much space as you would like.  Since security needs
   to be tight, mach-helper is very strict about this location.  A good
@@ -165,16 +182,21 @@ TIPS & TRICKS
   The easiest way to do this is to use mach to operate on it; for example,
   mach rpm -Uhv (rpm) will install the given rpm in the target's system.
 
-BUGS
-----
+10. BUGS
+--------
 - rpm 4.1 included with Red hat 8.0 has a few race condition bugs which
   can cause rpm to hang.  If this happens, you should kill -9 the stalling
   rpm process, chroot into the root, run "rm -rf /var/lib/rpm/__*" and retry.
   had given.
 - for now, report them to me personally at thomas (at) apestaart (dot) org
+- mounting /proc into the root system can cause problems.  For example,
+  removing openssh-server from the root will cause it to kill your build host's
+  ssh server, since it gets the pid from proc.  This isn't what you want to
+  have happen if the server is not somewhere in your physical neighbourhood.
+  This is the reason why openssh-server is listed in the base install.
 
-ADDING A DISTRIBUTION
----------------------
+11. ADDING A DISTRIBUTION
+-------------------------
 - Check both dist and conf in sysconfdir/mach and copy from another target.
   Change as required.
 - Base packages: list them in the packages[dist] dict under 'base'.
@@ -182,19 +204,7 @@ ADDING A DISTRIBUTION
   See if the installation of base packages works well by doing
   mach -r (dist) setup base
 
-- Apt packages :
-  - this is the tricky part.  You need to make an rpm of apt for this new
-    distribution.  
-    The easiest way to do this is to install dependencies in the chroot
-    environment by hand and manually make the apt rpm, for example by
-    rebuilding the src rpm.
-    This part is pretty painful, since the base system is installed with
-    --nodeps as to be minimal but functional for apt.  So you're missing a
-    lot of common stuff here.
-  - after building it, put it online so it can be downloaded, or manually
-    copy it to localstatedir/cache/mach/packages/(dist)
-
-DISCLAIMER
-----------
-Mach is offered under the GPL without any warranty whatsoever.
+12. DISCLAIMER
+--------------
+mach is offered under the GPL without any warranty whatsoever.
 Let me know where the documentation is lacking, so I can improve on that.

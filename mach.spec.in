@@ -20,7 +20,10 @@ BuildRequires:	python
 %description
 mach makes a chroot.
 Using apt-get and a suid binary, it manages to install clean chroot
-environments based on the original packages
+environments based on the original packages for that distribution.
+
+The clean root can be used to run jail roots, to create image files, or
+to build clean packages.
 
 Authors:
 --------
@@ -33,7 +36,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %configure
 
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
 install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/states
@@ -44,7 +47,7 @@ install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/packages
 install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/archives
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %pre
 # create user and group mach
@@ -72,7 +75,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT
+%doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT RELEASE
 %dir %{_sysconfdir}/mach
 %config(noreplace) %{_sysconfdir}/mach/conf
 %config(noreplace) %{_sysconfdir}/mach/dist

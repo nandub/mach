@@ -676,7 +676,7 @@ class Root:
         if arg:
             target = arg
         else:
-            target = 'build' # default to build
+            target = 'base' # default to build
         targets = ('prep', 'minimal', 'base', 'build')
     
         # see if something real given to setup
