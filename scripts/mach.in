@@ -159,14 +159,10 @@ def pty_popen (cmd):
 # run a command and give a progress spinner that regularly advances
 # delta gives the number of secs between each spin iteration
 # jump is the number of iterations before jumping one dot further
-<<<<<<< mach.in
-def do_progress (cmd, delta = 0.1, jump = 20):
-=======
 # returns a tuple:
 # - the return status of the app
 # - all of the output as one big string
-def do_progress (cmd, delta = 0.1, jump = 60):
->>>>>>> 1.8
+def do_progress (cmd, delta = 0.1, jump = 20):
     progress = '/-\|'
     i = 0
     timestamp = time.time ()
