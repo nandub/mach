@@ -20,3 +20,6 @@
 * EASY:		bash completion
 * EASY:		unlock root on ctrl-c interrupt
 * EASY:		provide -c option (continue) to not halt on errors
+* EASY:		have "quiet" mode so that output is usable for comparison
+* HARD:		integrate ccache building
+* HARD:		integrate distcc support

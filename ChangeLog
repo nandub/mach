@@ -1,5 +1,9 @@
 2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * scripts/mach.in: implemented -q, --quiet
+
+2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * tests/*:
 		- start creating torture tests for mach
 
