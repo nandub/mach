@@ -1,0 +1,59 @@
+# mach dist configuration                          -*- python -*-
+
+# suse-82-i386: configuration for SuSE 8.2
+
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
+
+### SuSE Linux 8.2 flavours
+aptsources['suse-82-i386'] = {
+    'base':          'rpm ' + suse + ' SuSE/8.2-i386 base',
+    'funktronics':   'rpm ' + suse + ' SuSE/8.2-i386 funktronics',
+    'kde':           'rpm ' + suse + ' SuSE/8.2-i386 kde',
+    'kde3-stable':   'rpm ' + suse + ' SuSE/8.2-i386 kde3-stable',
+    'mantel-kernel': 'rpm ' + suse + ' SuSE/8.2-i386 mantel-kernel',
+    'mozilla':       'rpm ' + suse + ' SuSE/8.2-i386 mozilla',
+    'packman-i686':  'rpm ' + suse + ' SuSE/8.2-i386 packman-i686',
+    'packman':       'rpm ' + suse + ' SuSE/8.2-i386 packman',
+    'security':      'rpm ' + suse + ' SuSE/8.2-i386 security',
+    'suse-people':   'rpm ' + suse + ' SuSE/8.2-i386 suse-people',
+    'suse-projects': 'rpm ' + suse + ' SuSE/8.2-i386 suse-projects',
+    'suser-ollakka': 'rpm ' + suse + ' SuSE/8.2-i386 suser-ollakka',
+    'suser-rbos':    'rpm ' + suse + ' SuSE/8.2-i386 suser-rbos',
+    'suser-tcousin': 'rpm ' + suse + ' SuSE/8.2-i386 suser-tcousin',
+    'update':        'rpm ' + suse + ' SuSE/8.2-i386 update',
+    'usr-local-bin': 'rpm ' + suse + ' SuSE/8.2-i386 usr-local-bin',
+    'xfree86':       'rpm ' + suse + ' SuSE/8.2-i386 xfree86',
+}
+
+# SuSE Linux 8.2
+packages['suse-82-i386'] = {
+    'dir':      'suse-82-i386',
+    'minimal':  'bash glibc',
+    'base':     'aaa_base coreutils findutils openssh openssl=0.9.6i ' +
+                'pam-modules',
+    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+}
+sourceslist['suse-82-i386'] = {
+    'suse-82-i386': ('base', )
+}
+config['suse-82-i386'] = { 'root_rpmbuild': 'rpm', }
+aliases['suse-82-i386'] = ('suse82', )
+
+# SuSE Linux 8.2, updates
+packages['suse-82-i386-updates'] = packages['suse-82-i386']
+sourceslist['suse-82-i386-updates'] = {
+    'suse-82-i386': ('base', 'update', 'security', )
+}
+config['suse-82-i386-updates'] = config['suse-82-i386']
+aliases['suse-82-i386-updates'] = ('suse82u', )
+
+# SuSE Linux 8.2, full
+packages['suse-82-i386-full'] = packages['suse-82-i386']
+sourceslist['suse-82-i386-full'] = {
+    'suse-82-i386': aptsources['suse-82-i386'].keys(),
+}
+config['suse-82-i386-full'] = config['suse-82-i386']
+aliases['suse-82-i386-full'] = ('suse82f', )

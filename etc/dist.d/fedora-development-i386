@@ -1,0 +1,27 @@
+# mach dist configuration                          -*- python -*-
+
+# fedora-development-i386: configuration for Fedora development
+
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
+
+### Fedora Core Development flavours
+aptsources['fedora-development-i386'] = {
+    'core':             'rpm ' + fedora + ' development/i386 core',
+}
+
+# Fedora Core Development
+packages['fedora-development-i386-core'] = {
+    'dir':      'fedoracore-development-i386',
+    'minimal':  'bash glibc',
+    'base':     'coreutils findutils openssh-server',
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
+                'unzip bzip2 diffutils cpio elfutils',
+}
+sourceslist['fedora-development-i386-core'] = {
+    'fedora-development-i386': ('core', )
+}
+config['fedora-development-i386-core'] = {}
+aliases['fedora-development-i386-core'] = ('fdev', 'fcdev', )
