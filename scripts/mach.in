@@ -954,17 +954,31 @@ class Root:
         # output of du -B M is inconsistent
         command = "%s %s du / --max-depth=0 | tail -n 1 | cut -f 1" % (config['chroot'], self.rootdir)
         
-        diskusage = string.atoi (string.strip (commands.getoutput (command))) / 1024.0
-        print "+ %s (%s, %d MB)" % (self.root, lockedness, diskusage)
+        try:
+            diskusage = "%d MB" % (string.atoi (string.strip (commands.getoutput (command))) / 1024.0)
+        except ValueError: # atoi failed
+            diskusage = 'Unknown'
+        print "+ %s (%s, %s)" % (self.root, lockedness, diskusage)
         resultdir = get_config_dir (self.config, 'result')
+        if not os.path.exists (resultdir):
+            print "  - no packages built"
+            return
         for dir in os.listdir (resultdir):
+            # check if there's a .src.rpm
+            built = False
+            for file in os.listdir (os.path.join (resultdir, dir)):
+                if file[-8:] == '.src.rpm': built = True
+            if not built:
+                print "  - %s: build failed" % dir
+                continue
+            
             # get disk usage
             command = "du --max-depth=0 -c %s | tail -n 1 | cut -f 1" % (os.path.join (resultdir, dir, '*.rpm'))
             diskusage = string.strip (commands.getoutput (command))
             # get signature
             command = "rpm -qip %s | grep Signature" % os.path.join (resultdir, dir, '*.src.rpm')
             output = string.strip (commands.getoutput (command))
-            # get last word
+            # get last word of output
             signature = output.split ()[-1]
             signedness = None
             if signature == "(none)":
