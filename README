@@ -156,6 +156,17 @@ BUGS
   rpm process.  After that, run "make unlock" and re-run the command you
   had given.
 - for now, report them to me personally at thomas (at) apestaart (dot) org
+- Red Hat 9, updated has repeatable db4 bugs.  To repeat:
+  - setup apt
+  - chroot
+  - put only 'os' in /etc/apt/sources.list
+  - apt-get update
+  - apt-get -f update
+  - add updates to sources.list
+  - apt-get upgrade
+  - running rpm -qa will give errors now, while first doing
+    export LD_ASSUME_KERNEL=2.2.5 and then rpm -qa will not.
+    This is due to glibc upgrade.
 
 ADDING A DISTRIBUTION
 ---------------------
