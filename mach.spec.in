@@ -72,7 +72,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc ChangeLog README AUTHORS BUGS TODO
+%doc ChangeLog README AUTHORS BUGS TODO FORGETMENOT
 %dir %{_sysconfdir}/mach
 %config(noreplace) %{_sysconfdir}/mach/conf
 %config(noreplace) %{_sysconfdir}/mach/dist
