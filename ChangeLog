@@ -1,5 +1,9 @@
 2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* m4/as-version.m4: sync with upstream, fixes release tag for snaps
+
+2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in: make sure build options are passed to rpmbuild
           when checking sources/patches.  Fixes error when parsing specs
           with ExclusiveArch:
