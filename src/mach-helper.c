@@ -203,6 +203,34 @@ do_apt_get (int argc, char *argv[])
   do_command ("/usr/bin/apt-get", &(argv[1]));
 }
 
+/* allow yum -c (statesdir/.../yum.conf) ... */
+void
+do_yum (int argc, char *argv[])
+{
+  char *installroot = NULL;
+
+  /* enough arguments ?
+   * mach-helper yum -c (statesdir/.../yum.conf) --installroot=..., 6 */
+  if (argc < 6)
+    error ("not enough arguments");
+
+  /* -c */
+  if (strncmp ("-c", argv[2], 2) != 0)
+    error ("%s: options not allowed", argv[2]);
+
+  /* check given file */
+  check_file_allowed (statesdir, argv[3]);
+
+  /* installroot */
+  if (strncmp ("--installroot=", argv[4], 14) != 0)
+    error ("%s: option not allowed", argv[4]);
+
+  installroot = argv[4] + 14;
+  check_dir_allowed (rootsdir, installroot);
+
+  do_command ("/usr/bin/yum", &(argv[1]));
+}
+
 void
 do_chroot (int argc, char *argv[])
 {
@@ -370,6 +398,8 @@ main (int argc, char *argv[])
     do_rpm (argc, argv);
   else if (strncmp ("apt-get", argv[1], 7) == 0)
     do_apt_get (argc, argv);
+  else if (strncmp ("yum", argv[1], 3) == 0)
+    do_yum (argc, argv);
   else if (strncmp ("mknod", argv[1], 5) == 0)
     do_mknod (argc, argv);
   else if (strncmp ("env", argv[1], 3) == 0)
