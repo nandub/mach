@@ -1136,7 +1136,7 @@ class Root:
                for x in glob.glob (os.path.join (resultdir, '*.rpm')):
                    os.system ('mv %s %s' % (x, os.path.basename (x)))
                for x in glob.glob (os.path.join (resultdir, '*')):
-                   os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
+                   os.system ('mv %s %s.%s' % (x, os.path.basename (resultdir), os.path.basename (x)))
 
         print "Build done."
         self.unlock ()
