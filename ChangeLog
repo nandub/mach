@@ -1,5 +1,10 @@
 2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * tests/*:
+		- start creating torture tests for mach
+
+2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * scripts/mach.in:
 		- remove use agent for signing until we figure it out
 		- also copy and md5sum spec file to results dir
