@@ -1459,7 +1459,12 @@ def get_rpm (config):
 # grab given url and store it as filename, preserving timestamps
 def urlgrab (url, filename):
     print "Getting %s ..." % url
-    (t, h) = urllib.urlretrieve (url, filename)
+    opener = urllib.URLopener ()
+    try:
+        (t, h) = opener.retrieve (url, filename)
+    except (IOError, errno, errmsg):
+        sys.stderr.write ("Couldn't retreive %s - %s\n" % (url, errmsg))
+
     d = None
     try:
         if h:
