@@ -2,6 +2,7 @@
 
 	* scripts/mach.in (rebuild): Don't fail if package has no build
 	requirements.
+	* etc/dist: Add Conectiva Linux 9.
 
 2003-12-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 

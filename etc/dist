@@ -20,6 +20,8 @@ fedora      = 'http://ayo.freshrpms.net/fedora/linux'
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 # SuSE Linux: http://apt4rpm.sourceforge.net/repos.html
 suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
+# Conectiva Linux: http://distro.conectiva.com.br/atualizacoes/#aptmirrors
+conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
 
 # Add-on locations
 jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
@@ -731,6 +733,34 @@ sourceslist['suse-82-i386-full'] = {
 }
 config['suse-82-i386-full'] = {}
 aliases['suse-82-i386-full'] = ('suse82f', )
+
+
+### Conectiva Linux 9 flavours
+aptsources['cnc-9-i386'] = {
+    'all':      'rpm ' + conectiva + ' 9/i386 all',
+    'updates':  'rpm ' + conectiva + '/atualizacoes 9/i386 updates',
+}
+
+# Conectiva Linux 9
+packages['cnc-9-i386'] = {
+    'dir':      'cnc-9-i386',
+    'minimal':  'bash glibc',
+    'base':     'filesystem fileutils findutils openssh-server textutils',
+    'build':    'rpm-build make gcc tar gzip patch unzip bzip2 diffutils cpio',
+}
+sourceslist['cnc-9-i386'] = {
+    'cnc-9-i386': ('all', )
+}
+config['cnc-9-i386'] = {}
+aliases['cnc-9-i386'] = ('cnc9', )
+
+# Conectiva Linux 9, updates
+packages['cnc-9-i386-updates'] = packages['cnc-9-i386']
+sourceslist['cnc-9-i386-updates'] = {
+    'cnc-9-i386': ('all', 'updates', )
+}
+config['cnc-9-i386-updates'] = {}
+aliases['cnc-9-i386-updates'] = ('cnc9u', )
 
 
 ### Dave/Dina
