@@ -60,6 +60,7 @@ sourceslist['redhat-70-i386-updates-freshrpms'] = {
 }
 aliases['redhat-70-i386-updates-freshrpms'] = ('rh70ufr', )
 
+
 ### Red Hat Linux 7.1 flavours
 aptsources['redhat-71-i386'] = {
     'os':               'rpm ' + redhat      + ' 7.1/i386 os',
@@ -102,6 +103,7 @@ sourceslist['redhat-71-i386-updates-freshrpms'] = {
     'redhat-71-i386': ('os', 'updates', 'freshrpms', )
 }
 aliases['redhat-71-i386-updates-freshrpms'] = ('rh71ufr', )
+
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
@@ -152,6 +154,8 @@ packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates']
 sourceslist['redhat-72-i386-jpackage'] = {
     'redhat-72-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh72', )
 }
+aliases['redhat-72-i386-jpackage'] = ('rh72jpp', )
+
 
 ### Red Hat Linux 7.3 flavours
 aptsources['redhat-73-i386'] = {
@@ -201,6 +205,8 @@ packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
 sourceslist['redhat-73-i386-jpackage'] = {
     'redhat-73-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh73', )
 }
+aliases['redhat-73-i386-jpackage'] = ('rh73jpp', )
+
 
 ### Red Hat Linux 8.0 flavours
 aptsources['redhat-80-i386'] = {
@@ -289,6 +295,8 @@ packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
 sourceslist['redhat-80-i386-jpackage'] = {
     'redhat-80-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh80', ),
 }
+aliases['redhat-80-i386-jpackage'] = ('rh80jpp', )
+
 
 ### Red Hat Linux 9 flavours
 aptsources['redhat-9-i386'] = {
@@ -377,6 +385,8 @@ packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
 sourceslist['redhat-9-i386-jpackage'] = {
     'redhat-9-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh9', ),
 }
+aliases['redhat-9-i386-jpackage'] = ('rh9jpp', )
+
 
 ### Fedora Core Beta 2 (0.94) flavours
 aptsources['fedora-0.94-i386'] = {
@@ -492,6 +502,7 @@ sourceslist['yellowdog-30-ppc-updates-freshrpms'] = {
 }
 aliases['yellowdog-30-ppc-updates-freshrpms'] = ('yd30ufr', )
 
+
 ### SuSE Linux 8.1 flavours
 aptsources['suse-81-i386'] = {
     'base':          'rpm ' + suse + ' 8.1-i386 base',
@@ -533,6 +544,7 @@ sourceslist['suse-81-i386-full'] = {
     'suse-81-i386': aptsources['suse-81-i386'].keys(),
 }
 
+
 ### SuSE Linux 8.2 flavours
 aptsources['suse-82-i386'] = {
     'base':          'rpm ' + suse + ' 8.2-i386 base',
@@ -569,6 +581,7 @@ packages['suse-82-i386-full'] = packages['suse-82-i386']
 sourceslist['suse-82-i386-full'] = {
     'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }
+
 
 ### Dave/Dina
 aptsources['davedina'] = {
