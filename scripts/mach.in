@@ -1366,10 +1366,10 @@ def main (config, args):
     except KeyError:
         sys.stderr.write ('No sources information found for %s\n' % root)
         sys.exit (1)
-    try:
-        config['files'] = files[root]
-    except:
-        debug ("no files override")
+    #try:
+    #    config['files'] = files[root]
+    #except:
+    #    debug ("no files override")
 
     if config[root]:
         for key in config[root].keys ():

@@ -23,17 +23,15 @@ config['dirs'] = {
 }
 
 # default root
-#config['defaultroot'] = 'redhat-9-i386'
+config['defaultroot'] = 'redhat-9-i386'
 
 # files created in the root
 config['files'] = {
     '/etc/resolv.conf': '''
-nameserver 192.168.001.001
-nameserver 157.193.40.42
-search 4fm.be onshuis
+nameserver 192.168.1.1
 ''',
     '/etc/hosts': '''
-127.0.0.1 thocra localhost.localdomain
+127.0.0.1 localhost localhost.localdomain
 ''',
     '/usr/bin/apt-sigchecker': '''#!/bin/bash
 while read p; do
