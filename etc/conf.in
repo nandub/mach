@@ -21,6 +21,8 @@ config['dirs'] = {
     'aptcache': '@LOCALSTATEDIR@/cache/mach/archives',
 }
 
+# default root
+#config['defaultroot'] = 'redhat-9-i386'
 
 # files created in the root
 config['files'] = {
