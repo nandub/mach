@@ -3,6 +3,8 @@
         * scripts/mach.in:
         	- refactor splitargs code
 		- added KeyboardInterrupt to catch ctrl-c
+                - reinstate proc
+                - remove bootstrap checks and code
 
 2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
 

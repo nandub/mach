@@ -22,3 +22,4 @@
 * EASY:		have "quiet" mode so that output is usable for comparison
 * HARD:		integrate ccache building
 * HARD:		integrate distcc support
+* EASY:		make proc mounting an option, document the issues with it

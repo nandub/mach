@@ -39,7 +39,6 @@ Commands:
                                 (passes options given to rpmbuild)
   chroot			chroot into root
   clean				totally cleans the root
-  check				check if a root can be set up
   rebuild			rebuild a (set of) .src.rpm(s)
                                 (passes options given to rpmbuild)
   setup				sets up the root for a particular purpose
@@ -50,6 +49,11 @@ Commands:
   status			show status of mach roots
   unlock			override root lock
 '''
+
+# list of allowed commands
+allowed_commands = ('apt-get', 'apt-cache', 'build',
+                    'chroot', 'clean', 'rebuild', 'rpm',
+                    'setup', 'status', 'unlock')
 
 # read default configuration
 config = {
@@ -94,10 +98,6 @@ try:
 except IOError:
     pass
 
-# list of allowed commands
-allowed_commands = ('apt-get', 'apt-cache', 'build',
-                    'check', 'chroot', 'clean', 'rebuild', 'rpm',
-                    'setup', 'status', 'unlock')
 
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
 qfmt = '"%{name}-%{version}-%{release}\n"'
@@ -356,15 +356,16 @@ class Root:
 
     def mount (self):
         "mount proc into chroot"
+        # FIXME: the next three lines are workaround code for when not having
+        # proc
         # FIXME: rh 72's mount needs /proc/mounts file, let's give it one
-        # FIXME: we need to move this to somewhere else
-        #ensure_dir (os.path.join (self.rootdir, 'proc'))
         #open (os.path.join (self.rootdir, 'proc', 'mounts'), 'w').close ()
         #return
+        ensure_dir (os.path.join (self.rootdir, 'proc'))
         # first umount for completeness; you never know
         self.umount ()
-        debug ("mounting proc and apt-archives")
-        file = open (os.path.join (self.statedir, 'mount'), "w+")
+        debug ("mounting proc")
+        file = open (os.path.join (self.statedir, 'mount'), "a+")
         command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
         debug (command)
         os.system (command)
@@ -439,11 +440,9 @@ class Root:
 
     def aptcache (self, arg, progress = False):
         "run apt-cache (arg) from outside the root on the root"
-        self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-cache'], conf, arg)
         (status, output) = do_with_output (command, progress)
-        self.umount ()
         if status != 0:
             raise self.Error, "Could not apt-cache %s" % arg
         print output
@@ -497,41 +496,6 @@ class Root:
         ret = self.do (cmd, progress)
         if message and not progress: self.stdout ('\n')
         return ret
-
-    def check_bootstrap (self):
-        "check if the bootstrap packages are present, download if not"
-        # if we already checked once, then we'll assume it's fine unless
-        # a check was forced with -c or --check
-        # FIXME: this doesn't survive mach clean, is that a problem ?
-        if self.get_state ('check') and not self.config['check']:
-            return
-    
-        # check if all packages are present
-        # FIXME: we don't need bootsstrap packages anymore, so move this
-        # check somewhere else
-        # print "Checking bootstrap packages ..."
-        ensure_dir (self.packagesdir)
-        self.set_state ('check')
-        return
-      
-        #FIXME: since we are dropping base, we don't need this anymore  
-        for pkg in self.config['packages']['base']:
-            path = os.path.join (self.packagesdir, pkg)
-            if not self.config['packages']['download'].has_key (pkg):
-                url = self.config['packages']['download'][''] + pkg
-            else:
-                url = self.config['packages']['download'][pkg] + pkg
-            if not os.path.exists (path):
-                urlgrab (url, path)
-            # verify that it's an rpm
-            #ret = os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path)
-            if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
-                os.remove (path)
-                urlgrab (url, path)
-                # retry
-                if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
-                    raise self.Error, "failed downloading %s" % url
-        self.set_state ('check')
 
     # check the given package list file
     # remove all packages that aren't in this list file
@@ -711,10 +675,6 @@ class Root:
         if target not in targets:
             raise self.Error, "don't know how to set up %s" % target
         self.lock ()
-    
-        # FIXME: methodize
-        debug ("checking packages")
-        self.check_bootstrap ()
     
         # try each of the targets in turn
         for which in targets:
@@ -1510,13 +1470,6 @@ def sanity_check (config):
     return True
 
    
-# forcibly check packages
-def check (config, args):
-    # force package check
-    config['check'] = 1
-    if check_packages (config):
-        print "Everything ok."
-
 # give a status of each of the roots
 def status (config, args):
     print "FIXME: write me" 
