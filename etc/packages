@@ -10,7 +10,7 @@ apts = 'http://thomas.apestaart.org/download/mach/apt/'
 apt = {
     'redhat-9-i386':  'apt-0.5.5cnc5-fr2.i386.rpm',
     'redhat-80-i386': 'apt-0.5.5cnc4.1-fr1.20030325a.0.rh80.4.i386.rpm',
-    'redhat-73-i386': 'apt-0.5.4cnc9-fr0.1.rh73.i386.rpm',
+    'redhat-73-i386': 'apt-0.5.5cnc5-fr0.rh73.2.i386.rpm',
     'redhat-72-i386-updates': 'apt-0.3.19cnc55-fr7.i386.rpm',
     'redhat-72-i386': 'apt-0.3.19cnc55-fr5.i386.rpm',
 }
@@ -135,7 +135,7 @@ packages['redhat-73-i386'] = {
                 ),
     'download': {
                     '': freshrpms + '7.3/i386/RPMS.os',
-                    apt['redhat-73-i386']: apts,
+                    apt['redhat-73-i386']: apts + 'redhat-73-i386/',
                 }
 }
 

@@ -1,3 +1,20 @@
+2003-05-21  Thomas Vander Stichele  <set EMAIL_ADDRESS environment variable>
+
+	* etc/Makefile.am: reworked config
+	* etc/apt: reworked config
+	* etc/conf.in: reworked config
+	* etc/packages: reworked config
+	* scripts/mach.in: reworked large parts, started objectifying Root,
+                           use host's apt and rpm to manipulate root packages
+
+2003-05-13  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in:
+          use rpm2cpio to extract an rpm matching the target platform
+          to install packages with.
+          This also uses a nasty chroot hack, so this ought to be thought
+          through.
+
 2003-05-12  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in:

@@ -40,3 +40,15 @@ while read p; do
 done
 '''
 }
+
+# commands used inside the chroot
+config['chrootcmds'] = {
+    'apt-get': 'apt-get',
+    'rpm': 'rpm',
+}
+
+# overrides for rh9 flavours
+chrootcmds['redhat-9-i386'] = {
+    'apt-get': 'export LD_ASSUME_KERNEL=2.2.5 && apt-get',
+    'rpm': 'export LD_ASSUME_KERNEL=2.2.5 && rpm',
+}
