@@ -68,7 +68,7 @@ then
   # last removal
   # be a good boy and clean out the dirs we filled with junk
   rm -rf %{_localstatedir}/lib/mach/states/*
-  umount %{_localstatedir}/lib/mach/roots/*/proc > /dev/null 2>%1 || :
+  umount %{_localstatedir}/lib/mach/roots/*/proc > /dev/null 2>&1 || :
   rm -rf %{_localstatedir}/lib/mach/roots/*
   rm -rf %{_localstatedir}/cache/mach/* > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/lib/mach/states > /dev/null 2>&1 || :
@@ -101,6 +101,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Sun Jun  6 2004 Ville Skyttä <ville.skytta at iki.fi>
+- Properly redirect STDERR from umount to /dev/null at erase time.
+
 * Wed Apr 14 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Own %%{_localstatedir}/mach, thanks to John Dalbec for the catch.
 
