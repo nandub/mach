@@ -37,7 +37,8 @@ packages['fedora-3-i386-core'] = {
 sourceslist['fedora-3-i386-core'] = {
     'fedora-3-i386': ('core', )
 }
-config['fedora-3-i386-core'] = {}
+# FC3 roots should use runuser instead of su
+config['fedora-3-i386-core'] = {'runuser': '/sbin/runuser'}
 aliases['fedora-3-i386-core'] = ('f3c', 'fc3', )
 
 # Fedora Core 3 with updates
@@ -45,7 +46,7 @@ packages['fedora-3-i386-updates'] = packages['fedora-3-i386-core']
 sourceslist['fedora-3-i386-updates'] = {
     'fedora-3-i386': ('core', 'updates', )
 }
-config['fedora-3-i386-updates'] = {}
+config['fedora-3-i386-updates'] = config['fedora-3-i386-core']
 aliases['fedora-3-i386-updates'] = ('f3u', )
 
 # Fedora Core 3 with GStreamer
@@ -53,25 +54,31 @@ packages['fedora-3-i386-gstreamer'] = packages['fedora-3-i386-core']
 sourceslist['fedora-3-i386-gstreamer'] = {
     'fedora-3-i386': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['fedora-3-i386-gstreamer'] = { 'release': '3' }
+config['fedora-3-i386-gstreamer'] = {
+  'runuser': '/sbin/runuser',
+  'release': '3'
+}
 aliases['fedora-3-i386-gstreamer'] = ('f3g', )
 
 packages['fedora-3-i386-gstreamer-deps'] = packages['fedora-3-i386-core']
 sourceslist['fedora-3-i386-gstreamer-deps'] = {
     'fedora-3-i386': ('core', 'gstreamer-deps')
 }
-config['fedora-3-i386-gstreamer-deps'] = { 'release': '3' }
+config['fedora-3-i386-gstreamer-deps'] = config['fedora-3-i386-gstreamer']
 aliases['fedora-3-i386-gstreamer-deps'] = ('f3gd', )
 
 # Fedora Core 3 with fedora.us
 packages['fedora-3-i386-fedora-stable'] = packages['fedora-3-i386-updates'].copy ()
-packages['fedora-3-i386-fedora-stable']['build'] = packages['fedora-3-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-3-i386-fedora-stable']['build'] = packages['fedora-3-i386-updates']['build'] # + " fedora-rpmdevtools"
 sourceslist['fedora-3-i386-fedora-stable'] = {
     'fedora-3-i386':
     sourceslist['fedora-3-i386-updates']['fedora-3-i386'] +
     ('fedora-stable', )
 }
-config['fedora-3-i386-fedora-stable']  = { 'release': '3' }
+config['fedora-3-i386-fedora-stable'] = {
+  'runuser': '/sbin/runuser',
+  'release': '3'
+}
 aliases['fedora-3-i386-fedora-stable'] = ('f3fs', )
 
 packages['fedora-3-i386-fedora-testing'] = packages['fedora-3-i386-fedora-stable']
@@ -100,7 +107,7 @@ sourceslist['fedora-3-i386-livna-stable'] = {
     sourceslist['fedora-3-i386-updates']['fedora-3-i386'] +
     ('fedora-stable', 'livna-stable', )
 }
-config['fedora-3-i386-livna-stable']  = { 'release': '3' }
+config['fedora-3-i386-livna-stable']  = config['fedora-3-i386-fedora-stable']
 aliases['fedora-3-i386-livna-stable'] = ('f3ls', )
 
 packages['fedora-3-i386-livna-testing'] = packages['fedora-3-i386-livna-stable']
@@ -126,7 +133,7 @@ packages['fedora-3-i386-freshrpms'] = packages['fedora-3-i386-core']
 sourceslist['fedora-3-i386-freshrpms'] = {
     'fedora-3-i386': ('core', 'freshrpms', )
 }
-config['fedora-3-i386-freshrpms'] = {}
+config['fedora-3-i386-freshrpms'] = config['fedora-3-i386-core']
 aliases['fedora-3-i386-freshrpms'] = ('f3fr', )
 
 # Fedora Core 3 with JPackage
@@ -138,7 +145,5 @@ sourceslist['fedora-3-i386-jpackage'] = {
     sourceslist['fedora-3-i386-updates']['fedora-3-i386'] +
     ('jpackage-generic', 'jpackage-fc3', 'jpackage-nonfree', ),
 }
-config['fedora-3-i386-jpackage'] = {}
+config['fedora-3-i386-jpackage'] = config['fedora-3-i386-core']
 aliases['fedora-3-i386-jpackage'] = ('fc3jpp', )
-
-config['runuser'] = '/sbin/runuser'
