@@ -1664,6 +1664,7 @@ def get_packages_dir (config):
 
 # make sure a dir exists
 def ensure_dir (dir):
+    debug ("ensuring dir %s" % dir)
     if not os.path.exists (dir):
         try:
             os.makedirs (dir)
