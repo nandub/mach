@@ -189,9 +189,9 @@ class SRPM:
         "return a list of BuildRequires for this src.rpm"
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
         # remove non-packagey things from buildreqs
-        # currently removes everything containing (
+        # currently removes everything containing ( or /
         for pkg in buildreqs:
-    	    if string.find (pkg, '(') >= 0:
+    	    if string.find (pkg, '(') >= 0 or string.find (pkg, '/') >= 0:
     	        buildreqs.remove (pkg)
         return buildreqs
     
