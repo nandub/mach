@@ -1,0 +1,1 @@
+* EASY:		finish build order figuring out by using rpm -q --specfile

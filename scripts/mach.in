@@ -24,10 +24,11 @@ Global options:
   -k, --keep			do not revert buildroot to initial package list
 
 Commands:
+  build				build from (set of) .spec file(s)
   chroot			chroot into root
   clean				totally cleans the root
   check				check if a root can be set up
-  rebuild			rebuild a .src.rpm
+  rebuild			rebuild a (set of) .src.rpm(s)
   setup				sets up the root for a particular purpose
   status			show status of mach roots
   unlock			override root lock
@@ -35,11 +36,11 @@ Commands:
 
 # read default configuration
 config = {
-  'statesdir': '@LOCALSTATEDIR@/state/mach',
-  'rootsdir': '@LOCALSTATEDIR@/tmp/mach/roots',
-  'resultsdir': '@LOCALSTATEDIR@/tmp/mach/result',
-  'packagedir': '@LOCALSTATEDIR@/tmp/mach/packages',
-  'tmpsdir': '@LOCALSTATEDIR@/tmp/mach/tmp',
+  'statesdir':   '@LOCALSTATEDIR@/state/mach',
+  'rootsdir':    '@LOCALSTATEDIR@/tmp/mach/roots',
+  'resultsdir':  '@LOCALSTATEDIR@/tmp/mach/result',
+  'packagedir':  '@LOCALSTATEDIR@/tmp/mach/packages',
+  'tmpsdir':     '@LOCALSTATEDIR@/tmp/mach/tmp',
   'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
 
   'force': 0,
@@ -151,13 +152,16 @@ def pty_popen (cmd):
     pid, fd = os.forkpty ()
     if pid == 0:
         os.execl ('/bin/sh', 'sh', '-c', cmd)
+        
     else:
         return os.fdopen (fd), pid
 
 # run a command and give a progress spinner that regularly advances
 # delta gives the number of secs between each spin iteration
 # jump is the number of iterations before jumping one dot further
-# return the return status of the app
+# returns a tuple:
+# - the return status of the app
+# - all of the output as one big string
 def do_progress (cmd, delta = 0.1, jump = 60):
     progress = '/-\|'
     i = 0
@@ -170,6 +174,8 @@ def do_progress (cmd, delta = 0.1, jump = 60):
     while running:
         try:
             block = fdin.read ()
+            # trash all \r\n
+            block = string.replace (block, '\r\n', '\n')
             output.append (block)
         except IOError:
             pass
@@ -186,23 +192,45 @@ def do_progress (cmd, delta = 0.1, jump = 60):
             (dip, status) = os.waitpid (pid, os.WNOHANG)
         except OSError:
             running = 0
-    if (status != 0):
+
+    # done
+    output = string.join (output, '').split ("\n")
+    if os.WIFEXITED (status):
+        retval = os.WEXITSTATUS (status)
+    if (retval != 0):
         sys.stdout.write ('\b!\n')
-        sys.stderr.write ('error:\n %s' % string.join (output))
+        sys.stderr.write ('error:\n %s\n' % string.join (output[-10:-1], "\n"))
     else: 
         sys.stdout.write ('\b.\n')
-    return status
+    return (retval, string.join (output, '\n') + '\n')
 
 # execute the given command in the chroot; possibly with progress bar
 # return return value of actual shell command
 def do_chroot (config, command, progress = False):
+    (retval, output) = do_chroot_with_output (config, command, progress)
+    return retval
+
+# execute the given command in the chroot; possibly with progress bar
+# return (return value, output) of command
+def do_chroot_with_output (config, command, progress = False):
     root = get_config_dir (config, 'root')
     cmd = '%s %s %s' % (config['chroot'], root, command)
     debug ("Executing %s" % cmd)
     if progress:
         return do_progress (cmd)
     else:
-        return os.system (cmd)
+        status = os.system (cmd)
+
+    if os.WIFEXITED (status):
+        retval = os.WEXITSTATUS (status)
+    #if (retval != 0):
+    #    sys.stdout.write ('\b!\n')
+        #sys.stderr.write ('error:\n %s' % string.join (output))
+    #else:
+    #    sys.stdout.write ('\b.\n')
+    #FIXME: hack to return no output, we should change this
+    return (retval, "")
+
 
 # do a topological sort on the given list of pairs
 # taken from a mail on the internet and adapted
@@ -476,7 +504,7 @@ def setup_build (config, args):
     macros.close ()
     os.system ('%s %s mv /tmp/macros /etc/rpm' % (config['chroot'], root))
     for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-        os.system ('%s %s mkdir -p /usr/src/rpm/%s' % (config['chroot'], root, dir))
+        os.system ("%s %s su -c 'mkdir -p /usr/src/rpm/%s' mach" % (config['chroot'], root, dir))
     #FIXME: add mach user and group
     do_chroot (config,
                "echo 'mach:!!:500:500::/usr/src/rpm:/bin/bash' >> /etc/passwd")
@@ -588,7 +616,7 @@ def build (config, args):
         # FIXME: add a temp stuff path somewhere instead of using current
         tmppath = "%s/%s-%s-%s" % (tmp, n, v, r)
         ensure_dir (tmppath)
-        paths = ['tmppath', '.', os.path.dirname (specfile)]
+        paths = [tmppath, '.', os.path.dirname (specfile)]
         # check if the files mentioned aren't already on-disk
         files = []
         for download in downloads:
@@ -603,7 +631,9 @@ def build (config, args):
             if not found:
                 print "Downloading %s ..." % download
                 filepath = tmppath + "/" + filename
-                if not urllib.urlretrieve (download, filepath):
+                try:
+                    urllib.urlretrieve (download, filepath)
+                except:
                     sys.stderr.write ("Could not download %s !\n" % download)
                     return False
                 files.append (filepath)
@@ -626,16 +656,20 @@ def build (config, args):
         #sys.stdout.write ("Installing BuildRequires ...")
         #do_chroot (config, "apt-get -y install %s" % string.join (packages, " "), True)
 
-        do_chroot (config, "rpmbuild -bs --nodeps /usr/src/rpm/SPECS/"
-                           + os.path.basename (specfile) + "> /dev/null 2>&1")
+        sys.stdout.write ("Creating .src.rpm ...")
+        if  do_chroot (config, "rpmbuild -bs --nodeps /usr/src/rpm/SPECS/"
+                               + os.path.basename (specfile), True) != 0:
+            sys.stderr.write ('error: could not build .src.rpm\n')
+            return False
         (n, v, r) = spec.nvr ()
         srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
         debug ("DEBUG: resulting srpm: %s" % srpmname)
         shutil.copy (root + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
-        srpms.append (srpmname)
+        srpms.append (tmppath + '/' + srpmname)
 
     # ready to build them all
-    print "Rebuilding generated .src.rpm's: %s " % string.join (srpms)
+    print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
+    unlock (config, args)
     rebuild (config, srpms)
             
         
@@ -693,11 +727,15 @@ def rebuild (config, args):
         srpm = os.path.basename (path)
         newpath = root + '/tmp/' + srpm
         print "Getting %s" % srpm
-        urllib.urlretrieve (path, newpath)
+        try:
+            urllib.urlretrieve (path, newpath)
+        except IOError:
+            sys.stderr.write ("Can't find %s !\n" % path)
+            return False
         spec = get_spec_from_srpm (newpath)
         header = get_header (newpath)
         if not header:
-            sys.stderr.write ('Cannot build %s\n' % srpm)
+            sys.stderr.write ('Cannot get header from %s\n' % newpath)
             continue
         buildreqs = get_build_requires (header)
         if buildreqs == False:
@@ -717,9 +755,10 @@ def rebuild (config, args):
         print "Processing %s" % pkgs[pkg]['srpm']
         # figure out the build requirements
         for buildreq in pkgs[pkg]['buildreqs']:
-            # FIXME: this is a hack
             # we trash everything after the - if it's there in the hopes
             # that the result is the pkg providing this buildrequire
+            # FIXME: use the rpm -q --specfile (spec) trick to do this
+            # properly
             req = string.split (buildreq, "-")[0]
             debug ("Mangled %s to %s" % (buildreq, req))
             deps.append ((pkg, req))
@@ -756,12 +795,14 @@ def rebuild (config, args):
         ensure_dir (resultdir)
         # rebuild binary rpm from the src rpm
         sys.stdout.write ("Rebuilding %s ..." % srpm)
-        if do_chroot (config, 'rpmbuild --rebuild /tmp/%s 2>&1 | tee %s'
-                              % (srpm, resultdir + '/rpm.log'), True) != 0:
+        (status, output) = do_chroot_with_output (config,
+                                      "su -c 'rpmbuild --rebuild /tmp/%s 2>&1' mach" % srpm,
+                                      True)
+        if (output):
+            open (resultdir + '/rpm.log', "wb"). write (output)
+        if status != 0:
             sys.stderr.write ("ERROR: something went wrong building this one\n")
-            sys.stderr.write ("ERROR: last 10 lines of build log:\n")
-            command = 'tail -n 10 %s/rpm.log' % resultdir
-            sys.stderr.write (commands.getoutput (command))
+            sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
             unlock (config, args)
             return False
         # reinstall and repackage src rpm
@@ -775,7 +816,8 @@ def rebuild (config, args):
         # analyze log file and move all of the rpms listed as Wrote:
         rpms = get_rpms_from_log (resultdir + '/rpm.log')
         sys.stdout.write ("Installing built RPMS ...")
-        do_chroot (config, 'rpm -Uhv %s' % string.join (rpms, " "), True)
+        if do_chroot (config, 'rpm -Uhv %s' % string.join (rpms, " "), True) != 0:
+            return False
         # FIXME: install these RPMS based on a boolean ?
         print "Collecting results from %s" % srpm
         for file in rpms:
@@ -896,6 +938,9 @@ def main (config, args):
     # DEBUG DEBUG DEBUG:
     #get_sources_list (config)
     #rpms = get_rpms_from_log ('/home/thomas/prefix/var/tmp/mach/result/redhat-9-i386/drwright-0.16-0.fdr.1/rpm.log')
+    #do_progress ("dmesg && sleep 1 && dmesg && sleep 1 && dmesg && true")
+    #do_progress ("dmesg && sleep 1 && dmesg && sleep 1 && dmesg && false")
+    #sys.exit (0)
 
     # run command
     if not args:
