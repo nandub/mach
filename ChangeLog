@@ -1,5 +1,12 @@
 2004-11-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	patch by: yax
+
+	* scripts/mach.in:
+	  Remove all matches of a package when removing packages
+
+2004-11-06  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* .cvsignore:
 	* autogen.sh:
 	* configure.in:

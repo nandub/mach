@@ -616,7 +616,7 @@ class Root:
         if not packages:
            return True
         sys.stdout.write ("Removing packages ...")
-        self.rpm (['-ev', ] + string.split (packages), self.progress ())
+        self.rpm (['-ev', '--allmatches'] + string.split (packages), self.progress ())
         return True
 
 
