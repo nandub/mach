@@ -116,7 +116,7 @@ def do_progress (cmd, delta = 0.1, jump = 60):
             running = 0
     if (status != 0):
         sys.stdout.write ('\b!\n')
-        print string.join (output)
+        sys.stderr.write ('error:\n %s' % string.join (output))
     else: 
         sys.stdout.write ('\b.\n')
     return status
@@ -278,13 +278,10 @@ def setup_prep (config, args):
     open (root + '/etc/mtab', 'w')
     open (root + '/etc/fstab', 'w')
 
-    file = open (root + '/etc/hosts', 'w')
-    file.write (config['hosts'])
-    file.close ()
-
-    file = open (root + '/etc/resolv.conf', 'w')
-    file.write (config['resolv.conf'])
-    file.close ()
+    for filename in config['files'].keys ():
+        file = open (root + filename, 'w')
+        file.write (config['files'][filename])
+        file.close ()
 
     ensure_dir (root + '/var/tmp')
     os.system ('rpm --root %s --initdb' % root)
@@ -440,6 +437,7 @@ def check (config, args):
 # chroot into root
 def chroot (config, args):
     rootdir = get_config_dir (config, 'root')
+    print "Entering %s" % config['root']
     os.system ("%s %s" % (config['chroot'], rootdir))
     
 # clean up chroot
@@ -486,13 +484,18 @@ def rebuild (config, args):
         # figure out the build requirements
         spec = get_spec_from_srpm (newpath)
         header = get_header (newpath)
+        if not header:
+            sys.stderr.write ('Cannot build %s\n' % srpm)
+            continue
         buildreqs = get_build_requires (header)
         if buildreqs == False:
             unlock (config, args)
             return False
         sys.stdout.write ('Installing BuildRequires ...')
-        do_chroot (config, 'apt-get install -y %s' % string.join (buildreqs),
-                   True)
+        if do_chroot (config, 'apt-get install -y %s' 
+                              % string.join (buildreqs), True) != 0:
+            sys.stderr.write ('Cannot build %s\n' % srpm)
+            continue
 
         # get the name and create the place where to store results
         name = header[rpm.RPMTAG_NAME]
@@ -504,7 +507,7 @@ def rebuild (config, args):
         # rebuild binary rpm from the src rpm
         sys.stdout.write ("Building %s ..." % srpm)
         if do_chroot (config, 'rpmbuild --rebuild /tmp/%s 2>&1 | tee %s'
-                              % (srpm, resultdir + '/rpm.log'), True):
+                              % (srpm, resultdir + '/rpm.log'), True) != 0:
             sys.stderr.write ("ERROR: something went wrong building this one\n")
             sys.stderr.write ("ERROR: last 10 lines of build log:\n")
             command = 'tail -n 10 %s/rpm.log' % resultdir
