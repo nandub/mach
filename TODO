@@ -41,3 +41,18 @@
   File "/usr/bin/mach", line 983, in rebuild
     shutil.copy2 (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
 * MEDIUM:	sanity-check conf files passed to mach-helper
+
+* HARD:		rpm --aid
+
+0) Create an /8.0/i386 mount point with all the packages for Red Hat 8.0.
+You can use anything you want, I use /8.0/i386.
+
+1) Install the rpmdb-redhat package from /8.0/i386.
+
+2) Edit /etc/rpm/macros, and supply the path to the package.
+Here's what I use
+    %_solve_dbpath          /usr/lib/rpmdb/%{_arch}-%{_vendor}-%{_os}/redhat
+    %_solve_pkgsdir         /8.0/i386/
+    %_solve_name_fmt        %{?_solve_pkgsdir}%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+
+That will make --aid functional.
