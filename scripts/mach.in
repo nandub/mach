@@ -604,7 +604,8 @@ class Root:
             (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
             # FIXME: install these RPMS based on a boolean ?
             # FIXME: error checks
-            (status, output) = do_chroot_with_output (config, '%s -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % (chroot_rpm, string.join (rpms, " ")))
+            output = self.rpm ('-qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % string.join (['', ] + rpms, " " + self.rootdir))
+            #(status, output) = do_chroot_with_output (config, '%s -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % (chroot_rpm, string.join (rpms, " ")))
             # Need to handle packages without Epochs :/
             output = string.replace (output, '=(none):', '=');
             sys.stdout.write ("Installing built RPMS and dependencies ...")
@@ -731,6 +732,7 @@ Dir {
             # FIXME: methodify
             statefile = os.path.join (self.statedir, 'build')
             self.check_package_list (statefile)
+            return
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         #FIXME: this ought to be done in a cleaner way
@@ -851,8 +853,6 @@ def get_rpm (config):
         exit (config)
     return binary
     
-    
-
 # grab given url and store it as filename, preserving timestamps
 def urlgrab (url, filename):
     print "Getting %s ..." % url
@@ -1335,6 +1335,8 @@ def main (config, args):
             Root.__dict__[command] (root, args)
         except KeyError:
             sys.stderr.write ("No %s method defined\n" % command)
+        except Root.Locked:
+            sys.stderr.write ("Root is locked.  Use -f to override lock")
     else:
         sys.stderr.write ("No such command '%s'\n" % command)
     #try:
