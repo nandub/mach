@@ -800,8 +800,7 @@ class Root:
                     # in the rpm-src tree apparently
                     #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
                 except Root.Error:
-                    sys.stderr.write ('Cannot build %s\n' % srpmname)
-                    sys.stderr.write ('ERROR: could not install buildreqs %s, expect a build failure' % buildreqs)
+                    sys.stderr.write ('ERROR: could not install buildreqs %s, expect a build failure\n' % buildreqs)
                     #continue
                     #FIXME: error code was never returned
                     #raise self.Error, "something went wrong building SRPM"
