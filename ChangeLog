@@ -1,7 +1,15 @@
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in: clean up temp dir after finding build results
+
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: fix proper mounting and umounting (Enrico Scholz)
+
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in: create /boot/kernel.h and make it throw an error
-          when included
+          when included (Enrico Scholz)
 
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 

@@ -313,6 +313,7 @@ class SRPM:
         specname = self.specname
         tmpdir = tempfile.mktemp ()
         ensure_dir (tmpdir)
+        tmp_remove_cmd = 'rm -rf %s' % tmpdir
         cmd = 'cd %s && rpm2cpio %s \
                | cpio -id --no-absolute-filenames %s \
                > /dev/null 2>&1' % (tmpdir, path, specname)
@@ -326,6 +327,7 @@ class SRPM:
         try:
             spec = Spec (spectmp)
         except Spec.Error, message:
+            os.system (tmp_remove_cmd)
             raise self.Error, message
             
         (n, v, r) = spec.nvr ()
@@ -334,6 +336,7 @@ class SRPM:
         for line in output.split ("\n"):
             result.append (line.replace ('-%s-%s' % (v, r), ''))
         debug ("results of srpm: %s" % result)
+        os.system (tmp_remove_cmd)
         return result
 
 ### abstract object acting on the root
@@ -488,7 +491,6 @@ class Root:
     def aptget (self, args, message = None,
                 progress = False, interactive = False):
         "run apt-get (arg) from outside the root on the root"
-        self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-get'], conf, string.join (args))
         debug ("aptget: command %s" % command)
@@ -498,14 +500,15 @@ class Root:
         if progress: self.stdout (' ...')
         (status, output) = do_with_output (command, progress)
         if message and not progress: self.stdout ('\n')
-        self.umount ()
         if status != 0:
             raise self.Error, "Could not apt-get %s" % string.join (args)
 
     def intaptget (self, args):
         if not self.get_state ('base'):
             self.setup (['base', ])
+        self.mount ()
         self.aptget (args, interactive = True)
+        self.umount ()
 
     def aptcache (self, args, progress = False):
         "run apt-cache (arg) from outside the root on the root"
@@ -1273,10 +1276,14 @@ clear Dir::Bin::scripts; // do not execute lua scripts
         for filename in self.config['files'].keys ():
             self.config_recreate (filename)
 
+        self.mount ()
         self._install ('minimal')
+        self.umount ()
 
     def _setup_base (self):
+        self.mount ()
         self._install ('base')
+        self.umount ()
 
     def _check_revert_build (self):
         # see if we need to revert to the build package list
