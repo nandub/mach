@@ -1,3 +1,9 @@
+2003-09-06  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in:
+		- remove use agent for signing until we figure it out
+		- also copy and md5sum spec file to results dir
+
 2003-08-17  Ville Skyttä <ville dot skytta at iki dot fi>
 
 	* etc/dist:
