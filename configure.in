@@ -3,6 +3,9 @@ AC_INIT(README)
 AS_VERSION(mach, MACH, 0, 4, 6, 1)
 AC_SUBST(RELEASE, $MACH_RELEASE)
 
+AC_CONFIG_SRCDIR([src/mach-helper.c])
+AM_CONFIG_HEADER(config.h)
+
 AC_SUBST_FILE(AUTHORS)
 AUTHORS=$srcdir/AUTHORS
 
@@ -10,9 +13,13 @@ AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AC_SUBST(ACLOCAL_AMFLAGS, "-I m4")
 
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
+AC_DEFINE_UNQUOTED(SYSCONFDIR, "$SYSCONFDIR",
+    [Location of configuration files])
 AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
 
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
+AC_DEFINE_UNQUOTED(LOCALSTATEDIR, "$LOCALSTATEDIR",
+    [Location of local state files])
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
 
 dnl rootsdir
@@ -22,6 +29,8 @@ AC_ARG_ENABLE(rootsdir,
   [ rootsdir=$localstatedir/lib/mach/roots]
 )
 AS_AC_EXPAND(ROOTSDIR, $rootsdir)
+AC_DEFINE_UNQUOTED(ROOTSDIR, "$ROOTSDIR",
+    [Location of mach roots])
 AC_MSG_NOTICE(Using rootsdir $ROOTSDIR)
 
 dnl archivesdir
@@ -31,6 +40,8 @@ AC_ARG_ENABLE(archivesdir,
   [ archivesdir=$localstatedir/cache/mach/archives]
 )
 AS_AC_EXPAND(ARCHIVESDIR, $archivesdir)
+AC_DEFINE_UNQUOTED(ARCHIVESDIR, "$ARCHIVESDIR",
+    [Location of cached packages])
 AC_MSG_NOTICE(Using archivesdir $ARCHIVESDIR)
 
 dnl statesdir
@@ -38,6 +49,8 @@ AC_ARG_ENABLE(statesdir,
   AC_HELP_STRING([--enable-statesdir=PATH], [use states in PATH]),
   [ statesdir=$enableval ],
   [ statesdir=$localstatedir/lib/mach/states]
+AC_DEFINE_UNQUOTED(STATESDIR, "$STATESDIR",
+    [Location of root states])
 )
 AS_AC_EXPAND(STATESDIR, $statesdir)
 AC_MSG_NOTICE(Using statesdir $STATESDIR)

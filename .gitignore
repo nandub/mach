@@ -40,5 +40,6 @@ install-sh
 mach.spec
 missing
 mkinstalldirs
+stamp-h1
 *.gz
 *.bz2
