@@ -1281,12 +1281,6 @@ Dir {
                             (dir, builduser), fatal = True)
 
         # this ensures that locally built RPMS are already used for apt-get
-        srcs = get_sources_list (self.config)
-        # FIXME: if we use external apt then this path should be changed ?
-        # FIXME: and if not ?
-        #srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
-        srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % self.rootdir)
-        create_sources_list (self.config, srcs)
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
         self.aptget (["update", ])
@@ -1614,6 +1608,8 @@ def create_sources_list (config, list):
     debug ("Creating sources.list")
     # we created in the root and chroot mv it afterwards due to perms
     sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
+    # this ensures that locally built RPMS are already used for apt-get
+    list.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
     sources.write (string.join (list, "\n"))
     sources.close ()
 #    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
