@@ -838,7 +838,7 @@ class Root:
                 release = spec.tag ("release")
                 debug ("Release of spec file to mangle is %s" % release)
                 if not release.endswith (self.config['release']):
-                    command = 'sed -e "s,Release.*,&.%s,g" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
+                    command = 'sed -e "s,^\\\\(Release\\\\s*:.*\\\\S\\\\)\\\\s*,\\\\1.%s,i" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
                     self.do_chroot (command)
                 else:
