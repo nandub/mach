@@ -569,14 +569,14 @@ def setup_consistency (config, args):
     # this ensures glibc doesn't get upgraded from underneath apt
     create_sources_list (config, (srcs[0], ))
     sys.stdout.write ('Updating apt from base source ...')
-    do_chroot (config, "%s update" % chroot_aptget, True) or exit (config)
+    do_chroot (config, "%s update" % chroot_aptget, True) and exit (config)
     sys.stdout.write ('Forcing consistency ...')
-    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) or exit (config)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) and exit (config)
     create_sources_list (config, srcs)
     sys.stdout.write ('Updating apt from all sources ...')
-    do_chroot (config, "%s update" % chroot_aptget, True) or exit (config)
+    do_chroot (config, "%s update" % chroot_aptget, True) and exit (config)
     sys.stdout.write ('Upgrading ...')
-    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) or exit (config)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) and exit (config)
     open (statefile, 'w')
     return True
 
