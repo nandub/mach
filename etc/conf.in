@@ -23,7 +23,7 @@ config['dirs'] = {
 }
 
 # default root
-config['defaultroot'] = 'redhat-9-i386'
+config['defaultroot'] = 'fedora-1-i386'
 
 # files created in the root
 config['files'] = {
