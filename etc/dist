@@ -493,7 +493,7 @@ sourceslist['fedora-1-i386-gstreamer-deps'] = {
     'fedora-1-i386': ('os', 'gstreamer-deps')
 }
 config['fedora-1-i386-gstreamer-deps'] = {}
-aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', 'f1gd')
+aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', )
 
 # Fedora Core 1 with fedora.us
 packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy ()
