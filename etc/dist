@@ -10,6 +10,7 @@
 rpmfind = 'ftp://rpmfind.net/linux/redhat/'
 freshrpms = 'http://ayo.freshrpms.net/redhat/'
 apts = 'http://thomas.apestaart.org/download/mach/apt/'
+gwdg = 'http://ftp.gwdg.de/pub/linux/suse/apt/SuSE/'
 
 # list of apt rpms to use
 # being lazy bastards, we only want to write the actual apt rpm used once
@@ -19,6 +20,8 @@ apt = {
     'redhat-73-i386': 'apt-0.5.5cnc5-fr0.rh73.2.i386.rpm',
     'redhat-72-i386-updates': 'apt-0.3.19cnc55-fr7.i386.rpm',
     'redhat-72-i386': 'apt-0.3.19cnc55-fr5.i386.rpm',
+    'suse-82-i386':   'apt-0.5.5cnc6-rb3.i386.rpm',
+    'suse-81-i386':   'apt-0.5.5cnc6-rb2.i386.rpm',
 }
 
 
@@ -62,8 +65,8 @@ packages['redhat-72-i386'] = {
                     'gdbm-1.8.0-10.i386.rpm',
                     apt['redhat-72-i386'],
                 ),
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'diffutils cpio openssh-server',
+    'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                    'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '7.2/i386/RPMS.os/',
                     apt['redhat-72-i386']: apts + '/redhat-72-i386/'
@@ -108,7 +111,7 @@ packages['redhat-72-i386-updates'] = {
                     'gdbm-1.8.0-10.i386.rpm',
                     apt['redhat-72-i386-updates']
                 ),
-    'build':    packages['redhat-72-i386']['build'],
+    'build':        packages['redhat-72-i386']['build'],
     'download': {
                     '': freshrpms + '7.2/i386/RPMS.os/',
                     'rpm-4.0.4-7x.i386.rpm':
@@ -164,8 +167,8 @@ packages['redhat-73-i386'] = {
                     'gdbm-1.8.0-14.i386.rpm',
                     apt['redhat-73-i386']
                 ),
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'diffutils cpio openssh-server',
+    'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                    'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '7.3/i386/RPMS.os',
                     apt['redhat-73-i386']: apts + 'redhat-73-i386/',
@@ -240,8 +243,8 @@ packages['redhat-80-i386'] = {
                     'glibc-common-2.2.93-5.i386.rpm',
                     apt['redhat-80-i386']
                 ),
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'diffutils cpio openssh-server',
+    'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                    'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '8.0/i386/RPMS.os/',
                     apt['redhat-80-i386']: apts + "redhat-80-i386/",
@@ -345,8 +348,8 @@ packages['redhat-9-i386'] = {
                     'glibc-common-2.3.2-11.9.i386.rpm',
                     apt['redhat-9-i386']
                 ),
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'diffutils cpio elfutils openssh-server',
+    'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                    'diffutils cpio elfutils openssh-server',
     'download': {
                     '': freshrpms + '9/i386/RPMS.os/',
                     apt['redhat-9-i386']: apts + "/redhat-9-i386/",
@@ -389,4 +392,167 @@ packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testi
 sourceslist['redhat-9-i386-fedora-unstable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
+}
+
+
+### SuSE Linux 8.1 flavours
+aptsources['suse-81-i386'] = {
+    'base':          'rpm ' + gwdg + ' 8.1-i386 base',
+    'extra':         'rpm ' + gwdg + ' 8.1-i386 extra',
+    'functronics':   'rpm ' + gwdg + ' 8.1-i386 funktronics',
+    'gnome2':        'rpm ' + gwdg + ' 8.1-i386 gnome2',
+    'kde':           'rpm ' + gwdg + ' 8.1-i386 kde',
+    'kde3-stable':   'rpm ' + gwdg + ' 8.1-i386 kde3-stable',
+    'mantel-kernel': 'rpm ' + gwdg + ' 8.1-i386 mantel-kernel',
+    'mozilla':       'rpm ' + gwdg + ' 8.1-i386 mozilla',
+    'packman-i686':  'rpm ' + gwdg + ' 8.1-i386 packman-i686',
+    'packman':       'rpm ' + gwdg + ' 8.1-i386 packman',
+    'security-prpm': 'rpm ' + gwdg + ' 8.1-i386 security-prpm',
+    'security':      'rpm ' + gwdg + ' 8.1-i386 security',
+    'suse-people':   'rpm ' + gwdg + ' 8.1-i386 suse-people',
+    'suser-kpietrz': 'rpm ' + gwdg + ' 8.1-i386 suser-kpietrz',
+    'suser-tcousin': 'rpm ' + gwdg + ' 8.1-i386 suser-tcousin',
+    'update-prpm':   'rpm ' + gwdg + ' 8.1-i386 update-prpm',
+    'update':        'rpm ' + gwdg + ' 8.1-i386 update',
+    'usr-local-bin': 'rpm ' + gwdg + ' 8.1-i386 usr-local-bin',
+    'wine':          'rpm ' + gwdg + ' 8.1-i386 wine',
+    'xfree86':       'rpm ' + gwdg + ' 8.1-i386 xfree86',
+}
+
+# SuSE Linux 8.1
+packages['suse-81-i386'] = {
+    'dir':      'suse-81-i386',
+    'base':     (
+                    'glibc-2.2.5-161.i586.rpm',
+                    'mktemp-1.5-481.i586.rpm',
+                    'termcap-2.0.8-625.i586.rpm',
+                    'readline-4.3-47.i586.rpm',
+                    'ncurses-5.2-401.i586.rpm',
+                    'bash-2.05b-47.i586.rpm',
+                    'zlib-1.1.4-50.i586.rpm',
+                    'texinfo-4.2-47.i586.rpm',
+                    'sed-3.02.80-52.i586.rpm',
+                    'grep-2.5.1-83.i586.rpm',
+                    'fileutils-4.1.11-28.i586.rpm',
+                    'textutils-2.1-37.i586.rpm',
+                    'diffutils-2.8.1-48.i586.rpm',
+                    'shadow-4.0.2-228.i586.rpm',
+                    'aaa_base-2002.10.14-0.i586.rpm',
+                    'filesystem-2002.9.2-50.i586.rpm',
+                    'util-linux-2.11u-44.i586.rpm',
+                    'bzip2-1.0.2-50.i586.rpm',
+                    'rpm-3.0.6-417.i586.rpm',
+                    'findutils-4.1.7-429.i586.rpm',
+                    'file-3.37-153.i586.rpm',
+                    'gawk-3.1.1-121.i586.rpm',
+                    'pam-0.76-46.i586.rpm',
+                    'pam-modules-2002.8.27-24.i586.rpm',
+                    'sh-utils-2.0-325.i586.rpm',
+                    'libxcrypt-1.1-53.i586.rpm',
+                    'acl-2.0.19-16.i586.rpm',
+                    'attr-2.0.11-15.i586.rpm',
+                ),
+    'apt':      (
+                    'popt-1.6-281.i586.rpm',
+                    'apt-libs-0.5.5cnc6-rb2.i386.rpm',
+                    'lua-5.0-rb1.i386.rpm',
+                    apt['suse-81-i386'],
+                ),
+    'build':        'rpm-devel make gcc tar gzip patch unzip cpio',
+    'download': {
+                    '':                         gwdg + '8.1-i386/RPMS.base/',
+                    apt['suse-81-i386']:        gwdg + '8.1-i386/RPMS.extra/',
+                    'apt-libs-0.5.5cnc6-rb2.i386.rpm':
+                                                gwdg + '8.1-i386/RPMS.extra/',
+                    'lua-5.0-rb1.i386.rpm':     gwdg + '8.1-i386/RPMS.extra/',
+        }
+}
+sourceslist['suse-81-i386'] = {
+    'suse-81-i386': ('base',)
+}
+
+# SuSE Linux 8.1 full, all updates
+packages['suse-81-i386-full'] = packages['suse-81-i386']
+sourceslist['suse-81-i386'] = {
+    'suse-81-i386': aptsources['suse-81-i386'].keys(),
+}
+
+
+
+### SuSE Linux 8.2 flavours
+aptsources['suse-82-i386'] = {
+    'base':          'rpm ' + gwdg + ' 8.2-i386 base',
+    'extra':         'rpm ' + gwdg + ' 8.2-i386 extra',
+    'kde':           'rpm ' + gwdg + ' 8.2-i386 kde',
+    'mantel-kernel': 'rpm ' + gwdg + ' 8.2-i386 mantel-kernel',
+    'mozilla':       'rpm ' + gwdg + ' 8.2-i386 mozilla',
+    'packman-i686':  'rpm ' + gwdg + ' 8.2-i386 packman-i686',
+    'packman':       'rpm ' + gwdg + ' 8.2-i386 packman',
+    'security-prpm': 'rpm ' + gwdg + ' 8.2-i386 security-prpm',
+    'security':      'rpm ' + gwdg + ' 8.2-i386 security',
+    'suse-people':   'rpm ' + gwdg + ' 8.2-i386 suse-people',
+    'suser-kpietrz': 'rpm ' + gwdg + ' 8.2-i386 suser-kpietrz',
+    'suser-tcousin': 'rpm ' + gwdg + ' 8.2-i386 suser-tcousin',
+    'update-prpm':   'rpm ' + gwdg + ' 8.2-i386 update-prpm',
+    'update':        'rpm ' + gwdg + ' 8.2-i386 update',
+    'usr-local-bin': 'rpm ' + gwdg + ' 8.2-i386 usr-local-bin',
+    'xfree86':       'rpm ' + gwdg + ' 8.2-i386 xfree86',
+}
+
+# SuSE Linux 8.2
+packages['suse-82-i386'] = {
+    'dir':      'suse-82-i386',
+    'base':     (
+                    'glibc-2.3.2-6.i586.rpm',
+                    'mktemp-1.5-531.i586.rpm',
+                    'termcap-2.0.8-674.i586.rpm',
+                    'readline-4.3-105.i586.rpm',
+                    'bash-2.05b-105.i586.rpm',
+                    'ncurses-5.3-28.i586.rpm',
+                    'zlib-1.1.4-105.i586.rpm',
+                    'info-4.5-18.i586.rpm',
+                    'grep-2.5.1-158.i586.rpm',
+                    'sed-3.02.80-102.i586.rpm',
+                    'coreutils-4.5.8-12.i586.rpm',
+                    'libacl-2.2.6-14.i586.rpm',
+                    'libattr-2.4.0-14.i586.rpm',
+                    'fillup-1.24-1.i586.rpm',
+                    'insserv-0.99.7-23.i586.rpm',
+                    'diffutils-2.8.1-99.i586.rpm',
+                    'shadow-4.0.3-59.i586.rpm',
+                    'aaa_base-2003.3.18-2.i586.rpm',
+                    'filesystem-2003.2.27-22.i586.rpm',
+                    'util-linux-2.11z-25.i586.rpm',
+                    'bzip2-1.0.2-103.i586.rpm',
+                    'rpm-3.0.6-478.i586.rpm',
+                    'findutils-4.1.7-545.i586.rpm',
+                    'file-3.37-208.i586.rpm',
+                    'gawk-3.1.1-233.i586.rpm',
+                    'pam-0.77-38.i586.rpm',
+                    'pam-modules-2003.3.11-1.i586.rpm',
+                    'libxcrypt-1.4-23.i586.rpm',
+                ),
+    'apt':      (
+                    'popt-1.6.4-31.i586.rpm',
+                    'lua-5.0-rb3.i386.rpm',
+                    'apt-libs-0.5.5cnc6-rb3.i386.rpm',
+                    apt['suse-82-i386'],
+                ),
+    'build':        'rpm-devel make gcc tar gzip patch unzip cpio',
+    'download': {
+                    '':                     gwdg + '8.2-i386/RPMS.base/',
+                    apt['suse-82-i386']:    gwdg + '8.2-i386/RPMS.extra/',
+                    'apt-libs-0.5.5cnc6-rb3.i386.rpm':
+                                            gwdg +'8.2-i386/RPMS.extra/',
+                    'lua-5.0-rb3.i386.rpm': gwdg + '8.2-i386/RPMS.extra/',
+                }
+}
+sourceslist['suse-82-i386'] = {
+    'suse-82-i386': ('base',)
+}
+
+# SuSE Linux 8.2 full, all updates
+packages['suse-82-i386-full'] = packages['suse-82-i386']
+sourceslist['suse-82-i386'] = {
+    'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }

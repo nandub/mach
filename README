@@ -35,6 +35,10 @@ Fedora 8.0 and 9
   - testing
   - unstable
 
+SuSE 8.1 and 8.2
+  - base
+  - full + updates
+
 Some handy features of mach include
   - "caching" of downloaded packages by mounting the archives dir into
     the build root
