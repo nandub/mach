@@ -8,6 +8,9 @@ import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 
+# FIXME: move this to config
+aptget = 'export LD_ASSUME_KERNEL=2.2.5 && apt-get'
+
 # make sure True and False constants exist
 
 if not hasattr (__builtins__, 'True'):
@@ -492,20 +495,27 @@ def install (config, set):
 def setup_base (config, args):
     return install (config, 'base')
 
-# install packages needed for apt and force an apt-update
+# install packages needed for apt
 def setup_apt (config, args):
     if not install (config, 'apt'):
         debug ("oops: couldn't install apt packages")
         return False
+    return True
+
+# force consistency
+def setup_consistency (config, args):
     # trigger an apt-get update
+    statefile = os.path.join (get_config_dir (config, 'state'), 'consistency')
+    if os.path.exists (statefile):
+        return True
     mount (config, args)
     rootdir = get_config_dir (config, 'root')
     create_sources_list (config, get_sources_list (config))
     sys.stdout.write ('Updating apt ...')
-    do_progress ('%s %s apt-get update' % (config['chroot'], rootdir))
+    do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
     sys.stdout.write ('Forcing consistency ...')
-    do_progress ('%s %s apt-get -f upgrade -y' % (config['chroot'], rootdir))
-    umount (config, args)
+    do_chroot (config, "/bin/bash -c '%s -f upgrade -y'" % aptget, True)
+    open (statefile, 'w')
     return True
 
 # set up a 'root' for rpm building
@@ -518,7 +528,8 @@ def setup_build (config, args):
     root = get_config_dir (config, 'root')
     # install packages
     sys.stdout.write ('Installing rpm build packages ...')
-    do_chroot (config, 'apt-get install -y rpm-devel rpm-build make gcc tar gzip patch unzip diffutils', True)
+    packages = "rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
+    do_chroot (config, "/bin/bash -c '%s install -y %s'" % (aptget, packages), True)
     #FIXME: add mach user and group
     if do_chroot (config, "/bin/bash -c 'echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd'") != 0:
         sys.stdout.write ("error: could not add mach user to /etc/passwd\n")
@@ -878,7 +889,7 @@ def rebuild (config, args):
 
 # setup chroot
 def setup (config, args):
-    targets = ('prep', 'base', 'apt', 'build')
+    targets = ('prep', 'base', 'apt', 'consistency', 'build')
     if not args:
         args = ['build',] # default to build
 
