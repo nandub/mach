@@ -24,3 +24,7 @@
 * MEDIUM:	make default buildroot dependant on target distro
 * MEDIUM:	figure out what to do with check for release name mangling
                 in the fedora.us fedora 1 case where "1" is used as disttag
+* MEDIUM:	SuSE 8.1, su inside root (and hence mach chroot) for base
+		and build setups fails due to missing pam_unix.so.  It's in
+		the pam-modules package, but as of 2003-12-20, that doesn't
+		install due to a relocation error.
