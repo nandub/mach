@@ -30,7 +30,7 @@ dnl archivesdir
 AC_ARG_WITH(archivesdir,
   AC_HELP_STRING([--enable-archivesdir=PATH], [create roots in PATH]),
   [ archivesdir=$withval ],
-  [ archivesdir=$localstatedir/cache/mach/packages]
+  [ archivesdir=$localstatedir/cache/mach/archives]
 )
 AS_AC_EXPAND(ARCHIVESDIR, $archivesdir)
 AC_MSG_NOTICE(Using archivesdir $ARCHIVESDIR)

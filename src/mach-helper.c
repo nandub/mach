@@ -131,11 +131,12 @@ do_command (const char *filename, char *const argv[])
   //printf ("DEBUG: First argument: %s\n", *argv);
   //printf ("DEBUG: Executing %s\n", filename);
   /* FIXME: for a debug option */
+  /*
   printf ("Executing %s ", filename);
   for (arg = (char **) &(argv[1]); *arg; ++arg)
     printf ("%s ", *arg);
   printf ("\n");
-  
+  */
   retval = execve (filename, argv, env);
   error ("executing %s: %s", filename, strerror (errno));
 }
