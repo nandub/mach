@@ -33,10 +33,12 @@ Global options:
 Commands:
   apt-get			run host's apt-get on target root
   build				build from (set of) .spec file(s)
+                                (passes options given to rpmbuild)
   chroot			chroot into root
   clean				totally cleans the root
   check				check if a root can be set up
   rebuild			rebuild a (set of) .src.rpm(s)
+                                (passes options given to rpmbuild)
   setup				sets up the root for a particular purpose
         prep                         preparation before package install
         base                         base set of rpms to make rpm work
