@@ -26,13 +26,19 @@ _$*
 *.ln
 core
 # CVS default ignores end
+INSTALL
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache
 autoregen.sh
+compile
 config.*
 configure
+depcomp
+install-sh
 mach.spec
+missing
+mkinstalldirs
 *.gz
 *.bz2
