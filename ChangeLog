@@ -1,5 +1,12 @@
 2004-03-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* configure.in:
+	  bump nano to 1
+	* scripts/mach.in:
+          check for missing prep script before interpreting spec file
+
+2004-03-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.ac: release 0.4.4, "Madrid"
 
 2004-03-10  Thomas Vander Stichele  <thomas at apestaart dot org>
