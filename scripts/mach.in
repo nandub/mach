@@ -776,8 +776,9 @@ class Root:
         for name in order:
             srpmname = pkgs[name]['srpmname']
             # install buildrequires if there are
-            if 'buildrequires' in pkgs[name].keys ():
-                buildreqs = string.join (pkgs[name]['buildrequires'])
+            debug ("Building %s with package stuff %s" % (name, pkgs[name].keys ()))
+            if 'buildreqs' in pkgs[name].keys ():
+                buildreqs = string.join (pkgs[name]['buildreqs'])
                 print "Building %s" % srpmname
                 debug ("BuildRequires: %s" % buildreqs)
                 sys.stdout.write ('Installing BuildRequires ...')
