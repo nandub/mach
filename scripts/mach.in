@@ -785,7 +785,17 @@ class Root:
         debug ("topological input: ")
         debug (deps)
         debug ("topological output: ")
-        sorted = topological_sort (deps)
+        try:
+            sorted = topological_sort (deps)
+        except CycleError:
+            sys.stderr.write ('''
+ERROR: You've hit a dependency loop in the packages you are trying to build.
+       This means that the BuildRequires: of the various packages form a loop.
+       You can work around this by breaking the loop in two pieces, and first
+       building the one chain, then the other, then the one again based on
+       the other's new packages.''')
+
+            exit (config)
         sorted.reverse ()
         debug ("order %s" % sorted)
         # now scrub packages not up for build from order
