@@ -23,6 +23,7 @@ usage = 'usage: mach [mach-options] command [command-options-and-arguments]'
 help = '''Make a chroot and do stuff in it.
 
 Mach options:
+  -v, --version			print mach version
   -r, --root=ROOT		specify a root to work in
   -d, --debug			turn on debugging
   -f, --force			override root lock
@@ -1760,10 +1761,10 @@ def main (config, args):
     cli_config = {}
 
     try:
-        opts, args = getopt.getopt (args, 'r:hdfkscq',
+        opts, args = getopt.getopt (args, 'r:hdfkscqv',
                                     ['root=', 'help', 'debug', 'force', 'keep',
                                      'sign', 'collect', 'quiet', 'release=',
-                                     'no-scripts', 'canonify'])
+                                     'no-scripts', 'canonify', 'version'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1779,6 +1780,10 @@ def main (config, args):
         if opt in ('-h', '--help'):
             print usage
             print help
+            sys.exit (0)
+        if opt in ('-v', '--version'):
+            print "mach (make a chroot) @VERSION@"
+            print "Written by Thomas Vander Stichele <thomas at apestaart dot org>."
             sys.exit (0)
         elif opt in ('-r', '--root'):
             root = arg

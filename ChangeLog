@@ -1,5 +1,9 @@
 2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in: implemented -v by popular demand
+
+2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in: make sure SRPM and Spec classes always pass
           the quoted options string passed for build, so parsing them
            doesn't fail on e.g. ExclusiveArch:
