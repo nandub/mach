@@ -517,7 +517,9 @@ class Root:
             return
     
         # check if all packages are present
-        print "Checking bootstrap packages ..."
+        # FIXME: we don't need bootsstrap packages anymore, so move this
+        # check somewhere else
+        # print "Checking bootstrap packages ..."
         ensure_dir (self.packagesdir)
         self.set_state ('check')
         return
