@@ -74,6 +74,8 @@ config = {
   'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
 
+  # root_*: commands run inside the build root
+  'root_rpmbuild': 'rpmbuild',
 }
 DEBUG = 0
 
@@ -568,7 +570,8 @@ class Root:
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
         (options, specs) = self.splitargspecs (arg)
-        debug ("options to rpmbuild: %s" % options)
+        debug ("Build options to %s: %s" %
+               (self.config['root_rpmbuild'], options))
         # check if the spec files exist and if we can parse the files necessary
         for specfile in specs:
             if not os.path.exists (specfile):
@@ -631,8 +634,9 @@ class Root:
             # fix ownership on all of these
             self.do_chroot ("cd /usr/src/rpm && chown -R machbuild:machbuild *")
             try:
-                self.do_chroot ("cd / && rpmbuild %s -bs --nodeps %s" \
-                                % (optstring,
+                self.do_chroot ("cd / && %s %s -bs --nodeps %s" \
+                                % (self.config['root_rpmbuild'],
+                                   optstring,
                                    os.path.join ('usr', 'src', 'rpm', 'SPECS', 
                                                 os.path.basename (specfile))),
                                 "Creating .src.rpm",
@@ -891,7 +895,7 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
     
-            command = "su -c 'RPM_BUILD_NCPUS=%s rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (nrcpus, string.join (options), specfile)
+            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding %s" % srpmname,
                                                True)
@@ -909,7 +913,7 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
             #do_chroot (config, "su -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' mach" % srpm)
             #self.rpm ('-Uhv /tmp/%s > /dev/null 2>&1' % srpm)
             #(status, output) = do_chroot_with_output (config,
-            # "su -c 'rpmbuild -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % spec,
+            # "su -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % (self.config['root_rpmbuild'], spec),
             #    True)
             if output:
                 open (resultdir + '/rpm.log', "ab"). write (output)
@@ -1109,7 +1113,7 @@ RPM {
     Hold { };
     Allow-Duplicated { "^gpg-pubkey$" };
     Source {
-        Build-Command "rpmbuild --rebuild";
+        Build-Command "''' + self.config['root_rpmbuild'] + ''' --rebuild";
     };
     GPG-Check "false";
     RootDir "''' + root + '''";

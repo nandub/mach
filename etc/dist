@@ -663,7 +663,7 @@ packages['suse-81-i386'] = {
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
 }
-config['suse-81-i386'] = {}
+config['suse-81-i386'] = { 'root_rpmbuild': 'rpm', }
 aliases['suse-81-i386'] = ('suse81', )
 
 # SuSE Linux 8.1, updates
@@ -671,7 +671,7 @@ packages['suse-81-i386-updates'] = packages['suse-81-i386']
 sourceslist['suse-81-i386-updates'] = {
     'suse-81-i386': ('base', 'update', 'security', )
 }
-config['suse-81-i386-updates'] = {}
+config['suse-81-i386-updates'] = config['suse-81-i386']
 aliases['suse-81-i386-updates'] = ('suse81u', )
 
 # SuSE Linux 8.1, full
@@ -679,7 +679,7 @@ packages['suse-81-i386-full'] = packages['suse-81-i386']
 sourceslist['suse-81-i386-full'] = {
     'suse-81-i386': aptsources['suse-81-i386'].keys(),
 }
-config['suse-81-i386-full'] = {}
+config['suse-81-i386-full'] = config['suse-81-i386']
 aliases['suse-81-i386-full'] = ('suse81f', )
 
 
@@ -708,14 +708,14 @@ aptsources['suse-82-i386'] = {
 packages['suse-82-i386'] = {
     'dir':      'suse-82-i386',
     'minimal':  'bash glibc',
-    'base':     'coreutils findutils openssh openssl=0.9.6i aaa_base ' +
+    'base':     'aaa_base coreutils findutils openssh openssl=0.9.6i ' +
                 'pam-modules',
     'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
-    'suse-82-i386': ('base',)
+    'suse-82-i386': ('base', )
 }
-config['suse-82-i386'] = {}
+config['suse-82-i386'] = { 'root_rpmbuild': 'rpm', }
 aliases['suse-82-i386'] = ('suse82', )
 
 # SuSE Linux 8.2, updates
@@ -723,7 +723,7 @@ packages['suse-82-i386-updates'] = packages['suse-82-i386']
 sourceslist['suse-82-i386-updates'] = {
     'suse-82-i386': ('base', 'update', 'security', )
 }
-config['suse-82-i386-updates'] = {}
+config['suse-82-i386-updates'] = config['suse-82-i386']
 aliases['suse-82-i386-updates'] = ('suse82u', )
 
 # SuSE Linux 8.2, full
@@ -731,7 +731,7 @@ packages['suse-82-i386-full'] = packages['suse-82-i386']
 sourceslist['suse-82-i386-full'] = {
     'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }
-config['suse-82-i386-full'] = {}
+config['suse-82-i386-full'] = config['suse-82-i386']
 aliases['suse-82-i386-full'] = ('suse82f', )
 
 
