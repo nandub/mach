@@ -126,7 +126,10 @@ def do_chroot (config, command, progress = False):
     root = get_config_dir (config, 'root')
     cmd = '%s %s %s' % (config['chroot'], root, command)
     debug ("Executing %s" % cmd)
-    return do_progress (cmd)
+    if progress:
+        return do_progress (cmd)
+    else:
+        return os.system (cmd)
 
 # do a topological sort on the given list of pairs
 # taken from a mail on the internet and adapted
@@ -509,68 +512,80 @@ def clean (config, args):
     os.rmdir (rootdir)
 
 # rebuild a src rpm
-# FIXME: add stuff so you can build multiple ones in one go
 def rebuild (config, args):
-    if not lock (config, args):
-        return False
     root = get_config_dir (config, 'root')
     # check if we can build here yet
-    if not get_state (config, 'build'):
-        if not setup_build (config, args):
-            return False
+    #if not get_state (config, 'build'):
+    # trigger a cleanout of build root
+    if not setup (config, ["build"]):
+        return False
+    if not lock (config, args):
+        return False
 
-    # go right ahead
+    # get pkgs and collect info
+    pkgs = {}
     for path in args:
 	# resolve path to basename (without dirs)
         srpm = os.path.basename (path)
         newpath = root + '/tmp/' + srpm
         print "Getting %s" % srpm
         urllib.urlretrieve (path, newpath)
-
-    # now figure out build order
-    deps = []
-    names = []
-    for path in args:
-        srpm = os.path.basename (path)
-        newpath = root + '/tmp/' + srpm
-        print "Processing %s" % srpm
-        # figure out the build requirements
         spec = get_spec_from_srpm (newpath)
         header = get_header (newpath)
         if not header:
             sys.stderr.write ('Cannot build %s\n' % srpm)
             continue
         buildreqs = get_build_requires (header)
-        name = header[rpm.RPMTAG_NAME]
         if buildreqs == False:
             unlock (config, args)
             return False
-        # add each of the buildrequires to the deps list of pairs
-        names.append (name)
-        for buildreq in buildreqs:
-            deps.append ((name, buildreq))
+        name = header[rpm.RPMTAG_NAME]
+        pkgs[name] = {}
+        pkgs[name]['path'] = newpath
+        pkgs[name]['buildreqs'] = buildreqs
+        pkgs[name]['srpm'] = srpm
+        pkgs[name]['header'] = header
+        pkgs[name]['spec'] = spec
+ 
+    # now figure out build order
+    deps = [] # list of pkg, dep pairs
+    for pkg in pkgs.keys ():
+        print "Processing %s" % pkgs[pkg]['srpm']
+        # figure out the build requirements
+        for buildreq in pkgs[pkg]['buildreqs']:
+            # FIXME: this is a hack
+            # we trash everything after the - if it's there in the hopes
+            # that the result is the pkg providing this buildrequire
+            req = string.split (buildreq, "-")[0]
+            debug ("Mangled %s to %s" % (buildreq, req))
+            deps.append ((pkg, req))
 
-    print "DEBUG: topological input: "
-    print deps
-    print "DEBUG: topological output: "
-    print topological_sort (deps)
+    debug ("DEBUG: topological input: ")
+    debug (deps)
+    debug ("DEBUG: topological output: ")
+    order = topological_sort (deps)
+    order.reverse ()
+    debug ("order %s" % order)
 
-    for path in args:
+    for name in order:
+        srpm = pkgs[name]['srpm']
+        print "Building %s" % srpm
         sys.stdout.write ('Installing BuildRequires ...')
         if do_chroot (config, 'apt-get install -y %s' 
-                              % string.join (buildreqs), True) != 0:
+                              % string.join (pkgs[name]['buildreqs']), True) != 0:
             sys.stderr.write ('Cannot build %s\n' % srpm)
             continue
 
         # get the name and create the place where to store results
-        name = header[rpm.RPMTAG_NAME]
-        version = header[rpm.RPMTAG_VERSION]
-        release = header[rpm.RPMTAG_RELEASE]
+        h = pkgs[name]['header']
+        name = h[rpm.RPMTAG_NAME]
+        version = h[rpm.RPMTAG_VERSION]
+        release = h[rpm.RPMTAG_RELEASE]
         fullname = '%s-%s-%s' % (name, version, release)
         resultdir = get_config_dir (config, 'result') + '/' + fullname
         ensure_dir (resultdir)
         # rebuild binary rpm from the src rpm
-        sys.stdout.write ("Building %s ..." % srpm)
+        sys.stdout.write ("Rebuilding %s ..." % srpm)
         if do_chroot (config, 'rpmbuild --rebuild /tmp/%s 2>&1 | tee %s'
                               % (srpm, resultdir + '/rpm.log'), True) != 0:
             sys.stderr.write ("ERROR: something went wrong building this one\n")
@@ -581,17 +596,22 @@ def rebuild (config, args):
             return False
         # reinstall and repackage src rpm
         sys.stdout.write ("Repackaging %s ..." % srpm)
-        do_chroot (config, 'rpm -Uhv /tmp/%s' % srpm)
+        do_chroot (config, 'rpm -Uhv /tmp/%s > /dev/null 2>&1' % srpm)
+        spec = pkgs[name]['spec']
         if do_chroot (config, 'rpmbuild -bs /usr/src/rpm/SPECS/%s >> %s 2>&1'
                               % (spec, resultdir + '/rpm.log'), True):
             print "ERROR: something went wrong repackaging SRPM"
 
         # analyze log file and move all of the rpms listed as Wrote:
         rpms = get_rpms_from_log (resultdir + '/rpm.log')
+        sys.stdout.write ("Installing built RPMS ...")
+        do_chroot (config, 'rpm -Uhv %s' % string.join (rpms, " "), True)
+        # FIXME: install these RPMS based on a boolean ?
         print "Collecting results from %s" % srpm
         for file in rpms:
             # FIXME: a more python-like solution ?
             shutil.copy (root + '/' + file, resultdir)
+            # for now, we do, for multiple builds
             do_chroot (config, 'rm ' + file)
         print "Build of %s succeeded." % fullname
         
