@@ -132,7 +132,7 @@ class Spec:
             if match:
                 expand = match.expand ("\\2")
                 debug ("Need to expand tag %s inside tag %s (%s)" % (expand, tag, self.vars[tag]))
-                if self.vars[expand]:
+                if expand in self.vars.keys ():
                     debug ("Expanding it to %s" % self.vars[expand])
                     front = match.expand ("\\1")
                     back = match.expand ("\\3")
@@ -1550,10 +1550,13 @@ def main (config, args):
         # this is silly but what can we do about it ?
         if command == "apt-get": command = "aptget"
         if command == "apt-cache": command = "aptcache"
+
+        if not command in Root.__dict__.keys():
+            sys.stderr.write ("No %s method defined\n" % command)
+            sys.exit (1)
+   
         try:
             output = Root.__dict__[command] (root, args)
-        except KeyError:
-            sys.stderr.write ("No %s method defined\n" % command)
         except Root.Locked:
             sys.stderr.write ("Root is locked.  Use -f to override lock\n")
         except Root.Error, message:
