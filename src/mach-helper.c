@@ -2,18 +2,29 @@
  * mach-helper.c: help mach perform tasks needing root privileges
  */
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
 #include <stdarg.h>
-
+#include <stdlib.h>
 
 /* pull in configure'd defines */
 char *rootsdir = ROOTSDIR;
 char *statesdir = STATESDIR;
 char *archivesdir = ARCHIVESDIR;
+
+static char const * const ALLOWED_ENV[] =
+{
+  "APT_CONFIG",
+  "dist",
+  "ftp_proxy", "http_proxy", "https_proxy", "no_proxy"
+};
+
+#define ALLOWED_ENV_SIZE (sizeof (ALLOWED_ENV) / sizeof (ALLOWED_ENV[0]))
 
 /*
  * helper functions
@@ -114,18 +125,21 @@ check_file_allowed (const char *allowed, const char *given)
     error ("%s: symbolic link", given);
   if (!(S_ISREG (buf.st_mode)))
     error ("%s: not a regular file", given);
-} 
+}
 
 /* argv[0] should by convention be the binary name to be executed */
 void
 do_command (const char *filename, char *const argv[])
 {
   /* do not trust user environment */
-  char *env[] = { "PATH=/bin:/usr/bin:/usr/sbin",
-                  "HOME=/root",
-                  NULL };
+  char *env[3 + ALLOWED_ENV_SIZE] = {
+    [0] = "PATH=/bin:/usr/bin:/usr/sbin",
+    [1] = "HOME=/root"
+  };
   int retval;
   char **arg;
+  size_t idx=2;
+  size_t i;
 
   /* elevate privileges */
   setreuid (geteuid (), geteuid ());
@@ -138,6 +152,15 @@ do_command (const char *filename, char *const argv[])
     printf ("%s ", *arg);
   printf ("\n");
   */
+
+  for (i = 0; i < ALLOWED_ENV_SIZE; ++i)
+  {
+    char *ptr = getenv (ALLOWED_ENV[i]);
+    if (ptr==0) continue;
+    ptr -= strlen (ALLOWED_ENV[i]) + 1;
+    env[idx++] = ptr;
+  }
+
   retval = execve (filename, argv, env);
   error ("executing %s: %s", filename, strerror (errno));
 }
