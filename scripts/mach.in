@@ -159,19 +159,25 @@ def pty_popen (cmd):
 # run a command and give a progress spinner that regularly advances
 # delta gives the number of secs between each spin iteration
 # jump is the number of iterations before jumping one dot further
+<<<<<<< mach.in
+def do_progress (cmd, delta = 0.1, jump = 20):
+=======
 # returns a tuple:
 # - the return status of the app
 # - all of the output as one big string
 def do_progress (cmd, delta = 0.1, jump = 60):
+>>>>>>> 1.8
     progress = '/-\|'
     i = 0
     timestamp = time.time ()
     running = 1
+    size = 0 # size of total output since last spinner update
     output = []
     (fdin, pid) = pty_popen (cmd)
     fcntl.fcntl (fdin, fcntl.F_SETFL, os.O_NONBLOCK) # don't block input
     sys.stdout.write ('|')
     while running:
+        block = ""
         try:
             block = fdin.read ()
             # trash all \r\n
@@ -179,8 +185,10 @@ def do_progress (cmd, delta = 0.1, jump = 60):
             output.append (block)
         except IOError:
             pass
-        if time.time () > timestamp + delta:
+        size = size + len (block)
+        if size > 0 and time.time () > timestamp + delta:
             timestamp = time.time ()
+            size = 0
             i = i + 1
             sys.stdout.write ('\b' + progress[i % len (progress)])
             if (i > jump):
@@ -332,7 +340,11 @@ def get_config_dir (config, which):
 # make sure a dir exists
 def ensure_dir (dir):
     if not os.path.exists (dir):
-        os.makedirs (dir)
+        try:
+            os.makedirs (dir)
+        except OSError:
+            sys.stderr.write ("Could not create %s, make sure you have permissions to do so\n" % dir)
+            sys.exit (1)
 
 # get the list of sources.list lines based on the config
 # based on sourceslist dict
@@ -431,8 +443,7 @@ def setup_prep (config, args):
     open (root + '/etc/mtab', 'w')
     open (root + '/etc/fstab', 'w')
 
-    
-
+    debug ("Creating config files")
     for filename in config['files'].keys ():
         file = open (root + filename, 'w')
         file.write (config['files'][filename])
@@ -555,7 +566,8 @@ def check_packages (config):
     # if we already checked once, then we'll assume it's fine unless
     # a check was forced with -c or --check
     # FIXME: this doesn't survive mach clean, is that a problem ?
-    checkfile = get_config_dir (config, 'state') + '/check'
+    statedir = get_config_dir (config, 'state')
+    checkfile = os.path.join (statedir, 'check')
     if os.path.exists (checkfile) and not config['check']:
         return True
 
@@ -582,6 +594,7 @@ def check_packages (config):
             if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
                 sys.stderr.write ('error: failed downloading %s\n' % url)
                 return False
+    ensure_dir (statedir)
     open (checkfile, 'w')
     return True
  
