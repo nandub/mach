@@ -1,0 +1,7 @@
+/etc/hosts
+----------
+To fake the buildhost, this file should contain
+127.0.0.1 (buildhost) (actual hostname)
+
+where actual hostname would be the output of "hostname" inside the build root,
+and (buildhost) the name you want to turn up in the buildhost
