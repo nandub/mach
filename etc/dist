@@ -467,14 +467,14 @@ config['fedora-1-i386-updates'] = {}
 aliases['fedora-1-i386-updates'] = ('f1u', )
 
 # Fedora 1 Core with GStreamer
-packages['fedora-1-i386-gstreamer'] = packages['fedora-1-i386']
+packages['fedora-1-i386-gstreamer'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-gstreamer'] = {
     'fedora-1-i386': ('os', 'gstreamer-deps', 'gstreamer')
 }
 config['fedora-1-i386-gstreamer'] = {}
 aliases['fedora-1-i386-gstreamer'] = ('f1g', )
 
-packages['fedora-1-i386-gstreamer-deps'] = packages['fedora-1-i386']
+packages['fedora-1-i386-gstreamer-deps'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-gstreamer-deps'] = {
     'fedora-1-i386': ('os', 'gstreamer-deps')
 }
