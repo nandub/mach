@@ -1,3 +1,7 @@
+2004-07-05  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/Makefile.am: Include suse-90-i386 in dist.
+
 2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
