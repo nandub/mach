@@ -3,18 +3,24 @@
 # torture test mach; set up a lot of distro's and build a few packages in it
 
 SPECS="ladspa.spec"
-DISTS="redhat-72-i386 redhat-73-i386 redhat-80-i386 redhat-9-i386";
+DISTS="rh72 rh72u rh73 rh73u rh80 rh80u rh80fs rh80ft rh80fu rh9 rh9u rh9fs rh9ft rh9fu"
 error=no
 for dist in $DISTS;
 do
   echo "+ torturing $dist"
-  ../scripts/mach -q -r $dist clean
-  ../scripts/mach -q -r $dist build $SPECS || error=yes
-  ../scripts/mach -q -r $dist clean
-  if test $error == yes;
+  #../scripts/mach -r $dist clean
+  ../scripts/mach -r $dist build $SPECS || error=yes
+  ../scripts/mach -r $dist clean
+  if test x$error == xyes;
   then
     echo "- dist $dist failed"
+    failed="$failed $dist"
+    error=no
   fi
 done
+if test x$failed != x;
+then
+  echo Failed distro's:$failed
+fi
 
 
