@@ -107,15 +107,19 @@ qfmt = '"%{name}-%{version}-%{release}\n"'
 
 ### objects
 class Spec:
-    def __init__ (self, path):
+    def __init__ (self, path, options = ""):
         self.path = path
         self.content = []
         self.vars = {}
         debug ("Spec.__init__: opening spec %s" % path)
         self.content = open (self.path).readlines ()
-        # get the standard vars used for expansion
+        # expand tags using rpm --specfile because results can depend on
+        # build options
         for which in ['name', 'version', 'release']:
-            self.vars[which] = self.tag (which)
+            command = "rpm -q %s --specfile --queryformat \"%%{%s}\\n\" %s | head -n 1" % (options, which, path)
+            value = commands.getoutput (command)
+            self.vars[which] = value
+
         # scan for defines in the spec file
         debug ("scanning spec file for %define")
         matchstr = re.compile ("^%define\s+(\S*)\s+(\S*)$")
@@ -189,25 +193,32 @@ class Spec:
         return (self.vars['name'], self.vars['version'], self.vars['release'])
  
 
-    # make this private
-    def sourcespatches (self, which):
+    def _sourcespatches (self, which, args = ""):
         result = {}
-        matchstr = re.compile ("^(" + which + r"\d*):\s*(.*)")
+        matchstr = re.compile ("^" + which + r"(\d*):\s*(.*)")
+        macro = ""
+        if which == "Source": macro = "SOURCEURL"
+        if which == "Patch": macro = "PATCHURL"
         for line in self.content:
             match = matchstr.search (line)
             if match:
-                tag = match.expand ("\\1")
+                number = match.expand ("\\1")
                 value = match.expand ("\\2")
-                result[tag] = self.expand (value)
+                tag = which + number
+                if number == "": number = "0"
+                print "number: %s" % number
+                command = "rpmbuild -bp --nodeps --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
+                debug (command)
+                result[tag] = commands.getoutput (command)
         return result
- 
+
     def sources (self):
            # parse the spec file for all Source: files
-           return self.sourcespatches ("Source")
+           return self._sourcespatches ("Source")
 
     def patches (self):
            # parse the spec file for all Source: files
-           return self.sourcespatches ("Patch")
+           return self._sourcespatches ("Patch")
  
 ### abstract object wrapping a src rpm
 class SRPM:
@@ -486,7 +497,7 @@ class Root:
         # in do_progress
         return (retval, output)
     
-    def do_chroot (self, command, message = None, progress = False, user = ""):
+    def do_chroot (self, command, message = None, progress = False, user = "", fatal = False):
         # if you call do_chroot, then do_chroot is responsible for printing
         # \n
         "execute given command in root"
@@ -503,9 +514,14 @@ class Root:
         if (self.progress () == False): progress = False
         if message: self.stdout (message)
         if progress: self.stdout (' ...')
-        ret = self.do (cmd, progress)
+        (ret, output) = self.do (cmd, progress)
         if message and not progress: self.stdout ('\n')
-        return ret
+        if (ret != 0):
+            if fatal:
+                # FIXME. what about unmounting ?
+                sys.stderr.write ("Non-zero return value %d on executing %s\n" % (ret, cmd))
+                exit (ret)
+        return (ret, output)
 
     # check the given package list file
     # remove all packages that aren't in this list file
@@ -559,7 +575,8 @@ class Root:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
-            spec = Spec (specfile)
+            opt = string.join (options)
+            spec = Spec (specfile, opt)
             (n, v, r) = spec.nvr ()
             # download all referenced files (Sources, Patches)
             downloads = spec.sources ().values () + spec.patches ().values ()
@@ -1118,11 +1135,11 @@ Dir {
         # install packages
         self._install ('build')
         #FIXME: add mach user and group
-        self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
-        self.do_chroot ("echo machbuild::500:mach >> /etc/group")
-        self.do_chroot ("mkdir -p /usr/src/rpm")
-        self.do_chroot ("chown -R machbuild:machbuild /usr/src/rpm")
-        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' machbuild")
+        self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd", fatal = True)
+        self.do_chroot ("echo machbuild::500:mach >> /etc/group", fatal = True)
+        self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
+        self.do_chroot ("chown -R machbuild:machbuild /usr/src/rpm", fatal = True)
+        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' machbuild", fatal = True)
          # create dir structure and rpmmacros
         macros = open (self.rootdir + '/tmp/macros', 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
@@ -1130,9 +1147,9 @@ Dir {
         macros.write ("%_unpackaged_files_terminate_build 1\n")
         macros.write ("%_missing_doc_files_terminate_build 1\n")
         macros.close ()
-        self.do_chroot ('mv /tmp/macros /etc/rpm')
+        self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' machbuild" % dir)
+            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' machbuild" % dir, fatal = True)
     
         # this ensures that locally built RPMS are already used for apt-get
         srcs = get_sources_list (self.config)
@@ -1142,7 +1159,7 @@ Dir {
         srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % self.rootdir)
         create_sources_list (self.config, srcs) 
         for dir in ('RPMS', 'SRPMS'):
-            self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir))
+            self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
         self.aptget ("update")
         self._call_setup_hook ("build")
 
