@@ -44,8 +44,8 @@ packages['redhat-70-i386'] = {
     'minimal':  'bash glibc',
     # net-tools provides hostname, otherwise it complains about it for chroot
     'base':     'fileutils findutils openssh-server net-tools file sh-utils',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-70-i386'] = {
     'redhat-70-i386': ('os', )
@@ -92,8 +92,8 @@ packages['redhat-71-i386'] = {
     # net-tools provides hostname, otherwise it complains about it for chroot
     # sh-utils provides 'su' on older systems
     'base':     'fileutils findutils openssh-server net-tools file sh-utils',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-71-i386'] = {
     'redhat-71-i386': ('os', )
@@ -141,8 +141,8 @@ packages['redhat-72-i386'] = {
     'minimal':  'bash glibc',
     # net-tools provides hostname, otherwise it complains about it for chroot
     'base':     'fileutils findutils openssh-server net-tools file',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-72-i386'] = {
     'redhat-72-i386': ('os', )
@@ -196,8 +196,8 @@ packages['redhat-73-i386'] = {
     'dir':      'redhat-73-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils file openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-73-i386'] = {
     'redhat-73-i386': ('os', )
@@ -259,8 +259,8 @@ packages['redhat-80-i386'] = {
     'dir':      'redhat-80-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-80-i386'] = {
     'redhat-80-i386': ('os', )
@@ -396,8 +396,8 @@ packages['redhat-9-i386'] = {
     'dir':      'redhat-9-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio elfutils',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['redhat-9-i386'] = {
     'redhat-9-i386': ('os', )
@@ -531,8 +531,8 @@ packages['fedora-1-i386-core'] = {
     'dir':      'fedoracore-1-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio elfutils',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-1-i386-core'] = {
     'fedora-1-i386': ('core', )
@@ -650,8 +650,8 @@ packages['yellowdog-23-ppc'] = {
     'dir':      'yellowdog-23-ppc',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils file openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio glibc-devel',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio glibc-devel',
 }
 sourceslist['yellowdog-23-ppc'] = {
     'yellowdog-23-ppc': ('os', )
@@ -695,8 +695,8 @@ packages['yellowdog-30-ppc'] = {
     'dir':      'yellowdog-30-ppc',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio',
+    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+                'unzip bzip2 diffutils cpio',
 }
 sourceslist['yellowdog-30-ppc'] = {
     'yellowdog-30-ppc': ('os', )
@@ -755,7 +755,7 @@ packages['suse-81-i386'] = {
     'dir':      'suse-81-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh',
-    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+    'build':    'rpm-devel make gcc gcc-c++ tar gzip patch unzip cpio',
 }
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
@@ -807,7 +807,7 @@ packages['suse-82-i386'] = {
     'minimal':  'bash glibc',
     'base':     'aaa_base coreutils findutils openssh openssl=0.9.6i ' +
                 'pam-modules',
-    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+    'build':    'rpm-devel make gcc gcc-c++ tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': ('base', )
@@ -843,7 +843,8 @@ packages['cnc-9-i386'] = {
     'dir':      'cnc-9-i386',
     'minimal':  'bash glibc',
     'base':     'filesystem fileutils findutils openssh-server textutils',
-    'build':    'rpm-build make gcc tar gzip patch unzip bzip2 diffutils cpio',
+    'build':    'rpm-build make gcc gcc-c++ tar gzip patch unzip bzip2 ' +
+                'diffutils cpio',
 }
 sourceslist['cnc-9-i386'] = {
     'cnc-9-i386': ('all', )
