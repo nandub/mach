@@ -58,7 +58,7 @@ check_dir_allowed (const char *allowed, const char *given)
     error ("%s: not under allowed directory (%s)", given, allowed);
 
   /* does it try to fool us by using .. ? */
-  if (strstr (given, "..") != NULL)
+  if (strstr (given, "..") != 0)
     error ("%s: contains '..'", given);
 
   /* does it try to fool us into following symlinks by having a trailing / ? */
@@ -96,7 +96,7 @@ check_file_allowed (const char *allowed, const char *given)
     error ("%s: not under allowed directory", given);
 
   /* does it try to fool us by using .. ? */
-  if (strstr (given, "..") != NULL)
+  if (strstr (given, "..") != 0)
     error ("%s: contains '..'", given);
 
   /* does it have a trailing / ? */
