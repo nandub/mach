@@ -1352,6 +1352,10 @@ Dir {
         self.mount ()
         self._install ('base')
         self.umount ()
+	# ensure if su is installed
+        if not os.path.exists (os.path.join (self.rootdir, 
+            self.config['runuser'])):
+            raise self.Error ("su/runuser did not get installed properly")
 
     def _check_revert_build (self):
         # see if we need to revert to the build package list
@@ -1430,7 +1434,7 @@ Dir {
             raise self.Error, "Package set '%s' not defined for this distribution !" % set
 
         if rpms:
-            # do a two change install if necessary and gloss over errors
+            # do a two stage install if necessary and gloss over errors
             # from first try
             try:
                 self.aptget (['install -y %s' % rpms, ],
@@ -1739,12 +1743,9 @@ def create_sources_list (config, list):
     root = get_config_dir (config, 'root')
     statedir = get_config_dir (config, 'state')
     debug ("Creating sources.list")
-    # we created in the root and chroot mv it afterwards due to perms
     sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
     sources.write (string.join (list, "\n"))
     sources.close ()
-#    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
-
 
 # lock a given root; creates a lock file in the statedir under root
 def lock (config):
