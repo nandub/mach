@@ -442,6 +442,9 @@ class Root:
             raise self.Error, "Could not apt-get %s" % arg
 
     def intaptget (self, arg):
+        if not self.get_state ('base'):
+            print "aptget: settingup base"
+            self.setup ('base')
         self.aptget (arg, interactive = True)
 
     def aptcache (self, arg, progress = False):
@@ -1149,8 +1152,15 @@ Dir {
             raise self.Error, "Package set '%s' not defined for this distribution !" % set
 
         if rpms:
-            self.aptget ('install -y %s' % rpms,
-                         "Installing package set '%s'" % set, True)
+            # do a two change install if necessary and gloss over errors
+            # from first try
+            try:
+                self.aptget ('install -y %s' % rpms,
+                             "Installing package set '%s'" % set, True)
+            except self.Error:
+                self.aptget ('install -y %s' % rpms,
+                             "Retrying installing package set '%s'" % set, True)
+
         else:
             print "No packages in %s set" % rpms
         self.set_state (set)

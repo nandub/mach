@@ -1,5 +1,10 @@
 2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * etc/dist: add sh-utils to 7.0 so su works
+        * scripts/mach.in: make runs of apt-get from outside check for base
+
+2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * etc/dist: patch from Matthias Saou
           - add RH70, RH71, RH72
           - add YD23, YD30
