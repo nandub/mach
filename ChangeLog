@@ -1,5 +1,11 @@
 2004-03-01  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+          fix removal of packages by using a split list of the packages to
+          remove
+
+2004-03-01  Thomas Vander Stichele  <thomas at apestaart dot org>
+
         * scripts/mach.in:
           - fix quoting issues so that
             mach build --target i686 --define "kernel 2.4.22" works
