@@ -621,7 +621,12 @@ class Root:
         if not packages:
            return True
         sys.stdout.write ("Removing packages ...")
-        self.rpm (['-ev', '--allmatches'] + string.split (packages), self.progress ())
+        try:
+            self.rpm (['-ev', '--allmatches'] + string.split (packages), self.progress ())
+        except self.Error:
+            # try harder
+            print "WARNING: could not remove all packages, trying harder"
+            self.rpm (['-ev', '--allmatches', '--noscripts'] + string.split (packages), self.progress ())
         return True
 
 
