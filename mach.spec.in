@@ -95,7 +95,11 @@ fi
 #%dir %{_datadir}/mach
 #%{_datadir}/mach/sudoers.patch
 %{_bindir}/mach
+%attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Wed May 21 2003 Thomas Vander Stichele <thomas at apestaart dot org>
+- added mach-helper
+
 * Wed Apr 30 2003 Thomas Vander Stichele <thomas at apestaart dot org>
 - initial creation
