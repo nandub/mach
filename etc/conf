@@ -1,0 +1,14 @@
+# mach system configuration file
+
+# /etc/resolv.conf
+config['resolv.conf'] = '''
+nameserver 192.168.001.001
+nameserver 157.193.40.42
+search 4fm.be onshuis
+'''
+
+# /etc/hosts
+config['hosts'] = '''
+127.0.0.1 thocra localhost.localdomain
+'''
+
