@@ -3,7 +3,7 @@
 # torture test mach; set up a lot of distro's and build a few packages in it
 
 SPECS="ladspa.spec"
-DISTS="rh72 rh72u rh73 rh73u rh80 rh80u rh80fs rh80ft rh80fu rh9 rh9u rh9fs rh9ft rh9fu"
+DISTS="rh72 rh72u rh73 rh73u rh80 rh80u rh80fs rh80ft rh80fu rh9 rh9u rh9fs rh9ft rh9fu f0.94"
 error=no
 for dist in $DISTS;
 do

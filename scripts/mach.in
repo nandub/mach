@@ -1490,6 +1490,8 @@ def sanity_check (config):
     return True
 
 # print out status for each of the roots set up
+# FIXME: maybe also add result dirs, since we could have results for cleaned
+# roots, or no results for roots that are set up
 def status (config):
     statedir = config['dirs']['states']
     dirs = os.listdir (statedir)
