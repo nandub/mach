@@ -58,7 +58,7 @@ packages['redhat-70-i386-updates-freshrpms'] = packages['redhat-70-i386']
 sourceslist['redhat-70-i386-updates-freshrpms'] = {
     'redhat-70-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-70-i386-updates-freshrpms'] = ('rh70fru', )
+aliases['redhat-70-i386-updates-freshrpms'] = ('rh70ufr', )
 
 ### Red Hat Linux 7.1 flavours
 aptsources['redhat-71-i386'] = {
@@ -101,7 +101,7 @@ packages['redhat-71-i386-updates-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-updates-freshrpms'] = {
     'redhat-71-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-71-i386-updates-freshrpms'] = ('rh71fru', )
+aliases['redhat-71-i386-updates-freshrpms'] = ('rh71ufr', )
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
@@ -145,7 +145,7 @@ packages['redhat-72-i386-updates-freshrpms'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-updates-freshrpms'] = {
     'redhat-72-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-72-i386-updates-freshrpms'] = ('rh72fru', )
+aliases['redhat-72-i386-updates-freshrpms'] = ('rh72ufr', )
 
 # Red Hat Linux 7.2 with JPackage
 packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates']
@@ -194,7 +194,7 @@ packages['redhat-73-i386-updates-freshrpms'] = packages['redhat-73-i386']
 sourceslist['redhat-73-i386-updates-freshrpms'] = {
     'redhat-73-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-73-i386-updates-freshrpms'] = ('rh73fru', )
+aliases['redhat-73-i386-updates-freshrpms'] = ('rh73ufr', )
 
 # Red Hat Linux 7.3 with JPackage
 packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
@@ -281,7 +281,7 @@ packages['redhat-80-i386-updates-freshrpms'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-updates-freshrpms'] = {
     'redhat-80-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-80-i386-updates-freshrpms'] = ('rh80fru', )
+aliases['redhat-80-i386-updates-freshrpms'] = ('rh80ufr', )
 
 # Red Hat Linux 8.0 with JPackage
 packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
@@ -368,7 +368,7 @@ packages['redhat-9-i386-updates-freshrpms'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-updates-freshrpms'] = {
     'redhat-9-i386': ('os', 'updates', 'freshrpms', )
 }
-aliases['redhat-9-i386-updates-freshrpms'] = ('rh9fru', )
+aliases['redhat-9-i386-updates-freshrpms'] = ('rh9ufr', )
 
 # Red Hat Linux 9 with JPackage
 packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
@@ -447,7 +447,7 @@ packages['yellowdog-23-ppc-updates-freshrpms'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-updates-freshrpms'] = {
     'yellowdog-23-ppc': ('os', 'updates', 'freshrpms', )
 }
-aliases['yellowdog-23-ppc-updates-freshrpms'] = ('yd23fru', )
+aliases['yellowdog-23-ppc-updates-freshrpms'] = ('yd23ufr', )
 
 ### Yellow Dog Linux 3.0 flavours
 aptsources['yellowdog-30-ppc'] = {
@@ -488,7 +488,7 @@ packages['yellowdog-30-ppc-updates-freshrpms'] = packages['yellowdog-30-ppc']
 sourceslist['yellowdog-30-ppc-updates-freshrpms'] = {
     'yellowdog-30-ppc': ('os', 'updates', 'freshrpms', )
 }
-aliases['yellowdog-30-ppc-updates-freshrpms'] = ('yd30fru', )
+aliases['yellowdog-30-ppc-updates-freshrpms'] = ('yd30ufr', )
 
 ### SuSE Linux 8.1 flavours
 aptsources['suse-81-i386'] = {
