@@ -563,7 +563,7 @@ class Root:
         "Set up the root to a given target"
         target = ''
         if arg:
-            target = arg[0]
+            target = arg
         else:
             target = 'build' # default to build
         targets = ('prep', 'base', 'apt', 'consistency', 'build')
