@@ -286,7 +286,7 @@ config['redhat-80-i386-gstreamer-deps'] = {}
 aliases['redhat-80-i386-gstreamer-deps'] = ('rh8gd', 'rh80gd')
 
 # Red Hat Linux 8.0 with fedora.us
-packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386-updates']
+packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386-updates'].copy ()
 packages['redhat-80-i386-fedora-stable']['build'] = packages['redhat-80-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['redhat-80-i386-fedora-stable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable')
@@ -352,7 +352,7 @@ aptsources['redhat-9-i386'] = {
 packages['redhat-9-i386'] = {
     'dir':      'redhat-9-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils findutils openssh-server',
+    'base':	'coreutils findutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio elfutils',
 }
@@ -386,7 +386,7 @@ config['redhat-9-i386-gstreamer-deps'] = {}
 aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', 'rh90gd')
 
 # Red Hat Linux 9 with fedora.us
-packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386-updates']
+packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386-updates'].copy ()
 packages['redhat-9-i386-fedora-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['redhat-9-i386-fedora-stable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable')
