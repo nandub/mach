@@ -11,33 +11,35 @@
 
 # Official distributions
 # Red Hat Linux base; this location should contain versioned directories
-redhat    = 'http://ayo.freshrpms.net/redhat'
-#redhat    = 'http://download.fedora.us/fedora/redhat'
+redhat      = 'http://ayo.freshrpms.net/redhat'
+#redhat      = 'http://download.fedora.us/fedora/redhat'
 # Fedora Core; this location should contain versioned directions
-fedora    = 'http://ayo.freshrpms.net/fedora/linux'
-#fedora    = 'http://download.fedora.us/fedora/fedora'
+fedora      = 'http://ayo.freshrpms.net/fedora/linux'
+#fedora      = 'http://download.fedora.us/fedora/fedora'
 # Yellow Dog Linux
-yellowdog = 'http://ayo.freshrpms.net/yellowdog'
+yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 # SuSE Linux: http://apt4rpm.sourceforge.net/repos.html
-suse      = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
+suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
 # Conectiva Linux: http://distro.conectiva.com.br/atualizacoes/#aptmirrors
-conectiva = 'ftp://ftp.nl.linux.org/pub/conectiva'
+conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
 # Dave/Dina: http://www.davedina.org
-davedina  = 'http://download.davedina.org/apt'
+davedina    = 'http://download.davedina.org/apt'
 
 # Add-on locations
-jpackage  = 'http://dl.sf.net/jpackage/direct_download/1.5'
-fedoraus  = 'http://download.fedora.us/fedora'
-livna     = 'http://rpm.livna.org'
-gstreamer = 'http://gstreamer.net/pkg'
-freshrpms = 'http://ayo.freshrpms.net'
+jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
+fedoraus    = 'http://download.fedora.us/fedora'
+livna       = 'http://rpm.livna.org'
+gstreamer   = 'http://gstreamer.net/pkg'
+freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
+freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
+freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
 
 
 ### Red Hat Linux 7.0 flavours
 aptsources['redhat-70-i386'] = {
-    'os':               'rpm ' + redhat    + ' 7.0/i386 os',
-    'updates':          'rpm ' + redhat    + ' 7.0/i386 updates',
-    'freshrpms':        'rpm ' + freshrpms + ' redhat/7.0/i386 freshrpms',
+    'os':               'rpm ' + redhat      + ' 7.0/i386 os',
+    'updates':          'rpm ' + redhat      + ' 7.0/i386 updates',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 7.0/i386 freshrpms',
 }
 
 # Red Hat Linux 7.0
@@ -82,9 +84,9 @@ aliases['redhat-70-i386-updates-freshrpms'] = ('rh70ufr', )
 
 ### Red Hat Linux 7.1 flavours
 aptsources['redhat-71-i386'] = {
-    'os':               'rpm ' + redhat    + ' 7.1/i386 os',
-    'updates':          'rpm ' + redhat    + ' 7.1/i386 updates',
-    'freshrpms':        'rpm ' + freshrpms + ' redhat/7.1/i386 freshrpms',
+    'os':               'rpm ' + redhat      + ' 7.1/i386 os',
+    'updates':          'rpm ' + redhat      + ' 7.1/i386 updates',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 7.1/i386 freshrpms',
 }
 
 # Red Hat Linux 7.1
@@ -130,11 +132,11 @@ aliases['redhat-71-i386-updates-freshrpms'] = ('rh71ufr', )
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
-    'os':               'rpm ' + redhat    + ' 7.2/i386 os',
-    'updates':          'rpm ' + redhat    + ' 7.2/i386 updates',
-    'freshrpms':        'rpm ' + freshrpms + ' redhat/7.2/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
-    'jpackage-rh72':    'rpm ' + jpackage  + ' redhat-7.2 free',
+    'os':               'rpm ' + redhat      + ' 7.2/i386 os',
+    'updates':          'rpm ' + redhat      + ' 7.2/i386 updates',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 7.2/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-rh72':    'rpm ' + jpackage    + ' redhat-7.2 free',
 }
 
 # Red Hat Linux 7.2
@@ -187,11 +189,11 @@ aliases['redhat-72-i386-jpackage'] = ('rh72jpp', )
 
 ### Red Hat Linux 7.3 flavours
 aptsources['redhat-73-i386'] = {
-    'os':               'rpm ' + redhat    + ' 7.3/i386 os',
-    'updates':          'rpm ' + redhat    + ' 7.3/i386 updates',
-    'freshrpms':        'rpm ' + freshrpms + ' 7.3/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
-    'jpackage-rh73':    'rpm ' + jpackage  + ' redhat-7.3 free',
+    'os':               'rpm ' + redhat      + ' 7.3/i386 os',
+    'updates':          'rpm ' + redhat      + ' 7.3/i386 updates',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 7.3/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-rh73':    'rpm ' + jpackage    + ' redhat-7.3 free',
 }
 
 # Red Hat Linux 7.3
@@ -243,20 +245,20 @@ aliases['redhat-73-i386-jpackage'] = ('rh73jpp', )
 
 ### Red Hat Linux 8.0 flavours
 aptsources['redhat-80-i386'] = {
-    'os':               'rpm ' + redhat    + ' 8.0/i386 os',
-    'updates':          'rpm ' + redhat    + ' 8.0/i386 updates',
-    'gstreamer':        'rpm ' + gstreamer + ' redhat/80/i386 gst',
-    'gstreamer-build':  'rpm ' + gstreamer + ' redhat/80/i386 build',
-    'gstreamer-deps':   'rpm ' + gstreamer + ' redhat/80/i386 deps',
-    'fedora-stable':    'rpm ' + fedoraus  + ' redhat/8.0/i386 stable',
-    'fedora-testing':   'rpm ' + fedoraus  + ' redhat/8.0/i386 testing',
-    'fedora-unstable':  'rpm ' + fedoraus  + ' redhat/8.0/i386 unstable',
-    'livna-stable':     'rpm ' + livna     + ' redhat/8.0/i386 stable',
-    'livna-testing':    'rpm ' + livna     + ' redhat/8.0/i386 testing',
-    'livna-unstable':   'rpm ' + livna     + ' redhat/8.0/i386 unstable',
-    'freshrpms':        'rpm ' + freshrpms + ' redhat/8.0/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
-    'jpackage-rh80':    'rpm ' + jpackage  + ' redhat-8.0 free',
+    'os':               'rpm ' + redhat      + ' 8.0/i386 os',
+    'updates':          'rpm ' + redhat      + ' 8.0/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer   + ' redhat/80/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' redhat/80/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat/80/i386 deps',
+    'fedora-stable':    'rpm ' + fedoraus    + ' redhat/8.0/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus    + ' redhat/8.0/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/8.0/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' redhat/8.0/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' redhat/8.0/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' redhat/8.0/i386 unstable',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 8.0/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-rh80':    'rpm ' + jpackage    + ' redhat-8.0 free',
 }
 
 # Red Hat Linux 8.0
@@ -382,20 +384,20 @@ aliases['redhat-80-i386-jpackage'] = ('rh8jpp', 'rh80jpp')
 
 ### Red Hat Linux 9 flavours
 aptsources['redhat-9-i386'] = {
-    'os':               'rpm ' + redhat    + ' 9/i386 os',
-    'updates':          'rpm ' + redhat    + ' 9/i386 updates',
-    'gstreamer':        'rpm ' + gstreamer + ' redhat/9/i386 gst',
-    'gstreamer-build':  'rpm ' + gstreamer + ' redhat/9/i386 build',
-    'gstreamer-deps':   'rpm ' + gstreamer + ' redhat/9/i386 deps',
-    'fedora-stable':    'rpm ' + fedoraus  + ' redhat/9/i386 stable',
-    'fedora-testing':   'rpm ' + fedoraus  + ' redhat/9/i386 testing',
-    'fedora-unstable':  'rpm ' + fedoraus  + ' redhat/9/i386 unstable',
-    'livna-stable':     'rpm ' + livna     + ' redhat/9/i386 stable',
-    'livna-testing':    'rpm ' + livna     + ' redhat/9/i386 testing',
-    'livna-unstable':   'rpm ' + livna     + ' redhat/9/i386 unstable',
-    'freshrpms':        'rpm ' + freshrpms + ' redhat/9/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
-    'jpackage-rh9':     'rpm ' + jpackage  + ' redhat-9 free',
+    'os':               'rpm ' + redhat      + ' 9/i386 os',
+    'updates':          'rpm ' + redhat      + ' 9/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer   + ' redhat/9/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' redhat/9/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat/9/i386 deps',
+    'fedora-stable':    'rpm ' + fedoraus    + ' redhat/9/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus    + ' redhat/9/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/9/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' redhat/9/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' redhat/9/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' redhat/9/i386 unstable',
+    'freshrpms':        'rpm ' + freshrpmsrh + ' 9/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-rh9':     'rpm ' + jpackage    + ' redhat-9 free',
 }
 
 # Red Hat Linux 9
@@ -520,20 +522,20 @@ aliases['redhat-9-i386-jpackage'] = ('rh9jpp', 'rh90jpp')
 
 ### Fedora Core 1 flavours
 aptsources['fedora-1-i386'] = {
-    'core':             'rpm ' + fedora    + ' 1/i386 core',
-    'updates':          'rpm ' + fedora    + ' 1/i386 updates',
-    'gstreamer':        'rpm ' + gstreamer + ' fedora/1/i386 gst',
-    'gstreamer-build':  'rpm ' + gstreamer + ' fedora/1/i386 build',
-    'gstreamer-deps':   'rpm ' + gstreamer + ' fedora/1/i386 deps',
-    'fedora-stable':    'rpm ' + fedoraus  + ' fedora/1/i386 stable',
-    'fedora-testing':   'rpm ' + fedoraus  + ' fedora/1/i386 testing',
-    'fedora-unstable':  'rpm ' + fedoraus  + ' fedora/1/i386 unstable',
-    'livna-stable':     'rpm ' + livna     + ' fedora/1/i386 stable',
-    'livna-testing':    'rpm ' + livna     + ' fedora/1/i386 testing',
-    'livna-unstable':   'rpm ' + livna     + ' fedora/1/i386 unstable',
-    'freshrpms':        'rpm ' + freshrpms + ' fedora/linux/1/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
-    'jpackage-fc1':     'rpm ' + jpackage  + ' fedora-1 free',
+    'core':             'rpm ' + fedora      + ' 1/i386 core',
+    'updates':          'rpm ' + fedora      + ' 1/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer   + ' fedora/1/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/1/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/1/i386 deps',
+    'fedora-stable':    'rpm ' + fedoraus    + ' fedora/1/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus    + ' fedora/1/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus    + ' fedora/1/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' fedora/1/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' fedora/1/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' fedora/1/i386 unstable',
+    'freshrpms':        'rpm ' + freshrpmsfd + ' 1/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-fc1':     'rpm ' + jpackage    + ' fedora-1 free',
 }
 
 # Fedora Core 1
@@ -670,9 +672,9 @@ aliases['fedora-development-i386-core'] = ('fdev', 'fcdev', )
 
 ### Yellow Dog Linux 2.3 flavours
 aptsources['yellowdog-23-ppc'] = {
-    'os':               'rpm ' + yellowdog + ' 2.3/ppc os',
-    'updates':          'rpm ' + yellowdog + ' 2.3/ppc updates',
-    'freshrpms':        'rpm ' + freshrpms + ' yellowdog/2.3/ppc freshrpms',
+    'os':               'rpm ' + yellowdog   + ' 2.3/ppc os',
+    'updates':          'rpm ' + yellowdog   + ' 2.3/ppc updates',
+    'freshrpms':        'rpm ' + freshrpmsyd + ' 2.3/ppc freshrpms',
 }
 
 # Yellow Dog Linux 2.3
@@ -716,9 +718,9 @@ aliases['yellowdog-23-ppc-updates-freshrpms'] = ('yd23ufr', )
 
 ### Yellow Dog Linux 3.0 flavours
 aptsources['yellowdog-30-ppc'] = {
-    'os':               'rpm ' + yellowdog + ' 3.0/ppc os',
-    'updates':          'rpm ' + yellowdog + ' 3.0/ppc updates',
-    'freshrpms':        'rpm ' + freshrpms + ' yellowdog/3.0/ppc freshrpms',
+    'os':               'rpm ' + yellowdog   + ' 3.0/ppc os',
+    'updates':          'rpm ' + yellowdog   + ' 3.0/ppc updates',
+    'freshrpms':        'rpm ' + freshrpmsyd + ' 3.0/ppc freshrpms',
 }
 
 # Yellow Dog Linux 3.0
