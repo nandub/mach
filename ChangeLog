@@ -1,5 +1,7 @@
 2004-03-24  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in: Include dist.d snippets in alphabetical order.
+
 	* scripts/mach.in: Ignore also #* in dist.d.
 
 2004-03-23  Noa Resare  <noa at resare dot com>
