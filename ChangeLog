@@ -1,3 +1,8 @@
+2004-11-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  try harder when rpm -e fails by adding noscripts
+
 2004-11-07  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	patch by: Rudi Chiarito
