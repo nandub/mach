@@ -1362,7 +1362,12 @@ def get_sources_list (config):
     root = config['root']
     for platform in config['sourceslist'][root].keys ():
         for source in config['sourceslist'][root][platform]:
-            sourceslist.append (config['aptsources'][platform][source])
+            try:
+                sourceslist.append (config['aptsources'][platform][source])
+            except KeyError:
+                sys.stderr.write ("no %s key found in config['aptsources'][%s]\n" % (source, platform))
+                sys.exit (1)
+
 
     debug ("sources.list: " + string.join (sourceslist, "\n"))
     return sourceslist
