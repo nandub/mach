@@ -1,3 +1,7 @@
+2004-03-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.ac: release 0.4.4, "Madrid"
+
 2004-03-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: fix local "juist built" repository by moving
@@ -165,6 +169,8 @@
 2003-12-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add JPackage for Fedora Core 1.
+
+=== 0.4.3 ===
 
 2003-12-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 

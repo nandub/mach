@@ -1,19 +1,37 @@
-2003-12-16  Thomas Vander Stichele <thomas at apestaart dot org>
+This is mach, make a chroot, 0.4.4.
 
-        * released 0.4.3, "Hot Water"
-	* added support for Fedora 1
-	* moved config files per distro initialization to dist file
+Changes since 0.4.3:
+	- added distributions:
+		- JPackage for FC1 (Ville)
+		- Conectiva Linux 1 (Ville)
+		- RH80/RH9/FC1 with rpm.livna.org (Thomas)
+	- fixed distributions:
+		- Red Hat 7.3 (Thomas)
+	- make rpmbuild command configurable (Ville)
+	- use config['macros'] to allow additional macros (Enrico)
+	- fix permissions on mach directories for multiple users (Thomas)
+	- add "script-success" to run a script on succesful build (Thomas)
+	- fix quoting problems so --target and --define work (Thomas)
+	- warn on kernel-related BuildRequires (Thomas)
+	- verify parsibility of spec file (Thomas)
+	- recreate sources.list on each update (Thomas)
+	- autodetect target distro on configure (Thomas)
+	- revert to package snapshot list between builds (Thomas)
+	- add pre-build in-root buildrequires verification (Thomas)
 
-2003-10-21  Thomas Vander Stichele <thomas at apestaart dot org>
+Changes since 0.4.2:
 
-        * released 0.4.2, "No More Betas"
-	* added support for Fedora Core 0.95 (Severn beta 3)
-	* moved config files per distro initialization to dist file
+	- added support for Fedora 1
+	- moved config files per distro initialization to dist file
 
-2003-10-10  Thomas Vander Stichele <thomas at apestaart dot org>
+Changes since 0.4.1:
 
-        * released 0.4.1, "Get A Room"
-	* changes since last release:
+	- added support for Fedora Core 0.95 (Severn beta 3)
+	- moved config files per distro initialization to dist file
+
+Changes since 0.4.0:
+
+	- changes since last release:
 		- added Red Hat 7.0, 7.1
 		- added Yellowdog 2.3, 3.0
 		- added Fedora Core 0.94
@@ -23,11 +41,3 @@
 		- fix permissions on copied sources
 		- unlock root on successful build
 		- allow "." in mach-helper
-
-2003-09-08  Thomas Vander Stichele <thomas at apestaart dot org>
-
-	* released 0.4.0, "Barcelona"
-
-2003-04-30  Thomas Vander Stichele <thomas at apestaart dot org>
-
-        * rewrite in python
