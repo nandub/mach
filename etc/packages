@@ -252,13 +252,13 @@ packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
 packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
 
 packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
-packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386']
-packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386']
+packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
+packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
 
 # Red Hat Linux 9 flavours
 packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
 packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
 
 packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386']
-packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386']
-packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386']
+packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386-fedora-stable']
+packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testing']
