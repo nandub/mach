@@ -27,7 +27,7 @@ aptsources['redhat-72-i386'] = {
 packages['redhat-72-i386'] = {
     'dir':      'redhat-72-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils openssh-server',
+    'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio elfutils',
 }
@@ -60,7 +60,7 @@ aptsources['redhat-73-i386'] = {
 packages['redhat-73-i386'] = {
     'dir':      'redhat-73-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils openssh-server',
+    'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio elfutils',
 }
@@ -98,7 +98,7 @@ aptsources['redhat-80-i386'] = {
 packages['redhat-80-i386'] = {
     'dir':      'redhat-80-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils openssh-server',
+    'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio elfutils',
 }
@@ -237,7 +237,7 @@ aptsources['suse-81-i386'] = {
 packages['suse-81-i386'] = {
     'dir':      'suse-81-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils openssh-server',
+    'base':	'fileutils openssh-server',
     'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-81-i386'] = {
@@ -276,7 +276,7 @@ aptsources['suse-82-i386'] = {
 packages['suse-82-i386'] = {
     'dir':      'suse-82-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils openssh-server',
+    'base':	'fileutils openssh-server',
     'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
