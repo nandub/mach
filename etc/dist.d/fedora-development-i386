@@ -13,9 +13,9 @@ aptsources['fedora-development-i386'] = {
     'fedora-stable':    'rpm ' + fedoraus    + ' fedora/latest/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus    + ' fedora/latest/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus    + ' fedora/latest/i386 unstable',
-    'livna-stable':     'rpm ' + livna       + ' fedora/1.91/i386 stable',
-    'livna-testing':    'rpm ' + livna       + ' fedora/1.91/i386 testing',
-    'livna-unstable':   'rpm ' + livna       + ' fedora/1.91/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' fedora/3/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' fedora/3/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' fedora/3/i386 unstable',
 }
 
 # Fedora Core Development
