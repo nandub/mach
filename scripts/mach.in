@@ -505,7 +505,7 @@ class Root:
                     except:
                         raise self.Error, "Could not download %s !" % download
                     files.append (filepath)
-                    self.stdout ("Using %s" % filepath)
+                    self.stdout ("Using %s\n" % filepath)
     
             # copy files to /tmp in root, then chroot to mv them 
             for file in files:
