@@ -6,6 +6,7 @@ dists = \
 	redhat-80-i386 \
 	redhat-9-i386 \
 	fedora-1-i386 \
+	fedora-2-i386 \
 	fedora-development-i386 \
 	cnc-9-i386 \
 	suse-81-i386 \

@@ -35,3 +35,4 @@
 	 	--root instead of doing it ourselves
 * MEDIUM:	keep track of all buildrequires stuff so that we can try
                 and install the right kernel- versions
+* MEDIUM:	copy all non-downloaded Sources/Patches in the resultdir too
