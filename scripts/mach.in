@@ -976,7 +976,7 @@ class Root:
             debug ("target prep already set up")
             return
     
-        print "Preparing root ..."
+        print "Preparing root"
         ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
@@ -1086,9 +1086,9 @@ Dir {
         self.mount ()
         # install packages
         self.aptget ('install -y glibc bash',
-                     'Installing glibc and bash ...', self.progress ())
+                     'Installing glibc and bash', self.progress ())
         self.aptget ('install -y %s' % self.config['packages']['build'],
-                     'Installing rpm build packages ...',
+                     'Installing rpm build packages',
                      self.progress ())
         #FIXME: add mach user and group
         self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
