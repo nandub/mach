@@ -11,12 +11,13 @@ dists = \
 	cnc-9-i386 \
 	suse-81-i386 \
 	suse-82-i386 \
+	suse-90-i386 \
 	yellowdog-23-ppc \
 	yellowdog-30-ppc \
 	davedina
 
 configdir = $(sysconfdir)/mach/dist.d
 config_DATA = $(dists)
-                                                                                
+
 EXTRA_DIST = $(dists)
 
