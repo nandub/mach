@@ -3,7 +3,7 @@ mach - make a chroot
 
 1. WHAT IS IT ?
 ---------------
-mach allows you to set up clean roots from scratch for any distribution or 
+mach allows you to set up clean roots from scratch for any distribution or
 distribution variation supported.
 
 This clean build root can be used for several goals :
