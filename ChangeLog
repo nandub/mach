@@ -1,6 +1,12 @@
 2003-09-07  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in:
+	* etc/dist:
+		- allow shortcut aliases in -r, for example rh9
+
+2003-09-07  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in:
         	- refactor splitargs code
 		- added KeyboardInterrupt to catch ctrl-c
                 - reinstate proc

@@ -27,19 +27,22 @@ aptsources['redhat-72-i386'] = {
 packages['redhat-72-i386'] = {
     'dir':      'redhat-72-i386',
     'minimal':	'bash glibc',
-    'base':	'fileutils findutils openssh-server',
+    # net-tools provides hostname, otherwise it complains about it for chroot
+    'base':	'fileutils findutils openssh-server net-tools file',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio',
 }
 sourceslist['redhat-72-i386'] = {
     'redhat-72-i386': ('os', )
 }
+aliases['redhat-72-i386'] = ('rh72', )
 
 # Red Hat Linux 7.2, updates (rpm 4.0.4)
 packages['redhat-72-i386-updates'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-updates'] = {
     'redhat-72-i386': ('os', 'updates', )
 }
+aliases['redhat-72-i386-updates'] = ('rh72u', )
 
 # Red Hat Linux 7.2 with JPackage
 packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates']
@@ -67,12 +70,14 @@ packages['redhat-73-i386'] = {
 sourceslist['redhat-73-i386'] = {
     'redhat-73-i386': ('os', )
 }
+aliases['redhat-73-i386'] = ('rh73', )
 
 # Red Hat Linux 7.3, updates
 packages['redhat-73-i386-updates'] = packages['redhat-73-i386']
 sourceslist['redhat-73-i386-updates'] = {
     'redhat-73-i386': ('os', 'updates', )
 }
+aliases['redhat-73-i386-updates'] = ('rh73u', )
 
 # Red Hat Linux 7.3 with JPackage
 packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
@@ -105,38 +110,47 @@ packages['redhat-80-i386'] = {
 sourceslist['redhat-80-i386'] = {
     'redhat-80-i386': ('os', )
 }
+aliases['redhat-80-i386'] = ('rh80', )
 
 # Red Hat Linux 8.0 with updates
 packages['redhat-80-i386-updates'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-updates'] = {
     'redhat-80-i386': ('os', 'updates', )
 }
+aliases['redhat-80-i386-updates'] = ('rh80u', )
 
 # Red Hat Linux 8.0 with GStreamer
 packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-gstreamer'] = {
     'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
 }
+aliases['redhat-80-i386-gstreamer'] = ('rh80g', )
 
 packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-gstreamer-deps'] = {
     'redhat-80-i386': ('os', 'gstreamer-deps')
 }
+aliases['redhat-80-i386-gstreamer-deps'] = ('rh80gd', )
 
 # Red Hat Linux 8.0 with Fedora
 packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-fedora-stable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable')
 }
+aliases['redhat-80-i386-fedora-stable'] = ('rh80fs', )
+
 packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
 sourceslist['redhat-80-i386-fedora-testing'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
 }
+aliases['redhat-80-i386-fedora-testing'] = ('rh80ft', )
 packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
 sourceslist['redhat-80-i386-fedora-unstable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
 }
+aliases['redhat-80-i386-fedora-unstable'] = ('rh80fu', )
+packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
 
 # Red Hat Linux 8.0 with JPackage
 packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
@@ -169,38 +183,47 @@ packages['redhat-9-i386'] = {
 sourceslist['redhat-9-i386'] = {
     'redhat-9-i386': ('os', )
 }
+aliases['redhat-9-i386'] = ('rh9', )
 
 # Red Hat Linux 9 with updates
 packages['redhat-9-i386-updates'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-updates'] = {
     'redhat-9-i386': ('os', 'updates', )
 }
+aliases['redhat-9-i386-updates'] = ('rh9u', )
 
 # Red Hat Linux 9 with GStreamer
 packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer'] = {
     'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer')
 }
+aliases['redhat-9-i386-gstreamer'] = ('rh9g', )
 
 packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer-deps'] = {
     'redhat-9-i386': ('os', 'gstreamer-deps')
 }
+aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', )
 
 # Red Hat Linux 9 with Fedora
 packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-fedora-stable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable')
 }
+aliases['redhat-9-i386-fedora-stable'] = ('rh9fs', )
+
 packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386-fedora-stable']
 sourceslist['redhat-9-i386-fedora-testing'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
 }
+aliases['redhat-9-i386-fedora-testing'] = ('rh9ft', )
+
 packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testing']
 sourceslist['redhat-9-i386-fedora-unstable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
 }
+aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', )
 
 # Red Hat Linux 9 with JPackage
 packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
@@ -250,8 +273,6 @@ sourceslist['suse-81-i386-full'] = {
     'suse-81-i386': aptsources['suse-81-i386'].keys(),
 }
 
-
-
 ### SuSE Linux 8.2 flavours
 aptsources['suse-82-i386'] = {
     'base':          'rpm ' + suse + ' 8.2-i386 base',
@@ -296,13 +317,15 @@ aptsources['davedina'] = {
 }
 
 packages['davedina-fridge'] = packages['redhat-9-i386']
-packages['davedina-oven'] = packages['redhat-9-i386']
-
 sourceslist['davedina-fridge'] = {
     'redhat-9-i386': ('os',),
     'davedina': ('fridge',),
 }
+aliases['davedina-fridge'] = ('ddf', )
+
+packages['davedina-oven'] = packages['redhat-9-i386']
 sourceslist['davedina-oven'] = {
     'redhat-9-i386': ('os',),
     'davedina': ('fridge', 'oven',),
 }
+aliases['davedina-oven'] = ('ddo', )

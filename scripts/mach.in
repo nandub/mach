@@ -88,6 +88,7 @@ aptsources = {}
 # read dist information
 packages = {}
 sourceslist = {}
+aliases = {}
 file = '@SYSCONFDIR@/mach/dist'
 execfile (file)
 
@@ -1466,6 +1467,13 @@ def main (config, args):
         elif opt == '--release':
             config['release'] = arg
 
+    # resolve root aliases to real root names
+    for name in aliases.keys ():
+        if root in aliases[name]:
+            root = name
+            break
+
+    debug ("DEBUG: real root name is %s" % root)
     # pull in root-specific configuration
     # FIXME: even nicer would be if we could just do config[rootname] = ...
     # and copy that over
@@ -1481,9 +1489,9 @@ def main (config, args):
         sys.stderr.write ('No sources information found for %s\n' % root)
         sys.exit (1)
     #try:
-    #    config['files'] = files[root]
+    #    config['aliases'] = aliases
     #except:
-    #    debug ("no files override")
+    #    debug ("no aliases for this root")
 
     if config.has_key (root):
         for key in config[root].keys ():
