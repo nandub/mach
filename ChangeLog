@@ -2,7 +2,7 @@
 
         * scripts/mach.in: Fix some code style issues
 
-2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+2003-12-01  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in: Add configurable hooks to different
 	build phases.
@@ -15,7 +15,7 @@
 	* scripts/mach.in (build): Let SRPM build failure error fall
 	through here.
 
-2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+2003-12-30  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in (rebuild): Raise an error instead of returning
 	false when an SRPM build fails.
@@ -36,7 +36,7 @@
 	it is now less likely to mangle other stuff than the actual release
 	tag, and tolerates trailing whitespace.
 
-2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+2003-11-21  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* scripts/mach.in: Some small corrections to fix the syntax
 	highlighting in XEmacs' python mode.
