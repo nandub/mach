@@ -927,6 +927,9 @@ class Root:
                 if (buildreqs):
                     try:
                         srcs = get_sources_list (self.config)
+                        # this ensures that locally built RPMS are already used for apt-get
+                        root = get_config_dir (config, 'root')
+                        srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
                         create_sources_list (config, srcs)
         	        self.aptget (["update", ])
                         # wrap all buildreqs in quotes
@@ -1074,6 +1077,8 @@ class Root:
 
             # update internal apt repo
             srcs = get_sources_list (self.config)
+            # this ensures that locally built RPMS are already used for apt-get
+            srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
             create_sources_list (config, srcs)
             self.aptget (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
@@ -1681,8 +1686,6 @@ def create_sources_list (config, list):
     debug ("Creating sources.list")
     # we created in the root and chroot mv it afterwards due to perms
     sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
-    # this ensures that locally built RPMS are already used for apt-get
-    list.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
     sources.write (string.join (list, "\n"))
     sources.close ()
 #    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
@@ -1827,7 +1830,8 @@ def main (config, args):
         print root
         sys.exit(0)
 
-    debug ("DEBUG: real root name is %s" % root)
+    debug ("This is mach (make a chroot) @VERSION@")
+    debug ("real root name is %s" % root)
     # pull in root-specific configuration
     # FIXME: even nicer would be if we could just do config[rootname] = ...
     # and copy that over
