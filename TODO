@@ -13,9 +13,8 @@
 * KLUDGEY:      SuSE 7.3 and 8.0 setups, the problem is their ncurses package
                 which has a %pre script that requires bash.  And bash requires
                 libncurses.so.5 :/
-* MEDIUM:	If spec file contains %define version ...
-                and Version: %{version}, we need to expand this
 * MEDIUM:	rpm -q --specfile shouldn't be used; it fails on %install
                 and similar in Changelog entries
 * MEDIUM:	make sure we don't rebuild binary rpms :)
 * EASY:		allow people to specify an alternate location for a root
+* EASY:		bash completion
