@@ -1098,10 +1098,12 @@ Acquire {
     }
 };
 
+#Allow-Duplicated { "^kernel$"; "^kernel-"; "^alsa-kernel"; "^gpg-pubkey$" };     Source {
 RPM {
     Ignore { };
     Hold { };
-    Allow-Duplicated { "^kernel$"; "^kernel-"; "^alsa-kernel"; "^gpg-pubkey$" };     Source {
+    Allow-Duplicated { "^gpg-pubkey$" };
+    Source {
         Build-Command "rpmbuild --rebuild";
     };
     GPG-Check "false";
