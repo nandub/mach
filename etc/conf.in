@@ -1,6 +1,9 @@
 # mach system configuration file                                 -*- python -*-
 
-# spinner theme
+# These configuration options can be overridden on per-root basis in
+# @SYSCONFDIR@/mach/dist
+
+# Spinner theme
 config['spinner'] = {
     'wheel':      '/-\|',
     'blip':       '.o0O0o',
@@ -11,8 +14,8 @@ config['spinner'] = {
     'point':      ".:':",
 }
 
-# directories used
-# don't change roots, archives and states, they're hardcoded into mach-helper
+# Directories
+# Don't change roots, archives and states, they're hardcoded into mach-helper.
 config['dirs'] = {
     'states':   '@STATESDIR@',
     'roots':    '@ROOTSDIR@',
@@ -22,10 +25,10 @@ config['dirs'] = {
     'archives': '@ARCHIVESDIR@',
 }
 
-# default root
+# Default root
 config['defaultroot'] = 'fedora-1-i386-core'
 
-# files created in the root
+# Files created in the root
 config['files'] = {
     '/etc/resolv.conf': '''
 nameserver 192.168.1.1
@@ -39,3 +42,9 @@ while read p; do
 done
 '''
 }
+
+# Additional macros
+#config['macros'] = {
+#    'packager': 'Packager Name <packager@email>',
+#    'vendor':   'Vendor name',
+#}
