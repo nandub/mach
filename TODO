@@ -1,9 +1,4 @@
-* EASY:         clean out packages dir, but only if it's the last dist that
-                uses that packagedir
-
 * HARD:		make an object class "Root" and execute all operations on this
-
-* EASY:		make mach-helper do rm if the root's rm is gone
 * EASY:		add warning about missing stuff from .rpmmacros for signing
 * EASY:		check for ending spaces in urlgrab, disallow
 * EASY:		sign and collect packages at end of complete build
@@ -18,8 +13,8 @@
 * MEDIUM:	make sure we don't rebuild binary rpms :)
 * EASY:		allow people to specify an alternate location for a root
 * EASY:		bash completion
-* EASY:		unlock root on ctrl-c interrupt
-* EASY:		have "quiet" mode so that output is usable for comparison
 * HARD:		integrate ccache building
 * HARD:		integrate distcc support
 * EASY:		make proc mounting an option, document the issues with it
+* MEDIUM:	allow specification of multiple roots for multibuilding
+* MEDIUM:	add e2fs target which makes the root into a filesystem file
