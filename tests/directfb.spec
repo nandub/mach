@@ -13,6 +13,7 @@ BuildRequires:  libpng-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  freetype-devel
+BuildRequires:	SDL-devel
 # the libtool in the tarball has a problem with installing binaries linked
 # against the included library
 BuildRequires:	libtool
