@@ -34,7 +34,7 @@ packages['suse-82-i386'] = {
     'minimal':  'bash glibc',
     'base':     'aaa_base coreutils findutils openssh openssl=0.9.6i ' +
                 'pam-modules',
-    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+    'build':    'make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': ('base', )
