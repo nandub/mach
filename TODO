@@ -4,3 +4,5 @@
                 suggestion: use rpm2cpio to extract the static rpm binary
 * EASY:         clean out packages dir, but only if it's the last dist that
                 uses that packagedir
+* MEDIUM:       figure out how to get around checking gpg sigs on installing
+                just built packages

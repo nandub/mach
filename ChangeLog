@@ -1,7 +1,13 @@
+2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * add global /bin/bash -c '...' wrapping
+        * use LD_ASSUME_KERNEL=2.2.5 for any installing/querying;
+          this ought to be configurable somehow
+
 2003-05-11  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* Force queryformat for rpm -q, users may have customized formats
-	which will confuse mach.
+	  which will confuse mach.
 	* Add (X)Emacs python mode cookies to config files.
 
 2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>

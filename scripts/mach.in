@@ -9,7 +9,8 @@ import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 
 # FIXME: move this to config
-aptget = 'export LD_ASSUME_KERNEL=2.2.5 && apt-get'
+chroot_aptget = 'export LD_ASSUME_KERNEL=2.2.5 && apt-get'
+chroot_rpm = 'export LD_ASSUME_KERNEL=2.2.5 && rpm'
 
 # make sure True and False constants exist
 
@@ -226,7 +227,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
         retval = os.WEXITSTATUS (status)
     if (retval != 0):
         sys.stdout.write ('\b!\n')
-        sys.stderr.write ('error:\n %s\n' % string.join (output, "\n"))
+        sys.stderr.write ('error: %s failed.\n %s\n' % (cmd, string.join (output, "\n")))
     else: 
         sys.stdout.write ('\b.\n')
     return (retval, string.join (output, '\n') + '\n')
@@ -241,7 +242,15 @@ def do_chroot (config, command, progress = False):
 # return (return value, output) of command
 def do_chroot_with_output (config, command, progress = False):
     root = get_config_dir (config, 'root')
-    cmd = '%s %s %s' % (config['chroot'], root, command)
+    # HACK: FIXME: 
+    # if the cmd already contains -c ' as a sequence, then don't wrap
+    # it in /bin/bash
+    
+    cmd = ""
+    if string.find (command, "-c '") > -1:
+        cmd = "%s %s %s" % (config['chroot'], root, command)
+    else:
+        cmd = "%s %s /bin/bash -c '%s'" % (config['chroot'], root, command)
     output = ''
     debug ("Executing %s" % cmd)
     if progress:
@@ -460,7 +469,7 @@ def check_package_list (config, list):
     packages = commands.getoutput (cmd)
     # FIXME: how many ?
     sys.stdout.write ("Removing packages ...")
-    if do_chroot (config, "rpm -ev " + packages, True) != 0:
+    if do_chroot (config, "%s -ev %s" % (chroot_rpm,  packages), True) != 0:
         sys.stderr.write ("Error removing packages\n")
         return False
     return True
@@ -541,14 +550,14 @@ def setup_consistency (config, args):
     # this ensures glibc doesn't get upgraded from underneath apt
     create_sources_list (config, (srcs[0], ))
     sys.stdout.write ('Updating apt ...')
-    do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
+    do_chroot (config, "%s update" % chroot_aptget, True)
     sys.stdout.write ('Forcing consistency ...')
-    do_chroot (config, "/bin/bash -c '%s -f upgrade -y'" % aptget, True)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True)
     create_sources_list (config, srcs)
     sys.stdout.write ('Updating apt ...')
-    do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
+    do_chroot (config, "%s update" % chroot_aptget, True)
     sys.stdout.write ('Upgrading ...')
-    do_chroot (config, "/bin/bash -c '%s -f upgrade -y'" % aptget, True)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True)
     open (statefile, 'w')
     return True
 
@@ -563,13 +572,13 @@ def setup_build (config, args):
     # install packages
     sys.stdout.write ('Installing rpm build packages ...')
     packages = "rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
-    do_chroot (config, "/bin/bash -c '%s install -y %s'" % (aptget, packages), True)
+    do_chroot (config, "%s install -y %s" % (chroot_aptget, packages), True)
     #FIXME: add mach user and group
-    if do_chroot (config, "/bin/bash -c 'echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd'") != 0:
+    if do_chroot (config, "echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd") != 0:
         sys.stdout.write ("error: could not add mach user to /etc/passwd\n")
         unlock (config, args)
         sys.exit (1)
-    if do_chroot (config, "/bin/bash -c 'echo mach::500:mach >> /etc/group'") != 0:
+    if do_chroot (config, "echo mach::500:mach >> /etc/group") != 0:
         sys.stdout.write ("error: could not add mach group to /etc/group\n")
         unlock (config, args)
         sys.exit (1)
@@ -602,8 +611,11 @@ def setup_build (config, args):
             sys.stdout.write ("error: could not create symlink /usr/src/rpm/%s.mach-local" % dir)
             unlock (config, args)
             sys.exit (1)
-   # make a snapshot
-    command = '%s %s rpm -qa --qf %s' % (config['chroot'], root, qfmt)
+    # make a snapshot
+    print "Making snapshot ..."
+    # FIXME: use _with_output for this
+    do_chroot (config, "%s update" % chroot_aptget, True)
+    command = "%s %s %s -qa --qf %s" % (config['chroot'], root, chroot_rpm, qfmt)
     file = open (statefile, 'w')
     for lines in os.popen (command).readlines ():
         file.write (lines)
@@ -880,8 +892,9 @@ def rebuild (config, args):
         srpm = pkgs[name]['srpm']
         print "Building %s" % srpm
         sys.stdout.write ('Installing BuildRequires ...')
-        if do_chroot (config, 'apt-get install -y %s' 
-                              % string.join (pkgs[name]['buildreqs']), True) != 0:
+        if do_chroot (config, '%s install -y %s' 
+                              % (chroot_aptget, string.join (pkgs[name]['buildreqs'])),
+                      True) != 0:
             sys.stderr.write ('Cannot build %s\n' % srpm)
             continue
 
@@ -907,7 +920,7 @@ def rebuild (config, args):
             return False
         # reinstall and repackage src rpm
         sys.stdout.write ("Repackaging %s ..." % srpm)
-        do_chroot (config, 'rpm -Uhv /tmp/%s > /dev/null 2>&1' % srpm)
+        do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
         spec = pkgs[name]['spec']
         if do_chroot (config, 'rpmbuild -bs /usr/src/rpm/SPECS/%s >> %s 2>&1'
                               % (spec, resultdir + '/rpm.log'), True):
@@ -917,11 +930,11 @@ def rebuild (config, args):
         (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
         # FIXME: install these RPMS based on a boolean ?
         # FIXME: error checks
-        (status, output) = do_chroot_with_output (config, 'rpm -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % string.join (rpms, " "))
+        (status, output) = do_chroot_with_output (config, '%s -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % (chroot_rpm, string.join (rpms, " ")))
         # Need to handle packages without Epochs :/
         output = string.replace (output, '=(none):', '=');
         sys.stdout.write ("Installing built RPMS and dependencies ...")
-        if do_chroot (config, 'apt-get install -y %s' % output, True) != 0:
+        if do_chroot (config, '%s install -y %s' % (chroot_aptget, output), True) != 0:
             return False
         # FIXME: install the SRPM?
         print "Collecting results from %s" % srpm
@@ -990,13 +1003,13 @@ def status (config, args):
 
 def urlgrab (url, filename):
     print "Getting %s ..." % url
-    (t, h) = urllib.urlretrieve(url, filename)
+    (t, h) = urllib.urlretrieve (url, filename)
     d = None
     try:
         if h:
-            d = time.mktime(h.getdate("Last-Modified") or h.getdate ("Date"))
+            d = time.mktime (h.getdate ("Last-Modified") or h.getdate ("Date"))
         if d:
-            os.utime(filename, (d, d))
+            os.utime (filename, (d, d))
     except:
         print "Warning: time stamp not preserved for %s" % filename
 
