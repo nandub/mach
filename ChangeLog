@@ -3,6 +3,7 @@
 	* scripts/mach.in:
 	Don't exit from setup_consistency if the commands succeed :)
 	Use the -H argument to sudo for better non-root experience.
+	Fix unlock target by introducing a dummy 2nd argument.
 
 2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
 
