@@ -32,6 +32,11 @@ Dave/Dina
   - fridge
   - oven
 
+Fedora 8.0 and 9
+  - stable
+  - testing
+  - unstable
+
 Some handy features of mach include
   - "caching" of downloaded packages by mounting the archives dir into
     the build root
