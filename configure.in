@@ -83,5 +83,6 @@ scripts/mach
 etc/Makefile
 src/Makefile
 etc/conf
+m4/Makefile
 mach.spec
 )
