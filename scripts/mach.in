@@ -994,10 +994,12 @@ class Root:
             # it picks up on Sources: and Patches: copied there
             command = "rpmbuild -bp --root %s %s " \
                       "--define '_topdir %s' " \
+                      "--define '_tmppath %s' " \
                       "--define '__spec_prep_pre exit 0' " \
                       "--define 'setup :' %s" \
                       % (self.rootdir, join_quoted (options),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm'),
+                         os.path.join ('/var', 'tmp'),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
             debug ("Checking buildreqs: %s" % command)
             try:
