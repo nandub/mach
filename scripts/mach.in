@@ -1154,6 +1154,10 @@ Dir {
     def _setup_base (self):
         self._install ('base')
 
+    def __writeMacros(self, file):
+        for mac in self.config.get('macros', {}).items():
+            file.write('%%%-19s %s\n' % (mac))
+
     def _setup_build (self):
         "set up a root for rpm building"
         if self.get_state ('build'):
@@ -1178,6 +1182,7 @@ Dir {
         macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
         macros.write ("%_unpackaged_files_terminate_build 1\n")
         macros.write ("%_missing_doc_files_terminate_build 1\n")
+        self.__writeMacros (macros)
         macros.close ()
         self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
