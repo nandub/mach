@@ -1,4 +1,5 @@
-#!@PYTHON@                                       -*- python -*-
+#!@PYTHON@
+#                                                -*- python -*-
 #
 # mach - make a chroot
 #
@@ -919,19 +920,26 @@ class Root:
                     elif cand == "kernel-source":
                         print "Warning: make sure you have manually installed the right kernel-source rpm"
                         print "         and that you are building with --keep"
-                    elif commands.getstatusoutput(chkcmd % cand)[0]:
-                        buildreqs.append (cand)
+                    #FIXME: if an older version of a buildrequire is already
+                    #installed, it will get filtered even though we need the
+                    #newer version
+                    #elif commands.getstatusoutput(chkcmd % cand)[0]:
+                    buildreqs.append (cand)
    
                 debug ("BuildRequires after filtering: %s" % buildreqs)
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
+                    srcs = get_sources_list (self.config)
+                    # this ensures that locally built RPMS are already used for apt-get
+                    root = get_config_dir (config, 'root')
+                    srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
+                    create_sources_list (config, srcs)
+
                     try:
-                        srcs = get_sources_list (self.config)
-                        # this ensures that locally built RPMS are already used for apt-get
-                        root = get_config_dir (config, 'root')
-                        srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
-                        create_sources_list (config, srcs)
         	        self.aptget (["update", ])
+                    except Root.Error:
+                        raise self.Error, 'could not update apt'
+                    try:
                         # wrap all buildreqs in quotes
                         self.aptget ([ 'install -y %s' % "'" + "' '".join (buildreqs) + "'", ],
                                      "Installing BuildRequires", self.progress ())
@@ -1078,8 +1086,9 @@ class Root:
             # update internal apt repo
             srcs = get_sources_list (self.config)
             # this ensures that locally built RPMS are already used for apt-get
+            root = get_config_dir (self.config, 'root')
             srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
-            create_sources_list (config, srcs)
+            create_sources_list (self.config, srcs)
             self.aptget (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
