@@ -266,12 +266,13 @@ class Spec:
 ### abstract object wrapping a src rpm
 class SRPM:
     class Error(Exception): pass
-    def __init__ (self, path):
+    def __init__ (self, path, options = ""):
         self.path = path
         self.header = self._header ()
         self.specname = self._specname ()
-        # ignore signatures
+        self.options = options
 
+        # ignore signatures
     def _header (self):
         "get the rpm header from the src.rpm"
         debug ("Getting RPM header from %s" % self.path)
@@ -329,7 +330,7 @@ class SRPM:
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
         try:
-            spec = Spec (spectmp)
+            spec = Spec (spectmp, self.options)
         except Spec.Error, message:
             os.system (tmp_remove_cmd)
             raise self.Error, message
@@ -690,6 +691,10 @@ class Root:
                 self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
                                 os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
+
+            # remove the spec if it existed, then copy
+            self.do_chroot ("cd / && rm -f %s" % (
+                                os.path.join ('tmp', os.path.basename (specfile))))
             shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
             self.do_chroot ("cd / && mv %s %s" % (
                             os.path.join ('tmp', os.path.basename (specfile)),
@@ -818,7 +823,8 @@ class Root:
             except IOError:
                 raise self.Error, "Can't find %s" % path
                 return False
-            srpm = SRPM (newpath)
+            srpm = SRPM (newpath, join_quoted (options))
+
             spec = srpm.specname
             buildreqs = srpm.BuildRequires ()
             name = srpm.header[rpm.RPMTAG_NAME]
@@ -966,7 +972,7 @@ class Root:
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
                 try:
-                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
+                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), join_quoted (options))
                 except Spec.Error, message:
                     raise self.Error, message
                 release = spec.tag ("release")
