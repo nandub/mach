@@ -113,11 +113,21 @@ buildgroup = '@BUILDGROUP@'
 
 ### objects
 class Spec:
+    class Error(Exception): pass
     def __init__ (self, path, options = ""):
         self.path = path
         self.content = []
         self.vars = {}
         debug ("Spec.__init__: opening spec %s" % path)
+        # check for syntax errors in the spec file first
+        command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, path)
+	debug ("Spec:__init__: command: %s" % command)
+        (status, output) = commands.getstatusoutput (command)
+        if os.WIFEXITED (status):
+            retval = os.WEXITSTATUS (status)
+        if (retval != 0):
+            raise self.Error, "spec file %s fails to parse:\n%s" % (self.path, output)
+ 
         self.content = open (self.path).readlines ()
         # expand tags using rpm --specfile because results can depend on
         # build options
@@ -292,7 +302,11 @@ class SRPM:
         cmd = "rpm -q --specfile %s" % spectmp
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
-        spec = Spec (spectmp)
+        try:
+            spec = Spec (spectmp)
+        except Spec.Error, message:
+            raise self.Error, message
+            
         (n, v, r) = spec.nvr ()
         # strip v and r off of output
         result = []
@@ -593,7 +607,10 @@ class Root:
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
             optstring = join_quoted (options)
             debug ("build: quoted optstring: %s" % optstring)
-            spec = Spec (specfile, optstring)
+            try:
+                spec = Spec (specfile, optstring)
+            except Spec.Error, message:
+                raise self.Error, message
             (n, v, r) = spec.nvr ()
             # download all referenced files (Sources, Patches)
             downloads = spec.sources ().values () + spec.patches ().values ()
@@ -909,7 +926,10 @@ class Root:
                 # FIXME: since fedora.us now uses .1 as a disttag,
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
-                spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
+                try:
+                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
+                except Spec.Error, message:
+                    raise self.Error, message
                 release = spec.tag ("release")
                 debug ("Release of spec file to mangle is %s" % release)
                 #if not release.endswith ('.' + self.config['release']):
