@@ -50,10 +50,10 @@ config = {
   'check': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
-  'chroot': 'sudo /usr/sbin/chroot',
-  'mount': 'sudo /bin/mount',
-  'rpm': 'sudo /bin/rpm',
-  'umount': 'sudo /bin/umount',
+  'chroot': 'sudo -H /usr/sbin/chroot',
+  'mount': 'sudo -H /bin/mount',
+  'rpm': 'sudo -H /bin/rpm',
+  'umount': 'sudo -H /bin/umount',
 
 }
 DEBUG = 0
