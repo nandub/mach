@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.5 - "Snow".
+Announcing the release of mach 0.4.6 - "Lenrek".
 
 WHAT IS IT
 ----------
@@ -22,7 +22,10 @@ mach can currently set up roots for the following distributions:
                JPackage, GStreamer, FreshRPMS)
 - Fedora 1    (core, updated, www.fedora.us, rpm.livna.org,
                JPackage, FreshRPMS, GStreamer)
-- SuSE 8.1/8.2
+- Fedora 2    (core, updated, www.fedora.us, rpm.livna.org,
+               JPackage, FreshRPMS, GStreamer)
+- SuSE 8.1/8.2/9
+- Connectiva
 - Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
 - Dave/Dina 0.0/oven/fridge
@@ -31,17 +34,15 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - pre-interpreting checks fixed (Thomas)
-        - use promoteepoch when supported; fixes building with newer apt
-          for older platforms (Thomas)
-        - proc mount/unmount fixes (Erik, Enrico)
-        - distro configuration split up in multiple distro files (Thomas)
-        - rewrite macros on each build (Thomas)
-        - pass through a specific set of env vars (Enrico)
-        - create /boot/kernel.h on root setup (Enrico)
-        - fix handling of rpmmacros when checking spec files (Thomas)
-        - always use build args to parse spec flies (Thomas)
-        - added -v option (Thomas)
+	- skip backup files in dist.d (Ville)
+        - avoid hangs by first-time apt druids (Noa)
+	- include dist.d snippets alphabetically (Ville)
+	- fix passwd entries for SuSE 9 (Ville)
+	- only add local apt repo after build stage (Jeff)
+	- rework buildrequire checking (Thomas)
+	- check for errors on URL retrieving (Panu)
+	- fix sed mangling to take care of trailing spaces (Thomas)
+	- added Fedora Core 2 (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -96,3 +97,7 @@ Contributors to this release include
 - Enrico Scholz
 - Matthias Saou
 - Erik LaBianca
+- Noa Resare
+- Dams
+- Jeff Pitman
+- Panu Matilainen
