@@ -522,7 +522,7 @@ def config_recreate (config, filename):
         file.close ()
 
 # install a set of packages
-# called by base and apt
+# called by base and apt, and build for dist-specific build packages
 def install (config, set):
     packagesdir = get_packages_dir (config)
     debug ("Installing package set %s" % set)
@@ -588,10 +588,15 @@ def setup_build (config, args):
         return check_package_list (config, statefile)
     mount (config, args)
     root = get_config_dir (config, 'root')
+    try:
+        distspecific = config['packages']['build']
+    except KeyError:
+        distspecific = ''
     # install packages
     sys.stdout.write ('Installing rpm build packages ...')
     packages = "rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
-    do_chroot (config, "%s install -y %s" % (chroot_aptget, packages), True)
+    do_chroot (config, "%s install -y %s %s" %
+               (chroot_aptget, packages, distspecific), True)
     #FIXME: add mach user and group
     if do_chroot (config, "echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd") != 0:
         sys.stdout.write ("error: could not add mach user to /etc/passwd\n")

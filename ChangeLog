@@ -5,6 +5,11 @@
 	Use the -H argument to sudo for better non-root experience.
 	Fix unlock target by introducing a dummy 2nd argument.
 
+	* etc/packages:
+	* scripts/mach.in:
+	Implement configurable per-distro build packages, and add
+	Fedora ones to default packages config.
+
 2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
 
 	* configure.in:
