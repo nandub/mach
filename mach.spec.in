@@ -13,6 +13,9 @@ Requires:	python
 Requires:	rpm
 Requires:	rpm-python
 Requires:	apt
+Requires:	sed
+
+BuildRequires:	python
 
 %description
 mach makes a chroot.
