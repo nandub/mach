@@ -49,9 +49,16 @@ aliases['redhat-70-i386-updates'] = ('rh70u', )
 # Red Hat Linux 7.0, FreshRPMS
 packages['redhat-70-i386-freshrpms'] = packages['redhat-70-i386']
 sourceslist['redhat-70-i386-freshrpms'] = {
-    'redhat-70-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-70-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-70-i386-freshrpms'] = ('rh70fr', )
+
+# Red Hat Linux 7.0, FreshRPMS + updated
+packages['redhat-70-i386-freshrpms'] = packages['redhat-70-i386']
+sourceslist['redhat-70-i386-freshrpms'] = {
+    'redhat-70-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-70-i386-freshrpms'] = ('rh70fru', )
 
 ### Red Hat Linux 7.1 flavours
 aptsources['redhat-71-i386'] = {
@@ -85,10 +92,17 @@ aliases['redhat-71-i386-updates'] = ('rh71u', )
 # Red Hat Linux 7.1, FreshRPMS
 packages['redhat-71-i386-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-freshrpms'] = {
-    'redhat-71-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-71-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-71-i386-freshrpms'] = ('rh71fr', )
                                                                                 
+# Red Hat Linux 7.1, FreshRPMS + updated
+packages['redhat-71-i386-freshrpms'] = packages['redhat-71-i386']
+sourceslist['redhat-71-i386-freshrpms'] = {
+    'redhat-71-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-71-i386-freshrpms'] = ('rh71fru', )
+
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
@@ -123,9 +137,16 @@ aliases['redhat-72-i386-updates'] = ('rh72u', )
 # Red Hat Linux 7.2, FreshRPMS
 packages['redhat-72-i386-freshrpms'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-freshrpms'] = {
-    'redhat-72-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-72-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-72-i386-freshrpms'] = ('rh72fr', )
+
+# Red Hat Linux 7.2, FreshRPMS + updated
+packages['redhat-72-i386-freshrpms'] = packages['redhat-72-i386']
+sourceslist['redhat-72-i386-freshrpms'] = {
+    'redhat-72-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-72-i386-freshrpms'] = ('rh72fru', )
 
 # Red Hat Linux 7.2 with JPackage
 packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates']
@@ -165,9 +186,16 @@ aliases['redhat-73-i386-updates'] = ('rh73u', )
 # Red Hat Linux 7.3, FreshRPMS
 packages['redhat-73-i386-freshrpms'] = packages['redhat-73-i386']
 sourceslist['redhat-73-i386-freshrpms'] = {
-    'redhat-73-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-73-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-73-i386-freshrpms'] = ('rh73fr', )
+
+# Red Hat Linux 7.3, FreshRPMS + updated
+packages['redhat-73-i386-freshrpms'] = packages['redhat-73-i386']
+sourceslist['redhat-73-i386-freshrpms'] = {
+    'redhat-73-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-73-i386-freshrpms'] = ('rh73fru', )
 
 # Red Hat Linux 7.3 with JPackage
 packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
@@ -246,9 +274,16 @@ packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-tes
 # Red Hat Linux 8.0, FreshRPMS
 packages['redhat-80-i386-freshrpms'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-freshrpms'] = {
-    'redhat-80-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-80-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-80-i386-freshrpms'] = ('rh80fr', )
+
+# Red Hat Linux 8.0, FreshRPMS + updated
+packages['redhat-80-i386-freshrpms'] = packages['redhat-80-i386']
+sourceslist['redhat-80-i386-freshrpms'] = {
+    'redhat-80-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-80-i386-freshrpms'] = ('rh80fru', )
 
 # Red Hat Linux 8.0 with JPackage
 packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
@@ -327,10 +362,16 @@ aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', )
 # Red Hat Linux 9, FreshRPMS
 packages['redhat-9-i386-freshrpms'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-freshrpms'] = {
-    'redhat-9-i386': ('os', 'updates', 'freshrpms', )
+    'redhat-9-i386': ('os', 'freshrpms', )
 }
 aliases['redhat-9-i386-freshrpms'] = ('rh9fr', )
 
+# Red Hat Linux 9, FreshRPMS + updated
+packages['redhat-9-i386-freshrpms'] = packages['redhat-9-i386']
+sourceslist['redhat-9-i386-freshrpms'] = {
+    'redhat-9-i386': ('os', 'updates', 'freshrpms', )
+}
+aliases['redhat-9-i386-freshrpms'] = ('rh9fru', )
 
 # Red Hat Linux 9 with JPackage
 packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
