@@ -995,9 +995,14 @@ class Root:
                 #if not release.endswith ('.' + self.config['release']):
                 if 1:
                     # we quote sed with ' because we quote shell -c with ""
-                    command = "sed -e 's,^\\\\(Release\\\\s*:.*\\\\S\\\\)\\\\s*$,\\\\1.%s,i' /tmp/%s > /usr/src/rpm/SPECS/%s" % (self.config['release'], specfile, specfile)
+                    # we use [:space:] and ^[:space:], most portable
+                    # don't use \s, doesn't work correctly on RH9
+                    command = "sed -e 's,^\\\\(Release[[:space:]]*:[[:space:]]*[^[:space:]]*\\\\)[[:space:]]*$,\\\\1.%s,i' /tmp/%s > /usr/src/rpm/SPECS/%s" % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
                     self.do_chroot (command)
+                    command = "grep Release: /usr/src/rpm/SPECS/%s" % specfile
+                    (ret, output) = self.do_chroot (command)
+                    debug ("Mangled to: %s" % output)
                 else:
                     debug ("Release already contains mangle trailer %s" % self.config['release'])
 
