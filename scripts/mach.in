@@ -559,13 +559,13 @@ class Root:
         os.system ("%s %s %s" % (self.config['chroot'], self.rootdir, arg))
         self.umount ()
      
-    def setup (self, args):
+    def setup (self, arg):
+        "Set up the root to a given target"
         target = ''
-        if args:
-            target = args[0]
+        if arg:
+            target = arg[0]
         else:
             target = 'build' # default to build
-        "Set up the root to a given target"
         targets = ('prep', 'base', 'apt', 'consistency', 'build')
     
         # see if something real given to setup
