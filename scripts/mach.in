@@ -34,6 +34,11 @@ Commands:
   check				check if a root can be set up
   rebuild			rebuild a (set of) .src.rpm(s)
   setup				sets up the root for a particular purpose
+        prep                         preparation before package install
+        base                         base set of rpms to make rpm work
+        apt                          base set of rpms to make apt work
+        consistency                  internally consistent install
+        build                        everything to build rpms
   status			show status of mach roots
   unlock			override root lock
 '''
@@ -63,8 +68,6 @@ DEBUG = 0
 file = '@SYSCONFDIR@/mach/conf'
 execfile (file)
 
-# read user configuration
-
 # read package information
 packages = {}
 file = '@SYSCONFDIR@/mach/packages'
@@ -75,6 +78,13 @@ aptsources = {}
 sourceslist = {}
 file = '@SYSCONFDIR@/mach/apt'
 execfile (file)
+
+# read user configuration
+file = os.path.join (os.environ['HOME'], '.machrc')
+try:
+    execfile (file)
+except IOError:
+    pass
 
 # list of allowed commands
 allowed_commands = ('build', 'check', 'chroot', 'clean', 'rebuild',
