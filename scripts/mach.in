@@ -921,7 +921,7 @@ Dir {
         self.do_chroot ("echo mach::500:mach >> /etc/group")
         self.do_chroot ("mkdir -p /usr/src/rpm")
         self.do_chroot ("chown -R mach:mach /usr/src/rpm")
-        self.do_chroot ("su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
+        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' mach")
          # create dir structure and rpmmacros
         macros = open (self.rootdir + '/tmp/macros', 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
