@@ -1,3 +1,8 @@
+2003-12-05  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+
+	* Makefile.am: Add ACLOCAL_AMFLAGS so the auto* system can be
+	(re)created with "autoreconf -i -f".
+
 2003-12-27  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: Make the rpmbuild command inside roots
