@@ -1,9 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.3 - "Hot Water".  This release celebrates
-the late arrival of a boiler in my new apartment and my first hot bath in
-two weeks.
+Announcing the release of mach 0.4.4 - "Madrid".
 
 WHAT IS IT
 ----------
@@ -18,15 +16,38 @@ mach can currently set up roots for the following distributions:
 - Red Hat 7.1 (basic, updated, FreshRPMS)
 - Red Hat 7.2 (basic, updated, FreshRPMS, JPackage)
 - Red Hat 7.3 (basic, updated, FreshRPMS, JPackage)
-- Red Hat 8.0 (basic, updated, Fedora, JPackage, GStreamer, FreshRPMS)
-- Red Hat 9   (basic, updated, Fedora, JPackage, GStreamer, FreshRPMS)
-- Fedora 1 (core, updated, FreshRPMS, GStreamer)
+- Red Hat 8.0 (basic, updated, www.fedora.us, rpm.livna.org,
+               JPackage, GStreamer, FreshRPMS)
+- Red Hat 9   (basic, updated, www.fedora.us, rpm.livna.org,
+               JPackage, GStreamer, FreshRPMS)
+- Fedora 1    (core, updated, www.fedora.us, rpm.livna.org,
+               JPackage, FreshRPMS, GStreamer)
 - SuSE 8.1/8.2
 - Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
-- Dave/Dina oven/fridge
+- Dave/Dina 0.0/oven/fridge
 
 Read the README included in the distribution for a better overview.
+
+CHANGES
+-------
+        - added distributions:
+                - JPackage for FC1 (Ville)
+                - Conectiva Linux 9 (Ville)
+                - RH80/RH9/FC1 with rpm.livna.org (Thomas)
+        - fixed distributions:
+                - Red Hat 7.3 (Thomas)
+        - make rpmbuild command configurable (Ville)
+        - use config['macros'] to allow additional macros (Enrico)
+        - fix permissions on mach directories for multiple users (Thomas)
+        - add "script-success" to run a script on succesful build (Thomas)
+        - fix quoting problems so --target and --define work (Thomas)
+        - warn on kernel-related BuildRequires (Thomas)
+        - verify parsibility of spec file (Thomas)
+        - recreate sources.list on each update (Thomas)
+        - autodetect target distro on configure (Thomas)
+        - revert to package snapshot list between builds (Thomas)
+        - add pre-build in-root buildrequires verification (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -59,10 +80,25 @@ If all goes well, you'll get a nice freshly built vorbis-tools package.
 
 Now go out, experiment and bug report !
 
+MAILING LIST
+------------
+A mailing list has been set up for discussion of mach use and development.
+Check http://lists.sourceforge.net/lists/listinfo/mach-devel for information.
+The list is low-volume.
+                                                                                
 BUGS
 ----
-Please report all bugs to me at thomas (at) apestaart (dot) org.
+Please report all bugs to the mailing list mentioned above.
 
 Always state what platform you are running on, if it's a clean install or
 somehow updated, how I can reproduce the bug, and output of a run of
 the failed command with -d (debugging).
+
+CONTRIBUTORS
+------------
+Contributors to this release include
+- Thomas Vander Stichele
+- Ville Skyttä
+- Enrico Scholz
+- Matthias Saou
+- Erik LaBianca

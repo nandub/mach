@@ -3,7 +3,7 @@ This is mach, make a chroot, 0.4.4.
 Changes since 0.4.3:
 	- added distributions:
 		- JPackage for FC1 (Ville)
-		- Conectiva Linux 1 (Ville)
+		- Conectiva Linux 9 (Ville)
 		- RH80/RH9/FC1 with rpm.livna.org (Thomas)
 	- fixed distributions:
 		- Red Hat 7.3 (Thomas)

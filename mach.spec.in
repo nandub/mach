@@ -1,10 +1,7 @@
-%{!?builduser:  %define builduser  @BUILDUSER@}
-%{!?buildgroup: %define buildgroup @BUILDGROUP@}
-
 Name:           @PACKAGE@
 Version:        @VERSION@
 Release:        0.fdr.@RELEASE@
-Summary:        Make a chroot.
+Summary:        make a chroot
 
 Group:          Applications/System
 License:	GPL
@@ -20,6 +17,9 @@ Requires:	sed
 Requires:	cpio
 
 BuildRequires:	python
+
+%{!?builduser:  %define builduser  @BUILDUSER@}
+%{!?buildgroup: %define buildgroup @BUILDGROUP@}
 
 %description
 mach makes a chroot.
@@ -37,7 +37,10 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %setup -q
 
 %build
-%configure --enable-builduser=%{builduser} --enable-buildgroup=%{buildgroup}
+%configure \
+	--enable-builduser=%{builduser} \
+	--enable-buildgroup=%{buildgroup} \
+	--with-flavor=fedora-stable
 make
 
 %install
@@ -96,6 +99,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Thu Mar 11 2004 Thomas Vander Stichele <thomas at apestaart dot org>
+- use --with-flavor
+
 * Fri Jan  9 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Use the bzip2'd tarball.
 
