@@ -44,7 +44,7 @@ Commands:
                                 (passes options given to rpmbuild)
   setup				sets up the root for a particular purpose
         prep                         preparation before package install
-        base                         base set of rpms to make rpm work
+        base                         base set of rpms
         consistency                  internally consistent install
         build                        everything to build rpms
   status			show status of mach roots
@@ -1089,6 +1089,8 @@ Dir {
         # install packages
         self.aptget ('install -y glibc bash',
                      'Installing glibc and bash', self.progress ())
+        # FIXME: here we can put other packages that should be basic,
+        # like findutils and so on
         self.aptget ('install -y %s' % self.config['packages']['build'],
                      'Installing rpm build packages',
                      self.progress ())
