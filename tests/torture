@@ -8,9 +8,9 @@ error=no
 for dist in $DISTS;
 do
   echo "+ torturing $dist"
-  ../scripts/mach -r $dist clean
-  ../scripts/mach -r $dist build $SPECS || error=yes
-  ../scripts/mach -r $dist clean
+  ../scripts/mach -q -r $dist clean
+  ../scripts/mach -q -r $dist build $SPECS || error=yes
+  ../scripts/mach -q -r $dist clean
   if test $error == yes;
   then
     echo "- dist $dist failed"
