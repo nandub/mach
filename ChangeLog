@@ -1,3 +1,8 @@
+2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  bump nano to 1 for development
+
 === release 0.4.6 ===
 
 2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
