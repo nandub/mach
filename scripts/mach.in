@@ -334,7 +334,7 @@ class Root:
             file = open (os.path.join (self.rootdir, tmpname), 'w')
             file.write (config['files'][filename])
             file.close ()
-            self.do_chroot ('mv %s %s' % (tmpname, filename))
+            self.do_chroot ('mv %s%s %s' % (os.sep, tmpname, filename))
     
 
     # run apt from outside the root on the root
@@ -401,7 +401,7 @@ class Root:
         if string.find (command, "-c '") > -1:
             cmd = "%s %s %s" % (config['chroot'], self.rootdir, command)
         else:
-            cmd = "%s %s /bin/bash -c '%s'" % (config['chroot'],
+            cmd = "%s %s su - root -c '%s'" % (config['chroot'],
                                                self.rootdir, command)
         return self.do (cmd, progress)
 
@@ -512,16 +512,16 @@ class Root:
             # copy files to /tmp in root, then chroot to mv them 
             for file in files:
                 shutil.copy2 (file, os.path.join (self.rootdir, 'tmp'))
-                self.do_chroot ("mv %s %s" % (
+                self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
                                 os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
                 shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
-                self.do_chroot ("mv %s %s " % (
+                self.do_chroot ("cd / && mv %s %s " % (
                                 os.path.join ('tmp', os.path.basename (specfile)),
                                 os.path.join ('usr', 'src', 'rpm', 'SPECS')))
             self.stdout ("Creating .src.rpm ...")
             try:
-                self.do_chroot ("rpmbuild -bs --nodeps %s" \
+                self.do_chroot ("cd / && rpmbuild -bs --nodeps %s" \
                                 % os.path.join ('usr', 'src', 'rpm', 'SPECS', 
                                                 os.path.basename (specfile)),
                                   True)
@@ -554,14 +554,17 @@ class Root:
         # get a list of files and dirs in the root
         files = string.join (os.listdir (self.rootdir))
         self.stdout ('Cleaning out root ...')
-        self.do_chroot ('rm -rfv %s' % files, True)
+        self.do_chroot ('cd / && rm -rfv %s' % files, True)
         os.rmdir (self.rootdir)
 
     # chroot into root
     def chroot (self, arg):
         print "Entering %s" % self.rootdir
         self.mount ()
-        os.system ("%s %s %s" % (self.config['chroot'], self.rootdir, arg))
+        if arg:
+             os.system ("%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, arg))
+        else:
+             os.system ("%s %s su - root" % (self.config['chroot'], self.rootdir))
         self.umount ()
      
     def setup (self, arg):
@@ -1390,6 +1393,8 @@ def main (config, args):
             sys.stderr.write ("Root is locked.  Use -f to override lock\n")
         except Root.Error, message:
             sys.stderr.write ("%s\n" % message)
+        except ReturnValue, retval:
+            sys.stderr.write ("Return value: %s\n" % retval)
         if output:
             print output
     else:
