@@ -39,30 +39,3 @@ while read p; do
 done
 '''
 }
-# config initialization for vanilla Red Hat trees
-config['redhat-9-i386'] = {}
-config['redhat-9-i386-updates'] = {}
-config['redhat-80-i386'] = {}
-config['redhat-80-i386-updates'] = {}
-config['redhat-73-i386'] = {}
-config['redhat-73-i386-updates'] = {}
-config['redhat-73-i386'] = {}
-config['redhat-72-i386-updates'] = {}
-
-# config initialization for GStreamer trees
-config['redhat-9-i386-gstreamer'] = {}
-config['redhat-9-i386-gstreamer-deps'] = {}
-config['redhat-80-i386-gstreamer'] = {}
-config['redhat-80-i386-gstreamer-deps'] = {}
-
-# config initialization for Dave/Dina trees
-config['davedina-fridge'] = {}
-config['davedina-oven'] = {}
-
-# release mangling for fedora trees
-config['redhat-9-i386-fedora-stable']    = { 'release': 'rh90' }
-config['redhat-9-i386-fedora-testing']   = { 'release': 'rh90' }
-config['redhat-9-i386-fedora-unstable']  = { 'release': 'rh90' }
-config['redhat-80-i386-fedora-stable']   = { 'release': 'rh80' }
-config['redhat-80-i386-fedora-testing']  = { 'release': 'rh80' }
-config['redhat-80-i386-fedora-unstable'] = { 'release': 'rh80' }

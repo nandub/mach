@@ -1,3 +1,8 @@
+2003-10-21  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * etc/dist: move initialization of config per dist to dist
+	* etc/dist: add Fedora Core 0.95
+
 2003-10-13  Ville Skyttä <ville dot skytta at iki dot fi>
 
         * etc/dist: Make fedora(.us) repos for RH 8.0 and 9 inherit from
