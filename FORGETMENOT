@@ -5,3 +5,14 @@ To fake the buildhost, this file should contain
 
 where actual hostname would be the output of "hostname" inside the build root,
 and (buildhost) the name you want to turn up in the buildhost
+
+quoting and arguments
+---------------------
+* the shell strips quotes from arguments, but collects stuff between quotes
+  as one argument
+  This means, mach build --target i686 --define "kernel 2.4.22" gets parsed as
+  ['--target', 'i686', '--define', 'kernel 2.4.22']
+* this is also how python's opt parsing gets the remaining arguments
+* it is safe to overquote in the shell; ie it's ok to run
+  rpmbuild '--target' 'i686' '--define' 'kernel 2.4.22'
+  this is what we use to execute rpmbuild calls

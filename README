@@ -216,6 +216,17 @@ the built directory as a parameter.
   The easiest way to do this is to use mach to operate on it; for example,
   mach rpm -Uhv (rpm) will install the given rpm in the target's system.
 
+- to build kernel modules or other packages that BuildRequire the kernel
+  or kernel-source rpms, you need to manually install the kernel and
+  kernel-source packages with the correct version.
+  As an example:
+  mach -r f1fs apt-get -y install kernel-source#2.4.22-1.2115.nptl
+  to install release 1.2115.ntpl of version 2.4.22
+  It is best to first try building your .spec file so that the buildroot
+  gets restored.  After that, install the kernel packages.  Then, rerun
+  the build with -k (to keep packages in the buildroot) and the build should
+  succeed.
+
 10. BUGS
 --------
 - rpm 4.1 included with Red hat 8.0 has a few race condition bugs which
