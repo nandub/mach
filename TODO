@@ -18,3 +18,4 @@
 * MEDIUM:	rpm -q --specfile shouldn't be used; it fails on %install
                 and similar in Changelog entries
 * MEDIUM:	make sure we don't rebuild binary rpms :)
+* EASY:		allow people to specify an alternate location for a root
