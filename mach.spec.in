@@ -64,6 +64,7 @@ then
   # last removal
   # be a good boy and clean out the dirs we filled with junk
   rm -rf %{_localstatedir}/cache/mach/*
+  rm -rf %{_localstatedir}/state/mach/*
   rm -rf %{_localstatedir}/tmp/mach/packages/*
   rm -rf %{_localstatedir}/tmp/mach/roots/*
   rm -rf %{_localstatedir}/tmp/mach/result/*

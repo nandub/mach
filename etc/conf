@@ -1,5 +1,16 @@
 # mach system configuration file
 
+# spinner theme
+config['spinner'] = {
+    'wheel': '/-\|',
+    'blip':  '.o0O0o',
+    'corner': '<^>v',
+    'text':   '<-WORKING->',
+    'subliminal':   '<- send us lots of money ->',
+    'quote':        "´'\"'`",
+    'point':        ".:¨:",
+}
+
 config['files'] = {}
 # /etc/resolv.conf
 config['files']['/etc/resolv.conf'] = '''

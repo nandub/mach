@@ -1,17 +1,11 @@
 # dict of apt-get sources.list lines
-aptsources['redhat-9-i386'] = {
-    'os': 'rpm http://ayo.freshrpms.net redhat/9/i386 os',
-    'updates': 'rpm http://ayo.freshrpms.net redhat/9/i386 updates',
-    'gstreamer':
-        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 redhat',
-    'gstreamer-deps':
-        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 deps',
-    'fedora-stable': 
-        'rpm http://download.fedora.us fedora/redhat/9/i386 stable',
-    'fedora-testing':
-        'rpm http://download.fedora.us fedora/redhat/9/i386 testing',
-    'fedora-unstable': 
-        'rpm http://download.fedora.us fedora/redhat/9/i386 unstable',
+aptsources['redhat-72-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 updates',
+}
+aptsources['redhat-73-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 updates',
 }
 aptsources['redhat-80-i386'] = {
     'os': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 os',
@@ -27,7 +21,63 @@ aptsources['redhat-80-i386'] = {
     'fedora-unstable': 
         'rpm http://download.fedora.us fedora/redhat/8.0/i386 unstable',
 }
-# configuration of each target root
+aptsources['redhat-9-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/9/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/9/i386 updates',
+    'gstreamer':
+        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 redhat',
+    'gstreamer-deps':
+        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 deps',
+    'fedora-stable': 
+        'rpm http://download.fedora.us fedora/redhat/9/i386 stable',
+    'fedora-testing':
+        'rpm http://download.fedora.us fedora/redhat/9/i386 testing',
+    'fedora-unstable': 
+        'rpm http://download.fedora.us fedora/redhat/9/i386 unstable',
+}
+
+# sources.list configuration of each target root
+# Red Hat Linux 7.2
+sourceslist['redhat-72-i386'] = {
+    'redhat-72-i386': ('os', )
+}
+sourceslist['redhat-72-i386-updates'] = {
+    'redhat-72-i386': ('os', 'updates', )
+}
+
+# Red Hat Linux 7.3
+sourceslist['redhat-73-i386'] = {
+    'redhat-73-i386': ('os', )
+}
+sourceslist['redhat-73-i386-updates'] = {
+    'redhat-73-i386': ('os', 'updates', )
+}
+
+# Red Hat Linux 8.0
+sourceslist['redhat-80-i386'] = {
+    'redhat-80-i386': ('os', )
+}
+sourceslist['redhat-80-i386-updates'] = {
+    'redhat-80-i386': ('os', 'updates', )
+}
+sourceslist['redhat-80-i386-gstreamer'] = {
+    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
+}
+sourceslist['redhat-80-i386-gstreamer-deps'] = {
+    'redhat-80-i386': ('os', 'gstreamer-deps')
+}
+sourceslist['redhat-80-i386-fedora-stable'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable')
+}
+sourceslist['redhat-80-i386-fedora-testing'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+}
+sourceslist['redhat-80-i386-fedora-unstable'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
+                      'fedora-unstable')
+}
+
+#Red Hat Linux 9
 sourceslist['redhat-9-i386'] = {
     'redhat-9-i386': ('os', )
 }
@@ -49,29 +99,6 @@ sourceslist['redhat-9-i386-fedora-testing'] = {
 }
 sourceslist['redhat-9-i386-fedora-unstable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
-                      'fedora-unstable')
-}
-
-sourceslist['redhat-80-i386'] = {
-    'redhat-80-i386': ('os', )
-}
-sourceslist['redhat-80-i386-updates'] = {
-    'redhat-80-i386': ('os', 'updates', )
-}
-sourceslist['redhat-80-i386-gstreamer'] = {
-    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
-}
-sourceslist['redhat-80-i386-gstreamer-deps'] = {
-    'redhat-80-i386': ('os', 'gstreamer-deps')
-}
-sourceslist['redhat-80-i386-fedora-stable'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable')
-}
-sourceslist['redhat-80-i386-fedora-testing'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
-}
-sourceslist['redhat-80-i386-fedora-unstable'] = {
-    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
 }
 
