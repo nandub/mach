@@ -1,5 +1,8 @@
 2004-03-20  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in: Skip various backup files when pulling in
+	dist.d snippets.
+
 	* etc/dist.d/suse-82-i386: Bring up to date.
 	* etc/dist.d/suse-81-i386: Ditto.
 
