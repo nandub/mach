@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.4 - "Madrid".
+Announcing the release of mach 0.4.5 - "Snow".
 
 WHAT IS IT
 ----------
@@ -31,23 +31,17 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - added distributions:
-                - JPackage for FC1 (Ville)
-                - Conectiva Linux 9 (Ville)
-                - RH80/RH9/FC1 with rpm.livna.org (Thomas)
-        - fixed distributions:
-                - Red Hat 7.3 (Thomas)
-        - make rpmbuild command configurable (Ville)
-        - use config['macros'] to allow additional macros (Enrico)
-        - fix permissions on mach directories for multiple users (Thomas)
-        - add "script-success" to run a script on succesful build (Thomas)
-        - fix quoting problems so --target and --define work (Thomas)
-        - warn on kernel-related BuildRequires (Thomas)
-        - verify parsibility of spec file (Thomas)
-        - recreate sources.list on each update (Thomas)
-        - autodetect target distro on configure (Thomas)
-        - revert to package snapshot list between builds (Thomas)
-        - add pre-build in-root buildrequires verification (Thomas)
+        - pre-interpreting checks fixed (Thomas)
+        - use promoteepoch when supported; fixes building with newer apt
+          for older platforms (Thomas)
+        - proc mount/unmount fixes (Erik, Enrico)
+        - distro configuration split up in multiple distro files (Thomas)
+        - rewrite macros on each build (Thomas)
+        - pass through a specific set of env vars (Enrico)
+        - create /boot/kernel.h on root setup (Enrico)
+        - fix handling of rpmmacros when checking spec files (Thomas)
+        - always use build args to parse spec flies (Thomas)
+        - added -v option (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
