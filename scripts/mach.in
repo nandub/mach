@@ -890,7 +890,6 @@ Dir {
         debug ("_install (%s)" % set)
         if self.get_state (set): return
         debug ("Installing set of packages in %s" % set)
-        ensure_dir (os.path.join (self.root, 'var', 'lib', 'rpm'))
         # expand path for each package and install all of them at once
         # a roundabout way to prefix each rpm in the list with the path
         rpms = string.join (('', ) + self.config['packages'][set],
@@ -906,7 +905,8 @@ Dir {
         self.stdout ("Installing %s packages ..." % set)
         (status, output) = do_progress (command)
         #print "DEBUG: status %d output %s\n" % (status, output)
-        if status != 0: raise self.Error, "Could not install package set %s" % set
+        if status != 0:
+            raise self.Error, "Could not install package set %s, status %s" % (set, status)
         self.set_state (set)
      
 ### helper functions
