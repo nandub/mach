@@ -34,7 +34,7 @@ aptsources['redhat-70-i386'] = {
     'updates':          'rpm ' + redhat      + ' 7.0/i386 updates',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 7.0/i386 freshrpms',
 }
-                                                                                
+
 #   Red Hat Linux 7.0
 packages['redhat-70-i386'] = {
     'dir':      'redhat-70-i386',
@@ -57,7 +57,7 @@ sourceslist['redhat-70-i386-updates'] = {
 }
 config['redhat-70-i386-updates'] = {}
 aliases['redhat-70-i386-updates'] = ('rh70u', )
-                                                                                
+
 # Red Hat Linux 7.0, FreshRPMS
 packages['redhat-70-i386-freshrpms'] = packages['redhat-70-i386']
 sourceslist['redhat-70-i386-freshrpms'] = {
@@ -81,7 +81,7 @@ aptsources['redhat-71-i386'] = {
     'updates':          'rpm ' + redhat      + ' 7.1/i386 updates',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 7.1/i386 freshrpms',
 }
-                                                                                
+
 #   Red Hat Linux 7.1
 packages['redhat-71-i386'] = {
     'dir':      'redhat-71-i386',
@@ -97,7 +97,7 @@ sourceslist['redhat-71-i386'] = {
 }
 config['redhat-71-i386'] = {}
 aliases['redhat-71-i386'] = ('rh71', )
-                                                                                
+
 # Red Hat Linux 7.1, updates (rpm 4.0.4)
 packages['redhat-71-i386-updates'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-updates'] = {
@@ -105,7 +105,7 @@ sourceslist['redhat-71-i386-updates'] = {
 }
 config['redhat-71-i386-updates'] = {}
 aliases['redhat-71-i386-updates'] = ('rh71u', )
-                                                                                
+
 # Red Hat Linux 7.1, FreshRPMS
 packages['redhat-71-i386-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-freshrpms'] = {
@@ -113,7 +113,7 @@ sourceslist['redhat-71-i386-freshrpms'] = {
 }
 config['redhat-71-i386-freshrpms'] = {}
 aliases['redhat-71-i386-freshrpms'] = ('rh71fr', )
-                                                                                
+
 # Red Hat Linux 7.1, updates + FreshRPMS
 packages['redhat-71-i386-updates-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-updates-freshrpms'] = {
@@ -552,7 +552,7 @@ sourceslist['yellowdog-23-ppc-updates'] = {
 }
 config['yellowdog-23-ppc-updates'] = {}
 aliases['yellowdog-23-ppc-updates'] = ('yd23u', )
-                                                                                
+
 # Yellow Dog Linux 2.3, FreshRPMS
 packages['yellowdog-23-ppc-freshrpms'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-freshrpms'] = {
@@ -560,7 +560,7 @@ sourceslist['yellowdog-23-ppc-freshrpms'] = {
 }
 config['yellowdog-23-ppc-freshrpms'] = {}
 aliases['yellowdog-23-ppc-freshrpms'] = ('yd23fr', )
-                                                                                
+
 # Yellow Dog Linux 2.3, updates + FreshRPMS
 packages['yellowdog-23-ppc-updates-freshrpms'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-updates-freshrpms'] = {
@@ -575,7 +575,7 @@ aptsources['yellowdog-30-ppc'] = {
     'updates':          'rpm ' + yellowdog   + ' 3.0/ppc updates',
     'freshrpms':        'rpm ' + freshrpmsyd + ' 3.0/ppc freshrpms',
 }
-                                                                                
+
 # Yellow Dog Linux 3.0
 packages['yellowdog-30-ppc'] = {
     'dir':      'yellowdog-30-ppc',
@@ -589,7 +589,7 @@ sourceslist['yellowdog-30-ppc'] = {
 }
 config['yellowdog-30-ppc'] = {}
 aliases['yellowdog-30-ppc'] = ('yd30', )
-                                                                                
+
 # Yellow Dog Linux 3.0 with updates
 packages['yellowdog-30-ppc-updates'] = packages['yellowdog-30-ppc']
 sourceslist['yellowdog-30-ppc-updates'] = {
@@ -597,7 +597,7 @@ sourceslist['yellowdog-30-ppc-updates'] = {
 }
 config['yellowdog-30-ppc-updates'] = {}
 aliases['yellowdog-30-ppc-updates'] = ('yd30u', )
-                                                                                
+
 # Yellow Dog Linux 3.0, FreshRPMS
 packages['yellowdog-30-ppc-freshrpms'] = packages['yellowdog-30-ppc']
 sourceslist['yellowdog-30-ppc-freshrpms'] = {
@@ -605,7 +605,7 @@ sourceslist['yellowdog-30-ppc-freshrpms'] = {
 }
 config['yellowdog-30-ppc-freshrpms'] = {}
 aliases['yellowdog-30-ppc-freshrpms'] = ('yd30fr', )
-                                                                                
+
 # Yellow Dog Linux 3.0, updates + FreshRPMS
 packages['yellowdog-30-ppc-updates-freshrpms'] = packages['yellowdog-30-ppc']
 sourceslist['yellowdog-30-ppc-updates-freshrpms'] = {
