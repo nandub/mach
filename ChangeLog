@@ -1,3 +1,8 @@
+2003-05-12  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in: Don't exit from setup_consistency if the
+	commands succeed :)
+
 2003-05-12  Thomas Vander Stichele <thomas at apestaart dot org>
 
 	* configure.in:
