@@ -113,7 +113,7 @@ class Spec:
             self.vars[which] = self.tag (which)
         # scan for defines in the spec file
         debug ("scanning spec file for %define")
-        matchstr = re.compile ("^%define\s+(\w*)\s+(\w*)$")
+        matchstr = re.compile ("^%define\s+(\S*)\s+(\S*)$")
         for line in self.content:
             match = matchstr.search (line)
             if match:
