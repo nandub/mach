@@ -1,6 +1,16 @@
 mach - make a chroot
 --------------------
 
+0. IMPORTANT
+------------
+If you're on Fedora Core 2, and want to build for older targets,
+MAKE SURE you turn off vdso's by doing
+
+sysctl -w kernel.vdso=0
+
+before using mach.
+You can add an entry to /etc/sysctl.conf to make this more permanent.
+
 1. WHAT IS IT ?
 ---------------
 mach allows you to set up clean roots from scratch for any distribution or
