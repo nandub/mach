@@ -6,6 +6,8 @@
 
 	* Makefile.am (EXTRA_DIST): Include m4/*.m4.
 
+	* mach.spec.in (build): Compile the package here.
+
 2004-01-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in: bump nano to 1 for cvs development

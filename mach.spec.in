@@ -38,16 +38,16 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 
 %build
 %configure --enable-builduser=%{builduser} --enable-buildgroup=%{buildgroup}
+make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall
-
-install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach
-install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/states
-install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/roots
-install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/packages
-install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/archives
+make install DESTDIR=$RPM_BUILD_ROOT
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/states
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/roots
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/packages
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/archives
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -99,10 +99,11 @@ fi
 * Thu Jan  8 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Make mach chroot build user/group configurable using
   "rpmbuild --define 'build(user|group) foo'"
+- Build in the %%build section.
 
 * Wed Sep 17 2003 Thomas Vander Stichele <thomas at apestaart dot org>
 - add Requires: cpio
-- change home dir to /var/lib/mach
+- change home dir to %%{_localstatedir}/lib/mach
 
 * Mon Sep 08 2003 Thomas Vander Stichele <thomas at apestaart dot org>
 - 0.4.0-0.fdr.1: first public release.
