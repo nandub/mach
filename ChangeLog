@@ -1,3 +1,15 @@
+2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* m4/as-ac-expand.m4:
+	  sync with upstream updates
+	* README:
+	  add note for FC2 users building FC1
+	* configure.in:
+	  bumped for prerel
+	* scripts/mach.in:
+	  fixed sed for mangling so that trailing spaces are caught
+	  write proper /boot/kernel.h
+
 2004-05-29  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* m4/as-ac-expand.m4: Avoid aclocal >= 1.8 warnings.
