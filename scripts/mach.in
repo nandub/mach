@@ -106,9 +106,38 @@ class Spec:
         self.path = path
         self.content = []
         self.vars = {}
+        debug ("Spec.__init__: opening spec %s" % path)
         self.content = open (self.path).readlines ()
+        # get the standard vars used for expansion
         for which in ['name', 'version', 'release']:
             self.vars[which] = self.tag (which)
+        # scan for defines in the spec file
+        debug ("scanning spec file for %define")
+        matchstr = re.compile ("^%define\s+(\w*)\s+(\w*)$")
+        for line in self.content:
+            match = matchstr.search (line)
+            if match:
+                tag = match.expand ("\\1")
+                value = match.expand ("\\2")
+                debug ("Found define of %s to %s" % (tag, value))
+                self.vars[tag] = value
+        # now loop over all of the tag values and expand them until we're done
+        # FIXME: an anti-loop here would be nice, wouldn't it ?
+        # FIXME: for now, we do a single pass loop
+        # FIXME: also realize this will bum us out with multiple %{...}, so
+        # FIXME: in the future make this non-greedy or something
+        matchstr = re.compile ("^(.*)%{(.*)}(.*)$")
+        for tag in self.vars.keys ():
+            match = matchstr.search (self.vars[tag])
+            if match:
+                expand = match.expand ("\\2")
+                debug ("Need to expand tag %s inside tag %s (%s)" % (expand, tag, self.vars[tag]))
+                if self.vars[expand]:
+                    debug ("Expanding it to %s" % self.vars[expand])
+                    front = match.expand ("\\1")
+                    back = match.expand ("\\3")
+                    self.vars[tag] = front + self.vars[expand] + back
+                    debug ("Expanded complete line to %s" % self.vars[tag])
 
     def tag (self, which):
         "Get the given (unique) tag from the spec file as a string"
@@ -306,6 +335,8 @@ class Root:
 
     def mount (self):
         "mount apt-archives and proc into chroot"
+        return
+        # FIXME: all this doesn't get done anymore
         # first umount for completeness; you never know
         self.umount ()
         debug ("mounting proc and apt-archives")
@@ -314,18 +345,12 @@ class Root:
         #debug (command)
         #os.system (command)
         #file.write ('%s/proc\n' % self.rootdir)
-        ensure_dir (os.path.join (self.statedir, 'apt@SYSCONFDIR@/apt'))
-        ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
-        ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
-        command = ('cp -a @SYSCONFDIR@/apt/rpmpriorities %s/apt@SYSCONFDIR@/apt/rpmpriorities' % self.statedir)
-        debug (command)
-        os.system (command)
-        command = ('%s -o bind %s %s/apt/var/cache/apt/archives' % (
-                   self.config['mount'], self.config['dirs']['archives'],
-                   self.statedir))
-        debug (command)
-        os.system (command)
-        file.write ('%s/apt/var/cache/apt/archives\n' % self.statedir)
+#        command = ('%s -o bind %s %s/apt/var/cache/apt/archives' % (
+#                   self.config['mount'], self.config['dirs']['archives'],
+#                   self.statedir))
+#        debug (command)
+#        os.system (command)
+#        file.write ('%s/apt/var/cache/apt/archives\n' % self.statedir)
         file.close ()
         
     # umount all mounted paths
@@ -341,12 +366,14 @@ class Root:
     def config_recreate (self, filename):
         debug ("Recreating %s from config" % filename)
         if self.config['files'].has_key (filename):
+            new = self.rootdir + filename
+            if os.path.exists (new):
+                return
             ensure_dir (os.path.dirname (self.rootdir + filename))
             tmpname = os.path.join ('tmp', os.path.basename (filename))
             file = open (os.path.join (self.rootdir, tmpname), 'w')
             file.write (config['files'][filename])
             file.close ()
-            new = self.rootdir + filename
             try:
               os.rename (os.path.join (self.rootdir, tmpname), new)
             except OSError:
@@ -356,10 +383,10 @@ class Root:
     def splitargspecs (self, argstring):
         specs = []
         other = []
-        match = re.compile('\.spec$', re.I)
+        match = re.compile ('\.spec$', re.I)
         for arg in argstring.split ():
-            if match.search(arg):
-                spec.append (arg)
+            if match.search (arg):
+                specs.append (arg)
             else:
                 other.append (arg)
         return (other, specs)
@@ -368,9 +395,9 @@ class Root:
     def splitargsrpms (self, argstring):
         srpms = []
         other = []
-        match = re.compile('\.src\.rpm$', re.I)
+        match = re.compile ('\.src\.rpm$', re.I)
         for arg in argstring.split ():
-            if match.search(arg):
+            if match.search (arg):
                 srpms.append (arg)
             else:
                 other.append (arg)
@@ -452,6 +479,10 @@ class Root:
         # check if all packages are present
         print "Checking bootstrap packages ..."
         ensure_dir (self.packagesdir)
+        self.set_state ('check')
+        return
+      
+        #FIXME: since we are dropping base, we don't need this anymore  
         for pkg in self.config['packages']['base']:
             path = os.path.join (self.packagesdir, pkg)
             if not self.config['packages']['download'].has_key (pkg):
@@ -492,7 +523,7 @@ class Root:
         # FIXME: how many ?
         sys.stdout.write ("Removing packages ...")
         if not packages:
-           print "Error: packages was empty"
+           print
            return True
         self.rpm ("-ev %s" % packages, True)
         return True
@@ -629,7 +660,9 @@ class Root:
             target = arg
         else:
             target = 'build' # default to build
-        targets = ('prep', 'base', 'consistency', 'build')
+        # FIXME: we dropped base
+        # targets = ('prep', 'base', 'consistency', 'build')
+        targets = ('prep', 'consistency', 'build')
     
         # see if something real given to setup
         if target not in targets:
@@ -753,19 +786,28 @@ class Root:
             #self.rpm ("-Uhv --nodeps %s" % newpath)
             # install the src.rpm
             self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' machbuild" % srpmname)
-            spec = pkgs[name]['spec']
+            specfile = pkgs[name]['spec']
 
             # mangle spec file if requested
             if self.config['release']:
-                command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (spec, spec)
+                command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
                 self.do_chroot (command)
-                command = 'sed -e "s,Release.*,&.%s,g" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], spec, spec)
-                self.do_chroot (command)
-                command = 'rm /tmp/%s' % spec
-                self.do_chroot (command)
+                # first check if it doesn't already comply !
+                debug ("self.rootdir: %s" % self.rootdir)
+                spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
+                release = spec.tag ("release")
+                debug ("Release of spec file to mangle is %s" % release)
+                if not release.endswith (self.config['release']):
+                    command = 'sed -e "s,Release.*,&.%s,g" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
+                    debug ("mangling with %s" % command)
+                    self.do_chroot (command)
+                    command = 'rm /tmp/%s' % specfile
+                    self.do_chroot (command)
+                else:
+                    debug ("Release already contains mangle trailer %s" % self.config['release'])
 
             # rebuild from spec inside chroot
-            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' machbuild" % (string.join (options), spec)
+            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' machbuild" % (string.join (options), specfile)
             (status, output) = self.do_chroot (command, True)
             if (output):
                 open (resultdir + '/rpm.log', "wb"). write (output)
@@ -858,7 +900,9 @@ class Root:
     def _setup_prep (self):
         "prepares a given root if not done yet; this ensures that a number"
         "continue of necessary files exist in the root"
-        if self.get_state ('prep'): return
+        if self.get_state ('prep'):
+            debug ("target prep already set up")
+            return
     
         print "Preparing root ..."
         ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
@@ -873,9 +917,16 @@ class Root:
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
         ensure_dir (os.path.join (self.rootdir, 'tmp'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'tmp'))
-    
+        ensure_dir (os.path.join (self.statedir, 'apt/etc/apt'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
+        command = ('cp -a @SYSCONFDIR@/apt/rpmpriorities %s/apt/etc/apt/rpmpriorities' % self.statedir)
+        debug (command)
+        os.system (command)
+  
         # create a custom apt.conf file
         root = self.rootdir
+        state = self.statedir
         conf = '''
 // apt.conf generated by mach
 
@@ -906,15 +957,16 @@ RPM {
     Allow-Duplicated { "^kernel$"; "^kernel-"; "^alsa-kernel"; "^gpg-pubkey$" };     Source {
         Build-Command "rpmbuild --rebuild";
     };
+    GPG-Check "false";
     RootDir "''' + root + '''";
     Options "--root ''' + root + '''";
     Install-Options "--root ''' + root + '''";
     Erase-Options "--root ''' + root + '''";
 }
 Dir {
-     Etc "''' + os.path.join (root, 'etc', 'apt') + '''";
-     Cache "''' + os.path.join (root, 'var', 'cache', 'apt') + '''";
-     State "''' + os.path.join (root, 'var', 'state', 'apt') + '''";
+     Etc "''' + os.path.join (state, 'apt', 'etc', 'apt') + '''";
+     Cache "''' + os.path.join ('/', 'var', 'cache', 'mach') + '''";
+     State "''' + os.path.join (state, 'apt', 'var', 'state', 'apt') + '''";
 }
 '''
         self.set_state ("apt.conf", conf)
@@ -923,21 +975,24 @@ Dir {
         self.set_state ("prep")
     
     def _setup_base (self):
+        # FIXME: right now we only create these once; shouldn't we redo this
+        # every time or something ?
+        debug ("Creating config files")
+        for filename in self.config['files'].keys ():
+            self.config_recreate (filename)
+
         self._install ('base')
     def _setup_consistency (self):
         "forces consistency on root by triggering an apt-get update"
-        if self.get_state ('consistency'): return
+        if self.get_state ('consistency'):
+            debug ("target consistency already set up")
+            return
         self.mount ()
 
         rootdir = self.rootdir
         config = self.config
         srcs = get_sources_list (config)
 
-        # create all needed configfiles
-        debug ("Creating config files")
-        for filename in self.config['files'].keys ():
-            self.config_recreate (filename)
-    
         # rebuild the rpm database using the installed rpm before messing
         # do_chroot (config, "rpm --rebuilddb")
         # first create a sources.list with only the first sources line
@@ -1012,13 +1067,16 @@ Dir {
         # can execute an arbitrary command (in this case, the extracted rpm)
         # with root privileges.  Please move this to a mach-helper binary !
         #command = "%s / /bin/bash -c 'export LD_ASSUME_KERNEL=2.2.5 && %s --root %s -Uhv %s --nodeps --noorder --replacepkgs'" % (config['chroot'], get_rpm (config), root, rpms)
-        command = "%s --root %s -Uhv %s --nodeps --noorder --replacepkgs" % (self.config['rpm'], self.rootdir, rpms)
-        debug ("Executing %s" % command)
-        self.stdout ("Installing %s packages ..." % set)
-        (status, output) = do_progress (command)
-        #print "DEBUG: status %d output %s\n" % (status, output)
-        if status != 0:
-            raise self.Error, "Could not install package set %s, status %s" % (set, status)
+        if rpms:
+            command = "%s --root %s -Uhv %s --nodeps --noorder --replacepkgs" % (self.config['rpm'], self.rootdir, rpms)
+            debug ("Executing %s" % command)
+            self.stdout ("Installing %s packages ..." % set)
+            (status, output) = do_progress (command)
+            #print "DEBUG: status %d output %s\n" % (status, output)
+            if status != 0:
+                raise self.Error, "Could not install package set %s, status %s" % (set, status)
+        else:
+            print "No packages in %s set" % set
         self.set_state (set)
      
 ### helper functions
@@ -1289,7 +1347,7 @@ def create_sources_list (config, list):
     statedir = get_config_dir (config, 'state')
     debug ("Creating sources.list")
     # we created in the root and chroot mv it afterwards due to perms
-    sources = open (statedir + '/apt@SYSCONFDIR@/apt/sources.list', 'w')
+    sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
     sources.write (string.join (list, "\n"))
     sources.close ()
 #    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
@@ -1351,7 +1409,7 @@ def check_package_list (config, list):
     # FIXME: how many ?
     sys.stdout.write ("Removing packages ...")
     if not packages:
-       print "Error: packages was empty"
+       print
        return True
     self.rpm ("-ev %s" % packages, True)
     return True

@@ -1,5 +1,20 @@
 2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
 
+	* etc/dist: removing all base and apt from Red Hat targets
+	* scripts/mach.in:
+		- do more expansion of define'd variables in spec file
+		- mounting isn't done anymore, should be removed
+		- only recreate config file if it doesn't exist yet
+                - only mangle spec release if it doesn't match yet
+		- don't GPG check when installing to satisfy buildreqs
+
+2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+
+	* scripts/mach.in: clean up Axel Thimm's bits to make mach work
+          without sets of base/apt packages
+
+2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * scripts/mach.in: add _bruteclean to use mach-helper to remove
           a root in case it can't remove itself
 
