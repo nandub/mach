@@ -15,49 +15,46 @@ AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
 
-
-dnl using ARG_WITH is maybe not the right thing to do but there doesn't seem
-dnl to be a good alternative
 dnl rootsdir
-AC_ARG_WITH(rootsdir,
+AC_ARG_ENABLE(rootsdir,
   AC_HELP_STRING([--enable-rootsdir=PATH], [create roots in PATH]),
-  [ rootsdir=$withval ],
+  [ rootsdir=$enableval ],
   [ rootsdir=$localstatedir/lib/mach/roots]
 )
 AS_AC_EXPAND(ROOTSDIR, $rootsdir)
 AC_MSG_NOTICE(Using rootsdir $ROOTSDIR)
 
 dnl archivesdir
-AC_ARG_WITH(archivesdir,
+AC_ARG_ENABLE(archivesdir,
   AC_HELP_STRING([--enable-archivesdir=PATH], [store archives in PATH]),
-  [ archivesdir=$withval ],
+  [ archivesdir=$enableval ],
   [ archivesdir=$localstatedir/cache/mach/archives]
 )
 AS_AC_EXPAND(ARCHIVESDIR, $archivesdir)
 AC_MSG_NOTICE(Using archivesdir $ARCHIVESDIR)
 
 dnl statesdir
-AC_ARG_WITH(statesdir,
+AC_ARG_ENABLE(statesdir,
   AC_HELP_STRING([--enable-statesdir=PATH], [use states in PATH]),
-  [ statesdir=$withval ],
+  [ statesdir=$enableval ],
   [ statesdir=$localstatedir/lib/mach/states]
 )
 AS_AC_EXPAND(STATESDIR, $statesdir)
 AC_MSG_NOTICE(Using statesdir $STATESDIR)
 
 dnl builduser
-AC_ARG_WITH(builduser,
+AC_ARG_ENABLE(builduser,
   AC_HELP_STRING([--enable-builduser=USERNAME], [use USERNAME for builds]),
-  [ BUILDUSER=$withval ],
+  [ BUILDUSER=$enableval ],
   [ BUILDUSER=machbuild ]
 )
 AC_SUBST(BUILDUSER)
 AC_MSG_NOTICE(Using build username $BUILDUSER)
 
 dnl buildgroup
-AC_ARG_WITH(buildgroup,
+AC_ARG_ENABLE(buildgroup,
   AC_HELP_STRING([--enable-buildgroup=GROUPNAME], [use GROUPNAME for builds]),
-  [ BUILDGROUP=$withval ],
+  [ BUILDGROUP=$enableval ],
   [ BUILDGROUP=machbuild ]
 )
 AC_SUBST(BUILDGROUP)
