@@ -90,6 +90,9 @@ except IOError:
 allowed_commands = ('build', 'check', 'chroot', 'clean', 'rebuild',
                     'setup', 'status', 'unlock')
 
+# rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
+qfmt = '"%{name}-%{version}-%{release}\n"'
+
 ### objects
 class Spec:
     def __init__ (self, path):
@@ -218,6 +221,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
 
     # done
     output = string.join (output, '').split ("\n")
+    retval = 0
     if os.WIFEXITED (status):
         retval = os.WEXITSTATUS (status)
     if (retval != 0):
@@ -443,12 +447,16 @@ def check_package_list (config, list):
         print "Not removing packages from root."
         return True
     root = get_config_dir (config, 'root')
-    cmd = 'rpm --root %s -qa | diff - %s > /dev/null 2>&1' % (root, list)
+    cmd = 'rpm --root %s -qa --qf %s | diff - %s > /dev/null 2>&1' % (root,
+                                                                      qfmt,
+                                                                      list)
     debug ("running " + cmd)
     if os.system (cmd) == 0:
         # no differences
         return True
-    cmd = "rpm --root %s -qa | grep -v -f %s - | tr '\n' ' '" % (root, list)
+    cmd = "rpm --root %s -qa --qf %s | grep -v -f %s - | tr '\n' ' '" % (root,
+                                                                         qfmt,
+                                                                         list)
     packages = commands.getoutput (cmd)
     # FIXME: how many ?
     sys.stdout.write ("Removing packages ...")
@@ -584,7 +592,7 @@ def setup_build (config, args):
             unlock (config, args)
             sys.exit (1)
    # make a snapshot
-    command = '%s %s rpm -qa' % (config['chroot'], root)
+    command = '%s %s rpm -qa --qf %s' % (config['chroot'], root, qfmt)
     file = open (statefile, 'w')
     for lines in os.popen (command).readlines ():
         file.write (lines)
@@ -1051,7 +1059,7 @@ def main (config, args):
     if command in allowed_commands:
         globals ()[command] (config, args)
     else:
-        sys.stderr.write ("No command '%s'\n" % command)
+        sys.stderr.write ("No such command '%s'\n" % command)
     #try:
     #globals()[command](config, args)
     #except:

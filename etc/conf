@@ -1,4 +1,4 @@
-# mach system configuration file
+# mach system configuration file                                 -*- python -*-
 
 # spinner theme
 config['spinner'] = {

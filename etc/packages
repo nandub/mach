@@ -1,4 +1,4 @@
-# mach bootstrap packages configuration
+# mach bootstrap packages configuration                          -*- python -*-
 
 # download locations for all bootstrap packages
 rpmfind = 'ftp://rpmfind.net/linux/redhat/'
