@@ -22,12 +22,14 @@ yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
 # Conectiva Linux: http://distro.conectiva.com.br/atualizacoes/#aptmirrors
 conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
+# Dave/Dina: http://www.davedina.org
+davedina    = 'http://download.davedina.org/apt'
 
 # Add-on locations
 jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
 fedoraus    = 'http://download.fedora.us/fedora'
 livna       = 'http://rpm.livna.org'
-gstreamer   = 'http://gstreamer.net/releases/redhat'
+gstreamer   = 'http://gstreamer.net/pkg'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
 
@@ -44,7 +46,7 @@ packages['redhat-70-i386'] = {
     'minimal':  'bash glibc',
     # net-tools provides hostname, otherwise it complains about it for chroot
     'base':     'fileutils findutils openssh-server net-tools file sh-utils',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-70-i386'] = {
@@ -92,7 +94,7 @@ packages['redhat-71-i386'] = {
     # net-tools provides hostname, otherwise it complains about it for chroot
     # sh-utils provides 'su' on older systems
     'base':     'fileutils findutils openssh-server net-tools file sh-utils',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-71-i386'] = {
@@ -141,7 +143,7 @@ packages['redhat-72-i386'] = {
     'minimal':  'bash glibc',
     # net-tools provides hostname, otherwise it complains about it for chroot
     'base':     'fileutils findutils openssh-server net-tools file',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-72-i386'] = {
@@ -196,7 +198,7 @@ packages['redhat-73-i386'] = {
     'dir':      'redhat-73-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils file openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-73-i386'] = {
@@ -241,8 +243,9 @@ aliases['redhat-73-i386-jpackage'] = ('rh73jpp', )
 aptsources['redhat-80-i386'] = {
     'os':               'rpm ' + redhat      + ' 8.0/i386 os',
     'updates':          'rpm ' + redhat      + ' 8.0/i386 updates',
-    'gstreamer':        'rpm ' + gstreamer   + ' redhat-80-i386 redhat',
-    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat-80-i386 deps',
+    'gstreamer':        'rpm ' + gstreamer   + ' redhat/80/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' redhat/80/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat/80/i386 deps',
     'fedora-stable':    'rpm ' + fedoraus    + ' redhat/8.0/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus    + ' redhat/8.0/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/8.0/i386 unstable',
@@ -259,7 +262,7 @@ packages['redhat-80-i386'] = {
     'dir':      'redhat-80-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-80-i386'] = {
@@ -279,16 +282,16 @@ aliases['redhat-80-i386-updates'] = ('rh8u', 'rh80u')
 # Red Hat Linux 8.0 with GStreamer
 packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-gstreamer'] = {
-    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
+    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['redhat-80-i386-gstreamer'] = {}
+config['redhat-80-i386-gstreamer'] = { 'release': 'rh80' }
 aliases['redhat-80-i386-gstreamer'] = ('rh8g', 'rh80g')
 
 packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-gstreamer-deps'] = {
     'redhat-80-i386': ('os', 'gstreamer-deps')
 }
-config['redhat-80-i386-gstreamer-deps'] = {}
+config['redhat-80-i386-gstreamer-deps'] = { 'release': 'rh80' }
 aliases['redhat-80-i386-gstreamer-deps'] = ('rh8gd', 'rh80gd')
 
 # Red Hat Linux 8.0 with fedora.us
@@ -378,8 +381,9 @@ aliases['redhat-80-i386-jpackage'] = ('rh8jpp', 'rh80jpp')
 aptsources['redhat-9-i386'] = {
     'os':               'rpm ' + redhat      + ' 9/i386 os',
     'updates':          'rpm ' + redhat      + ' 9/i386 updates',
-    'gstreamer':        'rpm ' + gstreamer   + ' redhat-9-i386 redhat',
-    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat-9-i386 deps',
+    'gstreamer':        'rpm ' + gstreamer   + ' redhat/9/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' redhat/9/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat/9/i386 deps',
     'fedora-stable':    'rpm ' + fedoraus    + ' redhat/9/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus    + ' redhat/9/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/9/i386 unstable',
@@ -396,7 +400,7 @@ packages['redhat-9-i386'] = {
     'dir':      'redhat-9-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['redhat-9-i386'] = {
@@ -416,16 +420,16 @@ aliases['redhat-9-i386-updates'] = ('rh9u', 'rh90u')
 # Red Hat Linux 9 with GStreamer
 packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer'] = {
-    'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer')
+    'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['redhat-9-i386-gstreamer'] = {}
+config['redhat-9-i386-gstreamer'] = { 'release': 'rh9' }
 aliases['redhat-9-i386-gstreamer'] = ('rh9g', 'rh90g')
 
 packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer-deps'] = {
     'redhat-9-i386': ('os', 'gstreamer-deps')
 }
-config['redhat-9-i386-gstreamer-deps'] = {}
+config['redhat-9-i386-gstreamer-deps'] = { 'release': 'rh9' }
 aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', 'rh90gd')
 
 # Red Hat Linux 9 with fedora.us
@@ -513,17 +517,20 @@ aliases['redhat-9-i386-jpackage'] = ('rh9jpp', 'rh90jpp')
 
 ### Fedora Core 1 flavours
 aptsources['fedora-1-i386'] = {
-    'core':             'rpm ' + fedora   + ' 1/i386 core',
-    'updates':          'rpm ' + fedora   + ' 1/i386 updates',
-    'fedora-stable':    'rpm ' + fedoraus + ' fedora/1/i386 stable',
-    'fedora-testing':   'rpm ' + fedoraus + ' fedora/1/i386 testing',
-    'fedora-unstable':  'rpm ' + fedoraus + ' fedora/1/i386 unstable',
-    'livna-stable':     'rpm ' + livna    + ' fedora/1/i386 stable',
-    'livna-testing':    'rpm ' + livna    + ' fedora/1/i386 testing',
-    'livna-unstable':   'rpm ' + livna    + ' fedora/1/i386 unstable',
-    'freshrpms':        'rpm ' + fedora   + ' 1/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage + ' generic free',
-    'jpackage-fc1':     'rpm ' + jpackage + ' fedora-1 free',
+    'core':             'rpm ' + fedora    + ' 1/i386 core',
+    'updates':          'rpm ' + fedora    + ' 1/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer + ' fedora/1/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer + ' fedora/1/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer + ' fedora/1/i386 deps',
+    'fedora-stable':    'rpm ' + fedoraus  + ' fedora/1/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus  + ' fedora/1/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus  + ' fedora/1/i386 unstable',
+    'livna-stable':     'rpm ' + livna     + ' fedora/1/i386 stable',
+    'livna-testing':    'rpm ' + livna     + ' fedora/1/i386 testing',
+    'livna-unstable':   'rpm ' + livna     + ' fedora/1/i386 unstable',
+    'freshrpms':        'rpm ' + fedora    + ' 1/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage  + ' generic free',
+    'jpackage-fc1':     'rpm ' + jpackage  + ' fedora-1 free',
 }
 
 # Fedora Core 1
@@ -531,7 +538,7 @@ packages['fedora-1-i386-core'] = {
     'dir':      'fedoracore-1-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-1-i386-core'] = {
@@ -551,16 +558,16 @@ aliases['fedora-1-i386-updates'] = ('f1u', )
 # Fedora Core 1 with GStreamer
 packages['fedora-1-i386-gstreamer'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-gstreamer'] = {
-    'fedora-1-i386': ('os', 'gstreamer-deps', 'gstreamer')
+    'fedora-1-i386': ('os', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['fedora-1-i386-gstreamer'] = {}
+config['fedora-1-i386-gstreamer'] = { 'release': '1' }
 aliases['fedora-1-i386-gstreamer'] = ('f1g', )
 
 packages['fedora-1-i386-gstreamer-deps'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-gstreamer-deps'] = {
     'fedora-1-i386': ('os', 'gstreamer-deps')
 }
-config['fedora-1-i386-gstreamer-deps'] = {}
+config['fedora-1-i386-gstreamer-deps'] = { 'release': '1' }
 aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', )
 
 # Fedora Core 1 with fedora.us
@@ -650,7 +657,7 @@ packages['yellowdog-23-ppc'] = {
     'dir':      'yellowdog-23-ppc',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils file openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio glibc-devel',
 }
 sourceslist['yellowdog-23-ppc'] = {
@@ -695,7 +702,7 @@ packages['yellowdog-30-ppc'] = {
     'dir':      'yellowdog-30-ppc',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc gcc-c++ tar gzip patch ' +
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['yellowdog-30-ppc'] = {
@@ -755,7 +762,7 @@ packages['suse-81-i386'] = {
     'dir':      'suse-81-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh',
-    'build':    'rpm-devel make gcc gcc-c++ tar gzip patch unzip cpio',
+    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
@@ -807,7 +814,7 @@ packages['suse-82-i386'] = {
     'minimal':  'bash glibc',
     'base':     'aaa_base coreutils findutils openssh openssl=0.9.6i ' +
                 'pam-modules',
-    'build':    'rpm-devel make gcc gcc-c++ tar gzip patch unzip cpio',
+    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': ('base', )
@@ -843,7 +850,7 @@ packages['cnc-9-i386'] = {
     'dir':      'cnc-9-i386',
     'minimal':  'bash glibc',
     'base':     'filesystem fileutils findutils openssh-server textutils',
-    'build':    'rpm-build make gcc gcc-c++ tar gzip patch unzip bzip2 ' +
+    'build':    'rpm-build make gcc tar gzip patch unzip bzip2 ' +
                 'diffutils cpio',
 }
 sourceslist['cnc-9-i386'] = {
@@ -862,23 +869,22 @@ aliases['cnc-9-i386-updates'] = ('cnc9u', )
 
 
 ### Dave/Dina
-aptsources['davedina'] = {
-    'oven':    'rpm http://davedina.build/apt oven os',
-    'fridge':  'rpm http://davedina.build/apt fridge os',
+aptsources['davedina-00'] = {
+    'os':      'rpm ' + davedina   + ' davedina-0.0 os',
+    'fridge':  'rpm ' + davedina   + ' davedina-0.0 fridge',
+    'oven':    'rpm ' + davedina   + ' davedina-0.0 oven',
 }
 
-packages['davedina-fridge'] = packages['redhat-9-i386']
+packages['davedina-00-fridge'] = packages['redhat-9-i386']
 sourceslist['davedina-fridge'] = {
-    'redhat-9-i386': ('os',),
-    'davedina': ('fridge',),
+    'davedina': ('os', 'fridge', ),
 }
-config['davedina-fridge'] = {}
-aliases['davedina-fridge'] = ('ddf', )
+config['davedina-00-fridge'] = {}
+aliases['davedina-00-fridge'] = ('dd00f', 'ddf', )
 
-packages['davedina-oven'] = packages['redhat-9-i386']
+packages['davedina-00-oven'] = packages['redhat-9-i386']
 sourceslist['davedina-oven'] = {
-    'redhat-9-i386': ('os',),
-    'davedina': ('fridge', 'oven',),
+    'davedina': ('os', 'fridge', 'oven', ),
 }
-config['davedina-oven'] = {}
-aliases['davedina-oven'] = ('ddo', )
+config['davedina-00-oven'] = {}
+aliases['davedina-00-oven'] = ('dd00o', 'ddo', )
