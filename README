@@ -22,13 +22,11 @@ Included at this moment is the necessary information to set up :
 Red Hat 7.2 and 7.3
   - standard
   - updated
-  - with Ximian Gnome
-  - with Ximian Gnome and Gnome 2 Snapshots
 
 Red Hat 8.0 and 9
   - standard
 
-Dave/Dina
+Dave/Dina (temporarily removed, FIXME)
   - fridge
   - oven
 
@@ -42,7 +40,7 @@ Some handy features of mach include
     the build root
   - uses apt to resolve dependencies
   - parsing of BuildRequires to install necessary packages for building
-  - support for flavours of distribution (e.g. Ximian)
+  - support for flavours of distribution
   - multiple build roots
   - locking of buildroot to avoid concurrent builds
 
@@ -63,11 +61,6 @@ GETTING STARTED - RPM INSTALL
 - After installing, you need to add all users that are going to build through
   mach to the "mach" group in /etc/group
 
-- You also need to configure /etc/sudoers to allow all these users to execute
-  a few commands.
-  I added this line :
-  thomas ALL=NOPASSWD: /bin/mknod,/bin/rpm,/bin/mount,/bin/umount,/usr/sbin/chroot
-
 GETTING STARTED - SOURCE INSTALL
 --------------------------------
 - If you insist on running from source, do
@@ -75,57 +68,52 @@ GETTING STARTED - SOURCE INSTALL
   make
   make install
 
-- If you intend to build as a user, configure /etc/sudoers (as root)
-  and allow this user to do mknod, chroot, mount, umount, rpm
-  I added this line :
-  thomas ALL=NOPASSWD: /bin/mknod,/bin/rpm,/bin/mount,/bin/umount,/usr/sbin/chroot
+  as root.
+
+- you have to setuid the mach-helper binary.
+  chmod u+s $(prefix)/bin/mach-helper
 
 SETTING IT UP
 -------------
 - configuration files are stored in $(sysconfdir)/mach
-  packages contains the list of bootstrap packages and download locations
-  apt contains the list of apt repositories to draw from
+  dist contains the list of packages for each distro target, as well
+  as download locations for various packages.
   conf contains configuration data, like hosts and resolv.conf files
   
-- FIXME: you can override any configuration variable by putting it in
+- you can override any configuration variable by putting it in
   ~/.machrc
 
-- The chroot system needs to be able to do DNS lookups.
-  The variable config['resolv.conf'] contains the resolv.conf file that will
-  be copied into the root.
-  Usually you can just copy the resolv.conf file from the host system.
+- you can add dist-specific configurations by creating a dict in ~/.machrc
+  It is advised that you create at least a files dict containing
+  /etc/resolv.conf and /etc/hosts.
 
-- To be able to set the build host name for the packages, you need to set the
-  config['hosts'] variable.
-  My host is called thocra.onshuis, and I want the build host to be
-  mach.net, so I put in this variable
+  For example, I have in my .machrc:
 
-	127.0.0.1 mach.net thocra.onshuis
+config['files'] = {
+  '/etc/hosts': '''
+127.0.0.1 mach.onshuis onzenbak
+''',
+  '/etc/resolv.conf': '''
+nameserver 127.0.0.1
+nameserver 157.193.40.42
+search onshuis
+'''
+}
 
-- To bootstrap a distribution, you need to get a bunch of files into the
-  packages/ subtree.  mach will automatically download these packages when
-  you try to setup a root.
-
-  There are three ways to do this :
-  a) from a CDROM or another dir on the system :
-     not yet implemented
-
-  b) from the net :
-     running "mach setup" will automatically do this if needed
-
-  c) by hand :
-     You can check the "packages" config file to see which files need
-     copying to the packages dir
+This ensures that all packages appear to be built on the host mach.onshuis,
+and ensures that it can look up hosts through localhost DNS and one outside
+DNS.
 
 USING IT
 --------
+- run mach --help for a list of commands you can use.
 - Now for the actual work.  If everything is configured properly, you can now
   do
     mach setup
-  and the build root should be created for you.
+  and the build root for the default dist should be created for you.
   run
     mach chroot
-  and try to apt-get install a few packages !
+  and poke around a little.
 
 - To build a package based on a .spec file, run
   mach build (spec file name)
@@ -153,50 +141,18 @@ BUGS
 ----
 - rpm 4.1 included with Red hat 8.0 has a few race condition bugs which
   can cause rpm to hang.  If this happens, you should kill -9 the stalling
-  rpm process.  After that, run "make unlock" and re-run the command you
+  rpm process, chroot into the root, run "rm -rf /var/lib/rpm/__*" and retry.
   had given.
 - for now, report them to me personally at thomas (at) apestaart (dot) org
-- Red Hat 9, updated has repeatable db4 bugs.  To repeat:
-  - setup apt
-  - chroot
-  - put only 'os' in /etc/apt/sources.list
-  - apt-get update
-  - apt-get -f update
-  - add updates to sources.list
-  - apt-get upgrade
-  - running rpm -qa will give errors now, while first doing
-    export LD_ASSUME_KERNEL=2.2.5 and then rpm -qa will not.
-    This is due to glibc upgrade.
 
 ADDING A DISTRIBUTION
 ---------------------
-FIXME: write me for the new mach version
-
-- Preliminaries :
-  - create a subdirectory in dist/
-  - copy a Makefile from another dir and adapt it
-  - edit dist/apt.mk and add the necessary lines you used in this Makefile
-    for repositories
-  - create a manifest dir under the new distribution dir
-
-- Base packages :
-  - download the packages necessary for a base install
-    and put them in packages/(new dist)/os
-  - create (new dist)/manifest/base with a list of all of these files
-    by executing 
-    find (new dist)/os -name *.rpm > ../dist/(new dist)/manifest/base
-    from the "packages" directory
-  - run "make check" to see if they're there and fix accordingly
-  - run "make unlock clean base" to clean out the current root and install
-    this new base
-    The rpm install at this stage should go cleanly; if not, then you must fix
-    the issues here first before proceeding (which can get messy).
-    For example, in going from Red Hat 7.3 to 8.0, libattr and libacl had to
-    be included in the base set.
-  - add Makefile's to the os and extra dir to automatically download these
-    files.
-  - add the location variables you make it download from to mach.mk in
-    packages/
+- Check both dist and conf in sysconfdir/mach and copy from another target.
+  Change as required.
+- Base packages: list them in the packages[dist] dict under 'base'.
+  You can then test by trying to set up this root,
+  See if the installation of base packages works well by doing
+  mach -r (dist) setup base
 
 - Apt packages :
   - this is the tricky part.  You need to make an rpm of apt for this new
@@ -207,6 +163,8 @@ FIXME: write me for the new mach version
     This part is pretty painful, since the base system is installed with
     --nodeps as to be minimal but functional for apt.  So you're missing a
     lot of common stuff here.
+  - after building it, put it online so it can be downloaded, or manually
+    copy it to localstatedir/cache/mach/packages/(dist)
 
 DISCLAIMER
 ----------
