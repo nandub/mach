@@ -1032,7 +1032,7 @@ class Root:
         ensure_dir (os.path.join (self.statedir, 'apt/etc/apt'))
         ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
         ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
-        command = ('cp -a @SYSCONFDIR@/apt/rpmpriorities %s/apt/etc/apt/rpmpriorities' % self.statedir)
+        command = ('install -m 664 @SYSCONFDIR@/apt/rpmpriorities %s/apt/etc/apt/rpmpriorities' % self.statedir)
         debug (command)
         os.system (command)
   
