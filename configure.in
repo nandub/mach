@@ -75,17 +75,18 @@ AC_MSG_NOTICE(Using build groupname $BUILDGROUP)
 
 dnl default root
 dnl first try to guess the platform
+CHECK_RELEASE(fedora,    "(Heidelberg)", defaultroot="fedora-3-i386")
 CHECK_RELEASE(fedora,    "(Tettnang)",   defaultroot="fedora-2-i386")
-CHECK_RELEASE(fedora,    "(Yarrow)",   defaultroot="fedora-1-i386")
+CHECK_RELEASE(fedora,    "(Yarrow)",     defaultroot="fedora-1-i386")
 
-CHECK_RELEASE(redhat,    "(Guinness)", defaultroot="redhat-70-i386")
-CHECK_RELEASE(redhat,    "(Seawolf)",  defaultroot="redhat-71-i386")
-CHECK_RELEASE(redhat,    "(Enigma)",   defaultroot="redhat-72-i386")
-CHECK_RELEASE(redhat,    "(Valhalla)", defaultroot="redhat-73-i386")
-CHECK_RELEASE(redhat,    "(Psyche)",   defaultroot="redhat-80-i386")
-CHECK_RELEASE(redhat,    "(Shrike)",   defaultroot="redhat-9-i386")
+CHECK_RELEASE(redhat,    "(Guinness)",   defaultroot="redhat-70-i386")
+CHECK_RELEASE(redhat,    "(Seawolf)",    defaultroot="redhat-71-i386")
+CHECK_RELEASE(redhat,    "(Enigma)",     defaultroot="redhat-72-i386")
+CHECK_RELEASE(redhat,    "(Valhalla)",   defaultroot="redhat-73-i386")
+CHECK_RELEASE(redhat,    "(Psyche)",     defaultroot="redhat-80-i386")
+CHECK_RELEASE(redhat,    "(Shrike)",     defaultroot="redhat-9-i386")
 
-CHECK_RELEASE(yellowdog, "(Sirius)",   defaultroot="yellowdog-30-ppc")
+CHECK_RELEASE(yellowdog, "(Sirius)",     defaultroot="yellowdog-30-ppc")
 
 dnl now append a modifier if asked for
 
