@@ -206,7 +206,7 @@ class Spec:
                 value = match.expand ("\\2")
                 tag = which + number
                 if number == "": number = "0"
-                command = "rpmbuild -bp --nodeps --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
+                command = "rpmbuild -bp --nodeps --force --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
                 debug (command)
                 result[tag] = commands.getoutput (command)
         return result
