@@ -1,7 +1,13 @@
+2003-11-13  Ville Skyttä <ville dot skytta at iki dot fi>
+
+        * etc/dist: Add Fedora Core 1, remove 0.9x betas.
+        * etc/dist: Add fedora-rpmdevtools to fedora.us build packages,
+        remove explicit gcc-c++ and redhat-rpm-config.
+
 2003-10-21  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * etc/dist: move initialization of config per dist to dist
-	* etc/dist: add Fedora Core 0.95
+        * etc/dist: add Fedora Core 0.95
 
 2003-10-13  Ville Skyttä <ville dot skytta at iki dot fi>
 
