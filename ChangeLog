@@ -1,5 +1,9 @@
 2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+        * scripts/mach.in: also pass rpm build options to .src.rpm building
+
+2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
         * scripts/mach.in: applied patch from Panu Matilainen to add
           number of CPU's on host to rpmbuild incantation
 
