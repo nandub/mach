@@ -198,6 +198,8 @@ do_mount (int argc, char *argv[])
     if (strncmp (archivesdir, argv[4], strlen (archivesdir)) != 0)
       error ("%s: mount not allowed", argv[4]);
   }
+  /* FIXME: disallow proc for now */
+#ifdef DONT
   else if ((strncmp ("-t", argv[2], 2) == 0) &&
            (strncmp ("proc", argv[3], 4) == 0))
   {
@@ -205,6 +207,7 @@ do_mount (int argc, char *argv[])
     if (strncmp (rootsdir, argv[5], strlen (rootsdir)) != 0)
       error ("proc: mount not allowed on %s", argv[5]);
   }
+#endif
   else
     error ("unallowed mount type");
 
