@@ -26,6 +26,7 @@ conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
 # Add-on locations
 jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
 fedoraus    = 'http://download.fedora.us/fedora'
+livna       = 'http://rpm.livna.org'
 gstreamer   = 'http://gstreamer.net/releases/redhat'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
@@ -245,6 +246,9 @@ aptsources['redhat-80-i386'] = {
     'fedora-stable':    'rpm ' + fedoraus    + ' redhat/8.0/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus    + ' redhat/8.0/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/8.0/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' redhat/8.0/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' redhat/8.0/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' redhat/8.0/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 8.0/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh80':    'rpm ' + jpackage    + ' redhat-8.0 free',
@@ -316,6 +320,35 @@ sourceslist['redhat-80-i386-fedora-unstable'] = {
 config['redhat-80-i386-fedora-unstable']   = config['redhat-80-i386-fedora-testing']
 aliases['redhat-80-i386-fedora-unstable']  = ('rh8fu', 'rh80fu')
 
+# Red Hat 8.0 with livna (+ fedora.us)
+packages['redhat-80-i386-livna-stable'] = packages['redhat-80-i386-updates'].copy ()
+packages['redhat-80-i386-livna-stable']['build'] = packages['redhat-80-i386-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['redhat-80-i386-livna-stable'] = {
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-updates']['redhat-80-i386'] +
+    ('fedora-stable', 'livna-stable', )
+}
+config['redhat-80-i386-livna-stable']  = { 'release': 'rh80' }
+aliases['redhat-80-i386-livna-stable'] = ('rh8ls', 'rh80ls', )
+
+packages['redhat-80-i386-livna-testing'] = packages['redhat-80-i386-livna-stable']
+sourceslist['redhat-80-i386-livna-testing'] = {
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-livna-stable']['redhat-80-i386'] +
+    ('fedora-testing', 'livna-testing', )
+}
+config['redhat-80-i386-livna-testing']  = config['redhat-80-i386-livna-stable']
+aliases['redhat-80-i386-livna-testing'] = ('rh8lt', 'rh80lt', )
+
+packages['redhat-80-i386-livna-unstable'] = packages['redhat-80-i386-livna-testing']
+sourceslist['redhat-80-i386-livna-unstable'] = {
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-livna-testing']['redhat-80-i386'] +
+    ('fedora-unstable', 'livna-unstable', )
+}
+config['redhat-80-i386-livna-unstable']  = config['redhat-80-i386-livna-testing']
+aliases['redhat-80-i386-livna-unstable'] = ('rh8lu', 'rh80lu', )
+
 
 # Red Hat Linux 8.0, FreshRPMS
 packages['redhat-80-i386-freshrpms'] = packages['redhat-80-i386']
@@ -350,6 +383,9 @@ aptsources['redhat-9-i386'] = {
     'fedora-stable':    'rpm ' + fedoraus    + ' redhat/9/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus    + ' redhat/9/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/9/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' redhat/9/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' redhat/9/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' redhat/9/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 9/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh9':     'rpm ' + jpackage    + ' redhat-9 free',
@@ -421,6 +457,35 @@ sourceslist['redhat-9-i386-fedora-unstable'] = {
 config['redhat-9-i386-fedora-unstable']  = config['redhat-9-i386-fedora-testing']
 aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', 'rh90fu')
 
+# Red Hat 9 with livna (+ fedora.us)
+packages['redhat-9-i386-livna-stable'] = packages['redhat-9-i386-updates'].copy ()
+packages['redhat-9-i386-livna-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['redhat-9-i386-livna-stable'] = {
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-updates']['redhat-9-i386'] +
+    ('fedora-stable', 'livna-stable', )
+}
+config['redhat-9-i386-livna-stable']  = { 'release': '1' }
+aliases['redhat-9-i386-livna-stable'] = ('rh9ls', )
+
+packages['redhat-9-i386-livna-testing'] = packages['redhat-9-i386-livna-stable']
+sourceslist['redhat-9-i386-livna-testing'] = {
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-livna-stable']['redhat-9-i386'] +
+    ('fedora-testing', 'livna-testing', )
+}
+config['redhat-9-i386-livna-testing']  = config['redhat-9-i386-livna-stable']
+aliases['redhat-9-i386-livna-testing'] = ('rh9lt', )
+
+packages['redhat-9-i386-livna-unstable'] = packages['redhat-9-i386-livna-testing']
+sourceslist['redhat-9-i386-livna-unstable'] = {
+    'redhat-9-i386':
+    sourceslist['redhat-9-i386-livna-testing']['redhat-9-i386'] +
+    ('fedora-unstable', 'livna-unstable', )
+}
+config['redhat-9-i386-livna-unstable']  = config['redhat-9-i386-livna-testing']
+aliases['redhat-9-i386-livna-unstable'] = ('rh9lu', )
+
 # Red Hat Linux 9, FreshRPMS
 packages['redhat-9-i386-freshrpms'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-freshrpms'] = {
@@ -453,6 +518,9 @@ aptsources['fedora-1-i386'] = {
     'fedora-stable':    'rpm ' + fedoraus + ' fedora/1/i386 stable',
     'fedora-testing':   'rpm ' + fedoraus + ' fedora/1/i386 testing',
     'fedora-unstable':  'rpm ' + fedoraus + ' fedora/1/i386 unstable',
+    'livna-stable':     'rpm ' + livna    + ' fedora/1/i386 stable',
+    'livna-testing':    'rpm ' + livna    + ' fedora/1/i386 testing',
+    'livna-unstable':   'rpm ' + livna    + ' fedora/1/i386 unstable',
     'freshrpms':        'rpm ' + fedora   + ' 1/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage + ' generic free',
     'jpackage-fc1':     'rpm ' + jpackage + ' fedora-1 free',
@@ -523,6 +591,35 @@ sourceslist['fedora-1-i386-fedora-unstable'] = {
 }
 config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing']
 aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
+
+# Fedora Core 1 with livna (+ fedora.us)
+packages['fedora-1-i386-livna-stable'] = packages['fedora-1-i386-updates'].copy ()
+packages['fedora-1-i386-livna-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['fedora-1-i386-livna-stable'] = {
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
+    ('fedora-stable', 'livna-stable', )
+}
+config['fedora-1-i386-livna-stable']  = { 'release': '1' }
+aliases['fedora-1-i386-livna-stable'] = ('f1ls', )
+
+packages['fedora-1-i386-livna-testing'] = packages['fedora-1-i386-livna-stable']
+sourceslist['fedora-1-i386-livna-testing'] = {
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-livna-stable']['fedora-1-i386'] +
+    ('fedora-testing', 'livna-testing', )
+}
+config['fedora-1-i386-livna-testing']  = config['fedora-1-i386-livna-stable']
+aliases['fedora-1-i386-livna-testing'] = ('f1lt', )
+
+packages['fedora-1-i386-livna-unstable'] = packages['fedora-1-i386-livna-testing']
+sourceslist['fedora-1-i386-livna-unstable'] = {
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-livna-testing']['fedora-1-i386'] +
+    ('fedora-unstable', 'livna-unstable', )
+}
+config['fedora-1-i386-livna-unstable']  = config['fedora-1-i386-livna-testing']
+aliases['fedora-1-i386-livna-unstable'] = ('f1lu', )
 
 # Fedora Core 1 with freshrpms
 packages['fedora-1-i386-freshrpms'] = packages['fedora-1-i386-core']
