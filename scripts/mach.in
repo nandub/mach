@@ -250,7 +250,7 @@ class SRPM:
         if buildreqs:
             return filter(lambda x: not re.search("[(/]", x), buildreqs)
         else:
-            return None
+            return []
 
     def results (self):
         "returns a list of packages that can be built from this src.rpm"
