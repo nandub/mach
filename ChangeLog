@@ -1,3 +1,8 @@
+2003-11-21  Paul Nasrat  <pauln at truemesh dot com>
+
+	* scripts/mach.in (BuildRequires): Avoid TypeErrors for packages
+	without build dependencies by returning an empty list instead of None.
+
 2003-11-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Use a login shell in order to get a
