@@ -1,3 +1,8 @@
+2003-12-21  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in (rebuild): Don't fail if package has no build
+	requirements.
+
 2003-12-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add JPackage for Fedora Core 1.
