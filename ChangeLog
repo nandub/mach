@@ -1,3 +1,8 @@
+2004-04-14  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* mach.spec.in: Own %{_localstatedir}/mach, thanks to
+	John Dalbec for the catch.
+
 2004-04-08  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* mach.spec.in, README: We require apt >= 0.5.5cnc2 due to
