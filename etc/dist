@@ -29,7 +29,7 @@ packages['redhat-72-i386'] = {
     'minimal':	'bash glibc',
     'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio elfutils',
+                'bzip2 diffutils cpio',
 }
 sourceslist['redhat-72-i386'] = {
     'redhat-72-i386': ('os', )
@@ -62,7 +62,7 @@ packages['redhat-73-i386'] = {
     'minimal':	'bash glibc',
     'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio elfutils',
+                'bzip2 diffutils cpio',
 }
 sourceslist['redhat-73-i386'] = {
     'redhat-73-i386': ('os', )
@@ -100,7 +100,7 @@ packages['redhat-80-i386'] = {
     'minimal':	'bash glibc',
     'base':	'fileutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                'bzip2 diffutils cpio elfutils',
+                'bzip2 diffutils cpio',
 }
 sourceslist['redhat-80-i386'] = {
     'redhat-80-i386': ('os', )
