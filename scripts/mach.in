@@ -315,7 +315,7 @@ class Root:
         try:
             lockfile = open (lockpath, 'w')
         except:
-            raise self.Error, 'error: can''t create lock file for %s !\n' % self.root
+            raise self.Error, "error: can't create lock file for %s !\n" % self.root
         lockfile.close ()
      
     def unlock (self, args = []):
