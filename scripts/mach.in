@@ -205,10 +205,10 @@ class SRPM:
             return None
 
     def results (self):
-        "returns a list of packages that can be built out if this src.rpm"
+        "returns a list of packages that can be built from this src.rpm"
         # FIXME: this extracts the spec file out of the src.rpm and
         # puts it in a temp dir; is this the cleanest option ?
-        debug ("Getting results from src.rpm %s" % self.path)
+        debug ("Getting possible result packages from src.rpm %s" % self.path)
         path = self.path
         specname = self.specname
         tmpdir = tempfile.mktemp ()
@@ -222,6 +222,7 @@ class SRPM:
             raise self.Error, "didn't find spec file in %s" % self.path
         cmd = "rpm -q --specfile %s" % spectmp
         output = commands.getoutput (cmd)
+        debug ("output of rpm -q --specfile: \n%s" % output)
         spec = Spec (spectmp)
         (n, v, r) = spec.nvr ()
         # strip v and r off of output
@@ -642,7 +643,7 @@ class Root:
             pkgs[name]['header'] = srpm.header
             pkgs[name]['spec'] = spec
      
-        # now figure out build order
+        # now figure out build order based on buildrequires of each pkg
         deps = [] # list of pkg, dep pairs
         for pkg in pkgs.keys ():
             debug ("Processing %s for build order" % pkgs[pkg]['srpmname'])
@@ -654,6 +655,7 @@ class Root:
                 if result != pkg:
                     debug ("adding %s depends on pkg %s" % (result, pkg))
                     deps.append ((result, pkg))
+                if not pkgs[pkg]['buildreqs']: continue
                 for buildreq in pkgs[pkg]['buildreqs']:
                     debug ("adding %s depends on buildreq %s" % (result, buildreq))
                     deps.append ((result, buildreq))
