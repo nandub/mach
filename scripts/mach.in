@@ -233,6 +233,8 @@ def do_chroot_with_output (config, command, progress = False):
     #else:
     #    sys.stdout.write ('\b.\n')
     #FIXME: hack to return no output, we should change this
+    if (retval != 0):
+        sys.stderr.write ("error: %s failed\n" % cmd)
     return (retval, "")
 
 
@@ -505,19 +507,32 @@ def setup_build (config, args):
     # install packages
     sys.stdout.write ('Installing rpm build packages ...')
     do_chroot (config, 'apt-get install -y rpm-devel rpm-build make gcc tar gzip patch unzip diffutils', True)
-    # create dir structure and rpmmacros
+    #FIXME: add mach user and group
+    if do_chroot (config, "/bin/bash -c 'echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd'") != 0:
+        sys.stdout.write ("error: could not add mach user to /etc/passwd\n")
+        unlock (config, args)
+        sys.exit (1)
+    if do_chroot (config, "/bin/bash -c 'echo mach::500:mach >> /etc/group'") != 0:
+        sys.stdout.write ("error: could not add mach group to /etc/group\n")
+        unlock (config, args)
+        sys.exit (1)
+    do_chroot (config, "mkdir -p /usr/src/rpm")
+    do_chroot (config, "chown -R mach:mach /usr/src/rpm")
+    do_chroot (config, "su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
+     # create dir structure and rpmmacros
     macros = open (root + '/tmp/macros', 'w')
     macros.write ('%_topdir /usr/src/rpm')
     macros.close ()
-    os.system ('%s %s mv /tmp/macros /etc/rpm' % (config['chroot'], root))
+    if do_chroot (config, 'mv /tmp/macros /etc/rpm') != 0:
+        sys.stdout.write ("error: could not create /etc/rpm\n")
+        unlock (config, args)
+        sys.exit (1)
     for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-        os.system ("%s %s su -c 'mkdir -p /usr/src/rpm/%s' mach" % (config['chroot'], root, dir))
-    #FIXME: add mach user and group
-    do_chroot (config,
-               "echo 'mach:!!:500:500::/usr/src/rpm:/bin/bash' >> /etc/passwd")
-    do_chroot (config,
-               "echo 'mach::500:mach' >> /etc/group")
-    # make a snapshot
+        if do_chroot (config, "su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir) != 0:
+            sys.stdout.write ("error: could not create /usr/src/rpm/%s\n" % dir)
+            unlock (config, args)
+            sys.exit (1)
+   # make a snapshot
     command = '%s %s rpm -qa' % (config['chroot'], root)
     file = open (statefile, 'w')
     for lines in os.popen (command).readlines ():
@@ -695,13 +710,17 @@ def check (config, args):
 def chroot (config, args):
     rootdir = get_config_dir (config, 'root')
     print "Entering %s" % config['root']
-    os.system ("%s %s" % (config['chroot'], rootdir))
+    os.system ("%s %s %s" % (config['chroot'], rootdir, string.join (args)))
     
 # clean up chroot
 def clean (config, args):
     rootdir = get_config_dir (config, 'root')
     # force umount
     umount (config, args)
+    # remove all state info
+    statedir = get_config_dir (config, 'state')
+    debug ("Removing statedir %s" % statedir)
+    os.system ("rm -rf %s" % statedir)
     # FIXME: check if the dir isn't already clean yet
     if not os.path.exists (rootdir + '/bin/rm'):
         sys.stderr.write ('error: no base installed in %s !\n' % config['root'])
@@ -709,9 +728,6 @@ def clean (config, args):
         #ensure_dir (rootdir + '/bin')
         #os.path.copyfile ('/bin/rm', rootdir + '/bin/rm')
         return False
-    # remove all state info
-    statedir = get_config_dir (config, 'state')
-    os.system ("rm -rf %s" % statedir)
     # get a list of files and dirs in the root
     files = string.join (os.listdir (rootdir))
     sys.stdout.write ('Cleaning out root ...')
@@ -785,6 +801,13 @@ def rebuild (config, args):
             order.append (pkg)
     debug ("order %s" % order)
 
+    # now make sure all packages given are up for build
+    for pkg in pkgs.keys ():
+        if pkg not in order:
+            order.append (pkg)
+    debug ("order %s" % order)
+
+    # now build
     for name in order:
         srpm = pkgs[name]['srpm']
         print "Building %s" % srpm
