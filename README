@@ -80,6 +80,8 @@ GETTING STARTED - SOURCE INSTALL
   I added this line :
   thomas ALL=NOPASSWD: /bin/mknod,/bin/rpm,/bin/mount,/bin/umount,/usr/sbin/chroot
 
+SETTING IT UP
+-------------
 - configuration files are stored in $(sysconfdir)/mach
   packages contains the list of bootstrap packages and download locations
   apt contains the list of apt repositories to draw from
@@ -115,6 +117,8 @@ GETTING STARTED - SOURCE INSTALL
      You can check the "packages" config file to see which files need
      copying to the packages dir
 
+USING IT
+--------
 - Now for the actual work.  If everything is configured properly, you can now
   do
     mach setup
@@ -122,6 +126,17 @@ GETTING STARTED - SOURCE INSTALL
   run
     mach chroot
   and try to apt-get install a few packages !
+
+- To build a package based on a .spec file, run
+  mach build (spec file name)
+
+  If the Source: and Patch: lines contain a proper URL, mach will automatically
+  download them and build the package
+
+- To build a package from a .src.rpm file, run
+  mach rebuild (src.rpm)
+  You can specify an http:// or ftp:// file here, and it will be downloaded
+  and built automatically.
 
 - To clean the buildroot, run
     mach clean

@@ -6,11 +6,13 @@ Summary:        make a chroot.
 Group:          Applications/System
 License:	GPL
 URL:            http://thomas.apestaart.org/projects/mach
-Source:         %{name}-%{version}.tar.gz
+Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.gz
 Buildroot:      %{_tmppath}/%{name}-%{version}-root
 BuildArch:	noarch
 
 Requires:	python
+Requires:	rpm
+Requires:	sudo
 
 %description
 mach makes a chroot.
@@ -79,6 +81,7 @@ fi
 %defattr(-,root,root)
 %doc ChangeLog README AUTHORS BUGS TODO
 %dir %{_sysconfdir}/mach
+# make these actual config files when we're happy with the syntax
 %{_sysconfdir}/mach/packages
 %{_sysconfdir}/mach/conf
 %{_sysconfdir}/mach/apt
