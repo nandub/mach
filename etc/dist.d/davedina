@@ -19,7 +19,7 @@ packages['davedina-00-fridge'] = {
     'dir':      'redhat-9-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
+    'build':    'dev rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['davedina-00-fridge'] = {

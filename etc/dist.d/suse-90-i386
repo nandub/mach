@@ -37,7 +37,7 @@ packages['suse-90-i386'] = {
     'dir':      'suse-90-i386',
     'minimal':  'bash glibc',
     'base':     'aaa_base coreutils findutils openssh pam pam-modules',
-    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+    'build':    'make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-90-i386'] = {
     'suse-90-i386': ('base', )

@@ -19,7 +19,7 @@ packages['yellowdog-30-ppc'] = {
     'dir':      'yellowdog-30-ppc',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh-server',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
+    'build':    'dev rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['yellowdog-30-ppc'] = {

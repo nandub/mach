@@ -20,7 +20,7 @@ packages['redhat-70-i386'] = {
     'minimal':  'bash glibc',
     # net-tools provides hostname, otherwise it complains about it for chroot
     'base':     'fileutils findutils openssh-server net-tools file sh-utils',
-    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch ' +
+    'build':    'dev rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio',
 }
 sourceslist['redhat-70-i386'] = {

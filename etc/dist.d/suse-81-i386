@@ -33,7 +33,7 @@ packages['suse-81-i386'] = {
     'dir':      'suse-81-i386',
     'minimal':  'bash glibc',
     'base':     'fileutils findutils openssh',
-    'build':    'rpm-devel make gcc tar gzip patch unzip cpio',
+    'build':    'make gcc tar gzip patch unzip cpio',
 }
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
