@@ -427,14 +427,14 @@ packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer'] = {
     'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['redhat-9-i386-gstreamer'] = { 'release': 'rh9' }
+config['redhat-9-i386-gstreamer'] = { 'release': 'rh90' }
 aliases['redhat-9-i386-gstreamer'] = ('rh9g', 'rh90g')
 
 packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
 sourceslist['redhat-9-i386-gstreamer-deps'] = {
     'redhat-9-i386': ('os', 'gstreamer-deps')
 }
-config['redhat-9-i386-gstreamer-deps'] = { 'release': 'rh9' }
+config['redhat-9-i386-gstreamer-deps'] = { 'release': 'rh90' }
 aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', 'rh90gd')
 
 # Red Hat Linux 9 with fedora.us
@@ -474,7 +474,7 @@ sourceslist['redhat-9-i386-livna-stable'] = {
     sourceslist['redhat-9-i386-updates']['redhat-9-i386'] +
     ('fedora-stable', 'livna-stable', )
 }
-config['redhat-9-i386-livna-stable']  = { 'release': '1' }
+config['redhat-9-i386-livna-stable']  = { 'release': 'rh90' }
 aliases['redhat-9-i386-livna-stable'] = ('rh9ls', )
 
 packages['redhat-9-i386-livna-testing'] = packages['redhat-9-i386-livna-stable']
