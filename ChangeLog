@@ -1,3 +1,9 @@
+2004-01-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* Makefile.am:
+	* configure.in:
+	* m4/Makefile.am: properly dist m4
+
 2004-01-08  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (main): Check for duplicate root/alias names.
