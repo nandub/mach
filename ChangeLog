@@ -3,6 +3,8 @@
 	* scripts/mach.in (_setup_build): Use "x" instead of "!!" in
 	the builder passwd entry to appease eg. SuSE 9.
 
+	* etc/dist.d/suse-90-i386: Add SuSE 9 config.
+
 2004-03-28  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: reworked and applied patch from Dams
