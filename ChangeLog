@@ -1,3 +1,7 @@
+2003-07-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: pass on options from build/rebuild to rpmbuild
+
 2003-07-15  Thomas Vander Stichele <thomas at apestaart dot org>
 
 	* configure.in:
