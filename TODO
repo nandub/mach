@@ -6,3 +6,8 @@
                 uses that packagedir
 * MEDIUM:       figure out how to get around checking gpg sigs on installing
                 just built packages
+
+* MEDIUM:	create a helper binary that does everything mach needs root
+                privileges for, including calling special rpm binaries
+
+* HARD:		make an object class "Root" and execute all operations on this
