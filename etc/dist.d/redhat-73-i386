@@ -14,6 +14,7 @@ aptsources['redhat-73-i386'] = {
     'freshrpms':        'rpm ' + freshrpmsrh + ' 7.3/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh73':    'rpm ' + jpackage    + ' redhat-7.3 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
 }
 
 # Red Hat Linux 7.3
@@ -55,9 +56,13 @@ config['redhat-73-i386-updates-freshrpms'] = {}
 aliases['redhat-73-i386-updates-freshrpms'] = ('rh73ufr', )
 
 # Red Hat Linux 7.3 with JPackage
-packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates']
+packages['redhat-73-i386-jpackage'] = packages['redhat-73-i386-updates'].copy()
+packages['redhat-73-i386-jpackage']['base'] = packages['redhat-73-i386-updates']['base'] + ' java-1.4.2-sun'
+packages['redhat-73-i386-jpackage']['build'] = packages['redhat-73-i386-updates']['build'] + ' gcc-c++ java-1.4.2-sun-devel'
 sourceslist['redhat-73-i386-jpackage'] = {
-    'redhat-73-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh73', )
+    'redhat-73-i386':
+    sourceslist['redhat-73-i386-updates']['redhat-73-i386'] +
+    ('jpackage-generic', 'jpackage-rh73', 'jpackage-nonfree', ),
 }
 config['redhat-73-i386-jpackage'] = {}
 aliases['redhat-73-i386-jpackage'] = ('rh73jpp', )

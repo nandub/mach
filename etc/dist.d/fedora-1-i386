@@ -23,6 +23,7 @@ aptsources['fedora-1-i386'] = {
     'freshrpms':        'rpm ' + freshrpmsfd + ' 1/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-fc1':     'rpm ' + jpackage    + ' fedora-1 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
 }
 
 # Fedora Core 1
@@ -129,9 +130,13 @@ config['fedora-1-i386-freshrpms'] = {}
 aliases['fedora-1-i386-freshrpms'] = ('f1fr', )
 
 # Fedora Core 1 with JPackage
-packages['fedora-1-i386-jpackage'] = packages['fedora-1-i386-updates']
+packages['fedora-1-i386-jpackage'] = packages['fedora-1-i386-updates'].copy()
+packages['fedora-1-i386-jpackage']['base'] = packages['fedora-1-i386-updates']['base'] + ' java-1.4.2-sun'
+packages['fedora-1-i386-jpackage']['build'] = packages['fedora-1-i386-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['fedora-1-i386-jpackage'] = {
-    'fedora-1-i386': ('core', 'updates', 'jpackage-generic', 'jpackage-fc1', ),
+    'fedora-1-i386':
+    sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
+    ('jpackage-generic', 'jpackage-fc1', 'jpackage-nonfree', ),
 }
 config['fedora-1-i386-jpackage'] = {}
 aliases['fedora-1-i386-jpackage'] = ('fc1jpp', )
