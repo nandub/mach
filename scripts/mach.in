@@ -830,7 +830,7 @@ class Root:
             srpmname = pkgs[name]['srpmname']
             # install buildrequires if there are
             debug ("Building %s with package stuff %s" % (name, pkgs[name].keys ()))
-            print "Building %s" % srpmname
+            print "Building source rpm %s" % srpmname
             if pkgs[name].has_key ('buildreqs') and pkgs[name]['buildreqs']:
                 buildreqs = string.join (pkgs[name]['buildreqs'])
                 debug ("BuildRequires: %s" % buildreqs)
@@ -860,8 +860,8 @@ class Root:
                 fullname = '%s-%s-%s' % (name, version, release)
             resultdir = os.path.join (self.resultdir, fullname)
             ensure_dir (resultdir)
-            # rebuild binary rpm from the src rpm
 
+            # rebuild binary rpm from the src rpm
             # install the src.rpm
             self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' %s" %
                             (srpmname, builduser))
@@ -904,12 +904,12 @@ class Root:
 
             command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - %s" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
-                                               "Rebuilding %s" % srpmname,
+                                               "Rebuilding source rpm %s" % srpmname,
                                                True)
             if (output):
                 open (resultdir + '/rpm.log', "wb"). write (output)
             if status != 0:
-                sys.stderr.write ("ERROR: something went wrong building this one\n")
+                sys.stderr.write ("ERROR: something went wrong rebuilding the .src.rpm\n")
                 sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
                 self.umount ()
                 self.unlock ()
@@ -922,10 +922,6 @@ class Root:
             #(status, output) = do_chroot_with_output (config,
             # "su -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % (self.config['root_rpmbuild'], spec),
             #    True)
-            if output:
-                open (resultdir + '/rpm.log', "ab"). write (output)
-            if status != 0:
-                raise self.Error, "something went wrong repackaging SRPM"
 
             # analyze log file and move all of the rpms listed as Wrote:
             (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
@@ -977,6 +973,13 @@ class Root:
 		cmd = 'gpg --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
+
+        # run success-script if requested
+        if self.config['script-success']:
+            for resultdir in resultdirs:
+                cmd = '%s %s' % (self.config['script-success'], resultdir)
+                debug ("running %s" % cmd)
+		os.system (cmd)
 
         # now collect stuff to . if requested
         if self.config['collect']:

@@ -142,9 +142,13 @@ search onshuis
 '''
 }
 
+config['script-success'] = "mach-collect"
+
 This ensures that all packages appear to be built on the host mach.onshuis,
 and ensures that it can look up hosts through localhost DNS and one outside
 DNS.
+Also, after a successful build it will run the mach-collect script with
+the built directory as a parameter.
 
 7. USING IT
 -----------
