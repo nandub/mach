@@ -633,8 +633,7 @@ class Root:
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
         self.unlock ()
-        if not self.rebuild (string.join (options) + " " + string.join (srpms)):
-            raise self.Error, "rebuild failed !"
+        self.rebuild (string.join (options) + " " + string.join (srpms))
              
     def _bruteclean (self):
         "brutishly clean out the root by using mach-helper rm -rfv"
@@ -862,7 +861,7 @@ class Root:
                 sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
                 self.umount ()
                 self.unlock ()
-                return False
+                raise self.Error, "failed to rebuild SRPMs"
             # reinstall and repackage src rpm
             #sys.stdout.write ("Repackaging %s ..." % srpm)
             #do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
