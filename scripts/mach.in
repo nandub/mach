@@ -29,6 +29,7 @@ Mach options:
   -k, --keep			do not revert buildroot to initial package list
   -s, --sign			sign packages after build
   -c, --collect			collect packages and relevant files to .
+  -q, --quiet			no spinners, minimal output
   --release=(tag)		add given tag to release tag
 
 Commands:
@@ -57,6 +58,7 @@ config = {
   'sign': 0,
   'collect': 0,
   'release': 0,
+  'quiet': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
   'chroot': '@SBINDIR@/mach-helper chroot',
@@ -340,10 +342,16 @@ class Root:
         debug ('outputted state')
         open (path, 'w').write (content)
 
+    def progress (self):
+        "returns True if progress information should be shown"
+        if self.config['quiet']: return False
+        return True
+
     def stdout (self, message):
         #FIXME: check verbosity here
         "outputs this message to stdout"
         sys.stdout.write (message)
+        sys.stdout.flush ()
 
     def mount (self):
         "mount apt-archives and proc into chroot"
@@ -423,12 +431,18 @@ class Root:
     # FIXME: virtualize this
     # FIXME: provide a way to not catch output so it can be run on a chroot
     # line interactively
-    def aptget (self, arg, progress = False):
+    # if message is specified, it will be printed, and newline-terminated
+    # properly
+    # if no message specified, then it's up to caller
+    def aptget (self, arg, message = None, progress = False):
         "run apt-get (arg) from outside the root on the root"
         self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-get'], conf, arg)
+        if message: self.stdout (message)
+        if progress: self.stdout (' ...')
         (status, output) = do_with_output (command, progress)
+        if message and not progress: self.stdout ('\n')
         self.umount ()
         if status != 0:
             raise self.Error, "Could not apt-get %s" % arg
@@ -469,9 +483,13 @@ class Root:
             retval = os.WEXITSTATUS (status)
         if (retval != 0):
             raise self.ReturnValue, retval
-        return output
+        # FIXME: we send back retvals with a raise now, do the same
+        # in do_progress
+        return (retval, output)
     
-    def do_chroot (self, command, progress = False, user = ""):
+    def do_chroot (self, command, message = None, progress = False, user = ""):
+        # if you call do_chroot, then do_chroot is responsible for printing
+        # \n
         "execute given command in root"
         # HACK: FIXME: 
         # if the cmd already contains -c ' as a sequence, then don't wrap
@@ -482,7 +500,13 @@ class Root:
         else:
             cmd = "%s %s su - root -c '%s'" % (config['chroot'],
                                                self.rootdir, command)
-        return self.do (cmd, progress)
+        # be quiet if we're asked to be so
+        if (self.progress () == False): progress = False
+        if message: self.stdout (message)
+        if progress: self.stdout (' ...')
+        ret = self.do (cmd, progress)
+        if message and not progress: self.stdout ('\n')
+        return ret
 
     def check_bootstrap (self):
         "check if the bootstrap packages are present, download if not"
@@ -541,7 +565,7 @@ class Root:
         if not packages:
            print
            return True
-        self.rpm ("-ev %s" % packages, True)
+        self.rpm ("-ev %s" % packages, self.progress ())
         return True
     
 
@@ -614,14 +638,14 @@ class Root:
                                 os.path.join ('tmp', os.path.basename (file)),
                                 os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
             shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
-            self.do_chroot ("cd / && mv %s %s " % (
+            self.do_chroot ("cd / && mv %s %s" % (
                             os.path.join ('tmp', os.path.basename (specfile)),
                             os.path.join ('usr', 'src', 'rpm', 'SPECS')))
-            self.stdout ("Creating .src.rpm ...")
             try:
                 self.do_chroot ("cd / && rpmbuild -bs --nodeps %s" \
                                 % os.path.join ('usr', 'src', 'rpm', 'SPECS', 
                                                 os.path.basename (specfile)),
+                                "Creating .src.rpm",
                                   True)
             except:
                 raise self.Error, 'error: could not build .src.rpm'
@@ -662,8 +686,7 @@ class Root:
             return
         # get a list of files and dirs in the root
         files = string.join (os.listdir (self.rootdir))
-        self.stdout ('Cleaning out root ...')
-        self.do_chroot ('cd / && rm -rfv %s' % files, True)
+        self.do_chroot ('cd / && rm -rfv %s' % files, "Cleaning out root", True)
         try:
             os.rmdir (self.rootdir)
         except OSError:
@@ -793,10 +816,10 @@ class Root:
                 buildreqs = string.join (pkgs[name]['buildreqs'])
                 print "Building %s" % srpmname
                 debug ("BuildRequires: %s" % buildreqs)
-                sys.stdout.write ('Installing BuildRequires ...')
                 try:
         	    self.aptget ("update")
-                    self.aptget ('install -y %s' % buildreqs, True)
+                    self.aptget ('install -y %s' % buildreqs,
+                                 "Installing BuildRequires", self.progress ())
                     # FIXME: build-dep would be nice but only works on a pkg
                     # in the rpm-src tree apparently
                     #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
@@ -822,16 +845,16 @@ class Root:
             resultdir = os.path.join (self.resultdir, fullname)
             ensure_dir (resultdir)
             # rebuild binary rpm from the src rpm
-            sys.stdout.write ("Rebuilding %s ..." % srpmname)
-            #newpath = os.path.join (self.rootdir, 'tmp', srpm)
-            #self.rpm ("-Uhv --nodeps %s" % newpath)
+
             # install the src.rpm
             self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' machbuild" % srpmname)
             specfile = pkgs[name]['spec']
 
-            # mangle spec file if requested
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
             self.do_chroot (command)
+            # copy specfile to resultdir
+            shutil.copy2 (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
+            # mangle spec file if requested
             if self.config['release']:
                 # first check if it doesn't already comply !
                 debug ("self.rootdir: %s" % self.rootdir)
@@ -845,9 +868,15 @@ class Root:
                 else:
                     debug ("Release already contains mangle trailer %s" % self.config['release'])
 
+            # delete the original temp spec file
+            command = 'rm /tmp/%s' % specfile
+            self.do_chroot (command)
+
             # rebuild from spec inside chroot
             command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' machbuild" % (string.join (options), specfile)
-            (status, output) = self.do_chroot (command, True)
+            (status, output) = self.do_chroot (command,
+                                               "Rebuilding %s" % srpmname,
+                                               True)
             if (output):
                 open (resultdir + '/rpm.log', "wb"). write (output)
             if status != 0:
@@ -883,9 +912,6 @@ class Root:
             #self.aptget ("install -y %s" % output, True)
             print "Collecting results of build %s" % srpm
             rpms.append (srpm)
-            # add spec file; FIXME rename rpms variable to results or something
-            # note, this is the original spec file without mangling
-            rpms.append (os.path.join ('/tmp', specfile))
             
             for file in rpms:
                 path = self.rootdir + file
@@ -894,9 +920,6 @@ class Root:
                 # for now, we do, for multiple builds
                 # self.do_chroot ('rm ' + file)
 
-            # delete the original temp spec file
-            command = 'rm /tmp/%s' % specfile
-            self.do_chroot (command)
             # update internal apt repo
             self.aptget ("update")
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
@@ -943,6 +966,7 @@ class Root:
 
         self.umount ()
         self.unlock ()
+        return True
         
     # private methods
     def _setup_prep (self):
@@ -1038,18 +1062,16 @@ Dir {
         self.mount ()
 
         rootdir = self.rootdir
-        config = self.config
         srcs = get_sources_list (config)
 
-        # rebuild the rpm database using the installed rpm before messing
-        # do_chroot (config, "rpm --rebuilddb")
+        # FIXME: twolevel glibc install would still be useful IMO
         # first create a sources.list with only the first sources line
         # this ensures glibc doesn't get upgraded from underneath apt
         create_sources_list (config, srcs)
-        self.stdout ('Updating apt using all sources ...')
-        self.aptget ("update", True)
-        self.stdout ('Forcing consistency and upgrading ...')
-        self.aptget ("-f upgrade -y", True)
+        self.aptget ("update", "Updating apt using all sources",
+                     self.progress ())
+        self.aptget ("-f upgrade -y", 'Forcing consistency and upgrading',
+                     self.progress ())
         self.set_state ('consistency')
 
     def _setup_build (self):
@@ -1063,10 +1085,11 @@ Dir {
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         # install packages
-        sys.stdout.write ('Installing glibc ...')
-        self.aptget ('install -y glibc bash', True)
-        sys.stdout.write ('Installing rpm build packages ...')
-        self.aptget ('install -y %s' % self.config['packages']['build'], True)
+        self.aptget ('install -y glibc bash',
+                     'Installing glibc and bash ...', self.progress ())
+        self.aptget ('install -y %s' % self.config['packages']['build'],
+                     'Installing rpm build packages ...',
+                     self.progress ())
         #FIXME: add mach user and group
         self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
         self.do_chroot ("echo machbuild::500:mach >> /etc/group")
@@ -1461,12 +1484,14 @@ def check_package_list (config, list):
                                                                          qfmt,
                                                                          list)
     packages = commands.getoutput (cmd)
+    progress = True
+    if config['quiet']: progress = False
     # FIXME: how many ?
     sys.stdout.write ("Removing packages ...")
     if not packages:
        print
        return True
-    self.rpm ("-ev %s" % packages, True)
+    self.rpm ("-ev %s" % packages, progress)
     return True
 
 # check if everything is in order to actually do stuff
@@ -1506,9 +1531,9 @@ def status (config, args):
 def main (config, args):
     global DEBUG # we might change it
     try:
-        opts, args = getopt.getopt (args, 'r:hdfksc',
+        opts, args = getopt.getopt (args, 'r:hdfkscq',
                                     ['root=', 'help', 'debug', 'force', 'keep',
-                                     'sign', 'collect', 'release='])
+                                     'sign', 'collect', 'quiet', 'release='])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1537,6 +1562,8 @@ def main (config, args):
             config['sign'] = 1
         elif opt in ('-c', '--collect'):
             config['collect'] = 1
+        elif opt in ('-q', '--quiet'):
+            config['quiet'] = 1
         elif opt == '--release':
             config['release'] = arg
 
