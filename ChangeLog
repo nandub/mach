@@ -1,5 +1,17 @@
 2004-11-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* autogen.sh:
+	* configure.in:
+	  detect selinux
+	* mach.spec.in:
+	* src/Makefile.am:
+	* src/selinux-mach.c:
+	  create a fake selinux library
+	* src/mach-helper.c:
+	  if MACH_LD_PRELOAD is set, add our selinux lib to LD_PRELOAD
+
+2004-11-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  try harder when rpm -e fails by adding noscripts
 

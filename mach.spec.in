@@ -54,6 +54,8 @@ install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/tmp/mach
 install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/packages
 install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/archives
 
+find $RPM_BUILD_ROOT -name "*.la" -exec rm {} \;
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -88,6 +90,7 @@ fi
 %ghost %attr(2775,root,mach) %dir %{_localstatedir}/tmp/mach
 %attr(2775,root,mach) %{_localstatedir}/cache/mach
 %{_bindir}/mach
+%{_libdir}/libselinux-mach.*
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
