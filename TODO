@@ -15,3 +15,5 @@
                 libncurses.so.5 :/
 * MEDIUM:	If spec file contains %define version ...
                 and Version: %{version}, we need to expand this
+* MEDIUM:	rpm -q --specfile shouldn't be used; it fails on %install
+                and similar in Changelog entries
