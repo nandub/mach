@@ -153,12 +153,10 @@ class Spec:
             raise self.Error, "spec file %s fails to parse:\n%s" % (self.path, output)
  
         self.content = open (self.path).readlines ()
-        # expand tags using rpm --specfile because results can depend on
+        # expand tags using rpmbuild because results can depend on
         # build options
         for which in ['name', 'version', 'release']:
-            # rpm -q --specfile doesn't understand stuff like target
             command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre echo %%%s; exit 0' --define 'setup :' %s | tail -n 1" % (options, which, path)
-            #command = "rpm -q %s --specfile --queryformat \"%%{%s}\\n\" %s | head -n 1" % (options, which, path)
 	    debug ("Spec:__init__: command: %s" % command)
             value = commands.getoutput (command)
             self.vars[which] = value

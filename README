@@ -250,8 +250,9 @@ The list is low-volume.
 
 12. ADDING A DISTRIBUTION
 -------------------------
-- Check both dist and conf in sysconfdir/mach and copy from another target.
-  Change as required.
+- Check the distribution files in $sysconfdir/dist.d and copy one.
+- Make sure the download locations you reference are specified in location.
+
 - Base packages: list them in the packages[dist] dict under 'base'.
   You can then test by trying to set up this root,
   See if the installation of base packages works well by doing

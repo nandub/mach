@@ -1,4 +1,17 @@
-This is mach, make a chroot, 0.4.4.
+This is mach, make a chroot, 0.4.5.
+
+Changes since 0.4.4:
+	- pre-interpreting checks fixed (Thomas)
+	- use promoteepoch when supported; fixes building with newer apt
+          for older platforms (Thomas)
+        - proc mount/unmount fixes (Erik, Enrico)
+	- distro configuration split up in multiple distro files (Thomas)
+	- rewrite macros on each build (Thomas)
+	- pass through a specific set of env vars (Enrico)
+	- create /boot/kernel.h on root setup (Enrico)
+        - fix handling of rpmmacros when checking spec files (Thomas)
+	- always use build args to parse spec flies (Thomas)
+        - added -v option (Thomas)
 
 Changes since 0.4.3:
 	- added distributions:
