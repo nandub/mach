@@ -1,16 +1,9 @@
-* EASY:		finish build order figuring out by using rpm -q --specfile
-* HARD:		figure out how to make sure that the rpm on the host system
-                can properly install rpms for the target dist
-                suggestion: use rpm2cpio to extract the static rpm binary
 * EASY:         clean out packages dir, but only if it's the last dist that
                 uses that packagedir
-* MEDIUM:       figure out how to get around checking gpg sigs on installing
-                just built packages
-
-* MEDIUM:	create a helper binary that does everything mach needs root
-                privileges for, including calling special rpm binaries
 
 * HARD:		make an object class "Root" and execute all operations on this
 
-* EASY:		make rootsdir a configure option so it's hardcompiled into
+* EASY:		make mach-helper do rm if the root's rm is gone
+* EASY:		check for suidness of mach-helper
 		mach-helper
+
