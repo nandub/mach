@@ -275,8 +275,6 @@ class Root:
         lockpath = os.path.join (self.statedir, 'lock')
         if os.path.exists (lockpath):
             os.remove (lockpath)
-        else:
-            raise self.Error, 'error: %s not locked !' % self.root
  
     def get_state (self, which):
         "Returns None if the state file doesn't exist, and contents if it does"
@@ -347,7 +345,11 @@ class Root:
             file = open (os.path.join (self.rootdir, tmpname), 'w')
             file.write (config['files'][filename])
             file.close ()
-            os.rename(os.path.join (self.rootdir, tmpname), self.rootdir + filename)
+            new = self.rootdir + filename
+            try:
+              os.rename (os.path.join (self.rootdir, tmpname), new)
+            except OSError:
+              raise self.Error, "Could not create %s" % new
 
     # seek through the argument list for specfiles
     def splitargspecs (self, argstring):
@@ -1297,15 +1299,12 @@ def lock (config):
     return True
         
 # unlock a given root; removes lock file in the statedir under root
-def unlock (config, notused=0):
+def unlock (config):
     statedir = get_config_dir (config, 'state')
     lockpath = statedir + '/lock'
     if os.path.exists (lockpath):
         os.remove (lockpath)
-        return True
-    else:
-        sys.stderr.write ('error: %s not locked !\n' % config['root'])
-        return False
+    return True
      
 # return the state, or nothing if state isn't there
 def get_state (config, state):
