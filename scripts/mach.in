@@ -193,7 +193,7 @@ class Spec:
     def nvr (self):
         "return name, version, release triplet"
         return (self.vars['name'], self.vars['version'], self.vars['release'])
- 
+
 
     def _sourcespatches (self, which, args = ""):
         result = {}
@@ -220,7 +220,7 @@ class Spec:
     def patches (self):
            # parse the spec file for all Source: files
            return self._sourcespatches ("Patch")
- 
+
 ### abstract object wrapping a src rpm
 class SRPM:
     class Error(Exception): pass
@@ -254,7 +254,7 @@ class SRPM:
                 raise self.Error, "Didn't find spec file in %s" % self.path
         debug ("SRPM.specname: %s" % name)
         return name
-    
+
     def BuildRequires (self):
         "return a list of BuildRequires for this src.rpm"
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
@@ -292,7 +292,7 @@ class SRPM:
             result.append (line.replace ('-%s-%s' % (v, r), ''))
         debug ("results of srpm: %s" % result)
         return result
- 
+
 ### abstract object acting on the root
 # FIXME: we can subclass this based on actual method to install stuff
 class Root:
@@ -329,14 +329,14 @@ class Root:
         except:
             raise self.Error, "error: can't create lock file for %s !\n" % self.root
         lockfile.close ()
-     
+
     def unlock (self, args = []):
         "Unlock this root for operations"
         debug ("unlocking root")
         lockpath = os.path.join (self.statedir, 'lock')
         if os.path.exists (lockpath):
             os.remove (lockpath)
- 
+
     def get_state (self, which):
         "Returns None if the state file doesn't exist, and contents if it does"
         path = os.path.join (self.statedir, which)
@@ -387,7 +387,7 @@ class Root:
         os.system (command)
         file.write ('%s/proc\n' % self.rootdir)
         file.close ()
-        
+
     # umount all mounted paths
     def umount (self):
         if not self.get_state: return
@@ -413,7 +413,7 @@ class Root:
               os.rename (os.path.join (self.rootdir, tmpname), new)
             except OSError:
               raise self.Error, "Could not create %s" % new
-   
+
     def _splitarg (self, argstring, matcher):
         "only used by splitargspecs and splitargsrcrpms"
         result = []
@@ -489,7 +489,7 @@ class Root:
             return do_progress (command)
         else:
             (status, output) = commands.getstatusoutput (command)
-    
+
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
         if (retval != 0):
@@ -497,12 +497,12 @@ class Root:
         # FIXME: we send back retvals with a raise now, do the same
         # in do_progress
         return (retval, output)
-    
+
     def do_chroot (self, command, message = None, progress = False, user = "", fatal = False):
         # if you call do_chroot, then do_chroot is responsible for printing
         # \n
         "execute given command in root"
-        # HACK: FIXME: 
+        # HACK: FIXME:
         # if the cmd already contains -c ' as a sequence, then don't wrap
         # it in /bin/bash
         cmd = ""
@@ -549,7 +549,7 @@ class Root:
         sys.stdout.write ("Removing packages ...")
         self.rpm ("-ev %s" % packages, self.progress ())
         return True
-    
+
 
     # implementation of actual externalized commands
     # actual externalized commands
@@ -560,13 +560,13 @@ class Root:
 
         if not arg:
             raise self.Error, 'Please supply .spec files to build'
-        
+
         # check if we can build here yet
         if not self.get_state ('build'):
             self.setup ('build')
 
         self.lock ()
-        
+
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
         (options, specs) = self.splitargspecs (arg)
@@ -607,8 +607,8 @@ class Root:
                         raise self.Error, "Could not download %s !" % download
                     files.append (filepath)
                     self.stdout ("Using %s\n" % filepath)
-    
-            # copy all necessary files to /tmp in root, then chroot to mv them 
+
+            # copy all necessary files to /tmp in root, then chroot to mv them
             for file in files:
                 debug ("Getting file %s into SOURCES" % file)
                 # sanity check the given file using "file"
@@ -637,7 +637,7 @@ class Root:
                 self.do_chroot ("cd / && %s %s -bs --nodeps %s" \
                                 % (self.config['root_rpmbuild'],
                                    optstring,
-                                   os.path.join ('usr', 'src', 'rpm', 'SPECS', 
+                                   os.path.join ('usr', 'src', 'rpm', 'SPECS',
                                                 os.path.basename (specfile))),
                                 "Creating .src.rpm",
                                   True)
@@ -651,12 +651,12 @@ class Root:
                 raise self.Error, '%s not built' % srpmfile
             shutil.copy2 (self.rootdir + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
             srpms.append (os.path.join (tmppath, srpmname))
-    
+
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
         self.unlock ()
         self.rebuild (string.join (options) + " " + string.join (srpms))
-             
+
     def _bruteclean (self):
         "brutishly clean out the root by using mach-helper rm -rfv"
         command = "%s -rfv %s" % (self.config['rm'], self.rootdir)
@@ -665,7 +665,7 @@ class Root:
         (status, output) = do_with_output (command, True)
         if status != 0:
     	    raise self.Error, "Could not remove %s" % self.rootdir
-    
+
     def clean (self, args = ""):
         "clean out the root"
         # does the root still exist ?
@@ -708,7 +708,7 @@ class Root:
         debug ("running %s" % cmd)
         os.system (cmd)
         self.umount ()
-     
+
     def setup (self, arg):
         "Set up the root to a given target"
         target = ''
@@ -717,12 +717,12 @@ class Root:
         else:
             target = 'base' # default to build
         targets = ('prep', 'minimal', 'base', 'build')
-    
+
         # see if something real given to setup
         if target not in targets:
             raise self.Error, "don't know how to set up %s" % target
         self.lock ()
-    
+
         # try each of the targets in turn
         for which in targets:
             debug ("setting up target %s" % which)
@@ -733,7 +733,7 @@ class Root:
             if target == which:
                 break
         self.unlock ()
-     
+
     def rebuild (self, arg):
         if not arg:
             raise self.Error, 'Please supply .src.rpm files to build'
@@ -765,7 +765,7 @@ class Root:
             pkgs[name]['srpmname'] = srpmname
             pkgs[name]['header'] = srpm.header
             pkgs[name]['spec'] = spec
-     
+
         # now figure out build order based on buildrequires of each pkg
         if len(pkgs) > 1:
             deps = [] # list of pkg, dep pairs
@@ -817,10 +817,10 @@ class Root:
             debug ("(with all packages up for build) order %s" % order)
         else:
             order = pkgs
-    
+
         # now build
         self.mount ()
-       
+
         resultdirs = [] # will contain each of the resultdir's for this build
         # loop over all package names
         for name in order:
@@ -888,16 +888,16 @@ class Root:
             command = 'rm /tmp/%s' % specfile
             self.do_chroot (command)
 
-            # detect amount of CPU's on system so _smp_flags gets set 
+            # detect amount of CPU's on system so _smp_flags gets set
             # correctly on chroot
             if not os.environ.has_key('RPM_BUILD_NCPUS'):
-               nrcpus = os.popen('/usr/bin/getconf _NPROCESSORS_ONLN').read().rstrip()	
+               nrcpus = os.popen('/usr/bin/getconf _NPROCESSORS_ONLN').read().rstrip()
             else:
                nrcpus = os.environ['RPM_BUILD_NCPUS']
 
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
-    
+
             command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding %s" % srpmname,
@@ -922,7 +922,7 @@ class Root:
                 open (resultdir + '/rpm.log', "ab"). write (output)
             if status != 0:
                 raise self.Error, "something went wrong repackaging SRPM"
-    
+
             # analyze log file and move all of the rpms listed as Wrote:
             (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
             # FIXME: install these RPMS based on a boolean ?
@@ -937,7 +937,7 @@ class Root:
             #self.aptget ("install -y %s" % output, True)
             print "Collecting results of build %s" % srpm
             rpms.append (srpm)
-            
+
             for file in rpms:
                 path = self.rootdir + file
                 # file already contains starting /
@@ -958,7 +958,7 @@ class Root:
         # now sign packages if requested
         if self.config['sign']:
             print "Signing built packages ..."
-            cmd = 'rpm --addsign %s' % string.join (resultdirs, '/*.rpm ') + '/*.rpm' 
+            cmd = 'rpm --addsign %s' % string.join (resultdirs, '/*.rpm ') + '/*.rpm'
             debug ("running %s" % cmd)
             os.system (cmd)
             #FIXME: sadly, we cannot clearsign multiple files ?
@@ -981,7 +981,7 @@ class Root:
                    os.system ('mv %s %s' % (x, os.path.basename (x)))
                for x in glob.glob (os.path.join (resultdir, '*')):
                    os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
-            
+
         print "Build done."
         self.unlock ()
         return True
@@ -999,13 +999,13 @@ class Root:
         if not os.path.exists (get_config_dir (self.config, 'state')):
             print "+ %s is cleared" % self.root
             return
-        
+
         lockedness = "unlocked"
         if self.get_state ('lock'): lockedness = "unlocked"
         print "+ %s: %s" % (self.root, lockedness)
         # output of du -B M is inconsistent
         command = "%s %s du / --max-depth=0 | tail -n 1 | cut -f 1" % (config['chroot'], self.rootdir)
-        
+
         try:
             diskusage = "%d MB" % (string.atoi (string.strip (commands.getoutput (command))) / 1024.0)
         except ValueError: # atoi failed
@@ -1028,7 +1028,7 @@ class Root:
             if not built:
                 print "    - %s: build failed" % dir
                 continue
-            
+
             # get disk usage
             command = "du --max-depth=0 -c %s | tail -n 1 | cut -f 1" % (os.path.join (self.resultdir, dir, '*.rpm'))
             diskusage = string.strip (commands.getoutput (command))
@@ -1042,7 +1042,7 @@ class Root:
                 signedness = "unsigned"
             else:
                 signedness = "signed with %s" % signature
-             
+
             print "    - %s: %s K, %s " % (dir, diskusage, signedness)
         print
 
@@ -1055,14 +1055,14 @@ class Root:
                                 self.rootdir, self.statedir))
             if not os.WIFEXITED (status) or os.WEXITSTATUS (status) != 0:
                 raise Root.Error, "setup-%s-hook failed" % (state)
-        
+
     def _setup_prep (self):
         "prepares a given root if not done yet; this ensures that a number"
         "of necessary files exist in the root"
         if self.get_state ('prep'):
             debug ("target prep already set up")
             return
-    
+
         print "Preparing root"
         ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
@@ -1082,7 +1082,7 @@ class Root:
         command = ('install -m 664 @SYSCONFDIR@/apt/rpmpriorities %s/apt/etc/apt/rpmpriorities' % self.statedir)
         debug (command)
         os.system (command)
-  
+
         # create a custom apt.conf file
         root = self.rootdir
         state = self.statedir
@@ -1103,7 +1103,7 @@ APT {
         Compile "false";
     };
 };
-                                                                                
+
 Acquire {
     Retries "0";
     Http {
@@ -1137,11 +1137,11 @@ Dir {
         create_sources_list (config, srcs)
         self.aptget ("update", "Updating apt sources",
                      self.progress ())
-    
+
         self._call_setup_hook ("prep")
         # write state file
         self.set_state ("prep")
-    
+
     def _setup_minimal (self):
         # FIXME: right now we only create these once; shouldn't we redo this
         # every time or something ?
@@ -1182,14 +1182,14 @@ Dir {
         self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
             self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' machbuild" % dir, fatal = True)
-    
+
         # this ensures that locally built RPMS are already used for apt-get
         srcs = get_sources_list (self.config)
         # FIXME: if we use external apt then this path should be changed ?
         # FIXME: and if not ?
         #srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
         srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % self.rootdir)
-        create_sources_list (self.config, srcs) 
+        create_sources_list (self.config, srcs)
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
         self.aptget ("update")
@@ -1200,7 +1200,7 @@ Dir {
         output = self.rpm ("-qa --qf %s" % qfmt)
         self.set_state ('build', output)
         self.umount ()
-    
+
     def _install (self, set):
         "installs the given set of packages into the root."
         "Packages in this set are defined in dist."
@@ -1225,7 +1225,7 @@ Dir {
         else:
             print "No packages in %s set" % rpms
         self.set_state (set)
-     
+
 ### helper functions
 
 # return path to rpm binary suited to our target root, extracting it if
@@ -1236,7 +1236,7 @@ def get_rpm (config):
     debug ("getting rpm for root %s" % config['root'])
     tmpdir = get_config_dir (config, 'tmp')
     binary = os.path.join (tmpdir, 'bin', 'rpm')
-    
+
     # first check if it exists yet
     if os.path.exists (binary): return binary
 
@@ -1265,7 +1265,7 @@ def get_rpm (config):
         sys.stderr.write ("Could not extract rpm binary from package !\n")
         exit (config)
     return binary
-    
+
 # grab given url and store it as filename, preserving timestamps
 def urlgrab (url, filename):
     print "Getting %s ..." % url
@@ -1295,7 +1295,7 @@ def pty_popen (cmd):
     pid, fd = os.forkpty ()
     if pid == 0:
         os.execl ('/bin/sh', 'sh', '-c', cmd)
-        
+
     else:
         return os.fdopen (fd), pid
 
@@ -1353,7 +1353,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
     if (retval != 0):
         sys.stdout.write ('\b!\n')
         sys.stderr.write ('error: %s failed.\n %s\n' % (cmd, string.join (output, "\n")))
-    else: 
+    else:
         sys.stdout.write ('\b.\n')
     return (retval, string.join (output, '\n'))
 
@@ -1392,20 +1392,20 @@ def topological_sort (pairlist):
             numpreds[first] = 0
         if not numpreds.has_key (second):
             numpreds[second] = 0
-                                                                                
+
         # since first < second, second gains a pred ...
         numpreds[second] = numpreds[second] + 1
-                                                                                
+
         # ... and first gains a succ
         if successors.has_key (first):
             successors[first].append (second)
         else:
             successors[first] = [second]
-                                                                                
+
     # suck up everything without a predecessor
     answer = filter (lambda x, numpreds=numpreds:
                          numpreds[x] == 0, numpreds.keys())
-                                                                                
+
     # for everything in answer, knock down the pred count on
     # its successors; note that answer grows *in* the loop
     for x in answer:
@@ -1418,7 +1418,7 @@ def topological_sort (pairlist):
             # following "del" isn't needed; just makes
             # CycleError details easier to grasp
             del successors[x]
-                                                                                
+
     if numpreds:
         # everything in numpreds has at least one successor ->
         # there's a cycle
@@ -1508,7 +1508,7 @@ def create_sources_list (config, list):
     sources.write (string.join (list, "\n"))
     sources.close ()
 #    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
-    
+
 
 # lock a given root; creates a lock file in the statedir under root
 def lock (config):
@@ -1528,7 +1528,7 @@ def lock (config):
         return False
     lockfile.close ()
     return True
-        
+
 # unlock a given root; removes lock file in the statedir under root
 def unlock (config):
     statedir = get_config_dir (config, 'state')
@@ -1536,7 +1536,7 @@ def unlock (config):
     if os.path.exists (lockpath):
         os.remove (lockpath)
     return True
-     
+
 # return the state, or nothing if state isn't there
 def get_state (config, state):
     statedir = get_config_dir (config, 'state')
@@ -1690,7 +1690,7 @@ def main (config, args):
     command = args[0]
     args = string.join (args[1:])
     debug ("main: running %s" % command)
-    
+
     root = Root (config)
     output = ""
     if command in allowed_commands:
@@ -1706,7 +1706,7 @@ def main (config, args):
         if not command in Root.__dict__.keys():
             sys.stderr.write ("No %s method defined\n" % command)
             sys.exit (1)
-   
+
         try:
             output = Root.__dict__[command] (root, args)
         except Root.Locked:
@@ -1747,4 +1747,4 @@ if __name__ == '__main__':
             command = sys.stdin.readline ()
             main (config, string.split (command))
 
-    
+
