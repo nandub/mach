@@ -32,3 +32,4 @@
 * MEDIUM:	"rpm -q --specfile" should be run inside the build root (or
 		perhaps using "rpm --root" would suffice) in order to
 		properly use distro/root specific macros.
+* MEDIUM:	support building from tarballs (ie. "rpmbuild -tb ...")
