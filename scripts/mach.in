@@ -128,6 +128,52 @@ def do_chroot (config, command, progress = False):
     debug ("Executing %s" % cmd)
     return do_progress (cmd)
 
+# do a topological sort on the given list of pairs
+# taken from a mail on the internet and adapted
+# given the list of pairs of X needed for Y, return a suggested build list
+
+def topological_sort (pairlist):
+    numpreds = {}   # elt ->; # of predecessors
+    successors = {} # elt -> list of successors
+    for first, second in pairlist:
+        # make sure every elt is a key in numpreds
+        if not numpreds.has_key (first):
+            numpreds[first] = 0
+        if not numpreds.has_key (second):
+            numpreds[second] = 0
+                                                                                
+        # since first < second, second gains a pred ...
+        numpreds[second] = numpreds[second] + 1
+                                                                                
+        # ... and first gains a succ
+        if successors.has_key (first):
+            successors[first].append (second)
+        else:
+            successors[first] = [second]
+                                                                                
+    # suck up everything without a predecessor
+    answer = filter (lambda x, numpreds=numpreds:
+                         numpreds[x] == 0, numpreds.keys())
+                                                                                
+    # for everything in answer, knock down the pred count on
+    # its successors; note that answer grows *in* the loop
+    for x in answer:
+        del numpreds[x]
+        if successors.has_key (x):
+            for y in successors[x]:
+                numpreds[y] = numpreds[y] - 1
+                if numpreds[y] == 0:
+                    answer.append (y)
+            # following "del" isn't needed; just makes
+            # CycleError details easier to grasp
+            del successors[x]
+                                                                                
+    if numpreds:
+        # everything in numpreds has at least one successor ->
+        # there's a cycle
+        raise CycleError, (answer, numpreds, successors)
+    return answer
+
 # get a header from a path to a local src.rpm; or False if no header
 def get_header (path):
     debug ("Getting RPM header from %s" % path)
@@ -401,6 +447,7 @@ def check_packages (config):
 
     # check if all packages are present
     print "Checking bootstrap packages ..."
+    ensure_dir (config['packagedir'])
     for pkg in config['packages']['base'] + config['packages']['apt']:
         path = config['packagedir'] + '/' + pkg
         if not config['packages']['download'].has_key (pkg):
@@ -412,7 +459,7 @@ def check_packages (config):
             print "downloading %s" % url
             urllib.urlretrieve (url, path)
         # verify that it's an rpm
-        ret = os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path)
+        #ret = os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path)
         if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
             os.remove (path)
             print "downloading %s" % url
@@ -476,11 +523,17 @@ def rebuild (config, args):
     for path in args:
 	# resolve path to basename (without dirs)
         srpm = os.path.basename (path)
-        print "Processing %s" % srpm
         newpath = root + '/tmp/' + srpm
         print "Getting %s" % srpm
         urllib.urlretrieve (path, newpath)
 
+    # now figure out build order
+    deps = []
+    names = []
+    for path in args:
+        srpm = os.path.basename (path)
+        newpath = root + '/tmp/' + srpm
+        print "Processing %s" % srpm
         # figure out the build requirements
         spec = get_spec_from_srpm (newpath)
         header = get_header (newpath)
@@ -488,9 +541,21 @@ def rebuild (config, args):
             sys.stderr.write ('Cannot build %s\n' % srpm)
             continue
         buildreqs = get_build_requires (header)
+        name = header[rpm.RPMTAG_NAME]
         if buildreqs == False:
             unlock (config, args)
             return False
+        # add each of the buildrequires to the deps list of pairs
+        names.append (name)
+        for buildreq in buildreqs:
+            deps.append ((name, buildreq))
+
+    print "DEBUG: topological input: "
+    print deps
+    print "DEBUG: topological output: "
+    print topological_sort (deps)
+
+    for path in args:
         sys.stdout.write ('Installing BuildRequires ...')
         if do_chroot (config, 'apt-get install -y %s' 
                               % string.join (buildreqs), True) != 0:
