@@ -1,3 +1,8 @@
+2003-11-13  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
+
+	* scripts/mach.in: Add configurable hooks to different
+	build phases.
+
 2003-12-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Prepend a dot to the string which is
