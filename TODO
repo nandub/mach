@@ -1,3 +1,5 @@
 * EASY:		finish build order figuring out by using rpm -q --specfile
 * HARD:		figure out how to make sure that the rpm on the host system
                 can properly install rpms for the target dist
+* EASY:         clean out packages dir, but only if it's the last dist that
+                uses that packagedir
