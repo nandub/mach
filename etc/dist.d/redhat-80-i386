@@ -23,6 +23,7 @@ aptsources['redhat-80-i386'] = {
     'freshrpms':        'rpm ' + freshrpmsrh + ' 8.0/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh80':    'rpm ' + jpackage    + ' redhat-8.0 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
 }
 
 # Red Hat Linux 8.0
@@ -137,9 +138,13 @@ config['redhat-80-i386-updates-freshrpms'] = {}
 aliases['redhat-80-i386-updates-freshrpms'] = ('rh8ufr', 'rh80ufr')
 
 # Red Hat Linux 8.0 with JPackage
-packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates']
+packages['redhat-80-i386-jpackage'] = packages['redhat-80-i386-updates'].copy()
+packages['redhat-80-i386-jpackage']['base'] = packages['redhat-80-i386-updates']['base'] + ' java-1.4.2-sun'
+packages['redhat-80-i386-jpackage']['build'] = packages['redhat-80-i386-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['redhat-80-i386-jpackage'] = {
-    'redhat-80-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh80', ),
+    'redhat-80-i386':
+    sourceslist['redhat-80-i386-updates']['redhat-80-i386'] +
+    ('jpackage-generic', 'jpackage-rh80', 'jpackage-nonfree', ),
 }
 config['redhat-80-i386-jpackage'] = {}
 aliases['redhat-80-i386-jpackage'] = ('rh8jpp', 'rh80jpp')

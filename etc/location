@@ -31,10 +31,15 @@ conectiva   = 'ftp://ftp.tiscali.nl/pub/mirrors/conectiva'
 davedina    = 'http://download.davedina.org/apt'
 
 # Add-on locations
-jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
 fedoraus    = 'http://download.fedora.us/fedora'
 livna       = 'http://rpm.livna.org'
 gstreamer   = 'http://gstreamer.net/pkg'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
+
+jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
+# jpackagenf is the non-free/non-distributable JPackage repository.  You
+# must set up one yourself and point this variable at if before you can use
+# the JPackage configurations.  http://www.jpackage.org/faq.php
+jpackagenf  = ''
