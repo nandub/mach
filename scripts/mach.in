@@ -635,7 +635,8 @@ class Root:
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
         self.unlock ()
-        self.rebuild (string.join (options) + " " + string.join (srpms))
+        if not self.rebuild (string.join (options) + " " + string.join (srpms)):
+            raise self.Error, "rebuild failed !"
              
     def _bruteclean (self):
         "brutishly clean out the root by using mach-helper rm -rfv"
