@@ -1,4 +1,4 @@
 configdir = $(sysconfdir)/mach
-config_DATA = conf helper.conf dist
+config_DATA = conf dist
 
-EXTRA_DIST = conf.in helper.conf.in dist
+EXTRA_DIST = conf.in dist

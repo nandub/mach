@@ -30,6 +30,5 @@ scripts/mach-helper
 etc/Makefile
 src/Makefile
 etc/conf
-etc/helper.conf
 mach.spec
 )
