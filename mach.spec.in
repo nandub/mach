@@ -77,8 +77,8 @@ fi
 %defattr(-,root,root,-)
 %doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT RELEASE
 %dir %{_sysconfdir}/mach
-%config(noreplace) %{_sysconfdir}/mach/conf
-%config(noreplace) %{_sysconfdir}/mach/dist
+%config %{_sysconfdir}/mach/conf
+%config %{_sysconfdir}/mach/dist
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/states
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/roots
 # %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach
