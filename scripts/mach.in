@@ -767,13 +767,13 @@ class Root:
         # a minimal system might not have su, yikes
         if not os.path.exists (os.path.join (self.rootdir, 'bin', 'su')):
             if args:
-                print "No su in root, can't execute %s" %arg
+                print "No su in root, can't execute %s" % join_quoted (args)
                 return
             else:
-                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, string.join (args))
+                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, join_quoted (args))
                 print "Entering %s, type exit to leave." % self.rootdir
         elif args:
-             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, string.join (arg))
+             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, join_quoted (args))
         else:
              cmd = "%s %s su - root" % (self.config['chroot'], self.rootdir)
              print "Entering %s, type exit to leave." % self.rootdir

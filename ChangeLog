@@ -1,3 +1,7 @@
+2004-03-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: reworked and applied patch from Dams
+
 2004-03-24  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: Include dist.d snippets in alphabetical order.
@@ -19,6 +23,10 @@
 	* etc/dist.d/suse-81-i386: Ditto.
 
 	* etc/location, etc/dist.d/cnc-9-i386: Fix Conectiva configs.
+
+2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in: release 0.4.5, "Snow"
 
 2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
