@@ -1,3 +1,7 @@
+2003-06-20  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in (BuildRequires): Fix BuildRequires filtering.
+
 2003-06-06  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add sh-utils to redhat-72-i386* and redhat-73-i386
