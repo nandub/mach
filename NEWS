@@ -1,3 +1,9 @@
+2003-10-21  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * released 0.4.2, "No More Betas"
+	* added support for Fedora Core 0.95 (Severn beta 3)
+	* moved config files per distro initialization to dist file
+
 2003-10-10  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * released 0.4.1, "Get A Room"
