@@ -6,6 +6,8 @@
 	* etc/dist.d/suse-82-i386: Bring up to date.
 	* etc/dist.d/suse-81-i386: Ditto.
 
+	* etc/location, etc/dist.d/cnc-9-i386: Fix Conectiva configs.
+
 2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: implemented -v by popular demand

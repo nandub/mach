@@ -24,7 +24,8 @@ yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
 
 # Conectiva Linux: http://distro.conectiva.com.br/atualizacoes/#aptmirrors
-conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
+#                  https://moin.conectiva.com.br/mirrors
+conectiva   = 'ftp://ftp.tiscali.nl/pub/mirrors/conectiva'
 
 # Dave/Dina: http://www.davedina.org
 davedina    = 'http://download.davedina.org/apt'
