@@ -284,9 +284,9 @@ class SRPM:
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
         debug ("BuildRequires from header: %s" % buildreqs)
         # remove non-packagey things from buildreqs, like autodeps
-        # currently removes everything containing ( or /
+        # currently removes everything containing  / and all rpmlib() deps
         if buildreqs:
-            return filter (lambda x: not re.search("[(/]", x), buildreqs)
+            return filter (lambda x: not (re.search("[/]", x) or re.search("rpmlib", x)), buildreqs)
         else:
             return []
 
@@ -877,6 +877,9 @@ class Root:
                 #FIXME: we filter out packages here that can have multiple
                 #versions, and expect the user to install them manually
                 #this works around kernel and kernel-source buildreqs
+		# command to use to find out if a buildreq is already satisfied
+                debug ("Package buildrequires before filtering: %s" % pkgs[name]['buildreqs'])
+                chkcmd = "rpm --root=%s -q --whatprovides '%%s'" % self.rootdir
                 candidates = pkgs[name]['buildreqs']
                 buildreqs = []
                 for cand in candidates:
@@ -886,18 +889,18 @@ class Root:
                     elif cand == "kernel-source":
                         print "Warning: make sure you have manually installed the right kernel-source rpm"
                         print "         and that you are building with --keep"
-                    else:
+                    elif commands.getstatusoutput(chkcmd % cand)[0]:
                         buildreqs.append (cand)
    
-                #buildreqs = string.join (pkgs[name]['buildreqs'])
-                debug ("BuildRequires: %s" % buildreqs)
+                debug ("BuildRequires after filtering: %s" % buildreqs)
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
                     try:
                         srcs = get_sources_list (self.config)
                         create_sources_list (config, srcs)
         	        self.aptget (["update", ])
-                        self.aptget ([ 'install -y %s' % string.join (buildreqs), ],
+                        # wrap all buildreqs in quotes
+                        self.aptget ([ 'install -y %s' % "'" + "' '".join (buildreqs) + "'", ],
                                      "Installing BuildRequires", self.progress ())
                         # FIXME: build-dep would be nice but only works on a pkg
                         # in the rpm-src tree apparently
@@ -1234,6 +1237,8 @@ Dir {
      Cache "''' + os.path.join ('/', 'var', 'cache', 'mach') + '''";
      State "''' + os.path.join (state, 'apt', 'var', 'state', 'apt') + '''";
 }
+clear Dir::Bin::scripts; // do not execute lua scripts
+
 '''
         self.set_state ("apt.conf", conf)
 
