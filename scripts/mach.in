@@ -335,6 +335,10 @@ class Root:
 
     def mount (self):
         "mount apt-archives and proc into chroot"
+        # FIXME: rh 72's mount needs /proc/mounts file, let's give it one
+        # FIXME: we need to move this to somewhere else
+        ensure_dir (os.path.join (self.rootdir, 'proc'))
+        open (os.path.join (self.rootdir, 'proc', 'mounts'), 'w').close ()
         return
         # FIXME: all this doesn't get done anymore
         # first umount for completeness; you never know
@@ -688,7 +692,8 @@ class Root:
         (options, paths) = self.splitargsrpms (arg)
         self.setup ('build')
         self.lock ()
-        self.config_recreate ('/usr/bin/apt-sigchecker')
+        # FIXME: we don't need this anymore, do we ?
+        #self.config_recreate ('/usr/bin/apt-sigchecker')
         # get pkgs and collect info
         pkgs = {}
         for path in paths:
@@ -1015,6 +1020,8 @@ Dir {
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         # install packages
+        sys.stdout.write ('Installing glibc ...')
+        self.aptget ('install -y glibc bash', True)
         sys.stdout.write ('Installing rpm build packages ...')
         self.aptget ('install -y %s' % self.config['packages']['build'], True)
         #FIXME: add mach user and group

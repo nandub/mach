@@ -1,3 +1,8 @@
+2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in: reorder some build orders, should standardize
+          this in general
+
 2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
 
 	* etc/dist: removing all base and apt from Red Hat targets
