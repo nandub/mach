@@ -1,3 +1,16 @@
+2004-03-03  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* TODO:
+          remove some, add one more
+	* etc/conf.in:
+	* configure.in:
+          add options to specify buildroot
+          autodetect for Fedora, RH7.0-9, YDL3
+          allow for a flavor to be specified
+	* scripts/mach.in:
+          recreate sources.list before each apt-get update, so that
+          changes to the root config are applied whenever needed
+
 2004-03-02  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: verify if spec file is parsable in Spec.__init__
