@@ -292,6 +292,7 @@ class Root:
     # read in configuration from disk when creating a root
     def __init__ (self, config):
         self.config = config
+        self.hooks  = self.config.get('hooks',{})
         self.root = self.config['root']
         self.rootdir = get_config_dir (config, 'root')
         self.resultdir = get_config_dir (config, 'result')
@@ -997,6 +998,15 @@ class Root:
              
             print "    - %s: %s K, %s " % (dir, diskusage, signedness)
         print
+
+    def __callSetupHook(self, state):
+        key = 'setup-%s' % state
+        if self.hooks.has_key(key):
+            status = os.system("%s '%s' '%s' '%s' '%s'" %
+                               (self.hooks[key], state, self.root,
+                                self.rootdir, self.statedir))
+            if not os.WIFEXITED(status) or os.WEXITSTATUS(status)!=0:
+                raise Root.Error, "setup-%s-hook failed" % (state)
         
     # private methods
     def _setup_prep (self):
@@ -1079,6 +1089,7 @@ Dir {
         self.aptget ("update", "Updating apt sources",
                      self.progress ())
     
+        self.__callSetupHook("prep")
         # write state file
         self.set_state ("prep")
     
@@ -1133,6 +1144,7 @@ Dir {
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir))
         self.aptget ("update")
+        self.__callSetupHook("build")
 
         self.stdout ("Making snapshot ...\n")
         # FIXME: use _with_output for this
@@ -1217,6 +1229,11 @@ def urlgrab (url, filename):
             os.utime (filename, (d, d))
     except:
         sys.stderr.write ("Warning: time stamp not preserved for %s\n" % filename)
+
+    if config.get('hooks',{}).has_key('download'):
+        status = os.system("%s '%s' '%s'" % (config['hooks']['download'], url, filename))
+        if not os.WIFEXITED(status) or os.WEXITSTATUS(status)!=0:
+            raise Root.Error, "Download-hook for %s failed" % url
 
 
 # unlock and exit
