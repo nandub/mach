@@ -1,0 +1,183 @@
+mach - make a chroot
+--------------------
+
+mach allows you to set up clean roots from scratch for any distribution or 
+distribution variation supported.
+This clean build root can be used for several goals :
+- making clean packages
+- set up chroots for services to run it
+- make disk images of clean roots (for example for UML)
+
+mach uses python.
+This mach is not to be confused with the microkernel of the same name.
+If you can't tell the difference between this mach and that mach from a
+cursory look then neither is for you.
+
+Currently, mach works for rpm-based distributions that can work with apt
+for rpm - hopefully this will be extended to other types of package manager
+as well.
+
+Included at this moment is the necessary information to set up :
+
+Red Hat 7.2 and 7.3
+  - standard
+  - updated
+  - with Ximian Gnome
+  - with Ximian Gnome and Gnome 2 Snapshots
+
+Red Hat 8.0 and 9
+  - standard
+
+Dave/Dina
+  - fridge
+  - oven
+
+Some handy features of mach include
+  - "caching" of downloaded packages by mounting the archives dir into
+    the build root
+  - uses apt to resolve dependencies
+  - parsing of BuildRequires to install necessary packages for building
+  - support for flavours of distribution (e.g. Ximian)
+  - multiple build roots
+  - locking of buildroot to avoid concurrent builds
+
+REQUIREMENTS
+------------
+- A Linux kernel that can do bind mounts (>= 2.2.0 if I'm correct)
+- rpm (>= 4.1 + gpg and cpio if you want GPG)
+- python
+- sudo
+- lots of disk space
+- good faith
+
+GETTING STARTED - RPM INSTALL
+-----------------------------
+- The easiest way to install mach is to just install the RPM.
+  Go ahead, don't be scared, it's built with mach.
+
+- After installing, you need to add all users that are going to build through
+  mach to the "mach" group in /etc/group
+
+- You also need to configure /etc/sudoers to allow all these users to execute
+  a few commands.
+  I added this line :
+  thomas ALL=NOPASSWD: /bin/mknod,/bin/rpm,/bin/mount,/bin/umount,/usr/sbin/chroot
+
+GETTING STARTED - SOURCE INSTALL
+--------------------------------
+- If you insist on running from source, do
+  ./configure
+  make
+  make install
+
+- If you intend to build as a user, configure /etc/sudoers (as root)
+  and allow this user to do mknod, chroot, mount, umount, rpm
+  I added this line :
+  thomas ALL=NOPASSWD: /bin/mknod,/bin/rpm,/bin/mount,/bin/umount,/usr/sbin/chroot
+
+- configuration files are stored in $(sysconfdir)/mach
+  packages contains the list of bootstrap packages and download locations
+  apt contains the list of apt repositories to draw from
+  conf contains configuration data, like hosts and resolv.conf files
+  
+- FIXME: you can override any configuration variable by putting it in
+  ~/.machrc
+
+- The chroot system needs to be able to do DNS lookups.
+  The variable config['resolv.conf'] contains the resolv.conf file that will
+  be copied into the root.
+  Usually you can just copy the resolv.conf file from the host system.
+
+- To be able to set the build host name for the packages, you need to set the
+  config['hosts'] variable.
+  My host is called thocra.onshuis, and I want the build host to be
+  mach.net, so I put in this variable
+
+	127.0.0.1 mach.net thocra.onshuis
+
+- To bootstrap a distribution, you need to get a bunch of files into the
+  packages/ subtree.  mach will automatically download these packages when
+  you try to setup a root.
+
+  There are three ways to do this :
+  a) from a CDROM or another dir on the system :
+     not yet implemented
+
+  b) from the net :
+     running "mach setup" will automatically do this if needed
+
+  c) by hand :
+     You can check the "packages" config file to see which files need
+     copying to the packages dir
+
+- Now for the actual work.  If everything is configured properly, you can now
+  do
+    mach setup
+  and the build root should be created for you.
+  run
+    mach chroot
+  and try to apt-get install a few packages !
+
+- To clean the buildroot, run
+    mach clean
+
+TIPS & TRICKS
+-------------
+
+- When stuff goes wrong when installing a build root, check to see what went
+  wrong.  Then when you find the problem, fix it, and clean the build root.
+  If this complains about not being able to run rm because no base is installed
+  in the chroot, you might have to su to root and clear out the root yourself.
+
+BUGS
+----
+- rpm 4.1 included with Red hat 8.0 has a few race condition bugs which
+  can cause rpm to hang.  If this happens, you should kill -9 the stalling
+  rpm process.  After that, run "make unlock" and re-run the command you
+  had given.
+- for now, report them to me personally at thomas (at) apestaart (dot) org
+
+ADDING A DISTRIBUTION
+---------------------
+FIXME: write me for the new mach version
+
+- Preliminaries :
+  - create a subdirectory in dist/
+  - copy a Makefile from another dir and adapt it
+  - edit dist/apt.mk and add the necessary lines you used in this Makefile
+    for repositories
+  - create a manifest dir under the new distribution dir
+
+- Base packages :
+  - download the packages necessary for a base install
+    and put them in packages/(new dist)/os
+  - create (new dist)/manifest/base with a list of all of these files
+    by executing 
+    find (new dist)/os -name *.rpm > ../dist/(new dist)/manifest/base
+    from the "packages" directory
+  - run "make check" to see if they're there and fix accordingly
+  - run "make unlock clean base" to clean out the current root and install
+    this new base
+    The rpm install at this stage should go cleanly; if not, then you must fix
+    the issues here first before proceeding (which can get messy).
+    For example, in going from Red Hat 7.3 to 8.0, libattr and libacl had to
+    be included in the base set.
+  - add Makefile's to the os and extra dir to automatically download these
+    files.
+  - add the location variables you make it download from to mach.mk in
+    packages/
+
+- Apt packages :
+  - this is the tricky part.  You need to make an rpm of apt for this new
+    distribution.  
+    The easiest way to do this is to install dependencies in the chroot
+    environment by hand and manually make the apt rpm, for example by
+    rebuilding the src rpm.
+    This part is pretty painful, since the base system is installed with
+    --nodeps as to be minimal but functional for apt.  So you're missing a
+    lot of common stuff here.
+
+DISCLAIMER
+----------
+Mach is offered under the GPL without any warranty whatsoever.
+Let me know where the documentation is lacking, so I can improve on that.
