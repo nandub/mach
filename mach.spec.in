@@ -1,0 +1,87 @@
+Name:           @PACKAGE@
+Version:        @VERSION@
+Release:        @RELEASE@
+Summary:        make a chroot.
+
+Group:          System
+License:	GPL
+URL:            http://thomas.apestaart.org/projects/mach
+Source:         %{name}-%{version}.tar.gz
+Buildroot:      %{_tmppath}/%{name}-%{version}-root
+BuildArch:	noarch
+
+Requires:	python
+
+%description
+mach makes a chroot.
+
+Authors:
+--------
+Thomas Vander Stichele (thomas (at) apestaart (dot) org)
+
+%prep
+%setup
+
+%build
+%configure
+
+%install
+[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
+%makeinstall
+
+install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/partial
+install -d -m 775 %{buildroot}/%{_localstatedir}/state/mach/
+install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/
+install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/packages
+install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/roots
+install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/result
+
+%clean
+[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
+
+%pre
+# create user and group mach
+/usr/sbin/useradd -M mach 2> /dev/null || true
+
+#%preun
+#patch -R %{_sysconfdir}/sudoers \
+#      < %{_datadir}/%{name}/sudoers.patch > /dev/null 2>&1
+#[ $? == 0 ] || \
+#  echo "Removing mach commands from %{_sysconfdir}/sudoers failed !"
+
+
+#%post
+#patch %{_sysconfdir}/sudoers \
+#      < %{_datadir}/%{name}/sudoers.patch > /dev/null 2>&1
+#[ $? == 0 ] || \
+#  echo "Adding mach commands to %{_sysconfdir}/sudoers failed !"
+
+%postun
+if [ "$1" = 0 ];
+then
+  # last removal
+  userdel mach
+  groupdel mach
+fi
+
+%files
+%defattr(-,root,root)
+%doc ChangeLog README AUTHORS BUGS TODO
+%dir %{_sysconfdir}/mach
+%{_sysconfdir}/mach/packages
+%{_sysconfdir}/mach/conf
+%{_sysconfdir}/mach/apt
+%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach
+%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/partial
+%attr(-,mach,mach) %dir %{_localstatedir}/state/mach
+%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach
+%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/packages
+%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/roots
+%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/result
+#%dir %{_datadir}/mach
+#%{_datadir}/mach/sudoers.patch
+%{_bindir}/mach
+
+%changelog
+* Wed Apr 30 2003 Thomas Vander Stichele <thomas at apestaart dot org>
+- initial creation
