@@ -1,3 +1,12 @@
+2004-02-27  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* mach.spec.in:
+          fix permissions on mach directories to be SGID
+	* README:
+	* scripts/mach.in:
+          run the script specified by script-success in the config dict
+          after a successful build
+
 2004-02-19  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist: Add gcc-c++ to all "build" package sets.
