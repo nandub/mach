@@ -1,3 +1,8 @@
+2004-03-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: fix local "juist built" repository by moving
+	  addition of it to create_sources_list
+
 2004-03-05  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
