@@ -1,3 +1,10 @@
+2003-12-27  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in: Make the rpmbuild command inside roots
+	configurable using root_rpmbuild to support older distros which
+	don't have "rpmbuild".
+	* etc/dist: Set root_rpmbuild to "rpm" for SuSE 8.1 and 8.2.
+
 2003-12-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Don't fail if package has no build
