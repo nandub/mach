@@ -1,0 +1,39 @@
+# mach location configuration                          -*- python -*-
+
+# all the download locations are defined here
+# you can override them here for the whole system
+# these locations are then used by the distribution configuration files
+# under dist.d
+
+# Base download locations.
+
+# Official distributions
+
+# Red Hat Linux base; this location should contain versioned directories
+redhat      = 'http://ayo.freshrpms.net/redhat'
+#redhat      = 'http://download.fedora.us/fedora/redhat'
+
+# Fedora Core; this location should contain versioned directions
+fedora      = 'http://ayo.freshrpms.net/fedora/linux'
+#fedora      = 'http://download.fedora.us/fedora/fedora'
+
+# Yellow Dog Linux
+yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
+
+# SuSE Linux: http://apt4rpm.sourceforge.net/repos.html
+suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
+
+# Conectiva Linux: http://distro.conectiva.com.br/atualizacoes/#aptmirrors
+conectiva   = 'ftp://ftp.nl.linux.org/pub/conectiva'
+
+# Dave/Dina: http://www.davedina.org
+davedina    = 'http://download.davedina.org/apt'
+
+# Add-on locations
+jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
+fedoraus    = 'http://download.fedora.us/fedora'
+livna       = 'http://rpm.livna.org'
+gstreamer   = 'http://gstreamer.net/pkg'
+freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
+freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
+freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
