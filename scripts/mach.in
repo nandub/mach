@@ -228,11 +228,13 @@ class SRPM:
 
     def _specname (self):
         "return the name of the specfile inside this src.rpm"
+        # FIXME: we found an rhas spec that had something.spec.in as the spec
+        # file, so find a better way to get the spec file name
         name = commands.getoutput ('rpm -qlp %s 2> /dev/null | grep \.spec$' % self.path)
         if not name:
-            raise self.Error, "Didn't find spec file in %s" % self.path
-        debug ("SRPM.specname: %s" % name)
-        print "length of name:"
+            name = commands.getoutput ('rpm -qlp %s 2> /dev/null | grep \.spec.*$' % self.path)
+            if not name:
+                raise self.Error, "Didn't find spec file in %s" % self.path
         debug ("SRPM.specname: %s" % name)
         return name
     
@@ -741,8 +743,11 @@ class Root:
                     deps.append ((result, pkg))
                 if not pkgs[pkg]['buildreqs']: continue
                 for buildreq in pkgs[pkg]['buildreqs']:
-                    debug ("adding %s depends on buildreq %s" % (result, buildreq))
-                    deps.append ((result, buildreq))
+                    if (result == buildreq):
+                        sys.stderr.write ("WARNING: package %s BuildRequires: itself, packaging error !" % result)
+                    else:
+                        debug ("adding %s depends on buildreq %s" % (result, buildreq))
+                        deps.append ((result, buildreq))
     
         debug ("topological input: ")
         debug (deps)

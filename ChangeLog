@@ -1,6 +1,12 @@
 2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in:
+		- hack around spec file extraction from src.rpm
+		- filter out buildrequires: requiring package under build
+
+2003-08-13  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in:
 		- fix KeyError catching for other errors
 		- fix KeyError in variable expansion
 
