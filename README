@@ -24,9 +24,11 @@ Included at this moment is the necessary information to set up :
 Red Hat 7.2 and 7.3
   - standard
   - updated
+  - with JPackage
 
 Red Hat 8.0 and 9
   - standard
+  - with JPackage
 
 Dave/Dina (temporarily removed, FIXME)
   - fridge
