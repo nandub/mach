@@ -449,7 +449,8 @@ def get_state (config, state):
         return statedir + '/' + state
     return
 
-# check the given package list and remove all packages that aren't in this list
+# check the given package list file
+# remove all packages that aren't in this list file
 def check_package_list (config, list):
     debug ("checking package list against snapshot")
     if config.has_key ('keep'):
@@ -500,6 +501,15 @@ def setup_prep (config, args):
     os.system ('rpm --root %s --initdb' % root)
     open (get_config_dir (config, 'state') + '/prep', 'w')
     return True
+
+# recreate a given file listed in config['files']
+def config_recreate (config, filename):
+    root = get_config_dir (config, 'root')
+    debug ("Recreating %s from config" % filename)
+    if config['files'].has_key (filename):
+        file = open (root + filename, 'w')
+        file.write (config['files'][filename])
+        file.close ()
 
 # install a set of packages
 # called by base and apt
@@ -612,10 +622,10 @@ def setup_build (config, args):
             unlock (config, args)
             sys.exit (1)
     # make a snapshot
-    print "Making snapshot ..."
+    sys.stdout.write ("Making snapshot ...")
     # FIXME: use _with_output for this
     do_chroot (config, "%s update" % chroot_aptget, True)
-    command = "%s %s %s -qa --qf %s" % (config['chroot'], root, chroot_rpm, qfmt)
+    command = "%s %s /bin/bash -c '%s -qa --qf %s'" % (config['chroot'], root, chroot_rpm, qfmt)
     file = open (statefile, 'w')
     for lines in os.popen (command).readlines ():
         file.write (lines)
@@ -826,6 +836,7 @@ def rebuild (config, args):
     if not lock (config, args):
         return False
 
+    config_recreate (config, '/usr/bin/apt-sigchecker')
     # get pkgs and collect info
     pkgs = {}
     for path in args:
@@ -909,8 +920,8 @@ def rebuild (config, args):
         # rebuild binary rpm from the src rpm
         sys.stdout.write ("Rebuilding %s ..." % srpm)
         (status, output) = do_chroot_with_output (config,
-                                      "su -c 'rpmbuild --rebuild --clean /tmp/%s 2>&1' mach" % srpm,
-                                      True)
+            "su -c 'rpmbuild --rebuild --clean /tmp/%s 2>&1' mach" % srpm,
+            True)
         if (output):
             open (resultdir + '/rpm.log', "wb"). write (output)
         if status != 0:
@@ -920,11 +931,18 @@ def rebuild (config, args):
             return False
         # reinstall and repackage src rpm
         sys.stdout.write ("Repackaging %s ..." % srpm)
-        do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
+        #do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
+        do_chroot (config, "su -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' mach" % srpm)
         spec = pkgs[name]['spec']
-        if do_chroot (config, 'rpmbuild -bs /usr/src/rpm/SPECS/%s >> %s 2>&1'
-                              % (spec, resultdir + '/rpm.log'), True):
-            print "ERROR: something went wrong repackaging SRPM"
+        (status, output) = do_chroot_with_output (config,
+         "su -c 'rpmbuild -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % spec,
+            True)
+        if output:
+            open (resultdir + '/rpm.log', "ab"). write (output)
+        if status != 0:
+            sys.stderr.write ("ERROR: something went wrong repackaging SRPM\n")
+            unlock (config, args)
+            return False
 
         # analyze log file and move all of the rpms listed as Wrote:
         (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
