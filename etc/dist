@@ -238,7 +238,7 @@ sourceslist['suse-81-i386'] = {
 
 # SuSE Linux 8.1 full, all updates
 packages['suse-81-i386-full'] = packages['suse-81-i386']
-sourceslist['suse-81-i386'] = {
+sourceslist['suse-81-i386-full'] = {
     'suse-81-i386': aptsources['suse-81-i386'].keys(),
 }
 
@@ -275,7 +275,7 @@ sourceslist['suse-82-i386'] = {
 
 # SuSE Linux 8.2 full, all updates
 packages['suse-82-i386-full'] = packages['suse-82-i386']
-sourceslist['suse-82-i386'] = {
+sourceslist['suse-82-i386-full'] = {
     'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }
 
