@@ -82,7 +82,7 @@ check_dir_allowed (const char *allowed, const char *given)
  * perform checks on the given file
  * - is the given file under the allowed hierarchy ?
  * - is it an actual file ?
- * - are we not being tricked by using . or .. ?
+ * - are we not being tricked by using .. ?
  */
 void
 check_file_allowed (const char *allowed, const char *given)
@@ -95,10 +95,9 @@ check_file_allowed (const char *allowed, const char *given)
   if (strncmp (given, allowed, strlen (allowed)) != 0)
     error ("%s: not under allowed directory", given);
 
-  /* does it try to fool us by using . or .. ? */
-  /* FIXME: this also excludes dot files, but that's not really a problem */
-  if (strstr (given, "/.") != NULL)
-    error ("%s: contains '/.'", given);
+  /* does it try to fool us by using .. ? */
+  if (strstr (given, "..") != NULL)
+    error ("%s: contains '..'", given);
 
   /* does it have a trailing / ? */
   last = given[strlen (given) - 1];

@@ -1,3 +1,17 @@
+2003-10-10  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * released 0.4.1, "Get A Room"
+	* changes since last release:
+		- added Red Hat 7.0, 7.1
+		- added Yellowdog 2.3, 3.0
+		- added Fedora Core 0.94
+		- added FreshRPMS targets
+		- make "mach apt-get" run interactive
+		- implemented "mach status"
+		- fix permissions on copied sources
+		- unlock root on successful build
+		- allow "." in mach-helper
+
 2003-09-08  Thomas Vander Stichele <thomas at apestaart dot org>
 
 	* released 0.4.0, "Barcelona"
