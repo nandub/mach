@@ -748,13 +748,9 @@ class Root:
         ensure_dir (os.path.join (self.rootdir, 'etc'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
-    
-        debug ("Creating config files")
-        for filename in self.config['files'].keys ():
-            self.config_recreate (filename)
-    
         ensure_dir (os.path.join (self.rootdir, 'tmp'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'tmp'))
+    
         # create a custom apt.conf file
         root = self.rootdir
         conf = '''
@@ -814,6 +810,11 @@ Dir {
         config = self.config
         srcs = get_sources_list (config)
 
+        # create all needed configfiles
+        debug ("Creating config files")
+        for filename in self.config['files'].keys ():
+            self.config_recreate (filename)
+    
         # rebuild the rpm database using the installed rpm before messing
         # do_chroot (config, "rpm --rebuilddb")
         # first create a sources.list with only the first sources line
@@ -1247,6 +1248,12 @@ def check_package_list (config, list):
 
 # check if everything is in order to actually do stuff
 def sanity_check (config):
+    # check if we're in the mach group
+    cmd = "groups | grep mach > /dev/null 2>&1"
+    if os.system (cmd) != 0:
+        sys.stderr.write ("error: user is not in group mach, please add !\n")
+        sys.exit (1)
+    
     # check if partial dir exists
     partial = config['dirs']['archives'] + '/partial'
     ensure_dir (partial)
