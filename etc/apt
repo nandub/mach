@@ -1,4 +1,4 @@
-# dict of apt-get sources.list lines
+# dict of apt-get sources.list lines                             -*- python -*-
 aptsources['redhat-72-i386'] = {
     'os': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 os',
     'updates': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 updates',
