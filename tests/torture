@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# torture test mach; set up a lot of distro's and build a few packages in it
+
+SPECS="directfb.spec"
+DISTS="redhat-72-i386 redhat-73-i386 redhat-80-i386 redhat-9-i386";
+error=no
+for dist in $DISTS;
+do
+  echo "+ torturing $dist"
+  ../scripts/mach -r $dist clean
+  ../scripts/mach -r $dist build $SPECS || error=yes
+  ../scripts/mach -r $dist clean
+  if test $error == yes;
+  then
+    echo "- dist $dist failed"
+  fi
+done
+
+
