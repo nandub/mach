@@ -1,6 +1,12 @@
+2004-01-08  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* configure.in: Make default build user/group names configurable.
+	* mach.spec.in: Ditto.
+	* scripts/mach.in: Use build-time configured build user/group names.
+
 2004-01-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * configure.in: bump nano to 1 for cvs development
+	* configure.in: bump nano to 1 for cvs development
 
 2003-12-05  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
