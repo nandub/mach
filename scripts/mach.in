@@ -8,6 +8,7 @@ import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 import tempfile # for tempdir for spec extraction
+import glob # for globbing paths
 
 # make sure True and False constants exist
 
@@ -24,6 +25,8 @@ Global options:
   -d, --debug			turn on debugging
   -f, --force			override root lock
   -k, --keep			do not revert buildroot to initial package list
+  -s, --sign			sign packages after build
+  -c, --collect			collect packages and relevant files to .
 
 Commands:
   apt-get			run host's apt-get on target root
@@ -46,6 +49,8 @@ Commands:
 config = {
   'force': 0,
   'check': 0,
+  'sign': 0,
+  'collect': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
   'chroot': '/usr/sbin/mach-helper chroot',
@@ -590,7 +595,7 @@ class Root:
      
     def rebuild (self, arg):
         args = string.split (arg)
-        self.setup (['build'])
+        self.setup ('build')
         self.lock ()
         self.config_recreate ('/usr/bin/apt-sigchecker')
         # get pkgs and collect info
@@ -724,8 +729,24 @@ class Root:
                 # self.do_chroot ('rm ' + file)
             # update internal apt repo
             self.aptget ("update")
-            # FIXME: give an option to "collect" results in current dir
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
+            # sign packages and md5sum them
+            # FIXME: integrate with agent or do everything at the end
+            if self.config['sign']:
+                cmd = 'rpm --addsign %s/*.rpm' % resultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+		cmd = 'gpg --clearsign %s/md5sum' % resultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+            if self.config['collect']:
+               for x in glob.glob (os.path.join (resultdir, '*.rpm')):
+                   os.system ('mv %s %s' % (x, os.path.basename (x)))
+               for x in glob.glob (os.path.join (resultdir, '*')):
+                   os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
             
         print "Build done."
         self.umount ()
@@ -848,7 +869,7 @@ Dir {
             distspecific = ''
         # install packages
         sys.stdout.write ('Installing rpm build packages ...')
-        packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
+        packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils elfutils cpio"
         self.aptget ('install -y %s %s' % (packages, distspecific), True)
         #FIXME: add mach user and group
         self.do_chroot ("echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
@@ -960,7 +981,7 @@ def urlgrab (url, filename):
         if d:
             os.utime (filename, (d, d))
     except:
-        print "Warning: time stamp not preserved for %s" % filename
+        sys.stderr.write ("Warning: time stamp not preserved for %s\n" % filename)
 
 
 # unlock and exit
@@ -1275,8 +1296,9 @@ def status (config, args):
 def main (config, args):
     global DEBUG # we might change it
     try:
-        opts, args = getopt.getopt (args, 'r:hdfk',
-                                    ['root=', 'help', 'debug', 'force', 'keep'])
+        opts, args = getopt.getopt (args, 'r:hdfksc',
+                                    ['root=', 'help', 'debug', 'force', 'keep',
+                                     'sign', 'collect'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1301,6 +1323,10 @@ def main (config, args):
             config['force'] = 1
         elif opt in ('-k', '--keep'):
             config['keep'] = 1
+        elif opt in ('-s', '--sign'):
+            config['sign'] = 1
+        elif opt in ('-c', '--collect'):
+            config['collect'] = 1
 
     # pull in root-specific configuration
     # FIXME: even nicer would be if we could just do config[rootname] = ...
