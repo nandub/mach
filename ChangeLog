@@ -1,7 +1,8 @@
 2003-08-17  Ville Skyttä <ville dot skytta at iki dot fi>
 
-	* scripts/mach.in:
+	* etc/dist:
 		- Add JPackage configuration for RH 7.2 - 9.
+		- Use base URLs for easier configurability.
 
 2003-08-17  Thomas Vander Stichele <thomas at apestaart dot org>
 
