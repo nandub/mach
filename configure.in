@@ -15,6 +15,9 @@ AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
 
+dnl check for C compiler
+AC_PROG_CC
+
 dnl check for python
 AS_PATH_PYTHON(2.2)
 
@@ -23,7 +26,10 @@ AC_OUTPUT(
 Makefile
 scripts/Makefile
 scripts/mach
+scripts/mach-helper
 etc/Makefile
+src/Makefile
 etc/conf
+etc/helper.conf
 mach.spec
 )
