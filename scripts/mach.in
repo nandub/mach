@@ -508,7 +508,7 @@ class Root:
                     files.append (filepath)
                     self.stdout ("Using %s\n" % filepath)
     
-            # copy files to /tmp in root, then chroot to mv them 
+            # copy all necessary files to /tmp in root, then chroot to mv them 
             for file in files:
                 debug ("Getting file %s into SOURCES" % file)
                 shutil.copy2 (file, os.path.join (self.rootdir, 'tmp'))

@@ -4,11 +4,10 @@
 * HARD:		make an object class "Root" and execute all operations on this
 
 * EASY:		make mach-helper do rm if the root's rm is gone
-* EASY:		check for suidness of mach-helper
 * EASY:		add warning about missing stuff from .rpmmacros for signing
 * EASY:		check for ending spaces in urlgrab, disallow
 * EASY:		sign and collect packages at end of complete build
-* EASY:		verify downloades Sources and Patches for false downloads
+* EASY:		verify downloaded Sources and Patches for false downloads
 * HARD:		figure out a good way to deal with /proc, because it's not safe
                 for the host to have this
 * KLUDGEY:      SuSE 7.3 and 8.0 setups, the problem is their ncurses package
