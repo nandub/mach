@@ -1245,7 +1245,7 @@ Dir {
 
         self.stdout ("Making snapshot ...\n")
         # FIXME: use _with_output for this
-        output = self.rpm (["-qa --qf %s" % qfmt, ])
+        output = self.rpm (["-qa", "--qf", qfmt, ])
         self.set_state ('build', output)
         self.umount ()
 
