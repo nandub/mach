@@ -1,3 +1,9 @@
+2003-06-21  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist:
+	Move build packages here instead of hardcoding them in mach.
+	* scripts/mach.in (_setup_build): Ditto.
+
 2003-06-20  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (BuildRequires): Fix BuildRequires filtering.
