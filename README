@@ -107,7 +107,6 @@ Some handy features of mach include
   mach to the "mach" group in /etc/group, and (possibly) log out and log back
   in so that this change gets registered.  You can check if your user
   is in this group by trying "groups (user)"
-- You can also build with the new "mach user" by su-ing to mach
 
 5. GETTING STARTED - SOURCE INSTALL
 -----------------------------------

@@ -1,3 +1,8 @@
+2004-08-20  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* mach.spec.in: Create only the "mach" group, and do not remove
+	it on erase.  The "mach" user is not really needed for anything.
+
 2004-07-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	patch by: Jeff Pitman
