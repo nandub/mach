@@ -1,3 +1,9 @@
+2004-03-18  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: make sure build options are passed to rpmbuild
+          when checking sources/patches.  Fixes error when parsing specs
+          with ExclusiveArch:
+
 2004-03-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: override _tmpdir as well when setting topdir

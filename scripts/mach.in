@@ -132,6 +132,8 @@ class Spec:
         self.path = path
         self.content = []
         self.vars = {}
+        self.options = options
+
         debug ("Spec.__init__: opening spec %s" % path)
 	# check if the spec file has a %prep section
         command = "grep '%%prep' %s" % path	
@@ -234,6 +236,8 @@ class Spec:
 
 
     def _sourcespatches (self, which, args = ""):
+        # get a dict of Source and Patch lines, given quoted options to build
+        # as args
         result = {}
         matchstr = re.compile ("^" + which + r"(\d*):\s*(.*)")
         macro = ""
@@ -253,11 +257,11 @@ class Spec:
 
     def sources (self):
            # parse the spec file for all Source: files
-           return self._sourcespatches ("Source")
+           return self._sourcespatches ("Source", self.options)
 
     def patches (self):
            # parse the spec file for all Source: files
-           return self._sourcespatches ("Patch")
+           return self._sourcespatches ("Patch", self.options)
 
 ### abstract object wrapping a src rpm
 class SRPM:
