@@ -1,0 +1,27 @@
+AC_INIT(README)
+
+AS_VERSION(mach, MACH, 0, 3, 9, 0)
+AC_SUBST(RELEASE, $MACH_RELEASE)
+
+AC_SUBST_FILE(AUTHORS)
+AUTHORS=$srcdir/AUTHORS
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
+AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
+
+AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
+AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
+
+dnl check for python
+AS_PATH_PYTHON(2.2)
+
+dnl output stuff
+AC_OUTPUT(
+Makefile
+scripts/Makefile
+scripts/mach
+etc/Makefile
+mach.spec
+)
