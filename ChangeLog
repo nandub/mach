@@ -1,3 +1,17 @@
+2004-03-01  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+        * scripts/mach.in:
+          - fix quoting issues so that
+            mach build --target i686 --define "kernel 2.4.22" works
+          - use the rpmbuild --define '__spec_prep_pre' hack to figure
+            out n/v/r because --target is not understood by rpm -q --specfile
+          - make all command functions take a list for arguments, instead of
+            a string, so we save the argument splitting information correctly
+          - warn when buildrequiring kernel or kernel-source, and remove them
+            from the autoinstall.
+          - use double quotes to wrap everything executed through shell -c
+
+
 2004-02-28  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:

@@ -122,7 +122,10 @@ class Spec:
         # expand tags using rpm --specfile because results can depend on
         # build options
         for which in ['name', 'version', 'release']:
-            command = "rpm -q %s --specfile --queryformat \"%%{%s}\\n\" %s | head -n 1" % (options, which, path)
+            # rpm -q --specfile doesn't understand stuff like target
+            command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre echo %%%s; exit 0' --define 'setup :' %s | tail -n 1" % (options, which, path)
+            #command = "rpm -q %s --specfile --queryformat \"%%{%s}\\n\" %s | head -n 1" % (options, which, path)
+	    debug ("Spec:__init__: command: %s" % command)
             value = commands.getoutput (command)
             self.vars[which] = value
 
@@ -262,10 +265,11 @@ class SRPM:
     def BuildRequires (self):
         "return a list of BuildRequires for this src.rpm"
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
-        # remove non-packagey things from buildreqs
+        debug ("BuildRequires from header: %s" % buildreqs)
+        # remove non-packagey things from buildreqs, like autodeps
         # currently removes everything containing ( or /
         if buildreqs:
-            return filter(lambda x: not re.search("[(/]", x), buildreqs)
+            return filter (lambda x: not re.search("[(/]", x), buildreqs)
         else:
             return []
 
@@ -418,12 +422,15 @@ class Root:
             except OSError:
               raise self.Error, "Could not create %s" % new
 
-    def _splitarg (self, argstring, matcher):
+    def _splitarg (self, matcher, args):
         "only used by splitargspecs and splitargsrcrpms"
+        "put everything from args matching matcher on result"
+        "put everything from args not matching matcher on other"
+        "return (result, other)"
         result = []
         other = []
         match = re.compile (matcher, re.I)
-        for arg in argstring.split ():
+        for arg in args:
             if match.search (arg):
                 result.append (arg)
             else:
@@ -431,24 +438,25 @@ class Root:
         return (other, result)
 
     # seek through the argument list for specfiles
-    def splitargspecs (self, argstring):
-        return self._splitarg (argstring, '\.spec$')
+    def splitargspecs (self, args):
+        return self._splitarg ('\.spec$', args)
 
     # seek through the argument list for srpms
-    def splitargsrpms (self, argstring):
-        return self._splitarg (argstring, '\.src\.rpm$')
+    def splitargsrpms (self, args):
+        return self._splitarg ('\.src\.rpm$', args)
 
     # run apt from outside the root on the root
     # FIXME: virtualize this
     # if message is specified, it will be printed, and newline-terminated
     # properly
     # if no message specified, then it's up to caller
-    def aptget (self, arg, message = None,
+    def aptget (self, args, message = None,
                 progress = False, interactive = False):
         "run apt-get (arg) from outside the root on the root"
         self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
-        command = "%s -c %s %s" % (self.config['apt-get'], conf, arg)
+        command = "%s -c %s %s" % (self.config['apt-get'], conf, string.join (args))
+        debug ("aptget: command %s" % command)
         if interactive:
             return os.system (command)
         if message: self.stdout (message)
@@ -457,28 +465,28 @@ class Root:
         if message and not progress: self.stdout ('\n')
         self.umount ()
         if status != 0:
-            raise self.Error, "Could not apt-get %s" % arg
+            raise self.Error, "Could not apt-get %s" % string.join (args)
 
-    def intaptget (self, arg):
+    def intaptget (self, args):
         if not self.get_state ('base'):
-            self.setup ('base')
-        self.aptget (arg, interactive = True)
+            self.setup (['base', ])
+        self.aptget (args, interactive = True)
 
-    def aptcache (self, arg, progress = False):
+    def aptcache (self, args, progress = False):
         "run apt-cache (arg) from outside the root on the root"
         conf = os.path.join (self.statedir, 'apt.conf')
-        command = "%s -c %s %s" % (self.config['apt-cache'], conf, arg)
+        command = "%s -c %s %s" % (self.config['apt-cache'], conf, string.join (args))
         (status, output) = do_with_output (command, progress)
         if status != 0:
-            raise self.Error, "Could not apt-cache %s" % arg
+            raise self.Error, "Could not apt-cache %s" % string.join (args)
         print output
 
-    def rpm (self, arg, progress = False):
+    def rpm (self, args, progress = False):
         "run rpm (arg) from outside the root on the root, returns output"
-        command = "%s --root %s %s" % (self.config['rpm'], self.rootdir, arg)
+        command = "%s --root %s %s" % (self.config['rpm'], self.rootdir, join_quoted (args))
         (status, output) = do_with_output (command, progress)
         if status != 0:
-            raise self.Error, "Could not rpm %s" % arg
+            raise self.Error, "Could not rpm %s" % join_quoted (args)
         return output
 
     # main command executer:
@@ -507,13 +515,15 @@ class Root:
         # \n
         "execute given command in root"
         # HACK: FIXME:
-        # if the cmd already contains -c ' as a sequence, then don't wrap
+        # if the cmd already contains -c " as a sequence, then don't wrap
         # it in /bin/bash
         cmd = ""
-        if string.find (command, "-c '") > -1:
+        if string.find (command, '-c "') > -1:
             cmd = "%s %s %s" % (config['chroot'], self.rootdir, command)
         else:
-            cmd = "%s %s su - root -c '%s'" % (config['chroot'],
+            # we use double quotes to protect the commandline since
+            # we use single quotes to protect the args in command
+            cmd = "%s %s su - root -c \"%s\"" % (config['chroot'],
                                                self.rootdir, command)
         # be quiet if we're asked to be so
         if (self.progress () == False): progress = False
@@ -551,29 +561,29 @@ class Root:
         if not packages:
            return True
         sys.stdout.write ("Removing packages ...")
-        self.rpm ("-ev %s" % packages, self.progress ())
+        self.rpm (["-ev %s" % packages, ], self.progress ())
         return True
 
 
     # implementation of actual externalized commands
     # actual externalized commands
 
-    def build (self, arg):
+    def build (self, args):
         "build from a set of spec files by packaging them up as src.rpm and "
         "passing them to rebuild"
 
-        if not arg:
+        if not args:
             raise self.Error, 'Please supply .spec files to build'
 
         # check if we can build here yet
         if not self.get_state ('build'):
-            self.setup ('build')
+            self.setup (['build', ])
 
         self.lock ()
 
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
-        (options, specs) = self.splitargspecs (arg)
+        (options, specs) = self.splitargspecs (args)
         debug ("Build options to %s: %s" %
                (self.config['root_rpmbuild'], options))
         # check if the spec files exist and if we can parse the files necessary
@@ -581,7 +591,8 @@ class Root:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
-            optstring = string.join (options)
+            optstring = join_quoted (options)
+            debug ("build: quoted optstring: %s" % optstring)
             spec = Spec (specfile, optstring)
             (n, v, r) = spec.nvr ()
             # download all referenced files (Sources, Patches)
@@ -594,6 +605,8 @@ class Root:
             paths = [tmppath, '.', os.path.dirname (specfile)]
             # check if the files mentioned aren't already on-disk
             files = []
+            debug ("build: files to download: %s" % downloads)
+            debug ("build: paths to check: %s" % paths)
             for download in downloads:
                 found = 0
                 filename = os.path.basename (download)
@@ -660,7 +673,7 @@ class Root:
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
         self.unlock ()
-        self.rebuild (string.join (options) + " " + string.join (srpms))
+        self.rebuild (options + srpms)
 
     def _bruteclean (self):
         "brutishly clean out the root by using mach-helper rm -rfv"
@@ -671,7 +684,7 @@ class Root:
         if status != 0:
     	    raise self.Error, "Could not remove %s" % self.rootdir
 
-    def clean (self, args = ""):
+    def clean (self, args = []):
         "clean out the root"
         # does the root still exist ?
         if not os.path.exists (self.rootdir):
@@ -695,18 +708,18 @@ class Root:
             self._bruteclean ()
 
     # chroot into root
-    def chroot (self, arg):
+    def chroot (self, args):
         self.mount ()
         # a minimal system might not have su, yikes
         if not os.path.exists (os.path.join (self.rootdir, 'bin', 'su')):
-            if arg:
+            if args:
                 print "No su in root, can't execute %s" %arg
                 return
             else:
-                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, arg)
+                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, string.join (args))
                 print "Entering %s, type exit to leave." % self.rootdir
-        elif arg:
-             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, arg)
+        elif args:
+             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, string.join (arg))
         else:
              cmd = "%s %s su - root" % (self.config['chroot'], self.rootdir)
              print "Entering %s, type exit to leave." % self.rootdir
@@ -714,11 +727,11 @@ class Root:
         os.system (cmd)
         self.umount ()
 
-    def setup (self, arg):
+    def setup (self, args):
         "Set up the root to a given target"
         target = ''
-        if arg:
-            target = arg
+        if args:
+            target = args[0]
         else:
             target = 'base' # default to build
         targets = ('prep', 'minimal', 'base', 'build')
@@ -739,12 +752,12 @@ class Root:
                 break
         self.unlock ()
 
-    def rebuild (self, arg):
-        if not arg:
+    def rebuild (self, args):
+        if not args:
             raise self.Error, 'Please supply .src.rpm files to build'
 
-        (options, paths) = self.splitargsrpms (arg)
-        self.setup ('build')
+        (options, paths) = self.splitargsrpms (args)
+        self.setup (['build', ])
         self.lock ()
         # FIXME: we don't need this anymore, do we ?
         #self.config_recreate ('/usr/bin/apt-sigchecker')
@@ -834,18 +847,35 @@ class Root:
             debug ("Building %s with package stuff %s" % (name, pkgs[name].keys ()))
             print "Building source rpm %s" % srpmname
             if pkgs[name].has_key ('buildreqs') and pkgs[name]['buildreqs']:
-                buildreqs = string.join (pkgs[name]['buildreqs'])
+                #FIXME: we filter out packages here that can have multiple
+                #versions, and expect the user to install them manually
+                #this works around kernel and kernel-source buildreqs
+                candidates = pkgs[name]['buildreqs']
+                buildreqs = []
+                for cand in candidates:
+                    if cand == "kernel":
+                        print "Warning: make sure you have manually installed the right kernel rpm"
+                        print "         and that you are rebuilding with --keep"
+                    elif cand == "kernel-source":
+                        print "Warning: make sure you have manually installed the right kernel-source rpm"
+                        print "         and that you are building with --keep"
+                    else:
+                        buildreqs.append (cand)
+   
+                #buildreqs = string.join (pkgs[name]['buildreqs'])
                 debug ("BuildRequires: %s" % buildreqs)
-                try:
-        	    self.aptget ("update")
-                    self.aptget ('install -y %s' % buildreqs,
-                                 "Installing BuildRequires", self.progress ())
-                    # FIXME: build-dep would be nice but only works on a pkg
-                    # in the rpm-src tree apparently
-                    #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
-                except Root.Error:
-                    raise self.Error, 'could not install buildreqs %s' % buildreqs
-                    #continue
+                # only try to install if filtering left buildreqs
+                if (buildreqs):
+                    try:
+        	        self.aptget (["update", ])
+                        self.aptget ([ 'install -y %s' % string.join (buildreqs), ],
+                                     "Installing BuildRequires", self.progress ())
+                        # FIXME: build-dep would be nice but only works on a pkg
+                        # in the rpm-src tree apparently
+                        #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
+                    except Root.Error:
+                        raise self.Error, 'could not install buildreqs %s' % buildreqs
+                        #continue
             else:
                 debug ("No BuildRequires for %s." % srpmname)
 
@@ -884,7 +914,8 @@ class Root:
                 debug ("Release of spec file to mangle is %s" % release)
                 #if not release.endswith ('.' + self.config['release']):
                 if 1:
-                    command = 'sed -e "s,^\\\\(Release\\\\s*:.*[^\\\\s]\\\\)\\\\s*$,\\\\1.%s,i" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
+                    # we quote sed with ' because we quote shell -c with ""
+                    command = "sed -e 's,^\\\\(Release\\\\s*:.*[^\\\\s]\\\\)\\\\s*$,\\\\1.%s,i' /tmp/%s > /usr/src/rpm/SPECS/%s" % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
                     self.do_chroot (command)
                 else:
@@ -904,7 +935,7 @@ class Root:
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
 
-            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba %s /usr/src/rpm/SPECS/%s 2>&1' - %s" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile, builduser)
+            command = "su -c \"RPM_BUILD_NCPUS=%s %s -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (nrcpus, self.config['root_rpmbuild'], join_quoted (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -929,7 +960,9 @@ class Root:
             (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
             # FIXME: install these RPMS based on a boolean ?
             # FIXME: error checks
-            output = self.rpm ('-qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % string.join (['', ] + rpms, " " + self.rootdir))
+            hostrpms = map (lambda x: self.rootdir + x, rpms)
+
+            output = self.rpm (['-qp',  '--qf', "%%{name}=%%{epoch}:%%{version}-%%{release} "] + hostrpms)
             #(status, output) = do_chroot_with_output (config, '%s -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % (chroot_rpm, string.join (rpms, " ")))
             # FIXME: don't install built packages automatically, they can
             # cause conflicts and break sequence builds
@@ -948,7 +981,7 @@ class Root:
                 # self.do_chroot ('rm ' + file)
 
             # update internal apt repo
-            self.aptget ("update")
+            self.aptget (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
@@ -1144,7 +1177,7 @@ Dir {
         # create sources.list, run apt-get update
         srcs = get_sources_list (config)
         create_sources_list (config, srcs)
-        self.aptget ("update", "Updating apt sources",
+        self.aptget (["update", ], "Updating apt sources",
                      self.progress ())
 
         self._call_setup_hook ("prep")
@@ -1207,12 +1240,12 @@ Dir {
         create_sources_list (self.config, srcs)
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
-        self.aptget ("update")
+        self.aptget (["update", ])
         self._call_setup_hook ("build")
 
         self.stdout ("Making snapshot ...\n")
         # FIXME: use _with_output for this
-        output = self.rpm ("-qa --qf %s" % qfmt)
+        output = self.rpm (["-qa --qf %s" % qfmt, ])
         self.set_state ('build', output)
         self.umount ()
 
@@ -1231,10 +1264,10 @@ Dir {
             # do a two change install if necessary and gloss over errors
             # from first try
             try:
-                self.aptget ('install -y %s' % rpms,
+                self.aptget (['install -y %s' % rpms, ],
                              "Installing package set '%s'" % set, True)
             except self.Error:
-                self.aptget ('install -y %s' % rpms,
+                self.aptget (['install -y %s' % rpms, ],
                              "Retrying installing package set '%s'" % set, True)
 
         else:
@@ -1242,6 +1275,18 @@ Dir {
         self.set_state (set)
 
 ### helper functions
+
+# return an argument string containing all of the arguments of the given list,
+# but each of them surrounded by quotes
+# this is done so that ['define', 'kernel 2.4.22'] returns a string like
+# "define" "kernel 2.4.22"
+# so that using mach build --define "kernel 2.4.22" passes correct arguments
+# to rpmbuild
+def join_quoted (args):
+    if not args:
+        return ""
+    else:
+        return "'" + string.join (args, "' '") + "'"
 
 # return path to rpm binary suited to our target root, extracting it if
 # necessary
@@ -1698,23 +1743,13 @@ def main (config, args):
     # check if everything is ready to go
     sanity_check (config)
 
-    # DEBUG DEBUG DEBUG:
-    #get_sources_list (config)
-    #rpms = get_rpms_from_log ('/home/thomas/prefix/var/tmp/mach/result/redhat-9-i386/drwright-0.16-0.fdr.1/rpm.log')
-    #do_progress ("dmesg && sleep 1 && dmesg && sleep 1 && dmesg && true")
-    #do_progress ("dmesg && sleep 1 && dmesg && sleep 1 && dmesg && false")
-    #binary = get_rpm (config)
-    #print "rpm binary: %s" % binary
-
-    #sys.exit (0)
-
     # run command
     if not args:
         print usage
         print help
         sys.exit (1)
+    debug ("main: args: %s" % args)
     command = args[0]
-    args = string.join (args[1:])
     debug ("main: running %s" % command)
 
     root = Root (config)
@@ -1734,7 +1769,8 @@ def main (config, args):
             sys.exit (1)
 
         try:
-            output = Root.__dict__[command] (root, args)
+            # we changed behaviour to pass the list of args instead of a string
+            output = Root.__dict__[command] (root, args[1:])
         except Root.Locked:
             sys.stderr.write ("Root is locked.  Use -f to override lock.\n")
         except Root.Error, message:
