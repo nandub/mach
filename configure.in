@@ -46,7 +46,7 @@ AS_AC_EXPAND(STATESDIR, $statesdir)
 AC_MSG_NOTICE(Using statesdir $STATESDIR)
 
 dnl builduser
-AC_ARG_WITH(BUILDUSER,
+AC_ARG_WITH(builduser,
   AC_HELP_STRING([--enable-builduser=USERNAME], [use USERNAME for builds]),
   [ BUILDUSER=$withval ],
   [ BUILDUSER=machbuild ]
@@ -55,7 +55,7 @@ AC_SUBST(BUILDUSER)
 AC_MSG_NOTICE(Using build username $BUILDUSER)
 
 dnl buildgroup
-AC_ARG_WITH(BUILDGROUP,
+AC_ARG_WITH(buildgroup,
   AC_HELP_STRING([--enable-buildgroup=GROUPNAME], [use GROUPNAME for builds]),
   [ BUILDGROUP=$withval ],
   [ BUILDGROUP=machbuild ]
