@@ -12,13 +12,14 @@ config['spinner'] = {
 }
 
 # directories used
+# don't change roots, archives and states, they're hardcoded into mach-helper
 config['dirs'] = {
-    'states':   '@LOCALSTATEDIR@/lib/mach/states',
-    'roots':    '@LOCALSTATEDIR@/lib/mach/roots',
+    'states':   '@STATESDIR@',
+    'roots':    '@ROOTSDIR@',
     'results':  '@LOCALSTATEDIR@/tmp/mach',
     'tmps':     '@LOCALSTATEDIR@/tmp/mach/tmp',
     'packages': '@LOCALSTATEDIR@/cache/mach/packages',
-    'aptcache': '@LOCALSTATEDIR@/cache/mach/archives',
+    'archives': '@ARCHIVESDIR@',
 }
 
 # default root

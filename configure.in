@@ -15,6 +15,36 @@ AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
 
+dnl using ARG_WITH is maybe not the right thing to do but there doesn't seem
+dnl to be a good alternative
+dnl rootsdir
+AC_ARG_WITH(rootsdir,
+  AC_HELP_STRING([--enable-rootsdir=PATH], [create roots in PATH]),
+  [ rootsdir=$withval ],
+  [ rootsdir=$localstatedir/lib/mach/roots]
+)
+AS_AC_EXPAND(ROOTSDIR, $rootsdir)
+AC_MSG_NOTICE(Using rootsdir $ROOTSDIR)
+
+dnl archivesdir
+AC_ARG_WITH(archivesdir,
+  AC_HELP_STRING([--enable-archivesdir=PATH], [create roots in PATH]),
+  [ archivesdir=$withval ],
+  [ archivesdir=$localstatedir/cache/mach/packages]
+)
+AS_AC_EXPAND(ARCHIVESDIR, $archivesdir)
+AC_MSG_NOTICE(Using archivesdir $ARCHIVESDIR)
+
+dnl statesdir
+AC_ARG_WITH(statesdir,
+  AC_HELP_STRING([--enable-statesdir=PATH], [create roots in PATH]),
+  [ statesdir=$withval ],
+  [ statesdir=$localstatedir/lib/mach/states]
+)
+AS_AC_EXPAND(STATESDIR, $statesdir)
+AC_MSG_NOTICE(Using statesdir $STATESDIR)
+
+
 dnl check for C compiler
 AC_PROG_CC
 
@@ -26,7 +56,6 @@ AC_OUTPUT(
 Makefile
 scripts/Makefile
 scripts/mach
-scripts/mach-helper
 etc/Makefile
 src/Makefile
 etc/conf

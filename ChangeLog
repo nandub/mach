@@ -1,3 +1,8 @@
+2003-05-22  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * src/mach-helper.c: created
+        * scripts/mach.in: make use of mach-helper
+
 2003-05-21  Thomas Vander Stichele  <set EMAIL_ADDRESS environment variable>
 
 	* etc/Makefile.am: reworked config

@@ -13,10 +13,12 @@ BuildArch:	noarch
 Requires:	python
 Requires:	rpm
 Requires:	rpm-python
-Requires:	sudo
+Requires:	apt
 
 %description
 mach makes a chroot.
+Using apt-get and a suid binary, it manages to install clean chroot
+environments based on the original packages
 
 Authors:
 --------
@@ -46,19 +48,6 @@ install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/archives
 # create user and group mach
 /usr/sbin/useradd -M mach 2> /dev/null || true
 
-#%preun
-#patch -R %{_sysconfdir}/sudoers \
-#      < %{_datadir}/%{name}/sudoers.patch > /dev/null 2>&1
-#[ $? == 0 ] || \
-#  echo "Removing mach commands from %{_sysconfdir}/sudoers failed !"
-
-
-#%post
-#patch %{_sysconfdir}/sudoers \
-#      < %{_datadir}/%{name}/sudoers.patch > /dev/null 2>&1
-#[ $? == 0 ] || \
-#  echo "Adding mach commands to %{_sysconfdir}/sudoers failed !"
-
 %preun
 if [ "$1" == 0 ];
 then
@@ -82,18 +71,14 @@ fi
 %defattr(-,root,root)
 %doc ChangeLog README AUTHORS BUGS TODO
 %dir %{_sysconfdir}/mach
-# make these actual config files when we're happy with the syntax
-%config(noreplace) %{_sysconfdir}/mach/packages
 %config(noreplace) %{_sysconfdir}/mach/conf
-%config(noreplace) %{_sysconfdir}/mach/apt
+%config(noreplace) %{_sysconfdir}/mach/dist
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/states
 %attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/roots
 # %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach
 # %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/tmp
 %attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/packages
 %attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/archives
-#%dir %{_datadir}/mach
-#%{_datadir}/mach/sudoers.patch
 %{_bindir}/mach
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 

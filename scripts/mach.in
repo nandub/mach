@@ -8,10 +8,6 @@ import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 
-# FIXME: move this to config
-chroot_aptget = 'export LD_ASSUME_KERNEL=2.2.5 && apt-get'
-chroot_rpm = 'export LD_ASSUME_KERNEL=2.2.5 && rpm'
-
 # make sure True and False constants exist
 
 if not hasattr (__builtins__, 'True'):
@@ -51,11 +47,11 @@ config = {
   'check': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
-  'chroot': 'sudo -H /usr/sbin/chroot',
-  'mount': 'sudo -H /bin/mount',
-  'rpm': 'sudo -H /bin/rpm',
-  'umount': 'sudo -H /bin/umount',
-  'apt-get': 'sudo -H /usr/bin/apt-get',
+  'chroot': '/usr/sbin/mach-helper chroot',
+  'mount': '/usr/sbin/mach-helper mount',
+  'rpm': '/usr/sbin/mach-helper rpm',
+  'umount': '/usr/sbin/mach-helper umount',
+  'apt-get': '/usr/sbin/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
 
 }
@@ -236,12 +232,16 @@ class Root:
         # first umount for completeness; you never know
         self.umount ()
         debug ("mounting proc and apt-archives")
-        config = self.config
         file = open (os.path.join (self.statedir, 'mount'), "w+")
-        os.system ('%s -t proc proc %s/proc' % (config['mount'], self.rootdir))
+        command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
+        debug (command)
+        os.system (command)
         file.write ('%s/proc\n' % self.rootdir)
-        os.system ('%s -o bind %s %s/var/cache/apt/archives' % (config['mount'],
-                   config['dirs']['aptcache'], self.rootdir))
+        command = ('%s -o bind %s %s/var/cache/apt/archives' % (
+                   self.config['mount'], self.config['dirs']['archives'],
+                   self.rootdir))
+        debug (command)
+        os.system (command)
         file.write ('%s/var/cache/apt/archives\n' % self.rootdir)
         file.close ()
         
@@ -250,6 +250,7 @@ class Root:
         if not self.get_state: return
         mountfile = os.path.join (self.statedir, 'mount')
         if not os.path.exists (mountfile): return
+        debug ('cat %s | xargs %s' % (mountfile, self.config['umount']))
         os.system ('cat %s | xargs %s' % (mountfile, self.config['umount']))
         os.remove (mountfile)
 
@@ -297,30 +298,58 @@ class Root:
     def do (self, command, progress = True, user = ""):
         "execute given command"
         debug ("Executing %s" % command)
-    if progress:
-        return do_progress (command)
-    else:
-        (status, output) = commands.getstatusoutput (command)
-
-    if os.WIFEXITED (status):
-        retval = os.WEXITSTATUS (status)
-    if (retval != 0):
-        raise ReturnValue, retval
-    return output
-
+        if progress:
+            return do_progress (command)
+        else:
+            (status, output) = commands.getstatusoutput (command)
+    
+        if os.WIFEXITED (status):
+            retval = os.WEXITSTATUS (status)
+        if (retval != 0):
+            raise ReturnValue, retval
+        return output
+    
     def do_chroot (self, command, progress = True, user = ""):
         "execute given command in root"
-    # HACK: FIXME: 
-    # if the cmd already contains -c ' as a sequence, then don't wrap
-    # it in /bin/bash
-    cmd = ""
-    if string.find (command, "-c '") > -1:
-        cmd = "%s %s %s" % (config['chroot'], self.rootdir, command)
-    else:
-        cmd = "%s %s /bin/bash -c '%s'" % (config['chroot'],
-                                           self.rootdir, command)
-    return self.do (cmd, progress)
+        # HACK: FIXME: 
+        # if the cmd already contains -c ' as a sequence, then don't wrap
+        # it in /bin/bash
+        cmd = ""
+        if string.find (command, "-c '") > -1:
+            cmd = "%s %s %s" % (config['chroot'], self.rootdir, command)
+        else:
+            cmd = "%s %s /bin/bash -c '%s'" % (config['chroot'],
+                                               self.rootdir, command)
+        return self.do (cmd, progress)
 
+    # check the given package list file
+    # remove all packages that aren't in this list file
+    def check_package_list (self, listfile):
+        "check the given package list file and remove packages not listed"
+        debug ("checking package list against snapshot")
+        if self.config.has_key ('keep'):
+            print "Not removing packages from root."
+            return
+        root = self.rootdir
+        cmd = 'rpm --root %s -qa --qf %s | diff - %s > /dev/null 2>&1' % (root,
+                                                                          qfmt,
+                                                                          list)
+        debug ("running " + cmd)
+        if os.system (cmd) == 0:
+            # no differences
+            return True
+        cmd = "rpm --root %s -qa --qf %s | grep -v -f %s - | tr '\n' ' '" % (root,
+                                                                             qfmt,
+                                                                             list)
+        packages = commands.getoutput (cmd)
+        # FIXME: how many ?
+        sys.stdout.write ("Removing packages ...")
+        if not packages:
+           print "Error: packages was empty"
+           return True
+        self.rpm ("-ev %s" % packages, True)
+        return True
+    
 
     # implementation of actual externalized commands
     # actual externalized commands
@@ -330,7 +359,7 @@ class Root:
         "passing them to rebuild"
         # check if we can build here yet
         if not self.get_state ('build'):
-            self.setup ('build'):
+            self.setup ('build')
         self.lock ()
         
         srpms = [] # resulting set of srpms
@@ -380,7 +409,7 @@ class Root:
             try:
                 self.do_chroot ("rpmbuild -bs --nodeps %s" \
                                 % os.path.join ('usr', 'src', 'rpm', 'SPECS', 
-                                                os.path.basename (specfile),
+                                                os.path.basename (specfile)),
                                   True)
             except:
                 raise self.Error, 'error: could not build .src.rpm'
@@ -701,7 +730,7 @@ Dir {
             # see if we need to revert to the given state
             # FIXME: methodify
             statefile = os.path.join (self.statedir, 'build')
-            return check_package_list (config, statefile)
+            self.check_package_list (statefile)
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()
         #FIXME: this ought to be done in a cleaner way
@@ -1153,10 +1182,8 @@ def check_package_list (config, list):
     sys.stdout.write ("Removing packages ...")
     if not packages:
        print "Error: packages was empty"
-       return False
-    if do_chroot (config, "%s -ev %s" % (chroot_rpm,  packages), True) != 0:
-        sys.stderr.write ("Error removing packages\n")
-        return False
+       return True
+    self.rpm ("-ev %s" % packages, True)
     return True
 
 # recreate a given file listed in config['files']
@@ -1172,7 +1199,7 @@ def config_recreate (config, filename):
 # check if everything is in order to actually do stuff
 def sanity_check (config):
     # check if partial dir exists
-    partial = config['dirs']['aptcache'] + '/partial'
+    partial = config['dirs']['archives'] + '/partial'
     ensure_dir (partial)
     return True
 
