@@ -91,7 +91,8 @@ except IOError:
     pass
 
 # list of allowed commands
-allowed_commands = ('apt-get', 'apt-cache', 'build', 'check', 'chroot', 'clean', 'rebuild', 'rpm',
+allowed_commands = ('apt-get', 'apt-cache', 'build',
+                    'check', 'chroot', 'clean', 'rebuild', 'rpm',
                     'setup', 'status', 'unlock')
 
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
@@ -712,7 +713,7 @@ class Root:
             #newpath = os.path.join (self.rootdir, 'tmp', srpm)
             #self.rpm ("-Uhv --nodeps %s" % newpath)
             # install the src.rpm
-            self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' mach" % srpmname)
+            self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' machbuild" % srpmname)
             spec = pkgs[name]['spec']
 
             # mangle spec file if requested
@@ -725,7 +726,7 @@ class Root:
                 self.do_chroot (command)
 
             # rebuild from spec inside chroot
-            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' mach" % (string.join (options), spec)
+            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' machbuild" % (string.join (options), spec)
             (status, output) = self.do_chroot (command, True)
             if (output):
                 open (resultdir + '/rpm.log', "wb"). write (output)
@@ -930,11 +931,11 @@ Dir {
         sys.stdout.write ('Installing rpm build packages ...')
         self.aptget ('install -y %s' % self.config['packages']['build'], True)
         #FIXME: add mach user and group
-        self.do_chroot ("echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
-        self.do_chroot ("echo mach::500:mach >> /etc/group")
+        self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
+        self.do_chroot ("echo machbuild::500:mach >> /etc/group")
         self.do_chroot ("mkdir -p /usr/src/rpm")
-        self.do_chroot ("chown -R mach:mach /usr/src/rpm")
-        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' mach")
+        self.do_chroot ("chown -R machbuild:machbuild /usr/src/rpm")
+        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' machbuild")
          # create dir structure and rpmmacros
         macros = open (self.rootdir + '/tmp/macros', 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
@@ -944,7 +945,7 @@ Dir {
         macros.close ()
         self.do_chroot ('mv /tmp/macros /etc/rpm')
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir)
+            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' machbuild" % dir)
     
         # this ensures that locally built RPMS are already used for apt-get
         srcs = get_sources_list (self.config)
