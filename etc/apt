@@ -85,10 +85,10 @@ sourceslist['redhat-9-i386-updates'] = {
     'redhat-9-i386': ('os', 'updates', )
 }
 sourceslist['redhat-9-i386-gstreamer'] = {
-    'redhat-9-i386': ('os', 'updates', 'gstreamer-deps', 'gstreamer')
+    'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer')
 }
 sourceslist['redhat-9-i386-gstreamer-deps'] = {
-    'redhat-9-i386': ('os', 'updates', 'gstreamer-deps')
+    'redhat-9-i386': ('os', 'gstreamer-deps')
 }
 
 sourceslist['redhat-9-i386-fedora-stable'] = {

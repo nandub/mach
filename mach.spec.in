@@ -12,6 +12,7 @@ BuildArch:	noarch
 
 Requires:	python
 Requires:	rpm
+Requires:	rpm-python
 Requires:	sudo
 
 %description

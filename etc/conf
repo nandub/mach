@@ -7,7 +7,7 @@ config['spinner'] = {
     'corner': '<^>v',
     'text':   '<-WORKING->',
     'subliminal':   '<- send us lots of money ->',
-    'quote':        "´'\"'`",
+    'quote':        "´'""'`",
     'point':        ".:¨:",
 }
 
