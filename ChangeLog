@@ -1,5 +1,9 @@
 2003-08-01  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * scripts/mach.in: various small fixes from Axel Thimm
+
+2003-08-01  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * mach.spec.in: patch from Axel Thimm to fix small issues
 
 2003-07-24  Thomas Vander Stichele <thomas at apestaart dot org>

@@ -10,6 +10,7 @@ import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 import tempfile # for tempdir for spec extraction
 import glob # for globbing paths
+import grp # for finding out the mach gid
 
 # make sure True and False constants exist
 
@@ -18,10 +19,10 @@ if not hasattr (__builtins__, 'True'):
     __builtins__.False = (1 != 1)
 
 # usage and help
-usage = 'usage: mach [ -r root ] command [ options ... ]'
+usage = 'usage: mach [mach-options] command [command-options-and-arguments]'
 help = '''Make a chroot and do stuff in it.
 
-Global options:
+Mach options:
   -r, --root=ROOT		specify a root to work in
   -d, --debug			turn on debugging
   -f, --force			override root lock
@@ -32,6 +33,7 @@ Global options:
 
 Commands:
   apt-get			run host's apt-get on target root
+  apt-cache                     run host's apt-cache on target root
   build				build from (set of) .spec file(s)
                                 (passes options given to rpmbuild)
   chroot			chroot into root
@@ -42,7 +44,6 @@ Commands:
   setup				sets up the root for a particular purpose
         prep                         preparation before package install
         base                         base set of rpms to make rpm work
-        apt                          base set of rpms to make apt work
         consistency                  internally consistent install
         build                        everything to build rpms
   status			show status of mach roots
@@ -314,12 +315,18 @@ class Root:
         #debug (command)
         #os.system (command)
         #file.write ('%s/proc\n' % self.rootdir)
-        command = ('%s -o bind %s %s/var/cache/apt/archives' % (
-                   self.config['mount'], self.config['dirs']['archives'],
-                   self.rootdir))
+        ensure_dir (os.path.join (self.statedir, 'apt@SYSCONFDIR@/apt'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
+        command = ('cp -a @SYSCONFDIR@/apt/rpmpriorities %s/apt@SYSCONFDIR@/apt/rpmpriorities' % self.statedir)
         debug (command)
         os.system (command)
-        file.write ('%s/var/cache/apt/archives\n' % self.rootdir)
+        command = ('%s -o bind %s %s/apt/var/cache/apt/archives' % (
+                   self.config['mount'], self.config['dirs']['archives'],
+                   self.statedir))
+        debug (command)
+        os.system (command)
+        file.write ('%s/apt/var/cache/apt/archives\n' % self.statedir)
         file.close ()
         
     # umount all mounted paths
@@ -340,18 +347,31 @@ class Root:
             file = open (os.path.join (self.rootdir, tmpname), 'w')
             file.write (config['files'][filename])
             file.close ()
-            self.do_chroot ('mv %s%s %s' % (os.sep, tmpname, filename))
-    
-    # separate options (starting with -) from other arguments based on string
-    def splitarg (self, argstring):
-        options = []
+            os.rename(os.path.join (self.rootdir, tmpname), self.rootdir + filename)
+
+    # seek through the argument list for specfiles
+    def splitargspecs (self, argstring):
+        specs = []
         other = []
+        match = re.compile('\.spec$', re.I)
         for arg in argstring.split ():
-            if arg[0] == '-':
-                options.append (arg)
+            if match.search(arg):
+                spec.append (arg)
             else:
                 other.append (arg)
-        return (options, other)
+        return (other, specs)
+
+    # seek through the argument list for srpms
+    def splitargsrpms (self, argstring):
+        srpms = []
+        other = []
+        match = re.compile('\.src\.rpm$', re.I)
+        for arg in argstring.split ():
+            if match.search(arg):
+                srpms.append (arg)
+            else:
+                other.append (arg)
+        return (other, srpms)
 
     # run apt from outside the root on the root
     # FIXME: virtualize this
@@ -362,7 +382,6 @@ class Root:
         self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-get'], conf, arg)
-        debug ("Executing %s " % command)
         (status, output) = do_with_output (command, progress)
         self.umount ()
         if status != 0:
@@ -373,7 +392,6 @@ class Root:
         self.mount ()
         conf = os.path.join (self.statedir, 'apt.conf')
         command = "%s -c %s %s" % (self.config['apt-cache'], conf, arg)
-        debug ("Executing %s " % command)
         (status, output) = do_with_output (command, progress)
         self.umount ()
         if status != 0:
@@ -383,7 +401,6 @@ class Root:
     def rpm (self, arg, progress = False):
         "run rpm (arg) from outside the root on the root, returns output"
         command = "%s --root %s %s" % (self.config['rpm'], self.rootdir, arg)
-        debug ("Executing %s " % command)
         (status, output) = do_with_output (command, progress)
         if status != 0:
             raise self.Error, "Could not rpm %s" % arg
@@ -432,10 +449,10 @@ class Root:
         # check if all packages are present
         print "Checking bootstrap packages ..."
         ensure_dir (self.packagesdir)
-        for pkg in self.config['packages']['base'] + self.config['packages']['apt']:
+        for pkg in self.config['packages']['base']:
             path = os.path.join (self.packagesdir, pkg)
             if not self.config['packages']['download'].has_key (pkg):
-                url = self.config['packages']['download'][''] + '/' + pkg
+                url = self.config['packages']['download'][''] + pkg
             else:
                 url = self.config['packages']['download'][pkg] + pkg
             if not os.path.exists (path):
@@ -491,7 +508,7 @@ class Root:
         
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
-        (options, specs) = self.splitarg (arg)
+        (options, specs) = self.splitargspecs (arg)
         debug ("options to rpmbuild: %s" % options)
         # check if the spec files exist and if we can parse the files necessary
         for specfile in specs:
@@ -594,7 +611,7 @@ class Root:
             target = arg
         else:
             target = 'build' # default to build
-        targets = ('prep', 'base', 'apt', 'consistency', 'build')
+        targets = ('prep', 'base', 'consistency', 'build')
     
         # see if something real given to setup
         if target not in targets:
@@ -617,7 +634,7 @@ class Root:
         self.unlock ()
      
     def rebuild (self, arg):
-        (options, paths) = self.splitarg (arg)
+        (options, paths) = self.splitargsrpms (arg)
         self.setup ('build')
         self.lock ()
         self.config_recreate ('/usr/bin/apt-sigchecker')
@@ -693,8 +710,12 @@ class Root:
                 self.aptget ('install -y %s' % string.join (pkgs[name]['buildreqs']), True)
             except Root.Error:
                 sys.stderr.write ('Cannot build %s\n' % srpmname)
-                continue
-    
+                #continue
+                #FIXME: error code was never returned
+                #raise self.Error, "something went wrong building SRPM"
+                self.unlock()
+                sys.exit (1)
+
             # get the name and create the place where to store results
             h = pkgs[name]['header']
             name = h[rpm.RPMTAG_NAME]
@@ -885,8 +906,6 @@ Dir {
     
     def _setup_base (self):
         self._install ('base')
-    def _setup_apt (self):
-        self._install ('apt')
     def _setup_consistency (self):
         "forces consistency on root by triggering an apt-get update"
         if self.get_state ('consistency'): return
@@ -905,15 +924,10 @@ Dir {
         # do_chroot (config, "rpm --rebuilddb")
         # first create a sources.list with only the first sources line
         # this ensures glibc doesn't get upgraded from underneath apt
-        create_sources_list (config, (srcs[0], ))
-        self.stdout ('Updating apt using base source ...')
-        self.aptget ("update", True)
-        self.stdout ('Forcing consistency ...')
-        self.aptget ("-f upgrade -y", True)
         create_sources_list (config, srcs)
         self.stdout ('Updating apt using all sources ...')
         self.aptget ("update", True)
-        self.stdout ('Upgrading ...')
+        self.stdout ('Forcing consistency and upgrading ...')
         self.aptget ("-f upgrade -y", True)
         self.set_state ('consistency')
 
@@ -1254,12 +1268,13 @@ def get_sources_list (config):
 # create sources.list file by putting the given list of lines in it
 def create_sources_list (config, list):
     root = get_config_dir (config, 'root')
+    statedir = get_config_dir (config, 'state')
     debug ("Creating sources.list")
     # we created in the root and chroot mv it afterwards due to perms
-    sources = open (root + '/tmp/sources.list', 'w')
+    sources = open (statedir + '/apt@SYSCONFDIR@/apt/sources.list', 'w')
     sources.write (string.join (list, "\n"))
     sources.close ()
-    os.system ('%s %s mv /tmp/sources.list /etc/apt' % (config['chroot'], root))
+#    os.system ('%s %s mv /tmp/sources.list @SYSCONFDIR@/apt' % (config['chroot'], root))
     
 
 # lock a given root; creates a lock file in the statedir under root
@@ -1329,11 +1344,12 @@ def check_package_list (config, list):
 # check if everything is in order to actually do stuff
 def sanity_check (config):
     # check if we're in the mach group
-    cmd = "groups | grep mach > /dev/null 2>&1"
-    if os.system (cmd) != 0:
-        sys.stderr.write ("error: user is not in group mach, please add !\n")
-        sys.exit (1)
-    
+    if os.getuid () != 0:
+        machgid=grp.getgrnam ('mach')[2]
+        if not machgid in os.getgroups():
+            sys.stderr.write ("error: user is not in group mach, please add !\n")
+            sys.exit (1)
+
     # check if partial dir exists
     partial = config['dirs']['archives'] + '/partial'
     ensure_dir (partial)
