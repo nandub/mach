@@ -2,6 +2,12 @@
 
 	patch by: Jeff Pitman
 
+	* scripts/mach.in: fix munging of filenames after collect
+
+2004-07-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	patch by: Jeff Pitman
+
 	* scripts/mach.in:
 	  use --use-agent for clearsigning md5sums
 
