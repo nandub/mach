@@ -104,6 +104,7 @@ class Spec:
         self.content = open (self.path).readlines ()
         for which in ['name', 'version', 'release']:
             self.vars[which] = self.tag (which)
+        print "DEBUG: version: %s" % self.vars['version']
 
     def tag (self, which):
         "Get the given (unique) tag from the spec file as a string"
@@ -335,6 +336,16 @@ class Root:
             file.close ()
             self.do_chroot ('mv %s%s %s' % (os.sep, tmpname, filename))
     
+    # separate options (starting with -) from other arguments based on string
+    def splitarg (self, argstring):
+        options = []
+        other = []
+        for arg in argstring.split ():
+            if arg[0] == '-':
+                options.append (arg)
+            else:
+                other.append (arg)
+        return (options, other)
 
     # run apt from outside the root on the root
     # FIXME: virtualize this
@@ -473,8 +484,11 @@ class Root:
         self.lock ()
         
         srpms = [] # resulting set of srpms
+        # separate options to rpmbuild from specfiles
+        (options, specs) = self.splitarg (arg)
+        debug ("options to rpmbuild: %s" % options)
         # check if the spec files exist and if we can parse the files necessary
-        for specfile in arg.split ():
+        for specfile in specs:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
@@ -537,7 +551,7 @@ class Root:
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
         self.unlock ()
-        self.rebuild (string.join (srpms))
+        self.rebuild (string.join (options) + " " + string.join (srpms))
              
     def clean (self, args = ""):
         "clean out the root"
@@ -597,13 +611,13 @@ class Root:
         self.unlock ()
      
     def rebuild (self, arg):
-        args = string.split (arg)
+        (options, paths) = self.splitarg (arg)
         self.setup ('build')
         self.lock ()
         self.config_recreate ('/usr/bin/apt-sigchecker')
         # get pkgs and collect info
         pkgs = {}
-        for path in args:
+        for path in paths:
     	# resolve path to basename (without dirs)
             srpmname = os.path.basename (path)
             newpath = os.path.join (self.rootdir, 'tmp', srpmname)
@@ -705,7 +719,7 @@ class Root:
                 self.do_chroot (command)
 
             # rebuild from spec inside chroot
-            command = "su -c 'rpmbuild -ba --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % spec
+            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' mach" % (string.join (options), spec)
             (status, output) = self.do_chroot (command, True)
             if (output):
                 open (resultdir + '/rpm.log', "wb"). write (output)
