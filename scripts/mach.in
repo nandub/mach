@@ -196,11 +196,8 @@ class SRPM:
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
         # remove non-packagey things from buildreqs
         # currently removes everything containing ( or /
-        for pkg in buildreqs:
-    	    if string.find (pkg, '(') >= 0 or string.find (pkg, '/') >= 0:
-    	        buildreqs.remove (pkg)
-        return buildreqs
-    
+        return filter(lambda x: not re.search("[(/]", x), buildreqs)
+
     def results (self):
         "returns a list of packages that can be built out if this src.rpm"
         # FIXME: this extracts the spec file out of the src.rpm and
