@@ -288,6 +288,52 @@ do_umount (int argc, char *argv[])
   do_command ("/bin/umount", &(argv[1]));
 }
 
+/* make /dev/null device node */
+void
+do_mknod (int argc, char *argv[])
+{
+  /* enough arguments ? mach-helper mknod (name) -m (mode) (type) (major) (minor), 8 */
+  if (argc < 8)
+    error ("not enough arguments");
+
+  /* check given file */
+  if (strncmp (argv[2], rootsdir, strlen (rootsdir)) != 0)
+    error ("%s: not under allowed directory (%s)", argv[2], rootsdir);
+
+  /* does it try to fool us by using .. ? */
+  if (strstr (argv[2], "..") != 0)
+    error ("%s: contains '..'", argv[2]);
+
+  /* does it have a trailing / ? */
+  int last = argv[2][strlen (argv[2]) - 1];
+  if (last == '/')
+    error ("%s: ends with '/'", argv[2]);
+
+  /* -m */
+  if (strncmp ("-m", argv[3], 2) != 0)
+    error ("%s: options not allowed", argv[3]);
+
+  /* type */
+  if (strncmp ("666", argv[4], 3) != 0)
+    error ("%s: options not allowed", argv[4]);
+
+  /* type */
+  if (strncmp ("c", argv[5], 1) != 0)
+    error ("%s: options not allowed", argv[5]);
+
+  /* major */
+  if (strncmp ("1", argv[6], 1) != 0)
+    error ("%s: options not allowed", argv[6]);
+
+  /* minor */
+  if (strncmp ("3", argv[7], 1) != 0)
+    error ("%s: options not allowed", argv[7]);
+
+  /* all checks passed, execute */
+  do_command ("/bin/mknod", &(argv[1]));
+}
+
+
 int
 main (int argc, char *argv[])
 {
@@ -308,6 +354,8 @@ main (int argc, char *argv[])
     do_rpm (argc, argv);
   else if (strncmp ("apt-get", argv[1], 7) == 0)
     do_apt_get (argc, argv);
+  else if (strncmp ("mknod", argv[1], 5) == 0)
+    do_mknod (argc, argv);
   else
   {
     error ("Command %s not recognized !\n", argv[1]);
