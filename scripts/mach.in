@@ -1059,10 +1059,10 @@ class Root:
             # reinstall and repackage src rpm
             #sys.stdout.write ("Repackaging %s ..." % srpm)
             #do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
-            #do_chroot (config, "su -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' mach" % srpm)
+            #do_chroot (config, "su -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' %s" % (srpm, builduser))
             #self.rpm ('-Uhv /tmp/%s > /dev/null 2>&1' % srpm)
             #(status, output) = do_chroot_with_output (config,
-            # "su -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' mach" % (self.config['root_rpmbuild'], spec),
+            # "su -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' %s" % (self.config['root_rpmbuild'], spec, builduser),
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
