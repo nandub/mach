@@ -40,4 +40,4 @@
 	   	after copying to root:
   File "/usr/bin/mach", line 983, in rebuild
     shutil.copy2 (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
-
+* MEDIUM:	sanity-check conf files passed to mach-helper
