@@ -20,3 +20,4 @@
 * EASY:		make proc mounting an option, document the issues with it
 * MEDIUM:	allow specification of multiple roots for multibuilding
 * MEDIUM:	add e2fs target which makes the root into a filesystem file
+* MEDIUM:	make output of rpm and apt-get and friends immediately available

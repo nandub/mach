@@ -14,6 +14,8 @@ jpackage  = 'http://dl.sf.net/jpackage/direct_download/1.5'
 fedora    = 'http://download.fedora.us/fedora'
 gstreamer = 'http://gstreamer.net/releases/redhat'
 
+fedorabeta  = 'http://download.fedora.us/fedora/redhat'
+
 
 ### Red Hat Linux 7.2 flavours
 aptsources['redhat-72-i386'] = {
@@ -262,6 +264,38 @@ packages['redhat-9-i386-jpackage'] = packages['redhat-9-i386-updates']
 sourceslist['redhat-9-i386-jpackage'] = {
     'redhat-9-i386': ('os', 'updates', 'jpackage-generic', 'jpackage-rh9', ),
 }
+
+### Fedora Core Beta 2 (0.94) Flavours
+
+aptsources['fedora-0.94-i386'] = {
+    'os':               'rpm ' + fedorabeta + ' 0.94/i386 os',
+    'updates':          'rpm ' + fedorabeta + ' 0.94/i386 updates',
+    'gstreamer':        'rpm ' + gstreamer + ' redhat-9-i386 redhat',
+    'gstreamer-deps':   'rpm ' + gstreamer + ' redhat-9-i386 deps',
+    'fedora-stable':    'rpm ' + fedorabeta + ' 0.94/i386 stable',
+    'fedora-testing':   'rpm ' + fedorabeta + ' 0.94/i386 testing',
+    'fedora-unstable':  'rpm ' + fedorabeta + ' 0.94/i386 unstable',
+}
+
+#   Fedora Core 0.94
+packages['fedora-0.94-i386'] = {
+    'dir':      'fedora-0.94-i386',
+    'minimal':	'bash glibc',
+    'base':	'coreutils fileutils findutils openssh-server',
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                'bzip2 diffutils cpio elfutils',
+}
+sourceslist['fedora-0.94-i386'] = {
+    'fedora-0.94-i386': ('os', )
+}
+aliases['fedora-0.94-i386'] = ('f0.94', )
+
+# Red Hat Linux 9 with updates
+packages['fedora-0.94-i386-updates'] = packages['fedora-0.94-i386']
+sourceslist['fedora-0.94-i386-updates'] = {
+    'fedora-0.94-i386': ('os', 'updates', )
+}
+aliases['fedora-0.94-i386-updates'] = ('f0.94u', )
 
 
 ### SuSE Linux 8.1 flavours

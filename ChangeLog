@@ -1,3 +1,17 @@
+2003-10-04  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in:
+          - make apt-get from command line run interactively
+          - get rid of file checks of tar files, it doesn't work on severn
+          - check for arguments on build and rebuild
+
+2003-10-03  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * mach.spec.in: dirs permissions fixes
+        * scripts/mach.in: unlock root on successful build
+        * src/mach-helper.c: only refuse ".." in mach-helper
+        * etc/dist: add Fedora Core 0.94
+
 2003-09-17  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * mach.spec.in: fix up spec file
