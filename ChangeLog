@@ -1,3 +1,9 @@
+2004-04-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in: remove the buildrequire checking commands, since
+          they make the build fail if an older package than the buildrequires
+          ask for is already present
+
 2004-04-14  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* mach.spec.in: Own %{_localstatedir}/mach, thanks to
