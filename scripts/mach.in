@@ -119,6 +119,13 @@ class Spec:
         self.content = []
         self.vars = {}
         debug ("Spec.__init__: opening spec %s" % path)
+	# check if the spec file has a %prep section
+        command = "grep '%%prep' %s" % path	
+        (status, output) = commands.getstatusoutput (command)
+        if os.WIFEXITED (status):
+            retval = os.WEXITSTATUS (status)
+        if (retval != 0):
+            raise self.Error, "spec file %s does not have a %%prep section" % self.path
         # check for syntax errors in the spec file first
         command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, path)
 	debug ("Spec:__init__: command: %s" % command)
@@ -228,6 +235,7 @@ class Spec:
                 command = "rpmbuild -bp --nodeps --force --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
                 debug (command)
                 result[tag] = commands.getoutput (command)
+	print result
         return result
 
     def sources (self):
@@ -624,24 +632,25 @@ class Root:
             files = []
             debug ("build: files to download: %s" % downloads)
             debug ("build: paths to check: %s" % paths)
-            for download in downloads:
-                found = 0
-                filename = os.path.basename (download)
-                for path in paths:
-                    filepath = os.path.join (path, filename)
-                    if os.path.exists (filepath):
-                        self.stdout ("Using %s\n" % filepath)
+            if downloads:
+                for download in downloads:
+                    found = 0
+                    filename = os.path.basename (download)
+                    for path in paths:
+                        filepath = os.path.join (path, filename)
+                        if os.path.exists (filepath):
+                            self.stdout ("Using %s\n" % filepath)
+                            files.append (filepath)
+                            found = 1
+                    if not found:
+                        filepath = os.path.join (tmppath, filename)
+                        try:
+                            urlgrab (download, filepath)
+                        except:
+                            raise self.Error, "Could not download %s !" % download
                         files.append (filepath)
-                        found = 1
-                if not found:
-                    filepath = os.path.join (tmppath, filename)
-                    try:
-                        urlgrab (download, filepath)
-                    except:
-                        raise self.Error, "Could not download %s !" % download
-                    files.append (filepath)
-                    self.stdout ("Using %s\n" % filepath)
-
+                        self.stdout ("Using %s\n" % filepath)
+    
             # copy all necessary files to /tmp in root, then chroot to mv them
             for file in files:
                 debug ("Getting file %s into SOURCES" % file)
