@@ -6,5 +6,6 @@
 * EASY:		make mach-helper do rm if the root's rm is gone
 * EASY:		check for suidness of mach-helper
 		mach-helper
+* EASY:		add warning about missing stuff from .rpmmacros for signing
 * EASY:		check for ending spaces in urlgrab, disallow
 * EASY:		sign and collect packages at end of complete build
