@@ -62,6 +62,8 @@ packages['redhat-72-i386'] = {
                     'gdbm-1.8.0-10.i386.rpm',
                     apt['redhat-72-i386'],
                 ),
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '7.2/i386/RPMS.os/',
                     apt['redhat-72-i386']: apts + '/redhat-72-i386/'
@@ -106,6 +108,7 @@ packages['redhat-72-i386-updates'] = {
                     'gdbm-1.8.0-10.i386.rpm',
                     apt['redhat-72-i386-updates']
                 ),
+    'build':    packages['redhat-72-i386']['build'],
     'download': {
                     '': freshrpms + '7.2/i386/RPMS.os/',
                     'rpm-4.0.4-7x.i386.rpm':
@@ -161,6 +164,8 @@ packages['redhat-73-i386'] = {
                     'gdbm-1.8.0-14.i386.rpm',
                     apt['redhat-73-i386']
                 ),
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '7.3/i386/RPMS.os',
                     apt['redhat-73-i386']: apts + 'redhat-73-i386/',
@@ -235,6 +240,8 @@ packages['redhat-80-i386'] = {
                     'glibc-common-2.2.93-5.i386.rpm',
                     apt['redhat-80-i386']
                 ),
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                'diffutils cpio openssh-server',
     'download': {
                     '': freshrpms + '8.0/i386/RPMS.os/',
                     apt['redhat-80-i386']: apts + "redhat-80-i386/",
@@ -266,7 +273,7 @@ packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
 sourceslist['redhat-80-i386-fedora-stable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable')
 }
-packages['redhat-80-i386-fedora-stable']['build'] = 'gcc-c++ redhat-rpm-config'
+packages['redhat-80-i386-fedora-stable']['build'] = packages['redhat-80-i386']['build'] + ' gcc-c++ redhat-rpm-config'
 
 packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
 sourceslist['redhat-80-i386-fedora-testing'] = {
@@ -338,6 +345,8 @@ packages['redhat-9-i386'] = {
                     'glibc-common-2.3.2-11.9.i386.rpm',
                     apt['redhat-9-i386']
                 ),
+    'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
+                'diffutils cpio elfutils openssh-server',
     'download': {
                     '': freshrpms + '9/i386/RPMS.os/',
                     apt['redhat-9-i386']: apts + "/redhat-9-i386/",
@@ -366,7 +375,7 @@ sourceslist['redhat-9-i386-gstreamer-deps'] = {
 
 # Red Hat Linux 9 with Fedora
 packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386']
-packages['redhat-9-i386-fedora-stable']['build'] = 'gcc-c++ redhat-rpm-config elfutils'
+packages['redhat-9-i386-fedora-stable']['build'] = packages['redhat-9-i386']['build'] + ' gcc-c++ redhat-rpm-config'
 sourceslist['redhat-9-i386-fedora-stable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable')
 }
