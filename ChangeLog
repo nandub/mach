@@ -1,3 +1,8 @@
+2004-04-08  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* mach.spec.in, README: We require apt >= 0.5.5cnc2 due to
+	use of the "rpm-dir" index type.
+
 2004-04-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in: patch from Jeff Pitman to only add

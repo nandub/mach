@@ -12,7 +12,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires:	python
 Requires:	rpm
 Requires:	rpm-python
-Requires:	apt
+Requires:	apt >= 0.5.5cnc2
 Requires:	sed
 Requires:	cpio
 
@@ -101,6 +101,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Thu Apr  8 2004 Ville Skyttä <ville.skytta at iki.fi>
+- Require apt >= 0.5.5cnc2 due to internal use of the "rpm-dir" index type.
+
 * Tue Mar 16 2004 Thomas Vander Stichele <thomas at apestaart dot org>
 - package dist.d and location
 

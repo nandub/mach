@@ -86,7 +86,7 @@ Some handy features of mach include
 - A Linux kernel that can do bind mounts (>= 2.2.0 if I'm correct)
 - rpm (>= 4.1 + gpg and cpio if you want GPG)
 - python
-- apt
+- apt >= 0.5.5cnc2
 - sudo
 - lots of disk space
 - good faith
