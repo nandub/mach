@@ -5,6 +5,9 @@
 	don't have "rpmbuild".
 	* etc/dist: Set root_rpmbuild to "rpm" for SuSE 8.1 and 8.2.
 
+	* scripts/mach.in (_setup_build): Ensure that /etc/rpm exists so
+	copying our macros works as expected.
+
 2003-12-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (rebuild): Don't fail if package has no build

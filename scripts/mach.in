@@ -1068,7 +1068,7 @@ ERROR: You've hit a dependency loop in the packages you are trying to build.
         #FIXME: create /dev/null or install dev rpm later on
         #os.system ('%s %s c 1 3' % (config['mknod'],
         #                            os.path.join (self.rootdir, 'dev', 'null'))
-        ensure_dir (os.path.join (self.rootdir, 'etc'))
+        ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
         ensure_dir (os.path.join (self.rootdir, 'tmp'))
