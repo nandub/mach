@@ -1,3 +1,9 @@
+2004-03-23  Noa Resare  <noa at resare dot com>
+
+	* scripts/mach.in (_setup_prep): Point Dir::Bin::scripts to
+	/dev/null in the default apt configuration to avoid hangs caused
+	eg. by first-time druids which expect input from stdin.
+
 2004-03-20  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: Skip various backup files when pulling in

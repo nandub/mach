@@ -33,5 +33,3 @@
 * EASY:		change --enable- to --with- in configure ?
 * MEDIUM:	check if we can have the actual rpmbuild command use
 	 	--root instead of doing it ourselves
-* EASY:		<Panu> thomasvs: you really want to disable all lua-scripts in mach environment
-<Panu> probably easiest to point Dir::Bin::scripts to some non-existent directory -> problem solved

@@ -1271,8 +1271,8 @@ Dir {
      Etc "''' + os.path.join (state, 'apt', 'etc', 'apt') + '''";
      Cache "''' + os.path.join ('/', 'var', 'cache', 'mach') + '''";
      State "''' + os.path.join (state, 'apt', 'var', 'state', 'apt') + '''";
+     Bin { scripts "/dev/null"; }; // do not execute lua scripts
 }
-clear Dir::Bin::scripts; // do not execute lua scripts
 
 '''
         self.set_state ("apt.conf", conf)
