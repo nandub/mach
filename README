@@ -53,7 +53,7 @@ Red Hat 8.0 and 9
   - with FreshRPMS
   - with JPackage
 
-Fedora 1 and 2
+Fedora 1, 2 and 3
   - Core
   - updated
   - with fedora.us stable, testing and unstable
@@ -234,6 +234,15 @@ the built directory as a parameter.
   gets restored.  After that, install the kernel packages.  Then, rerun
   the build with -k (to keep packages in the buildroot) and the build should
   succeed.
+
+- SELINUX:
+  When using an SELINUX-enabled host, a whole range of things can fail.
+  For example, creating an FC2 target on an FC3 host fails when installing
+  packages.
+  I've added a library that gets preloaded to override selinux, which allows
+  most packages to be installed.  The current blocker is the dev package
+  seeing devfs being mounted through /proc.
+  The library gets preloaded if you have MACH_LD_PRELOAD set in the environment.
 
 10. BUGS
 --------
