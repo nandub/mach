@@ -1634,11 +1634,20 @@ def main (config, args):
         elif opt == '--canonify':
             canonify = 1
 
-    # resolve root aliases to real root names
+    # resolve root aliases to real root names, check for duplicates
+    seen_aliases = []
     for name in aliases.keys ():
-        if root in aliases[name]:
-            root = name
-            break
+        if name in seen_aliases:
+            sys.stderr.write ('Root "%s" is ambiguous\n' % al)
+            sys.exit (1)
+        seen_aliases.append (name)
+        for al in aliases[name]:
+            if al in seen_aliases:
+                sys.stderr.write ('Root "%s" is ambiguous\n' % al)
+                sys.exit (1)
+            if al == root: root = name
+            seen_aliases.append (al)
+    del seen_aliases
 
     if canonify:
         print root

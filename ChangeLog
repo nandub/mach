@@ -1,5 +1,7 @@
 2004-01-08  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in (main): Check for duplicate root/alias names.
+
 	* configure.in: Make default build user/group names configurable.
 	* mach.spec.in: Ditto.
 	* scripts/mach.in: Use build-time configured build user/group names.
