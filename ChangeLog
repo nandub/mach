@@ -1,3 +1,7 @@
+2004-01-06  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+        * configure.in: bump nano to 1 for cvs development
+
 2003-12-05  Enrico Scholz  <enrico.scholz@informatik.tu-chemnitz.de>
 
 	* Makefile.am: Add ACLOCAL_AMFLAGS so the auto* system can be
