@@ -102,10 +102,12 @@ try:
 except IOError:
     pass
 
-
 # rpm -q format, users may have customized %_query_all_fmt in ~/.rpmmacros...
 qfmt = '"%{name}-%{version}-%{release}\n"'
 
+# build user/group inside chroot
+builduser = '@BUILDUSER@'
+buildgroup = '@BUILDGROUP@'
 
 ### objects
 class Spec:
@@ -632,7 +634,8 @@ class Root:
                             os.path.join ('tmp', os.path.basename (specfile)),
                             os.path.join ('usr', 'src', 'rpm', 'SPECS')))
             # fix ownership on all of these
-            self.do_chroot ("cd /usr/src/rpm && chown -R machbuild:machbuild *")
+            self.do_chroot ("cd /usr/src/rpm && chown -R %s:%s *" %
+                            (builduser, buildgroup))
             try:
                 self.do_chroot ("cd / && %s %s -bs --nodeps %s" \
                                 % (self.config['root_rpmbuild'],
@@ -860,7 +863,8 @@ class Root:
             # rebuild binary rpm from the src rpm
 
             # install the src.rpm
-            self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' machbuild" % srpmname)
+            self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' %s" %
+                            (srpmname, builduser))
             specfile = pkgs[name]['spec']
 
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
@@ -898,7 +902,7 @@ class Root:
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
 
-            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile)
+            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - %s" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding %s" % srpmname,
                                                True)
@@ -1171,11 +1175,11 @@ Dir {
         # install packages
         self._install ('build')
         #FIXME: add mach user and group
-        self.do_chroot ("echo machbuild:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd", fatal = True)
-        self.do_chroot ("echo machbuild::500:mach >> /etc/group", fatal = True)
+        self.do_chroot ("echo %s:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd" % builduser, fatal = True)
+        self.do_chroot ("echo %s::500:mach >> /etc/group" % buildgroup, fatal = True)
         self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
-        self.do_chroot ("chown -R machbuild:machbuild /usr/src/rpm", fatal = True)
-        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' machbuild", fatal = True)
+        self.do_chroot ("chown -R %s:%s /usr/src/rpm" % (builduser, buildgroup), fatal = True)
+        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % builduser, fatal = True)
          # create dir structure and rpmmacros
         macros = open (self.rootdir + '/tmp/macros', 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
@@ -1186,7 +1190,8 @@ Dir {
         macros.close ()
         self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' machbuild" % dir, fatal = True)
+            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' %s" %
+                            (dir, builduser), fatal = True)
 
         # this ensures that locally built RPMS are already used for apt-get
         srcs = get_sources_list (self.config)
