@@ -1,5 +1,14 @@
 2004-11-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* .cvsignore:
+	* autogen.sh:
+	* configure.in:
+	* src/Makefile.am:
+	* src/mach-helper.c:
+	  use config.h for all defines
+
+2004-11-06  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	patch by: yax
 
 	* src/mach-helper.c:
