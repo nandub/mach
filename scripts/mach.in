@@ -6,6 +6,7 @@
 
 import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
+import random # spinner theming madness
 
 # make sure True and False constants exist
 
@@ -39,7 +40,7 @@ config = {
   'statesdir':   '@LOCALSTATEDIR@/state/mach',
   'rootsdir':    '@LOCALSTATEDIR@/tmp/mach/roots',
   'resultsdir':  '@LOCALSTATEDIR@/tmp/mach/result',
-  'packagedir':  '@LOCALSTATEDIR@/tmp/mach/packages',
+  'packagesdir':  '@LOCALSTATEDIR@/tmp/mach/packages',
   'tmpsdir':     '@LOCALSTATEDIR@/tmp/mach/tmp',
   'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
 
@@ -163,15 +164,19 @@ def pty_popen (cmd):
 # - the return status of the app
 # - all of the output as one big string
 def do_progress (cmd, delta = 0.1, jump = 20):
-    progress = '/-\|'
-    i = 0
+    # choose a random spinner by jumping through lots of hoops
+    spinkey = random.randint (0, len (config['spinner'].keys ()) - 1)
+    spinner = config['spinner'][config['spinner'].keys ()[spinkey]]
+    i = 0 # jump counter
+    j = 0 # spinner state
     timestamp = time.time ()
     running = 1
     size = 0 # size of total output since last spinner update
     output = []
     (fdin, pid) = pty_popen (cmd)
     fcntl.fcntl (fdin, fcntl.F_SETFL, os.O_NONBLOCK) # don't block input
-    sys.stdout.write ('|')
+    sys.stdout.write (spinner[0])
+    sys.stdout.flush () # otherwise we don't see nothing until first update
     while running:
         block = ""
         try:
@@ -186,10 +191,11 @@ def do_progress (cmd, delta = 0.1, jump = 20):
             timestamp = time.time ()
             size = 0
             i = i + 1
-            sys.stdout.write ('\b' + progress[i % len (progress)])
+            j = (j + 1) % len (spinner)
+            sys.stdout.write ('\b' + spinner[j % len (spinner)])
             if (i > jump):
                 i = 0
-                sys.stdout.write ('\b.-')
+                sys.stdout.write ('\b.%s' % spinner[j])
             sys.stdout.flush ()
         time.sleep (0.1)
         try:
@@ -330,10 +336,15 @@ def debug (string):
     if DEBUG:
         print "DEBUG: %s" % string
 
-# return the dir given name of the root and name of the sort of dir
+# return full path to directory based on the root (in config) and which sort
+# of directory to get
 def get_config_dir (config, which):
 #FIXME: do error checking on key
     return config[which + 'sdir'] + '/' + config['root']
+
+# return full path to directory holding bootstrap packages for this root
+def get_packages_dir (config):
+    return config['packagesdir'] + '/' + config['packages']['dir']
 
 # make sure a dir exists
 def ensure_dir (dir):
@@ -455,6 +466,7 @@ def setup_prep (config, args):
 # install a set of packages
 # called by base and apt
 def install (config, set):
+    packagesdir = get_packages_dir (config)
     debug ("Installing package set %s" % set)
     statefile = get_config_dir (config, 'state') + '/' + set
     debug ("Checking statefile %s" % statefile)
@@ -466,8 +478,8 @@ def install (config, set):
     ensure_dir (root + '/var/lib/rpm')
     # expand path for each package and install all of them at once
     # a roundabout way to prefix each rpm in the list with the path
-    rpms = string.join (('', ) + config['packages'][set], ' ' 
-                               + config['packagedir'] + '/')
+    rpms = string.join (('', ) + config['packages'][set],
+                        ' ' + packagesdir + '/')
     command = '%s --root %s -Uhv %s --nodeps --noorder --replacepkgs' % (config ['rpm'], root, rpms)
     debug ("Executing %s" % command)
     sys.stdout.write ("Installing %s packages ..." % set)
@@ -582,10 +594,11 @@ def check_packages (config):
         return True
 
     # check if all packages are present
+    packagesdir = get_packages_dir (config)
     print "Checking bootstrap packages ..."
-    ensure_dir (config['packagedir'])
+    ensure_dir (packagesdir)
     for pkg in config['packages']['base'] + config['packages']['apt']:
-        path = config['packagedir'] + '/' + pkg
+        path = os.path.join (packagesdir, pkg)
         if not config['packages']['download'].has_key (pkg):
             url = config['packages']['download'][''] + '/' + pkg
         else:
@@ -616,14 +629,15 @@ def check_packages (config):
 # rebuild section
 def build (config, args):
     # check if we can build here yet
-    #if not get_state (config, 'build'):
-    # trigger a cleanout of build root
-    #if not setup (config, ["build"]):
-    #    return False
+    if not get_state (config, 'build'):
+        # trigger a cleanout of build root
+        if not setup (config, ["build"]):
+            return False
     if not lock (config, args):
         return False
     
     root = get_config_dir (config, 'root')
+    ensure_dir (root)
     tmp = get_config_dir (config, 'tmp')
     srpms = [] # resulting set of srpms
     # check if the spec files exist and if we can parse the files necessary
@@ -730,7 +744,7 @@ def clean (config, args):
     # get a list of files and dirs in the root
     files = string.join (os.listdir (rootdir))
     sys.stdout.write ('Cleaning out root ...')
-    do_chroot (config, 'rm -rf %s' % files, True)
+    do_chroot (config, 'rm -rfv %s' % files, True)
     os.rmdir (rootdir)
 
 # rebuild a src rpm
