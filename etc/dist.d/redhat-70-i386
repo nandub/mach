@@ -1,6 +1,6 @@
-# mach dist configuration                          -*- python -*-
+# mach dist configuration                                        -*- python -*-
 
-# redhat-9-i386: configuration for Red Hat 9
+# redhat-70-i386: configuration for Red Hat 7.0
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from

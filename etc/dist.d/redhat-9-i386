@@ -1,4 +1,4 @@
-# mach dist configuration                          -*- python -*-
+# mach dist configuration                                        -*- python -*-
 
 # redhat-9-i386: configuration for Red Hat 9
 
@@ -91,7 +91,7 @@ sourceslist['redhat-9-i386-fedora-unstable'] = {
 config['redhat-9-i386-fedora-unstable']  = config['redhat-9-i386-fedora-testing']
 aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', 'rh90fu')
 
-# Red Hat 9 with livna (+ fedora.us)
+# Red Hat Linux 9 with livna (+ fedora.us)
 packages['redhat-9-i386-livna-stable'] = packages['redhat-9-i386-updates'].copy ()
 packages['redhat-9-i386-livna-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['redhat-9-i386-livna-stable'] = {
