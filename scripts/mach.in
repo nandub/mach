@@ -1233,6 +1233,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
     # choose a random spinner by jumping through lots of hoops
     spinkey = random.randint (0, len (config['spinner'].keys ()) - 1)
     spinner = config['spinner'][config['spinner'].keys ()[spinkey]]
+    spinner = config['spinner']['point']
     i = 0 # jump counter
     j = 0 # spinner state
     timestamp = time.time ()
