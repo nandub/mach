@@ -1,3 +1,7 @@
+2003-11-16  Ville Skyttä <ville dot skytta at iki dot fi>
+
+        * etc/dist: Add a bunch of aliases for RH 8.0 and 9 repos.
+
 2003-11-13  Ville Skyttä <ville dot skytta at iki dot fi>
 
         * etc/dist: Add Fedora Core 1, remove 0.9x betas.
