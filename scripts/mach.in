@@ -125,8 +125,8 @@ class Spec:
             self.vars[which] = value
 
         # scan for defines in the spec file
-        debug ("scanning spec file for %define")
-        matchstr = re.compile ("^%define\s+(\S*)\s+(\S*)$")
+        debug ("scanning spec file for %define's")
+        matchstr = re.compile ("^\s*%define\s+(\S*)\s+(\S*)$")
         for line in self.content:
             match = matchstr.search (line)
             if match:

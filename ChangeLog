@@ -2,6 +2,9 @@
 
 	* scripts/mach.in (main): Check for duplicate root/alias names.
 
+	* scripts/mach.in (Spec.__init__): Allow whitespace before %define
+	in specfile scan.
+
 	* configure.in: Make default build user/group names configurable.
 	* mach.spec.in: Ditto.
 	* scripts/mach.in: Use build-time configured build user/group names.
