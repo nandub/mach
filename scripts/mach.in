@@ -855,7 +855,7 @@ class Root:
                 for cand in candidates:
                     if cand == "kernel":
                         print "Warning: make sure you have manually installed the right kernel rpm"
-                        print "         and that you are rebuilding with --keep"
+                        print "         and that you are building with --keep"
                     elif cand == "kernel-source":
                         print "Warning: make sure you have manually installed the right kernel-source rpm"
                         print "         and that you are building with --keep"
