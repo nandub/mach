@@ -34,3 +34,4 @@ autoregen.sh
 config.*
 configure
 mach.spec
+*.gz
