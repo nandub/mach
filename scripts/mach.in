@@ -1657,6 +1657,7 @@ def main (config, args):
             config[key] = config[root][key]
 
     for key in cli_config.keys():
+        debug ("setting config['%s'] to %s from CLI" % (key, cli_config[key]))
         config[key] = cli_config[key]
 
     # debug output options
