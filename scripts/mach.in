@@ -1082,7 +1082,7 @@ Dir {
 
         if rpms:
             self.aptget ('install -y %s' % rpms,
-                         'Installing %s set of packages' % set, True)
+                         "Installing package set '%s'" % set, True)
         else:
             print "No packages in %s set" % rpms
         self.set_state (set)
