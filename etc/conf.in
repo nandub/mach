@@ -36,6 +36,7 @@ search 4fm.be onshuis
 ''',
     '/usr/bin/apt-sigchecker': '''#!/bin/bash
 while read p; do
+/bin/true
 done
 '''
 }
