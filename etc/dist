@@ -1,11 +1,17 @@
-# mach bootstrap packages configuration                          -*- python -*-
+# mach dist configuration                          -*- python -*-
+
+# distro sets
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
 
 # download locations for all bootstrap packages
 rpmfind = 'ftp://rpmfind.net/linux/redhat/'
 freshrpms = 'http://ayo.freshrpms.net/redhat/'
 apts = 'http://thomas.apestaart.org/download/mach/apt/'
 
-
+# list of apt rpms to use
 # being lazy bastards, we only want to write the actual apt rpm used once
 apt = {
     'redhat-9-i386':  'apt-0.5.5cnc5-fr2.i386.rpm',
@@ -15,10 +21,14 @@ apt = {
     'redhat-72-i386': 'apt-0.3.19cnc55-fr5.i386.rpm',
 }
 
-# distro sets
 
-# Red Hat Linux 7.2
+### Red Hat Linux 7.2 flavours
+aptsources['redhat-72-i386'] = {
+    'os':      'rpm http://ayo.freshrpms.net redhat/7.2/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/7.2/i386 updates',
+}
 
+#   Red Hat Linux 7.2
 packages['redhat-72-i386'] = {
     'dir':      'redhat-72-i386',
     'base':     (
@@ -55,6 +65,9 @@ packages['redhat-72-i386'] = {
                     '': freshrpms + '7.2/i386/RPMS.os/',
                     apt['redhat-72-i386']: apts + '/redhat-72-i386/'
                 }
+}
+sourceslist['redhat-72-i386'] = {
+    'redhat-72-i386': ('os', )
 }
 
 # Red Hat Linux 7.2, updates (rpm 4.0.4)
@@ -99,6 +112,17 @@ packages['redhat-72-i386-updates'] = {
                 }
 }
 
+sourceslist['redhat-72-i386-updates'] = {
+    'redhat-72-i386': ('os', 'updates', )
+}
+
+
+### Red Hat Linux 7.3 flavours
+aptsources['redhat-73-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/7.3/i386 updates',
+}
+
 # Red Hat Linux 7.3
 packages['redhat-73-i386'] = {
     'dir':      'redhat-73-i386',
@@ -125,6 +149,7 @@ packages['redhat-73-i386'] = {
                     'textutils-2.0.21-1.i386.rpm',
                     'glibc-common-2.2.5-34.i386.rpm',
                     'zlib-1.1.3-25.7.i386.rpm',
+                    'sed-3.02-11.i386.rpm',
                     'pam-0.75-32.i386.rpm',
                 ),
     'apt':      (
@@ -138,10 +163,31 @@ packages['redhat-73-i386'] = {
                     apt['redhat-73-i386']: apts + 'redhat-73-i386/',
                 }
 }
+sourceslist['redhat-73-i386'] = {
+    'redhat-73-i386': ('os', )
+}
 
 # Red Hat Linux 7.3, updates
 packages['redhat-73-i386-updates'] = packages['redhat-73-i386']
+sourceslist['redhat-73-i386-updates'] = {
+    'redhat-73-i386': ('os', 'updates', )
+}
 
+### Red Hat Linux 8.0 flavours
+aptsources['redhat-80-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/8.0/i386 updates',
+    'gstreamer':
+        'rpm http://gstreamer.net/releases/redhat redhat-80-i386 redhat',
+    'gstreamer-deps':
+        'rpm http://gstreamer.net/releases/redhat redhat-80-i386 deps',
+    'fedora-stable': 
+        'rpm http://download.fedora.us fedora/redhat/8.0/i386 stable',
+    'fedora-testing':
+        'rpm http://download.fedora.us fedora/redhat/8.0/i386 testing',
+    'fedora-unstable': 
+        'rpm http://download.fedora.us fedora/redhat/8.0/i386 unstable',
+}
 
 # Red Hat Linux 8.0
 packages['redhat-80-i386'] = {
@@ -164,6 +210,7 @@ packages['redhat-80-i386'] = {
                     'filesystem-2.1.6-5.noarch.rpm',
                     'bzip2-1.0.2-5.i386.rpm',
                     'bzip2-libs-1.0.2-5.i386.rpm',
+                    'libelf-0.8.2-2.i386.rpm',
                     'rpm-4.1-1.06.i386.rpm',
                     'popt-1.7-1.06.i386.rpm',
                     'findutils-4.1.7-7.i386.rpm',
@@ -181,7 +228,7 @@ packages['redhat-80-i386'] = {
                     'libgcc-3.2-7.i386.rpm',
                     'sed-3.02-13.i386.rpm',
                     'pam-0.75-40.i386.rpm',
-                    'libelf-0.8.2-2.i386.rpm',
+#                    'libelf-0.8.2-2.i386.rpm',
                     'glibc-common-2.2.93-5.i386.rpm',
                     apt['redhat-80-i386']
                 ),
@@ -190,12 +237,63 @@ packages['redhat-80-i386'] = {
                     apt['redhat-80-i386']: apts + "redhat-80-i386/",
                 }
 }
+sourceslist['redhat-80-i386'] = {
+    'redhat-80-i386': ('os', )
+}
 
 # Red Hat Linux 8.0 with updates
 packages['redhat-80-i386-updates'] = packages['redhat-80-i386']
+sourceslist['redhat-80-i386-updates'] = {
+    'redhat-80-i386': ('os', 'updates', )
+}
+
+# Red Hat Linux 8.0 with GStreamer
+packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
+sourceslist['redhat-80-i386-gstreamer'] = {
+    'redhat-80-i386': ('os', 'gstreamer-deps', 'gstreamer')
+}
+
+packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
+sourceslist['redhat-80-i386-gstreamer-deps'] = {
+    'redhat-80-i386': ('os', 'gstreamer-deps')
+}
+
+# Red Hat Linux 8.0 with Fedora
+packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
+sourceslist['redhat-80-i386-fedora-stable'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable')
+}
+packages['redhat-80-i386-fedora-stable']['build'] = 'gcc-c++ redhat-rpm-config'
+
+packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
+sourceslist['redhat-80-i386-fedora-testing'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+}
+
+packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
+sourceslist['redhat-80-i386-fedora-unstable'] = {
+    'redhat-80-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
+                      'fedora-unstable')
+}
 
 
-# Red Hat Linux 9
+### Red Hat Linux 9 flavours
+aptsources['redhat-9-i386'] = {
+    'os': 'rpm http://ayo.freshrpms.net redhat/9/i386 os',
+    'updates': 'rpm http://ayo.freshrpms.net redhat/9/i386 updates',
+    'gstreamer':
+        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 redhat',
+    'gstreamer-deps':
+        'rpm http://gstreamer.net/releases/redhat redhat-9-i386 deps',
+    'fedora-stable': 
+        'rpm http://download.fedora.us fedora/redhat/9/i386 stable',
+    'fedora-testing':
+        'rpm http://download.fedora.us fedora/redhat/9/i386 testing',
+    'fedora-unstable': 
+        'rpm http://download.fedora.us fedora/redhat/9/i386 unstable',
+}
+
+#   Red Hat Linux 9
 packages['redhat-9-i386'] = {
     'dir':      'redhat-9-i386',
     'base':     (
@@ -242,25 +340,52 @@ packages['redhat-9-i386'] = {
                     apt['redhat-9-i386']: apts + "/redhat-9-i386/",
                 }
 }
+sourceslist['redhat-9-i386'] = {
+    'redhat-9-i386': ('os', )
+}
+# override default chrootcmds
+chrootcmds['redhat-9-i386'] = {
+    'apt-get': 'export LD_ASSUME_KERNEL=2.2.5 && apt-get',
+    'rpm':     'export LD_ASSUME_KERNEL=2.2.5 && rpm',
+}
 
 # Red Hat Linux 9 with updates
 packages['redhat-9-i386-updates'] = packages['redhat-9-i386']
+sourceslist['redhat-9-i386-updates'] = {
+    'redhat-9-i386': ('os', 'updates', )
+}
+chrootcmds['redhat-9-i386-updates'] = chrootcmds['redhat-9-i386']
 
-
-# Red Hat Linux 8.0 flavours
-packages['redhat-80-i386-gstreamer'] = packages['redhat-80-i386']
-packages['redhat-80-i386-gstreamer-deps'] = packages['redhat-80-i386']
-
-packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
-packages['redhat-80-i386-fedora-stable']['build'] = 'gcc-c++ redhat-rpm-config'
-packages['redhat-80-i386-fedora-testing'] = packages['redhat-80-i386-fedora-stable']
-packages['redhat-80-i386-fedora-unstable'] = packages['redhat-80-i386-fedora-testing']
-
-# Red Hat Linux 9 flavours
+# Red Hat Linux 9 with GStreamer
 packages['redhat-9-i386-gstreamer'] = packages['redhat-9-i386']
-packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
+sourceslist['redhat-9-i386-gstreamer'] = {
+    'redhat-9-i386': ('os', 'gstreamer-deps', 'gstreamer')
+}
+chrootcmds['redhat-9-i386-gstreamer'] = chrootcmds['redhat-9-i386']
 
+packages['redhat-9-i386-gstreamer-deps'] = packages['redhat-9-i386']
+sourceslist['redhat-9-i386-gstreamer-deps'] = {
+    'redhat-9-i386': ('os', 'gstreamer-deps')
+}
+chrootcmds['redhat-9-i386-gstreamer-deps'] = chrootcmds['redhat-9-i386']
+
+# Red Hat Linux 9 with Fedora
 packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386']
 packages['redhat-9-i386-fedora-stable']['build'] = 'gcc-c++ redhat-rpm-config'
+sourceslist['redhat-9-i386-fedora-stable'] = {
+    'redhat-9-i386': ('os', 'updates', 'fedora-stable')
+}
+chrootcmds['redhat-9-i386-fedora-stable'] = chrootcmds['redhat-9-i386']
+
 packages['redhat-9-i386-fedora-testing'] = packages['redhat-9-i386-fedora-stable']
+sourceslist['redhat-9-i386-fedora-testing'] = {
+    'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+}
+chrootcmds['redhat-9-i386-fedora-testing'] = chrootcmds['redhat-9-i386']
+
 packages['redhat-9-i386-fedora-unstable'] = packages['redhat-9-i386-fedora-testing']
+sourceslist['redhat-9-i386-fedora-unstable'] = {
+    'redhat-9-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
+                      'fedora-unstable')
+}
+chrootcmds['redhat-9-i386-fedora-unstable'] = chrootcmds['redhat-9-i386']

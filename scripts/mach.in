@@ -603,11 +603,13 @@ class Root:
         if self.get_state ('prep'): return
     
         print "Preparing root ..."
-        ensure_dir (os.path.join (self.root, 'etc', 'apt'))
-        ensure_dir (os.path.join (self.root, 'var', 'lib', 'rpm'))
+        ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
+        ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
-        ensure_dir (os.path.join (self.root, 'dev'))
-        #FIXME: create /dev/null or install dev rpm
+        ensure_dir (os.path.join (self.rootdir, 'dev'))
+        #FIXME: create /dev/null or install dev rpm later on
+        #os.system ('%s %s c 1 3' % (config['mknod'],
+        #                            os.path.join (self.rootdir, 'dev', 'null'))
         ensure_dir (os.path.join (self.root, 'etc'))
         open (os.path.join (self.root, 'etc', 'mtab'), 'w')
         open (os.path.join (self.root, 'etc', 'fstab'), 'w')
@@ -709,7 +711,7 @@ Dir {
             distspecific = ''
         # install packages
         sys.stdout.write ('Installing rpm build packages ...')
-        packages = "rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
+        packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils"
         self.aptget ('install -y %s %s' % (packages, distspecific))
         #FIXME: add mach user and group
         if do_chroot (config, "echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd") != 0:
