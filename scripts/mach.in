@@ -79,6 +79,7 @@ config = {
   'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
   'mknod': '@SBINDIR@/mach-helper mknod',
+  'runuser': '/bin/su',
 
   # root_*: commands run inside the build root
   'root_rpmbuild': 'rpmbuild',
@@ -160,7 +161,7 @@ class Spec:
             raise self.Error, "spec file %s does not have a %%prep section" % self.path
         # check for syntax errors in the spec file first
         command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, path)
-	debug ("Spec:__init__: command: %s" % command)
+	    debug ("Spec:__init__: command: %s" % command)
         (status, output) = commands.getstatusoutput (command)
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
@@ -172,7 +173,7 @@ class Spec:
         # build options
         for which in ['name', 'version', 'release']:
             command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre echo %%%s; exit 0' --define 'setup :' %s | tail -n 1" % (options, which, path)
-	    debug ("Spec:__init__: command: %s" % command)
+            debug ("Spec:__init__: command: %s" % command)
             value = commands.getoutput (command)
             self.vars[which] = value
 
@@ -580,8 +581,10 @@ class Root:
         else:
             # we use double quotes to protect the commandline since
             # we use single quotes to protect the args in command
-            cmd = "%s %s su - root -c \"%s\"" % (config['chroot'],
-                                               self.rootdir, command)
+            cmd = "%s %s %s - root -c \"%s\"" % (config['chroot'],
+                                                 self.rootdir,
+                                                 self.config['runuser'],
+                                                 command)
         # be quiet if we're asked to be so
         if (self.progress () == False): progress = False
         if message: self.stdout (message)
@@ -775,19 +778,23 @@ class Root:
     # chroot into root
     def chroot (self, args):
         self.mount ()
-        # a minimal system might not have su, yikes
-        if not os.path.exists (os.path.join (self.rootdir, 'bin', 'su')):
+        # a minimal system might not have su/runuser, yikes
+        if not os.path.exists (os.path.join (self.rootdir, 'bin',
+                                             self.config['runuser'])):
             if args:
-                print "No su in root, can't execute %s" % join_quoted (args)
+                print "No %s in root, can't execute %s" % (
+                    self.config['runuser'], join_quoted (args))
                 return
             else:
                 cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, join_quoted (args))
                 print "Entering %s, type exit to leave." % self.rootdir
         elif args:
-             cmd = "%s %s su - root -c '%s'" % (self.config['chroot'], self.rootdir, join_quoted (args))
+            cmd = "%s %s %s - root -c '%s'" % (self.config['chroot'],
+                self.rootdir, self.config['runuser'], join_quoted (args))
         else:
-             cmd = "%s %s su - root" % (self.config['chroot'], self.rootdir)
-             print "Entering %s, type exit to leave." % self.rootdir
+            cmd = "%s %s %s - root" % (self.config['chroot'], self.rootdir,
+                self.config['runuser'])
+            print "Entering %s, type exit to leave." % self.rootdir
         debug ("running %s" % cmd)
         os.system (cmd)
         self.umount ()
@@ -926,11 +933,11 @@ class Root:
                     if cand == "kernel":
                         print "Warning: make sure you have manually installed the right kernel rpm"
                         print "         and that you are building with --keep"
-			continue
+			            continue
                     elif cand == "kernel-source":
                         print "Warning: make sure you have manually installed the right kernel-source rpm"
                         print "         and that you are building with --keep"
-			continue
+			            continue
                     #FIXME: if an older version of a buildrequire is already
                     #installed, it will get filtered even though we need the
                     #newer version
@@ -947,7 +954,7 @@ class Root:
                     create_sources_list (config, srcs)
 
                     try:
-        	        self.aptget (["update", ])
+        	            self.aptget (["update", ])
                     except Root.Error:
                         raise self.Error, 'could not update apt'
                     try:
@@ -982,8 +989,8 @@ class Root:
 
             # rebuild binary rpm from the src rpm
             # install the src.rpm
-            self.do_chroot ("su -c 'rpm -Uhv /tmp/%s' %s" %
-                            (srpmname, builduser))
+            self.do_chroot ("%s -c 'rpm -Uhv /tmp/%s' %s" %
+                (self.config['runuser'], srpmname, builduser))
             specfile = pkgs[name]['spec']
 
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
@@ -1054,7 +1061,9 @@ class Root:
             # version than the host's rpmbuild understands.
             # this is fine now since we check for met buildrequires before.
 
-            command = "su -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (nrcpus, self.config['root_rpmbuild'], join_quoted (options), specfile, builduser)
+            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
+                self.config['runuser'], nrcpus, self.config['root_rpmbuild'],
+                join_quoted (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -1069,10 +1078,10 @@ class Root:
             # reinstall and repackage src rpm
             #sys.stdout.write ("Repackaging %s ..." % srpm)
             #do_chroot (config, '%s -Uhv /tmp/%s > /dev/null 2>&1' % (chroot_rpm, srpm))
-            #do_chroot (config, "su -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' %s" % (srpm, builduser))
+            #do_chroot (config, "%s -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' %s" % (self.config['runuser'], srpm, builduser))
             #self.rpm ('-Uhv /tmp/%s > /dev/null 2>&1' % srpm)
             #(status, output) = do_chroot_with_output (config,
-            # "su -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' %s" % (self.config['root_rpmbuild'], spec, builduser),
+            # "%s -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' %s" % (self.config['runuser'], self.config['root_rpmbuild'], spec, builduser),
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
@@ -1111,7 +1120,7 @@ class Root:
 
         # md5sum packages and spec file
         for resultdir in resultdirs:
-	    cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
+	        cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
             debug ("running %s" % cmd)
             os.system (cmd)
         # now sign packages if requested
@@ -1125,11 +1134,11 @@ class Root:
             for resultdir in resultdirs:
                 if os.path.exists (os.path.join (resultdir, 'md5sum.asc')):
                     os.unlink (os.path.join (resultdir, 'md5sum.asc'))
-		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
+		        cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
                 # FIXME: figure out the proper way to use an agent here
-		cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
+		        cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
@@ -1138,7 +1147,7 @@ class Root:
             for resultdir in resultdirs:
                 cmd = '%s %s' % (self.config['script-success'], resultdir)
                 debug ("running %s" % cmd)
-		os.system (cmd)
+		        os.system (cmd)
 
         # now collect stuff to . if requested
         if self.config['collect']:
@@ -1234,8 +1243,13 @@ class Root:
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
         ensure_dir (os.path.join (self.rootdir, 'dev'))
-        os.system ('%s %s -m 666 c 1 3' % (config['mknod'],
+        cmd = '%s %s -m 666 c 1 3' % (config['mknod'],
             os.path.join (self.rootdir, 'dev', 'null'))
+        try:
+            self.do(cmd, progress=False)
+        except Root.ReturnValue, (retval, output):
+            raise Root.Error, "mach-helper could not mknod /dev/null"
+
         ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
@@ -1248,8 +1262,8 @@ class Root:
         debug (command)
         os.system (command)
 
-	# check if our rpm understands --promoteepoch
-	command = ('rpm --promoteepoch')
+	    # check if our rpm understands --promoteepoch
+	    command = ('rpm --promoteepoch')
         status = os.system (command)
         epochopt = ''
         if os.WIFEXITED (status) and os.WEXITSTATUS (status) == 0:
@@ -1372,7 +1386,8 @@ Dir {
         self.do_chroot ("echo %s::500:%s >> /etc/group" % (buildgroup, builduser), fatal = True)
         self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
         self.do_chroot ("chown -R %s:%s /usr/src/rpm" % (builduser, buildgroup), fatal = True)
-        self.do_chroot ("su -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % builduser, fatal = True)
+        self.do_chroot ("%s -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % (
+            self.config['runuser'], builduser), fatal = True)
 
         # create /boot/kernel.h with a warning
         self.do_chroot ("mkdir -p /boot", fatal = True)
@@ -1383,8 +1398,8 @@ Dir {
 
         # create dir structure
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            self.do_chroot ("su -c 'mkdir -p /usr/src/rpm/%s' %s" %
-                            (dir, builduser), fatal = True)
+            self.do_chroot ("%s -c 'mkdir -p /usr/src/rpm/%s' %s" %
+                            (self.config['runuser'], dir, builduser), fatal = True)
 
         # this ensures that locally built RPMS are already used for apt-get
         for dir in ('RPMS', 'SRPMS'):
@@ -1406,7 +1421,7 @@ Dir {
         debug ("Installing set of packages in %s" % set)
         try:
             rpms = self.config['packages'][set]
-	except KeyError:
+        except KeyError:
             raise self.Error, "Package set '%s' not defined for this distribution !" % set
 
         if rpms:
