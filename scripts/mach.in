@@ -285,6 +285,7 @@ class Root:
     class Locked(Exception): pass
     class Error(Exception): pass
     class ReturnValue(Exception): pass
+
     # read in configuration from disk when creating a root
     def __init__ (self, config):
         self.config = config
@@ -354,27 +355,20 @@ class Root:
         sys.stdout.flush ()
 
     def mount (self):
-        "mount apt-archives and proc into chroot"
+        "mount proc into chroot"
         # FIXME: rh 72's mount needs /proc/mounts file, let's give it one
         # FIXME: we need to move this to somewhere else
-        ensure_dir (os.path.join (self.rootdir, 'proc'))
-        open (os.path.join (self.rootdir, 'proc', 'mounts'), 'w').close ()
-        return
-        # FIXME: all this doesn't get done anymore
+        #ensure_dir (os.path.join (self.rootdir, 'proc'))
+        #open (os.path.join (self.rootdir, 'proc', 'mounts'), 'w').close ()
+        #return
         # first umount for completeness; you never know
         self.umount ()
         debug ("mounting proc and apt-archives")
         file = open (os.path.join (self.statedir, 'mount'), "w+")
-        #command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
-        #debug (command)
-        #os.system (command)
-        #file.write ('%s/proc\n' % self.rootdir)
-#        command = ('%s -o bind %s %s/apt/var/cache/apt/archives' % (
-#                   self.config['mount'], self.config['dirs']['archives'],
-#                   self.statedir))
-#        debug (command)
-#        os.system (command)
-#        file.write ('%s/apt/var/cache/apt/archives\n' % self.statedir)
+        command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
+        debug (command)
+        os.system (command)
+        file.write ('%s/proc\n' % self.rootdir)
         file.close ()
         
     # umount all mounted paths
@@ -402,30 +396,26 @@ class Root:
               os.rename (os.path.join (self.rootdir, tmpname), new)
             except OSError:
               raise self.Error, "Could not create %s" % new
+   
+    def _splitarg (self, argstring, matcher):
+        "only used by splitargspecs and splitargsrcrpms"
+        result = []
+        other = []
+        match = re.compile (matcher, re.I)
+        for arg in argstring.split ():
+            if match.search (arg):
+                result.append (arg)
+            else:
+                other.append (arg)
+        return (other, result)
 
     # seek through the argument list for specfiles
     def splitargspecs (self, argstring):
-        specs = []
-        other = []
-        match = re.compile ('\.spec$', re.I)
-        for arg in argstring.split ():
-            if match.search (arg):
-                specs.append (arg)
-            else:
-                other.append (arg)
-        return (other, specs)
+        return self._splitarg (argstring, '\.spec$')
 
     # seek through the argument list for srpms
     def splitargsrpms (self, argstring):
-        srpms = []
-        other = []
-        match = re.compile ('\.src\.rpm$', re.I)
-        for arg in argstring.split ():
-            if match.search (arg):
-                srpms.append (arg)
-            else:
-                other.append (arg)
-        return (other, srpms)
+        return self._splitarg (argstring, '\.src\.rpm$')
 
     # run apt from outside the root on the root
     # FIXME: virtualize this
@@ -1646,6 +1636,10 @@ def main (config, args):
             sys.stderr.write ("Return value: %s\n" % retval)
             root.unlock ()
             sys.exit (retval)
+        except KeyboardInterrupt:
+            sys.stderr.write ("Aborted.\n")
+            root.unlock ()
+            sys.exit (1)
         if output:
             print output
     else:
