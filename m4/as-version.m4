@@ -1,4 +1,4 @@
-dnl version.m4 0.0.5
+dnl version.m4 0.0.6
 dnl autostars m4 macro for versioning
 dnl thomas@apestaart.org
 dnl
@@ -19,7 +19,7 @@ dnl   maintainer mode from running ok
 dnl
 dnl don't forget to put #undef [$2] and [$2]_RELEASE in acconfig.h
 
-AC_DEFUN(AS_VERSION,
+AC_DEFUN([AS_VERSION],
 [
   PACKAGE=[$1]
   [$2]_MAJOR=[$3]
@@ -37,7 +37,7 @@ AC_DEFUN(AS_VERSION,
   else
       AC_MSG_NOTICE(configuring [$1] for development with nano $NANO)
       VERSION=[$3].[$4].[$5].$NANO
-      [$2]_RELEASE=`date +%Y%m%d_%H%M%S`
+      [$2]_RELEASE=0.`date +%Y%m%d.%H%M%S`
       dnl execute action
       ifelse([$8], , :, [$8])
   fi
