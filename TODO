@@ -33,3 +33,5 @@
 * EASY:		change --enable- to --with- in configure ?
 * MEDIUM:	check if we can have the actual rpmbuild command use
 	 	--root instead of doing it ourselves
+* MEDIUM:	keep track of all buildrequires stuff so that we can try
+                and install the right kernel- versions
