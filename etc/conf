@@ -20,4 +20,8 @@ search 4fm.be onshuis
     '/etc/hosts': '''
 127.0.0.1 thocra localhost.localdomain
 ''',
+    '/usr/bin/apt-sigchecker': '''#!/bin/bash
+while read p; do
+done
+'''
 }
