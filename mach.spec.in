@@ -65,7 +65,7 @@ then
   rmdir %{_localstatedir}/lib/mach/states > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/lib/mach/roots > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/cache/mach > /dev/null 2>&1 || :
-  rm -rf %{_localstatedir}/tmp/mach
+  rm -rf %{_localstatedir}/tmp/mach > /dev/null 2>&1 || :
 fi
 
 %postun
