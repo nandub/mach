@@ -85,7 +85,12 @@ DEBUG = 0
 
 # read system-wide configuration
 file = '@SYSCONFDIR@/mach/conf'
-execfile (file)
+try:
+    execfile (file)
+except:
+    sys.stderr.write ("Could not read config file %s: %s\n" %
+                      (file, sys.exc_info()[1]))
+    sys.exit (1)
 
 # read dist information
 
@@ -100,7 +105,8 @@ file = '@SYSCONFDIR@/mach/location'
 try:
     execfile (file)
 except:
-    sys.stderr.write ("Could not read location file %s\n" % file)
+    sys.stderr.write ("Could not read location file %s: %s\n" %
+                      (file, sys.exc_info()[1]))
     sys.exit (1)
 
 
@@ -111,10 +117,12 @@ for file in dists:
     # skip various files, backups etc
     if re.search ('^[\.#]|(\.rpm(orig|new|save)|~)$', file):
         continue
+    file = os.path.join ('@SYSCONFDIR@', 'mach', 'dist.d', file)
     try:
-        execfile (os.path.join ('@SYSCONFDIR@', 'mach', 'dist.d', file))
+        execfile (file)
     except:
-        sys.stderr.write ("Could not read dist file %s\n" % file)
+        sys.stderr.write ("Could not read dist file %s: %s\n" %
+                          (file, sys.exc_info()[1]))
         sys.exit (1)
 
 # read user configuration

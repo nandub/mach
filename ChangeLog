@@ -1,5 +1,8 @@
 2004-08-20  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in: Improve error messages when loading config
+	files fail.
+
 	* mach.spec.in: Create only the "mach" group, and do not remove
 	it on erase.  The "mach" user is not really needed for anything.
 
