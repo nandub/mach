@@ -15,6 +15,7 @@ AC_MSG_NOTICE(Storing configuration files in $SYSCONFDIR)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 AC_MSG_NOTICE(Using localstatedir $LOCALSTATEDIR)
 
+
 dnl using ARG_WITH is maybe not the right thing to do but there doesn't seem
 dnl to be a good alternative
 dnl rootsdir
@@ -44,6 +45,8 @@ AC_ARG_WITH(statesdir,
 AS_AC_EXPAND(STATESDIR, $statesdir)
 AC_MSG_NOTICE(Using statesdir $STATESDIR)
 
+AS_AC_EXPAND(SBINDIR, $sbindir)
+AC_MSG_NOTICE(Placing mach-helper in $SBINDIR)
 
 dnl check for C compiler
 AC_PROG_CC

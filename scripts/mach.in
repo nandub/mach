@@ -4,7 +4,8 @@
 #
 # script to set up a chroot using packages and optionally perform builds in it
 
-import sys, os, getopt, string, commands, urllib, shutil, time, fcntl, re
+import sys, os, stat
+import getopt, string, commands, urllib, shutil, time, fcntl, re
 import rpm # FIXME: find out what rpm version we need !
 import random # spinner theming madness
 import tempfile # for tempdir for spec extraction
@@ -55,11 +56,11 @@ config = {
   'release': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
 
-  'chroot': '/usr/sbin/mach-helper chroot',
-  'mount': '/usr/sbin/mach-helper mount',
-  'rpm': '/usr/sbin/mach-helper rpm',
-  'umount': '/usr/sbin/mach-helper umount',
-  'apt-get': '/usr/sbin/mach-helper apt-get',
+  'chroot': '@SBINDIR@/mach-helper chroot',
+  'mount': '@SBINDIR@/mach-helper mount',
+  'rpm': '@SBINDIR@/mach-helper rpm',
+  'umount': '@SBINDIR@/mach-helper umount',
+  'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
 
 }
@@ -1315,6 +1316,13 @@ def sanity_check (config):
     # check if partial dir exists
     partial = config['dirs']['archives'] + '/partial'
     ensure_dir (partial)
+
+    # check if mach-helper is suid
+    if not (os.stat ('@SBINDIR@/mach-helper')[0] & stat.S_ISUID):
+        sys.stderr.write ("error: @SBINDIR@/mach-helper is not setuid !\n")
+        sys.exit (1)
+
+    # we're fine
     return True
 
    

@@ -1,3 +1,12 @@
+2003-07-15  Thomas Vander Stichele <thomas at apestaart dot org>
+
+	* configure.in:
+	* scripts/mach.in: check for suidness of mach-helper binary
+
+2003-07-10  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * etc/dist: added pam rpm to base of rh72 dists so that shell utils work
+
 2003-06-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist:
