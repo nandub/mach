@@ -1,0 +1,559 @@
+#!/usr/bin/python
+#
+# mach - make a chroot
+#
+# script to set up a chroot using packages and optionally perform builds in it
+
+import sys, os, getopt, string, commands, urllib, shutil
+import rpm # FIXME: find out what rpm version we need !
+
+# make sure True and False constants exist
+
+if not hasattr (__builtins__, 'True'):
+    __builtins__.True = (1 == 1)
+    __builtins__.False = (1 != 1)
+
+# usage and help
+usage = 'usage: mach [ -r root ] command [ options ... ]'
+help = '''Make a chroot and do stuff in it.
+
+Global options:
+  -r, --root=ROOT		specify a root to work in
+  -d, --debug			turn on debugging
+  -f, --force			override root lock
+
+Commands:
+  chroot			chroot into root
+  clean				totally cleans the root
+  check				check if a root can be set up
+  rebuild			rebuild a .src.rpm
+  setup				sets up the root for a particular purpose
+  status			show status of mach roots
+'''
+
+# read default configuration
+config = {
+  'statesdir': '@LOCALSTATEDIR@/state/mach',
+  'rootsdir': '@LOCALSTATEDIR@/tmp/mach/roots',
+  'resultsdir': '@LOCALSTATEDIR@/tmp/mach/result',
+  'packagedir': '@LOCALSTATEDIR@/tmp/mach/packages',
+  'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
+
+  'force': 0,
+  'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
+
+  'chroot': 'sudo /usr/sbin/chroot',
+  'mount': 'sudo /bin/mount',
+  'rpm': 'sudo /bin/rpm',
+  'umount': 'sudo /bin/umount',
+
+}
+DEBUG = 0
+
+# read system-wide configuration
+file = '@SYSCONFDIR@/mach/conf'
+execfile (file)
+
+# read user configuration
+
+# read package information
+packages = {}
+file = '@SYSCONFDIR@/mach/packages'
+execfile (file)
+
+# read apt information
+aptsources = {}
+sourceslist = {}
+file = '@SYSCONFDIR@/mach/apt'
+execfile (file)
+
+# list of allowed commands
+allowed_commands = ('chroot', 'clean', 'rebuild', 'setup', 'status')
+
+### helper functions
+
+# execute the given command in the chroot
+def do_chroot (config, command):
+    root = get_config_dir (config, 'root')
+    cmd = '%s %s %s' % (config['chroot'], root, command)
+    debug ("Executing %s" % cmd)
+    return os.system (cmd)
+
+# get a header from a path to a local src.rpm; or False if no header
+def get_header (path):
+    debug ("Getting RPM header from %s" % path)
+    # ignore signatures
+    ts = rpm.TransactionSet ("", (rpm._RPMVSF_NOSIGNATURES))
+    fd = os.open (path, os.O_RDONLY)
+    try:
+        h = ts.hdrFromFdno (fd)
+    except:
+        print "a whoopsie occurred."
+    if not h:
+        sys.stderr.write ("ERROR: %s doesn't look like a .src.rpm\n" % path)
+        return False
+    return h
+
+ # return a list of BuildRequires: packages based on rpm header
+def get_build_requires (header):
+    buildreqs = header[rpm.RPMTAG_REQUIRENAME]
+    # remove non-packagey things from buildreqs
+    # currently removes everything containing (
+    for pkg in buildreqs:
+        if string.find (pkg, '(') >= 0:
+            buildreqs.remove (pkg)
+    return buildreqs
+
+# find out name of spec file inside srpm
+def get_spec_from_srpm (path):
+# FIXME: rewrite using rpm module ?
+    spec = commands.getoutput ('rpm -qlp %s 2> /dev/null | grep \.spec$' % path)
+    debug ("get_spec_from_srpm: %s" % spec)
+    return spec
+
+# get all of the written rpms from the log file and return as list
+def get_rpms_from_log (log):
+    output = commands.getoutput ('grep "Wrote: " %s | sort | uniq' % log)
+    rpms = []
+    for line in output.split ("\n"):
+        rpms.append (string.replace (line, 'Wrote: ', ''),)
+    return rpms
+
+# print out debug info if wanted
+# uses DEBUG global
+def debug (string):
+    if DEBUG:
+        print "DEBUG: %s" % string
+
+# return the dir given name of the root and name of the sort of dir
+def get_config_dir (config, which):
+#FIXME: do error checking on key
+    return config[which + 'sdir'] + '/' + config['root']
+
+# make sure a dir exists
+def ensure_dir (dir):
+    if not os.path.exists (dir):
+        os.makedirs (dir)
+
+# get the list of sources.list lines based on the config
+# based on sourceslist dict
+def get_sources_list (config):
+    sourceslist = []
+    root = config['root']
+    for platform in config['sourceslist'][root].keys ():
+        for source in config['sourceslist'][root][platform]:
+            sourceslist.append (config['aptsources'][platform][source])
+
+    debug ("sources.list: " + string.join (sourceslist, "\n"))
+    return sourceslist
+
+# create sources.list file by putting the given list of lines in it
+def create_sources_list (config, list):
+    root = get_config_dir (config, 'root')
+    debug ("Creating sources.list")
+    # we created in the root and chroot mv it afterwards due to perms
+    sources = open (root + '/tmp/sources.list', 'w')
+    sources.write (string.join (list, "\n"))
+    sources.close ()
+    os.system ('%s %s mv /tmp/sources.list /etc/apt' % (config['chroot'], root))
+    
+
+# lock a given root; creates a lock file in the statedir under root
+def lock (config, args):
+    statedir = get_config_dir (config, 'state')
+    ensure_dir (statedir)
+    lockpath = statedir + '/lock'
+    if os.path.exists (lockpath):
+        if not config['force']:
+            sys.stderr.write ('error: %s already locked !\n' % config['root'])
+            return False
+        else:
+            print 'warning: overriding lock on root %s' % config['root']
+    try:
+        lockfile = open (lockpath, 'w')
+    except:
+        sys.stderr.write ('error: can''t create lock file for %s !\n' % config['root'])
+        return False
+    lockfile.close ()
+    return True
+        
+# unlock a given root; removes lock file in the statedir under root
+def unlock (config, args):
+    statedir = get_config_dir (config, 'state')
+    lockpath = statedir + '/lock'
+    if os.path.exists (lockpath):
+        os.remove (lockpath)
+        return True
+    else:
+        sys.stderr.write ('error: %s not locked !\n' % config['root'])
+        return False
+     
+# return the state, or nothing if state isn't there
+def get_state (config, state):
+    statedir = get_config_dir (config, 'state')
+    if os.path.exists (statedir + '/' + state):
+        return statedir + '/' + state
+    return
+
+# prepare a given root if not done yet; this ensures that a number of necessary
+# files exist in the root
+def setup_prep (config, args):
+    if os.path.exists (get_config_dir (config, 'state') + '/prep'):
+        return True
+    print "Preparing root ..."
+    root = get_config_dir (config, 'root')
+    ensure_dir (root + '/etc/apt')
+    ensure_dir (root + '/var/lib/rpm')
+    #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
+    ensure_dir (root + '/dev')
+    #FIXME: create /dev/null or install dev rpm
+    ensure_dir (root + '/etc')
+    open (root + '/etc/mtab', 'w')
+    open (root + '/etc/fstab', 'w')
+
+    file = open (root + '/etc/hosts', 'w')
+    file.write (config['hosts'])
+    file.close ()
+
+    file = open (root + '/etc/resolv.conf', 'w')
+    file.write (config['resolv.conf'])
+    file.close ()
+
+    ensure_dir (root + '/var/tmp')
+    os.system ('rpm --root %s --initdb' % root)
+    open (get_config_dir (config, 'state') + '/prep', 'w')
+    return True
+
+# install a set of packages
+# called by base and apt
+def install (config, set):
+    statefile = get_config_dir (config, 'state') + '/' + set
+    if os.path.exists (statefile):
+        return True
+    print "Installing %s packages ..." % set
+    root = get_config_dir (config, 'root')
+    debug ("Root dir %s" % root)
+    ensure_dir (root + '/var/lib/rpm')
+    # expand path for each package and install all of them at once
+    # a roundabout way to prefix each rpm in the list with the path
+    rpms = string.join (('', ) + config['packages'][set], ' ' 
+                               + config['packagedir'] + '/')
+    command = '%s --root %s -Uhv %s --nodeps --noorder --replacepkgs' % (config ['rpm'], root, rpms)
+    debug ("Executing %s" % command)
+    os.system (command)
+    open (statefile, 'w')
+    return True
+
+    
+# forcibly install a set of inconsistent base packages
+def setup_base (config, args):
+    return install (config, 'base')
+
+# install packages needed for apt and force an apt-update
+def setup_apt (config, args):
+    if not install (config, 'apt'):
+        return False
+    # trigger an apt-get update
+    root = get_config_dir (config, 'root')
+
+def setup_root (config, args):
+    mount (config, args)
+    rootdir = get_config_dir (config, 'root')
+    create_sources_list (config, get_sources_list (config))
+    os.system ('%s %s apt-get update' % (config['chroot'], rootdir))
+    os.system ('%s %s apt-get -f upgrade -y' % (config['chroot'], rootdir))
+    umount (config, args)
+    return True
+
+# set up a 'root' for rpm building
+def setup_build (config, args):
+    statefile = get_config_dir (config, 'state') + '/build'
+    if os.path.exists (statefile):
+        return True
+    mount (config, args)
+    root = get_config_dir (config, 'root')
+    # install pacakges
+    os.system ('%s %s apt-get install -y rpm-devel rpm-build make gcc tar gzip patch unzip diffutils' % (config['chroot'], root))
+    # create dir structure and rpmmacros
+    macros = open (root + '/tmp/macros', 'w')
+    macros.write ('%_topdir /usr/src/rpm')
+    macros.close ()
+    os.system ('%s %s mv /tmp/macros /etc/rpm' % (config['chroot'], root))
+    for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
+        os.system ('%s %s mkdir -p /usr/src/rpm/%s' % (config['chroot'], root, dir))
+    # make a snapshot
+    command = '%s %s rpm -qa' % (config['chroot'], root)
+    file = open (statefile, 'w')
+    for lines in os.popen (command).readlines ():
+        file.write (lines)
+    file.close ()
+    umount (config, args)
+    return True
+
+
+# mount apt-archives and proc into chroot
+def mount (config, args):
+    # first umount for completeness
+    umount (config, args)
+    root = get_config_dir (config, 'root')
+    statedir = get_config_dir (config, 'state')
+    file = open (statedir + '/mount', "w+")
+    os.system ('%s -t proc proc %s/proc' % (config['mount'], root))
+    file.write ('%s/proc\n' % root)
+    os.system ('%s -o bind %s %s/var/cache/apt/archives' % (config['mount'],
+               config['aptcachedir'], root))
+    file.write ('%s/var/cache/apt/archives\n' % root)
+    file.close ()
+    
+# umount all mounted paths
+def umount (config, args):
+    statedir = get_config_dir (config, 'state')
+    mountfile = statedir + '/mount'
+    if not os.path.exists (mountfile):
+        return True
+    os.system ('cat %s | xargs %s' % (mountfile, config['umount']))
+    os.remove (mountfile)
+
+# check if everything is in order to actually do stuff
+def check (config):
+    # check if partial dir exists
+    partial = config['aptcachedir'] + '/partial'
+    if not os.path.exists (partial):
+        os.makedirs (partial) 
+
+def check_packages (config):
+    # check if all packages are present
+    print "Checking bootstrap packages..."
+    for pkg in config['packages']['base'] + config['packages']['apt']:
+        path = config['packagedir'] + '/' + pkg
+        if not config['packages']['download'].has_key (pkg):
+            url = config['packages']['download'][''] + '/' + pkg
+        else:
+            url = config['packages']['download'][pkg] + pkg
+        if not os.path.exists (path):
+            # get it
+            print "downloading %s" % url
+            urllib.urlretrieve (url, path)
+        # verify that it's an rpm
+        ret = os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path)
+        if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
+            os.remove (path)
+            print "downloading %s" % url
+            urllib.urlretrieve (url, path)
+            # retry
+            if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
+                sys.stderr.write ('error: failed downloading %s\n' % url)
+                return False
+    return True
+ 
+ 
+# implementation of commands
+
+# chroot into root
+def chroot (config, args):
+    rootdir = get_config_dir (config, 'root')
+    os.system ("%s %s" % (config['chroot'], rootdir))
+    
+# clean up chroot
+def clean (config, args):
+    rootdir = get_config_dir (config, 'root')
+    # force umount
+    umount (config, args)
+    # FIXME: check if the dir isn't already clean yet
+    if not os.path.exists (rootdir + '/bin/rm'):
+        sys.stderr.write ('error: no base installed in %s !\n' % config['root'])
+        # this is an ugly hack; we copy our rm and hope it works
+        #ensure_dir (rootdir + '/bin')
+        #os.path.copyfile ('/bin/rm', rootdir + '/bin/rm')
+        return False
+    # remove all state info
+    statedir = get_config_dir (config, 'state')
+    os.system ("rm -rf %s" % statedir)
+    # get a list of files and dirs in the root
+    files = string.join (os.listdir (rootdir))
+    command = "%s %s rm -rf %s" % (config['chroot'], rootdir, files)
+    debug ("executing %s" % command)
+    os.system (command)
+    os.rmdir (rootdir)
+
+# rebuild a src rpm
+# FIXME: add stuff so you can build multiple ones in one go
+def rebuild (config, args):
+    if not lock (config, args):
+        return False
+    root = get_config_dir (config, 'root')
+    # check if we can build here yet
+    if not get_state (config, 'build'):
+        if not setup_build (config, args):
+            return False
+
+    # go right ahead
+    for path in args:
+	# resolve path to basename (without dirs)
+        srpm = os.path.basename (path)
+        newpath = root + '/tmp/' + srpm
+        urllib.urlretrieve (path, newpath)
+
+        # figure out the build requirements
+        spec = get_spec_from_srpm (newpath)
+        header = get_header (newpath)
+        buildreqs = get_build_requires (header)
+        if buildreqs == False:
+            unlock (config, args)
+            return False
+        do_chroot (config, 'apt-get install -y %s' % string.join (buildreqs))
+
+        # get the name and create the place where to store results
+        name = header[rpm.RPMTAG_NAME]
+        version = header[rpm.RPMTAG_VERSION]
+        release = header[rpm.RPMTAG_RELEASE]
+        fullname = '%s-%s-%s' % (name, version, release)
+        resultdir = get_config_dir (config, 'result') + '/' + fullname
+        ensure_dir (resultdir)
+        # rebuild binary rpm from the src rpm
+        if do_chroot (config, 'rpmbuild --rebuild /tmp/%s > %s 2>&1'
+                              % (srpm, resultdir + '/rpm.log')):
+            sys.stderr.write ("ERROR: something went wrong building this one\n")
+            sys.stderr.write ("ERROR: last 10 lines of build log:\n")
+            command = 'tail -n 10 %s/rpm.log' % resultdir
+            sys.stderr.write (commands.getoutput (command))
+            unlock (config, args)
+            return False
+        # reinstall and repackage src rpm
+        do_chroot (config, 'rpm -Uhv /tmp/%s' % srpm)
+        if do_chroot (config, 'rpmbuild -ba /usr/src/rpm/SPECS/%s >> %s 2>&1'
+                              % (spec, resultdir + '/rpm.log')):
+            print "ERROR: something went wrong repackaging SRPM"
+
+        # analyze log file and move all of the rpms listed as Wrote:
+        rpms = get_rpms_from_log (resultdir + '/rpm.log')
+        for file in rpms:
+            # FIXME: a more python-like solution ?
+            shutil.copy (root + '/' + file, resultdir)
+            do_chroot (config, 'rm ' + file)
+        print "Build of %s succeeded." % fullname
+        
+    unlock (config, args)
+    return True
+
+# setup chroot
+def setup (config, args):
+    debug ("locking root")
+    if not lock (config, args):
+        return False
+    debug ("checking packages")
+    if not check_packages (config):
+        unlock (config, args)
+        sys.exit (1)
+    debug ("running prep")
+    setup_prep (config, args)
+    debug ("running base")
+    setup_base (config, args)
+    debug ("running apt")
+    setup_apt (config, args)
+    debug ("running root")
+    setup_root (config, args)
+    debug ("running build")
+    setup_build (config, args)
+    debug ("unlocking root")
+    if not unlock (config, args):
+        return False
+    return True
+
+# give a status of each of the roots
+def status (config, args):
+    print "FIXME: write me" 
+
+# main function
+def main (config, args):
+    global DEBUG # we might change it
+    try:
+        opts, args = getopt.getopt (args, 'r:hdf',
+                                    ['root=', 'help', 'debug', 'force'])
+    except getopt.error, exc:
+        sys.stderr.write ('error: %s\n' % str (exc))
+        sys.exit (1)
+
+    # parse environment
+    try:
+        root = os.environ['MACH_ROOT']
+    except:
+        root = config['defaultroot']
+
+    # parse config options
+    for opt, arg in opts:
+        if opt in ('-h', '--help'):
+            print usage
+            print help
+            sys.exit (0)
+        elif opt in ('-r', '--root'):
+            root = arg
+        elif opt in ('-d', '--debug'):
+            DEBUG = 1
+        elif opt in ('-f', '--force'):
+            config['force'] = 1
+
+    # pull in root-specific configuration
+    try:
+        config['packages'] = packages[root]
+    except KeyError:
+        sys.stderr.write ('No definition for packages found for %s\n' % root)
+        sys.exit (1)
+    try:
+        config['aptsources'] = aptsources
+        config['sourceslist'] = sourceslist
+    except KeyError:
+        sys.stderr.write ('No sources information found for %s\n' % root)
+        sys.exit (1)
+
+    # debug output options
+    debug ("root: %s" % root)
+
+    # process options
+    config['root'] = root
+
+    # check if everything is ready to go
+    check (config)
+
+    # DEBUG DEBUG DEBUG:
+    #get_sources_list (config)
+    #rpms = get_rpms_from_log ('/home/thomas/prefix/var/tmp/mach/result/redhat-9-i386/drwright-0.16-0.fdr.1/rpm.log')
+
+    # run command
+    if not args:
+        print usage
+        print help
+        sys.exit (1)
+    command = args[0]
+    args = args[1:]
+    debug ("running %s" % command)
+    
+    if command in allowed_commands:
+        try:
+            globals ()[command] (config, args)
+        except KeyError:
+            unlock (config, args)
+            raise SystemExit, "Command '%s' not implemented." % command
+    else:
+        sys.stderr.write ("No command '%s'\n" % command)
+    #try:
+    #globals()[command](config, args)
+    #except:
+    #    sys.stderr.write ('mach: unsupported command %s\n' % command)
+    #    sys.exit (1)
+
+# run main program
+
+if __name__ == '__main__':
+    # run command specified or go into interpreter mode
+    if len (sys.argv) > 1:
+        main (config, sys.argv[1:])
+    else:
+        print "starting mach interpreter ..."
+        running = True;
+        while running:
+            sys.stdout.write ("> ")
+            command = sys.stdin.readline ()
+            main (string.split (command))
+
+    
