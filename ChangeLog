@@ -1,3 +1,8 @@
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* mach.spec.in:
+          patch from Erik LaBianca to umount proc before erasing
+
 2004-03-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:

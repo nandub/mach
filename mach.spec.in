@@ -67,6 +67,7 @@ then
   # last removal
   # be a good boy and clean out the dirs we filled with junk
   rm -rf %{_localstatedir}/lib/mach/states/*
+  umount %{_localstatedir}/lib/mach/roots/*/proc > /dev/null 2>%1 || :
   rm -rf %{_localstatedir}/lib/mach/roots/*
   rm -rf %{_localstatedir}/cache/mach/* > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/lib/mach/states > /dev/null 2>&1 || :
