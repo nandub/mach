@@ -30,6 +30,6 @@
 		properly use distro/root specific macros.
 * MEDIUM:	support building from tarballs (ie. "rpmbuild -tb ...")
 * EASY:		add --arch tests
-* MEDIUM:	work around --nodeps for rpmbuild by having a validate buildreq
-                step first
 * EASY:		change --enable- to --with- in configure ?
+* MEDIUM:	check if we can have the actual rpmbuild command use
+	 	--root instead of doing it ourselves

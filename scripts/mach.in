@@ -519,7 +519,7 @@ class Root:
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
         if (retval != 0):
-            raise self.ReturnValue, retval
+            raise self.ReturnValue, (retval, output)
         # FIXME: we send back retvals with a raise now, do the same
         # in do_progress
         return (retval, output)
@@ -959,10 +959,28 @@ class Root:
             else:
                nrcpus = os.environ['RPM_BUILD_NCPUS']
 
+            # run an rpmbuild test using the root argument to check for
+            # fulfilled BuildRequires, using the host's rpmbuild
+            # so that it understands the created database
+            command = "rpmbuild -bp --root %s %s " \
+                      "--define '__spec_prep_pre exit 0' " \
+                      "--define 'setup :' %s" \
+                      % (self.rootdir, join_quoted (options),
+                         os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
+            debug ("Checking buildreqs: %s" % command)
+            try:
+                (status, output) = self.do (command, False)
+            except self.ReturnValue, (retval, output):
+                raise self.Error, "BuildRequires not met:\n%s" % output
+
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
+            # we use --nodeps here to that the build doesn't try to read
+            # the target's database, which might be written in a different
+            # version than the host's rpmbuild understands.
+            # this is fine now since we check for met buildrequires before.
 
-            command = "su -c \"RPM_BUILD_NCPUS=%s %s -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (nrcpus, self.config['root_rpmbuild'], join_quoted (options), specfile, builduser)
+            command = "su -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (nrcpus, self.config['root_rpmbuild'], join_quoted (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -1808,7 +1826,7 @@ def main (config, args):
             sys.stderr.write ("ERROR: %s\n" % message)
             root.unlock ()
             sys.exit (1)
-        except Root.ReturnValue, retval:
+        except Root.ReturnValue, (retval, output):
             sys.stderr.write ("Return value: %s\n" % retval)
             root.unlock ()
             sys.exit (retval)
