@@ -4,6 +4,9 @@
           - make apt-get from command line run interactively
           - get rid of file checks of tar files, it doesn't work on severn
           - check for arguments on build and rebuild
+          - implemented "status" for all roots combined
+          - check for not properly built src.rpm
+          - change permissions on copied sources
 
 2003-10-03  Thomas Vander Stichele <thomas at apestaart dot org>
 
