@@ -46,13 +46,6 @@ Commands:
 
 # read default configuration
 config = {
-  'statesdir':   '@LOCALSTATEDIR@/state/mach',
-  'rootsdir':    '@LOCALSTATEDIR@/tmp/mach/roots',
-  'resultsdir':  '@LOCALSTATEDIR@/tmp/mach/result',
-  'packagesdir':  '@LOCALSTATEDIR@/tmp/mach/packages',
-  'tmpsdir':     '@LOCALSTATEDIR@/tmp/mach/tmp',
-  'aptcachedir': '@LOCALSTATEDIR@/cache/mach',
-
   'force': 0,
   'check': 0,
   'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
@@ -374,11 +367,11 @@ def debug (string):
 # of directory to get
 def get_config_dir (config, which):
 #FIXME: do error checking on key
-    return config[which + 'sdir'] + '/' + config['root']
+    return config['dirs'][which + 's'] + '/' + config['root']
 
 # return full path to directory holding bootstrap packages for this root
 def get_packages_dir (config):
-    return config['packagesdir'] + '/' + config['packages']['dir']
+    return config['dirs']['packages'] + '/' + config['packages']['dir']
 
 # make sure a dir exists
 def ensure_dir (dir):
@@ -493,6 +486,7 @@ def setup_prep (config, args):
 
     debug ("Creating config files")
     for filename in config['files'].keys ():
+        ensure_dir (os.path.dirname (root + filename))
         file = open (root + filename, 'w')
         file.write (config['files'][filename])
         file.close ()
@@ -644,7 +638,7 @@ def mount (config, args):
     os.system ('%s -t proc proc %s/proc' % (config['mount'], root))
     file.write ('%s/proc\n' % root)
     os.system ('%s -o bind %s %s/var/cache/apt/archives' % (config['mount'],
-               config['aptcachedir'], root))
+               config['dirs']['aptcache'], root))
     file.write ('%s/var/cache/apt/archives\n' % root)
     file.close ()
     
@@ -660,7 +654,7 @@ def umount (config, args):
 # check if everything is in order to actually do stuff
 def sanity_check (config):
     # check if partial dir exists
-    partial = config['aptcachedir'] + '/partial'
+    partial = config['dirs']['aptcache'] + '/partial'
     ensure_dir (partial)
     return True
 
