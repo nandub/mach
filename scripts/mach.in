@@ -229,6 +229,10 @@ class SRPM:
     def _specname (self):
         "return the name of the specfile inside this src.rpm"
         name = commands.getoutput ('rpm -qlp %s 2> /dev/null | grep \.spec$' % self.path)
+        if not name:
+            raise self.Error, "Didn't find spec file in %s" % self.path
+        debug ("SRPM.specname: %s" % name)
+        print "length of name:"
         debug ("SRPM.specname: %s" % name)
         return name
     
