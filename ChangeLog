@@ -1,26 +1,25 @@
-2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-09  Ville Skyttä  <ville dot skytta at iki dot fi>
 
-        * patch from Ville applied
-        * Use apt's "rpm-dir" indextype to create a local mini-repo inside the 
-          chroot.  This way, we can install the binary packages and their 
-          dependencies just by doing a "apt-get install foo".
-        * Put all URL retrieval operations into a new urlgrab function, which
-          tries to preserve timestamps of the downloads.
-        * Use shutil.copy2 instead of copy, again for preserving timestamps.
-        * Add --clean to rpmbuild --rebuild.
+	* Use apt's "rpm-dir" indextype to create a local mini-repo inside the
+	chroot. This way, we can install the binary packages and their
+	dependencies just by doing a "apt-get install foo".
+	* Put all URL retrieval operations into a new urlgrab function, which
+	tries to preserve timestamps of the downloads.
+	* Use shutil.copy2 instead of copy, again for preserving timestamps.
+	* Add --clean to rpmbuild --rebuild.
 
-2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * added ASCII spinner themes
-        * add more dists and rework config file for it
-        * make each root download in a different packages dir
+	* added ASCII spinner themes
+	* add more dists and rework config file for it
+	* make each root download in a different packages dir
 
-2003-05-02  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-05-02  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * implemented a progress indicator as outptu
-        * implemented snapshot of "build" target with auto-return to it
-          on setup build
+	* implemented a progress indicator as output
+	* implemented snapshot of "build" target with auto-return to it
+	on setup build
 
-2003-04-30  Thomas Vander Stichele <thomas at apestaart dot org>
+2003-04-30  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-        * rewrite in python
+	* rewrite in python
