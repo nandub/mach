@@ -8,3 +8,6 @@
 * EASY:		add warning about missing stuff from .rpmmacros for signing
 * EASY:		check for ending spaces in urlgrab, disallow
 * EASY:		sign and collect packages at end of complete build
+* EASY:		verify downloades Sources and Patches for false downloads
+* HARD:		figure out a good way to deal with /proc, because it's not safe
+                for the host to have this

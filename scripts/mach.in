@@ -305,10 +305,10 @@ class Root:
         self.umount ()
         debug ("mounting proc and apt-archives")
         file = open (os.path.join (self.statedir, 'mount'), "w+")
-        command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
-        debug (command)
-        os.system (command)
-        file.write ('%s/proc\n' % self.rootdir)
+        #command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
+        #debug (command)
+        #os.system (command)
+        #file.write ('%s/proc\n' % self.rootdir)
         command = ('%s -o bind %s %s/var/cache/apt/archives' % (
                    self.config['mount'], self.config['dirs']['archives'],
                    self.rootdir))
@@ -769,7 +769,7 @@ class Root:
             #FIXME: sadly, we cannot clearsign multiple files ?
             print "clearsigning md5sums ..."
             for resultdir in resultdirs:
-                if os.file.exists (os.path.join (resultdir, 'md5sum.asc')):
+                if os.path.exists (os.path.join (resultdir, 'md5sum.asc')):
                     os.unlink (os.path.join (resultdir, 'md5sum.asc'))
 		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
@@ -778,8 +778,8 @@ class Root:
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
-         # now collect stuff to . if requested
-         if self.config['collect']:
+        # now collect stuff to . if requested
+        if self.config['collect']:
             for resultdir in resultdirs:
                for x in glob.glob (os.path.join (resultdir, '*.rpm')):
                    os.system ('mv %s %s' % (x, os.path.basename (x)))
@@ -915,7 +915,9 @@ Dir {
             distspecific = ''
         # install packages
         sys.stdout.write ('Installing rpm build packages ...')
-        packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils elfutils cpio"
+        # FIXME: we'd like elfutils here too for rh9
+        # FIXME: so openssh-server never gets removed, we put it here
+        packages = "dev rpm-devel rpm-build make gcc tar gzip patch unzip diffutils cpio openssh-server"
         self.aptget ('install -y %s %s' % (packages, distspecific), True)
         #FIXME: add mach user and group
         self.do_chroot ("echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd")
@@ -1442,8 +1444,10 @@ def main (config, args):
             sys.stderr.write ("Root is locked.  Use -f to override lock\n")
         except Root.Error, message:
             sys.stderr.write ("%s\n" % message)
+            root.unlock ()
         except Root.ReturnValue, retval:
             sys.stderr.write ("Return value: %s\n" % retval)
+            root.unlock ()
         if output:
             print output
     else:
