@@ -1,11 +1,11 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
 Release:        @RELEASE@
-Summary:        make a chroot.
+Summary:        Make a chroot.
 
 Group:          Applications/System
 License:	GPL
-URL:            http://thomas.apestaart.org/projects/mach
+URL:            http://thomas.apestaart.org/projects/mach/
 Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.gz
 Buildroot:      %{_tmppath}/%{name}-%{version}-root
 
@@ -27,28 +27,29 @@ Authors:
 Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 
 %prep
-%setup
+%setup -q
 
 %build
 %configure
 
 %install
-[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 %makeinstall
 
-install -d -m 775 %{buildroot}/%{_localstatedir}/lib/mach/states
-install -d -m 775 %{buildroot}/%{_localstatedir}/lib/mach/roots
-#install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach
-#install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/tmp
-install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/packages
-install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/archives
+install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/states
+install -d -m 775 %{buildroot}%{_localstatedir}/lib/mach/roots
+#install -d -m 775 %{buildroot}%{_localstatedir}/tmp/mach
+#install -d -m 775 %{buildroot}%{_localstatedir}/tmp/mach/tmp
+install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/packages
+install -d -m 775 %{buildroot}%{_localstatedir}/cache/mach/archives
 
 %clean
-[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %pre
 # create user and group mach
-/usr/sbin/useradd mach 2> /dev/null || true
+/usr/sbin/useradd -c "mach user" \
+	-r -m mach > /dev/null 2>&1 || :
 
 %preun
 if [ "$1" == 0 ];
@@ -65,13 +66,12 @@ fi
 if [ "$1" == 0 ];
 then
   # last removal
-  userdel mach || : > /dev/null 2>&1
-  groupdel mach || \
-    echo "Failed to delete group mach"
+  userdel mach > /dev/null 2>&1 || : 
+  groupdel mach > /dev/null 2>&1 || :
 fi
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc ChangeLog README AUTHORS BUGS TODO FORGETMENOT
 %dir %{_sysconfdir}/mach
 %config(noreplace) %{_sysconfdir}/mach/conf
