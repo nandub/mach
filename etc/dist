@@ -672,7 +672,7 @@ sourceslist['suse-81-i386-updates'] = {
     'suse-81-i386': ('base', 'update', 'security', )
 }
 config['suse-81-i386-updates'] = {}
-aliases['suse-81-i386'] = ('suse81u', )
+aliases['suse-81-i386-updates'] = ('suse81u', )
 
 # SuSE Linux 8.1, full
 packages['suse-81-i386-full'] = packages['suse-81-i386']
@@ -724,7 +724,7 @@ sourceslist['suse-82-i386-updates'] = {
     'suse-82-i386': ('base', 'update', 'security', )
 }
 config['suse-82-i386-updates'] = {}
-aliases['suse-82-i386'] = ('suse82u', )
+aliases['suse-82-i386-updates'] = ('suse82u', )
 
 # SuSE Linux 8.2, full
 packages['suse-82-i386-full'] = packages['suse-82-i386']
