@@ -107,7 +107,7 @@ except:
 dists = os.listdir ('@SYSCONFDIR@/mach/dist.d')
 for file in dists:
     # skip various files, backups etc
-    if re.search('^\.|(\.rpm(orig|new|save)|~)$', file):
+    if re.search('^[\.#]|(\.rpm(orig|new|save)|~)$', file):
         continue
     try:
         execfile (os.path.join ('@SYSCONFDIR@', 'mach', 'dist.d', file))
