@@ -1,5 +1,12 @@
 2004-07-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	patch by: Jeff Pitman
+
+	* scripts/mach.in:
+	  use --use-agent for clearsigning md5sums
+
+2004-07-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  fix and comment release mangling, don't touch it anymore now.
 
