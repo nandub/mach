@@ -55,6 +55,10 @@ config['redhat-9-i386-gstreamer-deps'] = {}
 config['redhat-80-i386-gstreamer'] = {}
 config['redhat-80-i386-gstreamer-deps'] = {}
 
+# config initialization for Dave/Dina trees
+config['davedina-fridge'] = {}
+config['davedina-oven'] = {}
+
 # release mangling for fedora trees
 config['redhat-9-i386-fedora-stable']    = { 'release': 'rh90' }
 config['redhat-9-i386-fedora-testing']   = { 'release': 'rh90' }

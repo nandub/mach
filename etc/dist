@@ -259,3 +259,22 @@ packages['suse-82-i386-full'] = packages['suse-82-i386']
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': aptsources['suse-82-i386'].keys(),
 }
+
+### Dave/Dina
+aptsources['davedina'] = {
+    'oven':    'rpm http://davedina.build/apt oven os',
+    'fridge':  'rpm http://davedina.build/apt fridge os',
+}
+
+packages['davedina-fridge'] = packages['redhat-9-i386']
+packages['davedina-oven'] = packages['redhat-9-i386']
+
+sourceslist['davedina-fridge'] = {
+    'redhat-9-i386': ('os',),
+    'davedina': ('fridge',),
+}
+sourceslist['davedina-oven'] = {
+    'redhat-9-i386': ('os',),
+    'davedina': ('fridge', 'oven',),
+}
+
