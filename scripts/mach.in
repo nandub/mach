@@ -158,6 +158,24 @@ class Spec:
  
 ### helper functions
 
+def urlgrab (url, filename):
+    print "Getting %s ..." % url
+    (t, h) = urllib.urlretrieve (url, filename)
+    d = None
+    try:
+        if h:
+            d = time.mktime (h.getdate ("Last-Modified") or h.getdate ("Date"))
+        if d:
+            os.utime (filename, (d, d))
+    except:
+        print "Warning: time stamp not preserved for %s" % filename
+
+
+# unlock and exit
+def exit (config):
+    unlock (config)
+    sys.exit (1)
+
 # run a command, opening a pty and returning fd and pid
 def pty_popen (cmd):
     pid, fd = os.forkpty ()
@@ -406,7 +424,7 @@ def create_sources_list (config, list):
     
 
 # lock a given root; creates a lock file in the statedir under root
-def lock (config, args):
+def lock (config):
     statedir = get_config_dir (config, 'state')
     ensure_dir (statedir)
     lockpath = statedir + '/lock'
@@ -425,7 +443,7 @@ def lock (config, args):
     return True
         
 # unlock a given root; removes lock file in the statedir under root
-def unlock (config, args):
+def unlock (config):
     statedir = get_config_dir (config, 'state')
     lockpath = statedir + '/lock'
     if os.path.exists (lockpath):
@@ -486,7 +504,7 @@ def setup_prep (config, args):
 
     debug ("Creating config files")
     for filename in config['files'].keys ():
-        config_recreate (config, root + filename)
+        config_recreate (config, filename)
 
     ensure_dir (root + '/var/tmp')
     os.system ('rpm --root %s --initdb' % root)
@@ -496,8 +514,8 @@ def setup_prep (config, args):
 # recreate a given file listed in config['files']
 def config_recreate (config, filename):
     root = get_config_dir (config, 'root')
+    debug ("Recreating %s from config" % filename)
     if config['files'].has_key (filename):
-        debug ("Recreating %s from config" % filename)
         ensure_dir (os.path.dirname (root + filename))
         file = open (root + filename, 'w')
         file.write (config['files'][filename])
@@ -550,15 +568,15 @@ def setup_consistency (config, args):
     # first create a sources.list with only the first sources line
     # this ensures glibc doesn't get upgraded from underneath apt
     create_sources_list (config, (srcs[0], ))
-    sys.stdout.write ('Updating apt ...')
-    do_chroot (config, "%s update" % chroot_aptget, True)
+    sys.stdout.write ('Updating apt from base source ...')
+    do_chroot (config, "%s update" % chroot_aptget, True) or exit (config)
     sys.stdout.write ('Forcing consistency ...')
-    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) or exit (config)
     create_sources_list (config, srcs)
-    sys.stdout.write ('Updating apt ...')
-    do_chroot (config, "%s update" % chroot_aptget, True)
+    sys.stdout.write ('Updating apt from all sources ...')
+    do_chroot (config, "%s update" % chroot_aptget, True) or exit (config)
     sys.stdout.write ('Upgrading ...')
-    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True)
+    do_chroot (config, "%s -f upgrade -y" % chroot_aptget, True) or exit (config)
     open (statefile, 'w')
     return True
 
@@ -577,12 +595,10 @@ def setup_build (config, args):
     #FIXME: add mach user and group
     if do_chroot (config, "echo mach:!!:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd") != 0:
         sys.stdout.write ("error: could not add mach user to /etc/passwd\n")
-        unlock (config, args)
-        sys.exit (1)
+        exit (config)
     if do_chroot (config, "echo mach::500:mach >> /etc/group") != 0:
         sys.stdout.write ("error: could not add mach group to /etc/group\n")
-        unlock (config, args)
-        sys.exit (1)
+        exit (config)
     do_chroot (config, "mkdir -p /usr/src/rpm")
     do_chroot (config, "chown -R mach:mach /usr/src/rpm")
     do_chroot (config, "su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
@@ -595,13 +611,11 @@ def setup_build (config, args):
     macros.close ()
     if do_chroot (config, 'mv /tmp/macros /etc/rpm') != 0:
         sys.stdout.write ("error: could not create /etc/rpm\n")
-        unlock (config, args)
-        sys.exit (1)
+        exit (config)
     for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
         if do_chroot (config, "su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir) != 0:
             sys.stdout.write ("error: could not create /usr/src/rpm/%s\n" % dir)
-            unlock (config, args)
-            sys.exit (1)
+            exit (config)
 
     # this ensures that locally built RPMS are already used for apt-get
     srcs = get_sources_list (config)
@@ -610,8 +624,7 @@ def setup_build (config, args):
     for dir in ('RPMS', 'SRPMS'):
         if do_chroot (config, 'ln -s %s /usr/src/rpm/%s.mach-local' % (dir, dir)) != 0:
             sys.stdout.write ("error: could not create symlink /usr/src/rpm/%s.mach-local" % dir)
-            unlock (config, args)
-            sys.exit (1)
+            exit (config)
     # make a snapshot
     sys.stdout.write ("Making snapshot ...")
     # FIXME: use _with_output for this
@@ -701,7 +714,7 @@ def build (config, args):
         # trigger a cleanout of build root
         if not setup (config, ["build"]):
             return False
-    if not lock (config, args):
+    if not lock (config):
         return False
     
     root = get_config_dir (config, 'root')
@@ -773,7 +786,7 @@ def build (config, args):
 
     # ready to build them all
     print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
-    unlock (config, args)
+    unlock (config)
     rebuild (config, srpms)
             
         
@@ -824,7 +837,7 @@ def rebuild (config, args):
     # trigger a cleanout of build root
     if not setup (config, ["build"]):
         return False
-    if not lock (config, args):
+    if not lock (config):
         return False
 
     config_recreate (config, '/usr/bin/apt-sigchecker')
@@ -846,7 +859,7 @@ def rebuild (config, args):
             continue
         buildreqs = get_build_requires (header)
         if buildreqs == False:
-            unlock (config, args)
+            unlock (config)
             return False
         name = header[rpm.RPMTAG_NAME]
         pkgs[name] = {}
@@ -918,7 +931,7 @@ def rebuild (config, args):
         if status != 0:
             sys.stderr.write ("ERROR: something went wrong building this one\n")
             sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
-            unlock (config, args)
+            unlock (config)
             return False
         # reinstall and repackage src rpm
         sys.stdout.write ("Repackaging %s ..." % srpm)
@@ -932,7 +945,7 @@ def rebuild (config, args):
             open (resultdir + '/rpm.log', "ab"). write (output)
         if status != 0:
             sys.stderr.write ("ERROR: something went wrong repackaging SRPM\n")
-            unlock (config, args)
+            unlock (config)
             return False
 
         # analyze log file and move all of the rpms listed as Wrote:
@@ -956,7 +969,7 @@ def rebuild (config, args):
         print "Build of %s succeeded." % fullname
         
     print "Build done."
-    unlock (config, args)
+    unlock (config)
     return True
 
 # setup chroot
@@ -968,15 +981,14 @@ def setup (config, args):
     # see if something real given to setup
     if args[0] not in targets:
         sys.stderr.write ("error: don't know how to setup %s" % args[0])
-        unlock (config, args)
+        unlock (config)
 
     debug ("locking root")
-    if not lock (config, args):
+    if not lock (config):
         return False
     debug ("checking packages")
     if not check_packages (config):
-        unlock (config, args)
-        sys.exit (1)
+        exit (config)
 
         return False
 
@@ -984,7 +996,7 @@ def setup (config, args):
         debug ("setting up target %s" % target)
         if not globals ()['setup_' + target] (config, args):
             sys.stderr.write ("error: couldn't setup target %s\n" % target)
-            unlock (config, args)
+            unlock (config)
             return False
         if args[0] == target:
             break
@@ -1002,26 +1014,13 @@ def setup (config, args):
 #    debug ("running build")
 #    setup_build (config, args)
 #    debug ("unlocking root")
-    if not unlock (config, args):
+    if not unlock (config):
         return False
     return True
 
 # give a status of each of the roots
 def status (config, args):
     print "FIXME: write me" 
-
-def urlgrab (url, filename):
-    print "Getting %s ..." % url
-    (t, h) = urllib.urlretrieve (url, filename)
-    d = None
-    try:
-        if h:
-            d = time.mktime (h.getdate ("Last-Modified") or h.getdate ("Date"))
-        if d:
-            os.utime (filename, (d, d))
-    except:
-        print "Warning: time stamp not preserved for %s" % filename
-
 # main function
 def main (config, args):
     global DEBUG # we might change it
