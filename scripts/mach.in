@@ -106,7 +106,6 @@ class Spec:
         self.content = open (self.path).readlines ()
         for which in ['name', 'version', 'release']:
             self.vars[which] = self.tag (which)
-        print "DEBUG: version: %s" % self.vars['version']
 
     def tag (self, which):
         "Get the given (unique) tag from the spec file as a string"
