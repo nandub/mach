@@ -91,6 +91,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Mon Sep 08 2003 Thomas Vander Stichele <thomas at apestaart dot org>
+- 0.4.0-0.fdr.1: first public release.
+
 * Sat Aug 16 2003 Ville Skyttä <ville.skytta at iki.fi>
 - Add COPYING to docs.
 
