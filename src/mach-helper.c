@@ -231,7 +231,7 @@ do_rm (int argc, char *argv[])
   check_dir_allowed (rootsdir, argv[3]);
 
   /* all checks passed, execute */
-  do_command ("/bin/rm", &(argv[2]));
+  do_command ("/bin/rm", &(argv[1]));
 }
 
 /* perform rpm commands on root */

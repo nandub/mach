@@ -63,6 +63,7 @@ config = {
   'mount': '@SBINDIR@/mach-helper mount',
   'rpm': '@SBINDIR@/mach-helper rpm',
   'umount': '@SBINDIR@/mach-helper umount',
+  'rm': '@SBINDIR@/mach-helper rm',
   'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
 
@@ -578,23 +579,38 @@ class Root:
         self.unlock ()
         self.rebuild (string.join (options) + " " + string.join (srpms))
              
+    def _bruteclean (self):
+        "brutishly clean out the root by using mach-helper rm -rfv"
+        command = "%s -rfv %s" % (self.config['rm'], self.rootdir)
+        self.umount ()
+        sys.stdout.write ("Brutishly removing %s ..." % self.rootdir)
+        (status, output) = do_with_output (command, True)
+        if status != 0:
+    	    raise self.Error, "Could not remove %s" % self.rootdir
+    
     def clean (self, args = ""):
         "clean out the root"
+        # does the root still exist ?
+        if not os.path.exists (self.rootdir):
+            return
         self.umount ()
         # remove all state info
         debug ("Removing statedir %s" % self.statedir)
         os.system ("rm -rf %s" % self.statedir)
         # FIXME: check if the dir isn't already clean yet
         if not os.path.exists (self.rootdir + '/bin/rm'):
-            raise self.Error, "no base installed in %s !" % self.rootdir
-            # this is an ugly hack; we copy our rm and hope it works
-            #ensure_dir (rootdir + '/bin')
-            #os.path.copyfile ('/bin/rm', rootdir + '/bin/rm')
+            self._bruteclean ()
+            return
         # get a list of files and dirs in the root
         files = string.join (os.listdir (self.rootdir))
         self.stdout ('Cleaning out root ...')
         self.do_chroot ('cd / && rm -rfv %s' % files, True)
-        os.rmdir (self.rootdir)
+        try:
+            os.rmdir (self.rootdir)
+        except OSError:
+            # assume we couldn't delete because not empty and bring out the
+            # big guns
+            self._bruteclean ()
 
     # chroot into root
     def chroot (self, arg):
