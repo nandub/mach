@@ -1,5 +1,10 @@
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in: when checking for buildrequires, use topdir
+          to make it check for Sources: and Patches: in the root
+
+2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in: clean up temp dir after finding build results
 
 2004-03-16  Thomas Vander Stichele  <thomas at apestaart dot org>

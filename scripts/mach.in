@@ -990,10 +990,14 @@ class Root:
             # run an rpmbuild test using the root argument to check for
             # fulfilled BuildRequires, using the host's rpmbuild
             # so that it understands the created database
+            # also make the topdir point to the root's rpm tree, so that
+            # it picks up on Sources: and Patches: copied there
             command = "rpmbuild -bp --root %s %s " \
+                      "--define '_topdir %s' " \
                       "--define '__spec_prep_pre exit 0' " \
                       "--define 'setup :' %s" \
                       % (self.rootdir, join_quoted (options),
+                         os.path.join (self.rootdir, 'usr', 'src', 'rpm'),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
             debug ("Checking buildreqs: %s" % command)
             try:
