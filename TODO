@@ -11,3 +11,6 @@
                 privileges for, including calling special rpm binaries
 
 * HARD:		make an object class "Root" and execute all operations on this
+
+* EASY:		make rootsdir a configure option so it's hardcompiled into
+		mach-helper
