@@ -1,3 +1,8 @@
+2003-12-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+        * scripts/mach.in: applied patch from Panu Matilainen to add
+          number of CPU's on host to rpmbuild incantation
+
 2003-12-04  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/conf.in: rename default root to fedora-1-i386-core

@@ -865,9 +865,17 @@ class Root:
             command = 'rm /tmp/%s' % specfile
             self.do_chroot (command)
 
+            # detect amount of CPU's on system so _smp_flags gets set 
+            # correctly on chroot
+            if not os.environ.has_key('RPM_BUILD_NCPUS'):
+               nrcpus = os.popen('/usr/bin/getconf _NPROCESSORS_ONLN').read().rstrip()	
+            else:
+               nrcpus = os.environ['RPM_BUILD_NCPUS']
+
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
-            command = "su -c 'rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (string.join (options), specfile)
+    
+            command = "su -c 'RPM_BUILD_NCPUS=%s rpmbuild -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - machbuild" % (nrcpus, string.join (options), specfile)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding %s" % srpmname,
                                                True)
