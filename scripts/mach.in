@@ -1181,7 +1181,15 @@ class Root:
         debug (command)
         os.system (command)
 
+	# check if our rpm understands --promoteepoch
+	command = ('rpm --promoteepoch')
+        status = os.system (command)
+        epochopt = ''
+        if os.WIFEXITED (status) and os.WEXITSTATUS (status) == 0:
+            epochopt = 'Options { "--promoteepoch"; }'
+
         # create a custom apt.conf file
+
         root = self.rootdir
         state = self.statedir
         conf = '''
@@ -1218,7 +1226,7 @@ RPM {
     };
     GPG-Check "false";
     RootDir "''' + root + '''";
-    Options "--root ''' + root + '''";
+    ''' + epochopt + '''
     Install-Options "--root ''' + root + '''";
     Erase-Options "--root ''' + root + '''";
 }
