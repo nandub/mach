@@ -829,9 +829,9 @@ class Root:
             specfile = pkgs[name]['spec']
 
             # mangle spec file if requested
+            command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
+            self.do_chroot (command)
             if self.config['release']:
-                command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
-                self.do_chroot (command)
                 # first check if it doesn't already comply !
                 debug ("self.rootdir: %s" % self.rootdir)
                 spec = Spec (os.path.join (self.rootdir, 'tmp', specfile))
@@ -840,8 +840,6 @@ class Root:
                 if not release.endswith (self.config['release']):
                     command = 'sed -e "s,Release.*,&.%s,g" /tmp/%s > /usr/src/rpm/SPECS/%s' % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
-                    self.do_chroot (command)
-                    command = 'rm /tmp/%s' % specfile
                     self.do_chroot (command)
                 else:
                     debug ("Release already contains mangle trailer %s" % self.config['release'])
@@ -884,20 +882,28 @@ class Root:
             #self.aptget ("install -y %s" % output, True)
             print "Collecting results of build %s" % srpm
             rpms.append (srpm)
+            # add spec file; FIXME rename rpms variable to results or something
+            # note, this is the original spec file without mangling
+            rpms.append (os.path.join ('/tmp', specfile))
+            
             for file in rpms:
                 path = self.rootdir + file
                 # file already contains starting /
                 shutil.copy2 (path, resultdir)
                 # for now, we do, for multiple builds
                 # self.do_chroot ('rm ' + file)
+
+            # delete the original temp spec file
+            command = 'rm /tmp/%s' % specfile
+            self.do_chroot (command)
             # update internal apt repo
             self.aptget ("update")
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
-        # md5sum packages
+        # md5sum packages and spec file
         for resultdir in resultdirs:
-	    cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
+	    cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
             debug ("running %s" % cmd)
             os.system (cmd)
         # now sign packages if requested
@@ -914,7 +920,8 @@ class Root:
 		cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
-		cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
+                # FIXME: figure out the proper way tu use an agent here
+		cmd = 'gpg --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
