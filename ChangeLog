@@ -1,5 +1,14 @@
 2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * scripts/mach.in: implement config[target] specific config
+                           remove chrootcmds
+                           implement release mangling with --release
+        * etc/conf.in: remove chrootcmds
+                       add release mangling for fedora
+
+
+2003-06-03  Thomas Vander Stichele <thomas at apestaart dot org>
+
 	* scripts/mach.in: fix some places where / was forgotten now that
                            $HOME is set
                            clear RPM::Pre-Install-Pkgs so GPG's aren't checked
