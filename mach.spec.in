@@ -8,7 +8,6 @@ License:	GPL
 URL:            http://thomas.apestaart.org/projects/mach
 Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.gz
 Buildroot:      %{_tmppath}/%{name}-%{version}-root
-BuildArch:	noarch
 
 Requires:	python
 Requires:	rpm
