@@ -574,8 +574,8 @@ class Root:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
-            opt = string.join (options)
-            spec = Spec (specfile, opt)
+            optstring = string.join (options)
+            spec = Spec (specfile, optstring)
             (n, v, r) = spec.nvr ()
             # download all referenced files (Sources, Patches)
             downloads = spec.sources ().values () + spec.patches ().values ()
@@ -631,9 +631,10 @@ class Root:
             # fix ownership on all of these
             self.do_chroot ("cd /usr/src/rpm && chown -R machbuild:machbuild *")
             try:
-                self.do_chroot ("cd / && rpmbuild -bs --nodeps %s" \
-                                % os.path.join ('usr', 'src', 'rpm', 'SPECS', 
-                                                os.path.basename (specfile)),
+                self.do_chroot ("cd / && rpmbuild %s -bs --nodeps %s" \
+                                % (optstring,
+                                   os.path.join ('usr', 'src', 'rpm', 'SPECS', 
+                                                os.path.basename (specfile))),
                                 "Creating .src.rpm",
                                   True)
             except self.ReturnValue:
