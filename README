@@ -108,7 +108,7 @@ Some handy features of mach include
   as root.
 
 - you have to setuid the mach-helper binary.
-  chmod u+s $(prefix)/bin/mach-helper
+  chmod u+s $(prefix)/sbin/mach-helper
 
 - do not start to tweak stuff all in the source code just yet; mach is picky
   about its setup if you start to hack it.
