@@ -1516,7 +1516,8 @@ def status (config):
 def main (config, args):
     global DEBUG # we might change it
 
-    canonify = 0
+    canonify   = 0
+    cli_config = {}
 
     try:
         opts, args = getopt.getopt (args, 'r:hdfkscq',
@@ -1544,17 +1545,17 @@ def main (config, args):
         elif opt in ('-d', '--debug'):
             DEBUG = 1
         elif opt in ('-f', '--force'):
-            config['force'] = 1
+            cli_config['force'] = 1
         elif opt in ('-k', '--keep'):
-            config['keep'] = 1
+            cli_config['keep'] = 1
         elif opt in ('-s', '--sign'):
-            config['sign'] = 1
+            cli_config['sign'] = 1
         elif opt in ('-c', '--collect'):
-            config['collect'] = 1
+            cli_config['collect'] = 1
         elif opt in ('-q', '--quiet'):
-            config['quiet'] = 1
+            cli_config['quiet'] = 1
         elif opt == '--release':
-            config['release'] = arg
+            cli_config['release'] = arg
         elif opt == '--canonify':
             canonify = 1
 
@@ -1592,6 +1593,9 @@ def main (config, args):
         for key in config[root].keys ():
             debug ("setting config['%s'] to %s" % (key, config[root][key]))
             config[key] = config[root][key]
+
+    for key in cli_config.keys():
+        config[key] = cli_config[key]
 
     # debug output options
     debug ("root: %s" % root)
