@@ -35,3 +35,4 @@ config.*
 configure
 mach.spec
 *.gz
+*.bz2

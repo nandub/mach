@@ -9,7 +9,7 @@ Summary:        Make a chroot.
 Group:          Applications/System
 License:	GPL
 URL:            http://thomas.apestaart.org/projects/mach/
-Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.gz
+Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires:	python
@@ -96,6 +96,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Fri Jan  9 2004 Ville Skyttä <ville.skytta at iki.fi>
+- Use the bzip2'd tarball.
+
 * Thu Jan  8 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Make mach chroot build user/group configurable using
   "rpmbuild --define 'build(user|group) foo'"
