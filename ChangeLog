@@ -1,3 +1,8 @@
+2003-08-07  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in: don't fail unlock if not locked
+          src/mach-helper.c: print out root files should be under when failing
+
 2003-08-01  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in: various small fixes from Axel Thimm

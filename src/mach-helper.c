@@ -55,7 +55,7 @@ check_dir_allowed (const char *allowed, const char *given)
 
   /* does given start with allowed ? */
   if (strncmp (given, allowed, strlen (allowed)) != 0)
-    error ("%s: not under allowed directory", given);
+    error ("%s: not under allowed directory (%s)", given, allowed);
 
   /* does it try to fool us by using . or .. ? */
   if (strstr (given, ".") != NULL)
