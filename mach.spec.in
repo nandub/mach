@@ -62,8 +62,9 @@ fi
 if [ "$1" == 0 ];
 then
   # last removal
-  userdel mach
-  groupdel mach
+  userdel mach || : > /dev/null 2>&1
+  groupdel mach || \
+    echo "Failed to delete group mach"
 fi
 
 %files
