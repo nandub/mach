@@ -8,7 +8,7 @@ error=no
 for dist in $DISTS;
 do
   echo "+ torturing $dist"
-  #../scripts/mach -r $dist clean
+  ../scripts/mach -r $dist clean
   ../scripts/mach -r $dist build $SPECS || error=yes
   ../scripts/mach -r $dist clean
   if test x$error == xyes;
@@ -18,7 +18,7 @@ do
     error=no
   fi
 done
-if test x$failed != x;
+if test "x$failed" != "x";
 then
   echo "Failed distros:$failed"
 fi
