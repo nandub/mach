@@ -860,6 +860,8 @@ class Root:
         # loop over all package names
         for name in order:
             srpmname = pkgs[name]['srpmname']
+            # remove packages if not asked to keep
+            self._check_revert_build ()
             # install buildrequires if there are
             debug ("Building %s with package stuff %s" % (name, pkgs[name].keys ()))
             print "Building source rpm %s" % srpmname
@@ -884,6 +886,8 @@ class Root:
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
                     try:
+                        srcs = get_sources_list (self.config)
+                        create_sources_list (config, srcs)
         	        self.aptget (["update", ])
                         self.aptget ([ 'install -y %s' % string.join (buildreqs), ],
                                      "Installing BuildRequires", self.progress ())
@@ -903,11 +907,14 @@ class Root:
             release = h[rpm.RPMTAG_RELEASE]
             # if the release tag needs mangling, do it here as well
             if self.config['release']:
+                debug ("Mangling release tag with %s" % self.config['release'])
                 fullname = '%s-%s-%s.%s' % (name, version, release,
                                             self.config['release'])
             else:
+                debug ("Not mangling release tag")
                 fullname = '%s-%s-%s' % (name, version, release)
             resultdir = os.path.join (self.resultdir, fullname)
+            debug ("Storing result in %s" % resultdir)
             ensure_dir (resultdir)
 
             # rebuild binary rpm from the src rpm
@@ -1001,6 +1008,8 @@ class Root:
                 # self.do_chroot ('rm ' + file)
 
             # update internal apt repo
+            srcs = get_sources_list (self.config)
+            create_sources_list (config, srcs)
             self.aptget (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
@@ -1220,13 +1229,15 @@ Dir {
         for mac in self.config.get('macros', {}).items():
             file.write('%%%-19s %s\n' % (mac))
 
+    def _check_revert_build (self):
+        # see if we need to revert to the build package list
+        statefile = os.path.join (self.statedir, 'build')
+        self.check_package_list (statefile)
+
     def _setup_build (self):
         "set up a root for rpm building"
         if self.get_state ('build'):
-            # see if we need to revert to the given state
-            # FIXME: methodify
-            statefile = os.path.join (self.statedir, 'build')
-            self.check_package_list (statefile)
+            self._check_revert_build ()
             return
         #statefile = get_config_dir (config, 'state') + '/build'
         self.mount ()

@@ -1,3 +1,9 @@
+2004-03-04  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+          revert to clean build package list for each build if not asked
+          to keep
+
 2004-03-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* TODO:

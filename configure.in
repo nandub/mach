@@ -60,6 +60,38 @@ AC_ARG_ENABLE(buildgroup,
 AC_SUBST(BUILDGROUP)
 AC_MSG_NOTICE(Using build groupname $BUILDGROUP)
 
+dnl default root
+dnl first try to guess the platform
+CHECK_RELEASE(fedora,    "(Yarrow)",   defaultroot="fedora-1-i386")
+
+CHECK_RELEASE(redhat,    "(Guinness)", defaultroot="redhat-70-i386")
+CHECK_RELEASE(redhat,    "(Seawolf)",  defaultroot="redhat-71-i386")
+CHECK_RELEASE(redhat,    "(Enigma)",   defaultroot="redhat-72-i386")
+CHECK_RELEASE(redhat,    "(Valhalla)", defaultroot="redhat-73-i386")
+CHECK_RELEASE(redhat,    "(Psyche)",   defaultroot="redhat-80-i386")
+CHECK_RELEASE(redhat,    "(Shrike)",   defaultroot="redhat-9-i386")
+
+CHECK_RELEASE(yellowdog, "(Sirius)",   defaultroot="yellowdog-30-ppc")
+
+dnl now append a modifier if asked for
+
+AC_ARG_WITH(flavor,
+  AC_HELP_STRING([--with-flavor=FLAVOR], [set flavor of root to FLAVOR]),
+  [ flavor="${withval}" ],
+  [ flavor=]
+)
+if test "x$flavor" != "x"
+then
+  defaultroot="$defaultroot-$flavor"
+fi
+
+AC_ARG_WITH(defaultroot,
+  AC_HELP_STRING([--with-defaultroot=ROOT], [set default root to ROOT]),
+  [ defaultroot=${withval} ]
+)
+AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
+AC_MSG_NOTICE(Using default root $DEFAULTROOT)
+
 AS_AC_EXPAND(SBINDIR, $sbindir)
 AC_MSG_NOTICE(Placing mach-helper in $SBINDIR)
 
