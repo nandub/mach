@@ -31,6 +31,7 @@ Mach options:
   -c, --collect			collect packages and relevant files to .
   -q, --quiet			no spinners, minimal output
   --release=(tag)		add given tag to release tag
+  --canonify			just output the canonical root name and exit
 
 Commands:
   apt-get			run host\'s apt-get on target root
@@ -1514,10 +1515,14 @@ def status (config):
 # main function
 def main (config, args):
     global DEBUG # we might change it
+
+    canonify = 0
+
     try:
         opts, args = getopt.getopt (args, 'r:hdfkscq',
                                     ['root=', 'help', 'debug', 'force', 'keep',
-                                     'sign', 'collect', 'quiet', 'release='])
+                                     'sign', 'collect', 'quiet', 'release=',
+                                     'canonify'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1550,12 +1555,18 @@ def main (config, args):
             config['quiet'] = 1
         elif opt == '--release':
             config['release'] = arg
+        elif opt == '--canonify':
+            canonify = 1
 
     # resolve root aliases to real root names
     for name in aliases.keys ():
         if root in aliases[name]:
             root = name
             break
+
+    if canonify:
+        print root
+        sys.exit(0)
 
     debug ("DEBUG: real root name is %s" % root)
     # pull in root-specific configuration
