@@ -32,12 +32,12 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 [ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
 %makeinstall
 
-install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/partial
-install -d -m 775 %{buildroot}/%{_localstatedir}/state/mach/
-install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/
-install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/packages
-install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/roots
-install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/result
+install -d -m 775 %{buildroot}/%{_localstatedir}/lib/mach/states
+install -d -m 775 %{buildroot}/%{_localstatedir}/lib/mach/roots
+#install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach
+#install -d -m 775 %{buildroot}/%{_localstatedir}/tmp/mach/tmp
+install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/packages
+install -d -m 775 %{buildroot}/%{_localstatedir}/cache/mach/archives
 
 %clean
 [ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
@@ -64,11 +64,10 @@ if [ "$1" == 0 ];
 then
   # last removal
   # be a good boy and clean out the dirs we filled with junk
-  rm -rf %{_localstatedir}/cache/mach/*
-  rm -rf %{_localstatedir}/state/mach/*
-  rm -rf %{_localstatedir}/tmp/mach/packages/*
-  rm -rf %{_localstatedir}/tmp/mach/roots/*
-  rm -rf %{_localstatedir}/tmp/mach/result/*
+  rm -rf %{_localstatedir}/lib/mach/states
+  rm -rf %{_localstatedir}/lib/mach/roots
+  rm -rf %{_localstatedir}/tmp/mach
+  rm -rf %{_localstatedir}/cache/mach
 fi
 
 %postun
@@ -84,16 +83,15 @@ fi
 %doc ChangeLog README AUTHORS BUGS TODO
 %dir %{_sysconfdir}/mach
 # make these actual config files when we're happy with the syntax
-%{_sysconfdir}/mach/packages
-%{_sysconfdir}/mach/conf
-%{_sysconfdir}/mach/apt
-%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach
-%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/partial
-%attr(-,mach,mach) %dir %{_localstatedir}/state/mach
-%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach
-%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/packages
-%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/roots
-%attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/result
+%config(noreplace) %{_sysconfdir}/mach/packages
+%config(noreplace) %{_sysconfdir}/mach/conf
+%config(noreplace) %{_sysconfdir}/mach/apt
+%attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/states
+%attr(-,mach,mach) %dir %{_localstatedir}/lib/mach/roots
+# %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach
+# %attr(-,mach,mach) %dir %{_localstatedir}/tmp/mach/tmp
+%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/packages
+%attr(-,mach,mach) %dir %{_localstatedir}/cache/mach/archives
 #%dir %{_datadir}/mach
 #%{_datadir}/mach/sudoers.patch
 %{_bindir}/mach
