@@ -1,6 +1,6 @@
 # mach dist configuration                          -*- python -*-
 
-# cnc-9-i386: configuration for Connectiva 9
+# cnc-9-i386: configuration for Conectiva Linux 9
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from
