@@ -8,11 +8,22 @@
 
 
 # Base download locations.
+
+# Official distributions
+# Red Hat Linux base; this location should contain versioned directories
 redhat      = 'http://ayo.freshrpms.net/redhat'
+#redhat      = 'http://download.fedora.us/fedora/redhat'
+# Fedora Core; this location should contain versioned directions
+fedora      = 'http://ayo.freshrpms.net/fedora/linux'
+#fedora      = 'http://download.fedora.us/fedora/fedora'
+# Yellow Dog Linux
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
+# SuSE Linux
 suse        = 'http://ftp.gwdg.de/pub/linux/suse/apt/SuSE'
+
+# Add-on locations
 jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
-fedora      = 'http://download.fedora.us/fedora'
+fedoraus    = 'http://download.fedora.us/fedora'
 gstreamer   = 'http://gstreamer.net/releases/redhat'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
@@ -229,9 +240,9 @@ aptsources['redhat-80-i386'] = {
     'updates':          'rpm ' + redhat      + ' 8.0/i386 updates',
     'gstreamer':        'rpm ' + gstreamer   + ' redhat-80-i386 redhat',
     'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat-80-i386 deps',
-    'fedora-stable':    'rpm ' + fedora      + ' redhat/8.0/i386 stable',
-    'fedora-testing':   'rpm ' + fedora      + ' redhat/8.0/i386 testing',
-    'fedora-unstable':  'rpm ' + fedora      + ' redhat/8.0/i386 unstable',
+    'fedora-stable':    'rpm ' + fedoraus    + ' redhat/8.0/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus    + ' redhat/8.0/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/8.0/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 8.0/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh80':    'rpm ' + jpackage    + ' redhat-8.0 free',
@@ -329,9 +340,9 @@ aptsources['redhat-9-i386'] = {
     'updates':          'rpm ' + redhat      + ' 9/i386 updates',
     'gstreamer':        'rpm ' + gstreamer   + ' redhat-9-i386 redhat',
     'gstreamer-deps':   'rpm ' + gstreamer   + ' redhat-9-i386 deps',
-    'fedora-stable':    'rpm ' + fedora      + ' redhat/9/i386 stable',
-    'fedora-testing':   'rpm ' + fedora      + ' redhat/9/i386 testing',
-    'fedora-unstable':  'rpm ' + fedora      + ' redhat/9/i386 unstable',
+    'fedora-stable':    'rpm ' + fedoraus    + ' redhat/9/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus    + ' redhat/9/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus    + ' redhat/9/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 9/i386 freshrpms',
     'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
     'jpackage-rh9':     'rpm ' + jpackage    + ' redhat-9 free',
@@ -424,59 +435,59 @@ aliases['redhat-9-i386-jpackage'] = ('rh9jpp', 'rh90jpp')
 
 
 ### Fedora Core 1 flavours
-aptsources['fedora-1-i386'] = {
-    'os':               'rpm ' + fedora + ' fedora/1/i386 os',
-    'updates':          'rpm ' + fedora + ' fedora/1/i386 updates',
-    'fedora-stable':    'rpm ' + fedora + ' fedora/1/i386 stable',
-    'fedora-testing':   'rpm ' + fedora + ' fedora/1/i386 testing',
-    'fedora-unstable':  'rpm ' + fedora + ' fedora/1/i386 unstable',
+aptsources['fedoracore-1-i386'] = {
+    'os':               'rpm ' + fedora   + ' 1/i386 os',
+    'updates':          'rpm ' + fedora   + ' 1/i386 updates',
+    'fedora-stable':    'rpm ' + fedoraus + ' fedora/1/i386 stable',
+    'fedora-testing':   'rpm ' + fedoraus + ' fedora/1/i386 testing',
+    'fedora-unstable':  'rpm ' + fedoraus + ' fedora/1/i386 unstable',
 }
 
 #   Fedora Core 1
-packages['fedora-1-i386'] = {
-    'dir':      'fedora-1-i386',
+packages['fedoracore-1-i386'] = {
+    'dir':      'fedoracore-1-i386',
     'minimal':	'bash glibc',
-    'base':	'coreutils fileutils findutils openssh-server',
+    'base':	'coreutils findutils openssh-server',
     'build':    'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
                 'bzip2 diffutils cpio elfutils',
 }
-sourceslist['fedora-1-i386'] = {
-    'fedora-1-i386': ('os', )
+sourceslist['fedoracore-1-i386'] = {
+    'fedoracore-1-i386': ('os', )
 }
-config['fedora-1-i386'] = {}
-aliases['fedora-1-i386'] = ('f1', )
+config['fedoracore-1-i386'] = {}
+aliases['fedoracore-1-i386'] = ('fc1', )
 
 # Fedora Core 1 with updates
-packages['fedora-1-i386-updates'] = packages['fedora-1-i386']
-sourceslist['fedora-1-i386-updates'] = {
-    'fedora-1-i386': ('os', 'updates', )
+packages['fedoracore-1-i386-updates'] = packages['fedoracore-1-i386']
+sourceslist['fedoracore-1-i386-updates'] = {
+    'fedoracore-1-i386': ('os', 'updates', )
 }
-config['fedora-1-i386-updates'] = {}
-aliases['fedora-1-i386-updates'] = ('f1u', )
+config['fedoracore-1-i386-updates'] = {}
+aliases['fedoracore-1-i386-updates'] = ('fc1u', )
 
 # Fedora Core 1 with fedora.us
-packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates']
-packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
-sourceslist['fedora-1-i386-fedora-stable'] = {
-    'fedora-1-i386': ('os', 'updates', 'fedora-stable')
+packages['fedoracore-1-i386-fedora-stable'] = packages['fedoracore-1-i386-updates'].copy ()
+packages['fedoracore-1-i386-fedora-stable']['build'] = packages['fedoracore-1-i386-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['fedoracore-1-i386-fedora-stable'] = {
+    'fedoracore-1-i386': ('os', 'updates', 'fedora-stable')
 }
-config['fedora-1-i386-fedora-stable']  = { 'release': '1' }
-aliases['fedora-1-i386-fedora-stable'] = ('f1fs', )
+config['fedoracore-1-i386-fedora-stable']  = { 'release': '1' }
+aliases['fedoracore-1-i386-fedora-stable'] = ('fc1fs', )
 
-packages['fedora-1-i386-fedora-testing'] = packages['fedora-1-i386-fedora-stable']
-sourceslist['fedora-1-i386-fedora-testing'] = {
-    'fedora-1-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
+packages['fedoracore-1-i386-fedora-testing'] = packages['fedoracore-1-i386-fedora-stable']
+sourceslist['fedoracore-1-i386-fedora-testing'] = {
+    'fedoracore-1-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing')
 }
-config['fedora-1-i386-fedora-testing']  = config['fedora-1-i386-fedora-stable']
-aliases['fedora-1-i386-fedora-testing'] = ('f1ft', )
+config['fedoracore-1-i386-fedora-testing']  = config['fedoracore-1-i386-fedora-stable']
+aliases['fedoracore-1-i386-fedora-testing'] = ('fc1ft', )
 
-packages['fedora-1-i386-fedora-unstable'] = packages['fedora-1-i386-fedora-testing']
-sourceslist['fedora-1-i386-fedora-unstable'] = {
-    'fedora-1-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
+packages['fedoracore-1-i386-fedora-unstable'] = packages['fedoracore-1-i386-fedora-testing']
+sourceslist['fedoracore-1-i386-fedora-unstable'] = {
+    'fedoracore-1-i386': ('os', 'updates', 'fedora-stable', 'fedora-testing',
                       'fedora-unstable')
 }
-config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing']
-aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
+config['fedoracore-1-i386-fedora-unstable']  = config['fedoracore-1-i386-fedora-testing']
+aliases['fedoracore-1-i386-fedora-unstable'] = ('fc1fu', )
 
 
 ### Yellow Dog Linux 2.3 flavours
