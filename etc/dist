@@ -80,7 +80,7 @@ aptsources['redhat-80-i386'] = {
 packages['redhat-80-i386'] = {
     'dir':      'redhat-80-i386',
     'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                    'diffutils cpio openssh-server',
+                    'bzip2 diffutils cpio openssh-server',
 }
 sourceslist['redhat-80-i386'] = {
     'redhat-80-i386': ('os', )
@@ -142,7 +142,7 @@ aptsources['redhat-9-i386'] = {
 packages['redhat-9-i386'] = {
     'dir':      'redhat-9-i386',
     'build':        'dev rpm-devel rpm-build make gcc tar gzip patch unzip ' +
-                    'diffutils cpio elfutils openssh-server',
+                    'bzip2 diffutils cpio elfutils openssh-server',
 }
 sourceslist['redhat-9-i386'] = {
     'redhat-9-i386': ('os', )
