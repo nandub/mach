@@ -1,0 +1,43 @@
+mach - make a chroot - RELEASE NOTES
+------------------------------------
+
+Announcing the release of mach 0.4.0 - "Barcelona"
+
+WHAT IS IT
+----------
+mach allows you to set up clean roots from scratch for any distribution or 
+distribution variation supported.
+
+This clean build root can be used to run jailed services, create disk images,
+or build clean packages.
+
+Read the README included in the distribution for a better overview.
+
+INFORMATION
+-----------
+mach's homepage is at http://thomas.apestaart.org/projects/mach/
+mach is hosted on SourceForge; the project page is
+http://www.sourceforge.net/projects/mach/
+
+QUICKSTART
+----------
+a) On a Red Hat 9 system, install the mach rpm from
+   http://thomas.apestaart.org/download/mach
+b) su - mach
+c) mach setup base
+d) mach chroot
+   poke around a bit in the fresh root
+e) exit
+f) mach rebuild http://ayo.freshrpms.net/redhat/9/i386/SRPMS.os/vorbis-tools-1.0-3.src.rpm
+
+If all goes well, you'll get a nice freshly built vorbis-tools package.
+
+Now go out, experiment and bug report !
+
+BUGS
+----
+Please report all bugs to me at thomas (at) apestaart (dot) org.
+
+Always state what platform you are running on, if it's a clean install or
+somehow updated, how I can reproduce the bug, and output of a run of
+the failed command with -d (debugging).
