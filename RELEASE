@@ -11,7 +11,22 @@ distribution variation supported.
 This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
+mach can currently set up roots for the following distributions:
+- Red Hat 7.2 (basic, updated, FreshRPMS)
+- Red Hat 7.3 (basic, updated, FreshRPMS)
+- Red Hat 8.0 (basic, updated, Fedora, JPackage, GStreamer, FreshRPMS)
+- Red Hat 9   (basic, updated, Fedora, JPackage, GStreamer, FreshRPMS)
+- SuSE 8.1/8.2
+- Dave/Dina oven/fridge
+
 Read the README included in the distribution for a better overview.
+
+WHY WOULD YOU USE IT
+--------------------
+mach is helpful:
+- to create minimal chroot environments to jail services in
+- to create clean packages for distributions
+- to catch spec file mistakes, missing buildrequires, and more
 
 INFORMATION
 -----------
