@@ -7,6 +7,8 @@
 	* Makefile.am: Enable bzip2'd dist tarball.
 	* mach.spec.in: Use the bzip2'd tarball.
 
+	* etc/dist: Add "file" to rh73/base.
+
 2004-01-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* Makefile.am:
