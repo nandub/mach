@@ -1,9 +1,16 @@
+2004-02-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+          add a --no-scripts option to not run the postbuild scripts
+          remove --nodeps from rpmbuild on spec file
+
 2004-02-27  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist:
           remove gcc-c++ from "build" sets, I really want this in on a
           spec-by-spec basis
 	* mach.spec.in:
+          only output log once on succesful build
           more permission fixing
 
 2004-02-27  Thomas Vander Stichele  <thomas at apestaart dot org>

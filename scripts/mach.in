@@ -31,6 +31,7 @@ Mach options:
   -c, --collect			collect packages and relevant files to .
   -q, --quiet			no spinners, minimal output
   --release=(tag)		add given tag to release tag
+  --no-scripts			don\'t run post build scripts
   --canonify			just output the canonical root name and exit
 
 Commands:
@@ -64,7 +65,8 @@ config = {
   'collect': 0,
   'release': 0,
   'quiet': 0,
-  'defaultroot': 'redhat-9-i386', # FIXME: based on configure's distro check
+  'scripts': 1,
+  'defaultroot': 'fedora-1-i386', # FIXME: based on configure's distro check
 
   'chroot': '@SBINDIR@/mach-helper chroot',
   'mount': '@SBINDIR@/mach-helper mount',
@@ -902,7 +904,7 @@ class Root:
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
 
-            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba --nodeps %s /usr/src/rpm/SPECS/%s 2>&1' - %s" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile, builduser)
+            command = "su -c 'RPM_BUILD_NCPUS=%s %s -ba %s /usr/src/rpm/SPECS/%s 2>&1' - %s" % (nrcpus, self.config['root_rpmbuild'], string.join (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -975,7 +977,7 @@ class Root:
                 os.system (cmd)
 
         # run success-script if requested
-        if self.config['script-success']:
+        if self.config['script-success'] and self.config['scripts']:
             for resultdir in resultdirs:
                 cmd = '%s %s' % (self.config['script-success'], resultdir)
                 debug ("running %s" % cmd)
@@ -1601,7 +1603,7 @@ def main (config, args):
         opts, args = getopt.getopt (args, 'r:hdfkscq',
                                     ['root=', 'help', 'debug', 'force', 'keep',
                                      'sign', 'collect', 'quiet', 'release=',
-                                     'canonify'])
+                                     'no-scripts', 'canonify'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -1634,6 +1636,8 @@ def main (config, args):
             cli_config['quiet'] = 1
         elif opt == '--release':
             cli_config['release'] = arg
+        elif opt == '--no-scripts':
+            cli_config['scripts'] = 0
         elif opt == '--canonify':
             canonify = 1
 
