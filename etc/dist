@@ -250,7 +250,8 @@ sourceslist['redhat-80-i386-gstreamer-deps'] = {
 aliases['redhat-80-i386-gstreamer-deps'] = ('rh80gd', )
 
 # Red Hat Linux 8.0 with Fedora
-packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386']
+packages['redhat-80-i386-fedora-stable'] = packages['redhat-80-i386-updates']
+packages['redhat-80-i386-fedora-stable']['build'] = packages['redhat-80-i386-updates']['build'] + " gcc-c++ redhat-rpm-config"
 sourceslist['redhat-80-i386-fedora-stable'] = {
     'redhat-80-i386': ('os', 'updates', 'fedora-stable')
 }
@@ -337,7 +338,8 @@ sourceslist['redhat-9-i386-gstreamer-deps'] = {
 aliases['redhat-9-i386-gstreamer-deps'] = ('rh9gd', )
 
 # Red Hat Linux 9 with Fedora
-packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386']
+packages['redhat-9-i386-fedora-stable'] = packages['redhat-9-i386-updates']
+packages['redhat-9-i386-fedora-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " gcc-c++ redhat-rpm-config"
 sourceslist['redhat-9-i386-fedora-stable'] = {
     'redhat-9-i386': ('os', 'updates', 'fedora-stable')
 }

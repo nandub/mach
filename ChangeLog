@@ -1,3 +1,8 @@
+2003-10-13  Ville Skyttä <ville dot skytta at iki dot fi>
+
+        * etc/dist: Make fedora(.us) repos for RH 8.0 and 9 inherit from
+	updates, add gcc-c++ and redhat-rpm-config to build packages.
+
 2003-10-06  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * etc/dist: add sh-utils to 7.0 so su works
