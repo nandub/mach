@@ -1,6 +1,8 @@
 mach - make a chroot
 --------------------
 
+WHAT IS IT ?
+
 mach allows you to set up clean roots from scratch for any distribution or 
 distribution variation supported.
 This clean build root can be used for several goals :
@@ -44,6 +46,7 @@ Some handy features of mach include
     the build root
   - uses apt to resolve dependencies
   - parsing of BuildRequires to install necessary packages for building
+  - build ordering when doing multiple builds
   - support for flavours of distribution
   - multiple build roots
   - locking of buildroot to avoid concurrent builds
@@ -142,6 +145,16 @@ TIPS & TRICKS
   wrong.  Then when you find the problem, fix it, and clean the build root.
   If this complains about not being able to run rm because no base is installed
   in the chroot, you might have to su to root and clear out the root yourself.
+
+- mach tries to adhere to the FHS.  It uses a lot of disk space by nature.
+  You might not have as much space as you would like.  Since security needs
+  to be tight, mach-helper is very strict about this location.  A good
+  solution for this is to use bind mounts.  For example, I have in my
+  /etc/fstab file:
+  /home/mach/roots /var/lib/mach/roots auto bind,defaults 0 0
+  which causes /home/mach/roots on my big home disk to be mounted again
+  on /var/lib/mach/roots.
+
 
 BUGS
 ----
