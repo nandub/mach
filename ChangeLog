@@ -1,3 +1,7 @@
+2003-07-24  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in: use machbuild in place of mach inside build root
+
 2003-07-18  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in: fix case when src.rpm/spec has no BuildRequires:
