@@ -1,3 +1,8 @@
+2003-08-09  Thomas Vander Stichele <thomas at apestaart dot org>
+
+        * scripts/mach.in: add _bruteclean to use mach-helper to remove
+          a root in case it can't remove itself
+
 2003-08-07  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * scripts/mach.in: don't fail unlock if not locked
