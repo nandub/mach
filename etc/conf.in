@@ -8,7 +8,7 @@ config['spinner'] = {
     'text':       '<-WORKING->',
     'subliminal': '<- send us lots of money ->',
     'quote':      '´''"''`',
-    'point':      ".:¨:",
+    'point':      ".:°:",
 }
 
 # directories used
