@@ -4,6 +4,8 @@
 	Move build packages here instead of hardcoding them in mach.
 	* scripts/mach.in (_setup_build): Ditto.
 
+	* etc/dist: Add SuSE 8.1 and 8.2 configs.
+
 2003-06-20  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (BuildRequires): Fix BuildRequires filtering.
