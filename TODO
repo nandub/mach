@@ -11,3 +11,6 @@
 * EASY:		verify downloades Sources and Patches for false downloads
 * HARD:		figure out a good way to deal with /proc, because it's not safe
                 for the host to have this
+* KLUDGEY:      SuSE 7.3 and 8.0 setups, the problem is their ncurses package
+                which has a %pre script that requires bash.  And bash requires
+                libncurses.so.5 :/
