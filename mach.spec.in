@@ -95,12 +95,14 @@ fi
 %attr(2775,mach,mach) %dir %{_localstatedir}/lib/mach/states
 %attr(2775,mach,mach) %dir %{_localstatedir}/lib/mach/roots
 %ghost %attr(2775,mach,mach) %dir %{_localstatedir}/tmp/mach
-%attr(2775,mach,mach) %dir %{_localstatedir}/cache/mach/packages
-%attr(2775,mach,mach) %dir %{_localstatedir}/cache/mach/archives
+%attr(2775,mach,mach) %{_localstatedir}/cache/mach
 %{_bindir}/mach
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Wed Apr 14 2004 Ville Skyttä <ville.skytta at iki.fi>
+- Own %%{_localstatedir}/mach, thanks to John Dalbec for the catch.
+
 * Thu Apr  8 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Require apt >= 0.5.5cnc2 due to internal use of the "rpm-dir" index type.
 
