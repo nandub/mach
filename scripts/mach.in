@@ -918,6 +918,7 @@ class Root:
                    os.system ('mv %s %s.%s' % (x, name, os.path.basename (x)))
             
         print "Build done."
+        return True
 
         # sign all packages at once so we only need the passphrase once
         # FIXME: repeat if fail
@@ -1553,7 +1554,7 @@ def main (config, args):
             sys.stderr.write ("Aborted.\n")
             root.unlock ()
             sys.exit (1)
-        if output:
+        if output and output != True:
             print output
     else:
         sys.stderr.write ("No such command '%s'\n" % command)
