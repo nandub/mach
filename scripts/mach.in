@@ -228,11 +228,12 @@ def do_chroot (config, command, progress = False):
 def do_chroot_with_output (config, command, progress = False):
     root = get_config_dir (config, 'root')
     cmd = '%s %s %s' % (config['chroot'], root, command)
+    output = ''
     debug ("Executing %s" % cmd)
     if progress:
         return do_progress (cmd)
     else:
-        status = os.system (cmd)
+        (status, output) = commands.getstatusoutput (cmd)
 
     if os.WIFEXITED (status):
         retval = os.WEXITSTATUS (status)
@@ -244,7 +245,7 @@ def do_chroot_with_output (config, command, progress = False):
     #FIXME: hack to return no output, we should change this
     if (retval != 0):
         sys.stderr.write ("error: %s failed\n" % cmd)
-    return (retval, "")
+    return (retval, output)
 
 
 # do a topological sort on the given list of pairs
@@ -325,13 +326,20 @@ def get_spec_from_srpm (path):
     debug ("get_spec_from_srpm: %s" % spec)
     return spec
 
-# get all of the written rpms from the log file and return as list
+# get all of the written rpms from the log file and return a tuple
+# srpm, list of rpms
 def get_rpms_from_log (log):
-    output = commands.getoutput ('grep "Wrote: " %s | sort | uniq' % log)
     rpms = []
+    srpm = ''
+    matchstr = re.compile ("src\.rpm$")
+    output = commands.getoutput ('grep "Wrote: " %s | sort | uniq' % log)
     for line in output.split ("\n"):
-        rpms.append (string.replace (line, 'Wrote: ', ''),)
-    return rpms
+        curr = string.replace (line, 'Wrote: ', '')
+        if matchstr.search (curr):
+            srpm = curr
+        else:
+            rpms.append (curr)
+    return (srpm, rpms)
 
 # print out debug info if wanted
 # uses DEBUG global
@@ -510,7 +518,9 @@ def setup_consistency (config, args):
         return True
     mount (config, args)
     rootdir = get_config_dir (config, 'root')
-    create_sources_list (config, get_sources_list (config))
+    srcs = get_sources_list (config)
+    srcs.insert (0, 'rpm-dir file:///usr/src rpm mach-local')
+    create_sources_list (config, srcs)
     sys.stdout.write ('Updating apt ...')
     do_chroot (config, "/bin/bash -c '%s update'" % aptget, True)
     sys.stdout.write ('Forcing consistency ...')
@@ -544,7 +554,10 @@ def setup_build (config, args):
     do_chroot (config, "su -c 'cp /etc/bashrc /usr/src/rpm/.bashrc' mach")
      # create dir structure and rpmmacros
     macros = open (root + '/tmp/macros', 'w')
-    macros.write ('%_topdir /usr/src/rpm')
+    macros.write ("%_topdir /usr/src/rpm\n")
+    macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
+    macros.write ("%_unpackaged_files_terminate_build 1\n")
+    macros.write ("%_missing_doc_files_terminate_build 1\n")
     macros.close ()
     if do_chroot (config, 'mv /tmp/macros /etc/rpm') != 0:
         sys.stdout.write ("error: could not create /etc/rpm\n")
@@ -553,6 +566,11 @@ def setup_build (config, args):
     for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
         if do_chroot (config, "su -c 'mkdir -p /usr/src/rpm/%s' mach" % dir) != 0:
             sys.stdout.write ("error: could not create /usr/src/rpm/%s\n" % dir)
+            unlock (config, args)
+            sys.exit (1)
+    for dir in ('RPMS', 'SRPMS'):
+        if do_chroot (config, 'ln -s %s /usr/src/rpm/%s.mach-local' % (dir, dir)) != 0:
+            sys.stdout.write ("error: could not create symlink /usr/src/rpm/%s.mach-local" % dir)
             unlock (config, args)
             sys.exit (1)
    # make a snapshot
@@ -615,15 +633,12 @@ def check_packages (config):
         else:
             url = config['packages']['download'][pkg] + pkg
         if not os.path.exists (path):
-            # get it
-            print "downloading %s" % url
-            urllib.urlretrieve (url, path)
+            urlgrab (url, path)
         # verify that it's an rpm
         #ret = os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path)
         if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
             os.remove (path)
-            print "downloading %s" % url
-            urllib.urlretrieve (url, path)
+            urlgrab (url, path)
             # retry
             if os.system ('rpm --checksig --nosignature %s > /dev/null 2>&1' % path) != 0:
                 sys.stderr.write ('error: failed downloading %s\n' % url)
@@ -677,10 +692,9 @@ def build (config, args):
                     files.append (filepath)
                     found = 1
             if not found:
-                print "Downloading %s ..." % download
                 filepath = tmppath + "/" + filename
                 try:
-                    urllib.urlretrieve (download, filepath)
+                    urlgrab (download, filepath)
                 except:
                     sys.stderr.write ("Could not download %s !\n" % download)
                     return False
@@ -688,10 +702,10 @@ def build (config, args):
                 print "Using %s" % filepath
 
         for file in files:
-            shutil.copy (file, root + '/tmp')
+            shutil.copy2 (file, root + '/tmp')
             do_chroot (config, "mv /tmp/" + os.path.basename (file)
                                           + " /usr/src/rpm/SOURCES")
-            shutil.copy (specfile, root + '/tmp')
+            shutil.copy2 (specfile, root + '/tmp')
             do_chroot (config, "mv /tmp/" + os.path.basename (specfile)
                                           + " /usr/src/rpm/SPECS")
         # we were stupid enough to think we couldn't build an src.rpm without
@@ -712,7 +726,7 @@ def build (config, args):
         (n, v, r) = spec.nvr ()
         srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
         debug ("DEBUG: resulting srpm: %s" % srpmname)
-        shutil.copy (root + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
+        shutil.copy2 (root + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
         srpms.append (tmppath + '/' + srpmname)
 
     # ready to build them all
@@ -775,9 +789,8 @@ def rebuild (config, args):
 	# resolve path to basename (without dirs)
         srpm = os.path.basename (path)
         newpath = root + '/tmp/' + srpm
-        print "Getting %s" % srpm
         try:
-            urllib.urlretrieve (path, newpath)
+            urlgrab (path, newpath)
         except IOError:
             sys.stderr.write ("Can't find %s !\n" % path)
             return False
@@ -812,12 +825,12 @@ def rebuild (config, args):
             debug ("Mangled %s to %s" % (buildreq, req))
             deps.append ((pkg, req))
 
-    debug ("DEBUG: topological input: ")
+    debug ("topological input: ")
     debug (deps)
-    debug ("DEBUG: topological output: ")
+    debug ("topological output: ")
     sorted = topological_sort (deps)
     sorted.reverse ()
-    debug ("DEBUG: order %s" % sorted)
+    debug ("order %s" % sorted)
     # now scrub packages not up for build from order
     order = []
     for pkg in sorted:
@@ -852,7 +865,7 @@ def rebuild (config, args):
         # rebuild binary rpm from the src rpm
         sys.stdout.write ("Rebuilding %s ..." % srpm)
         (status, output) = do_chroot_with_output (config,
-                                      "su -c 'rpmbuild --rebuild /tmp/%s 2>&1' mach" % srpm,
+                                      "su -c 'rpmbuild --rebuild --clean /tmp/%s 2>&1' mach" % srpm,
                                       True)
         if (output):
             open (resultdir + '/rpm.log', "wb"). write (output)
@@ -870,15 +883,21 @@ def rebuild (config, args):
             print "ERROR: something went wrong repackaging SRPM"
 
         # analyze log file and move all of the rpms listed as Wrote:
-        rpms = get_rpms_from_log (resultdir + '/rpm.log')
-        sys.stdout.write ("Installing built RPMS ...")
-        if do_chroot (config, 'rpm -Uhv %s' % string.join (rpms, " "), True) != 0:
-            return False
+        (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
         # FIXME: install these RPMS based on a boolean ?
+        # FIXME: error checks
+        (status, output) = do_chroot_with_output (config, 'rpm -qp --qf "%%{name}=%%{epoch}:%%{version}-%%{release} " %s' % string.join (rpms, " "))
+        # Need to handle packages without Epochs :/
+        output = string.replace (output, '=(none):', '=');
+        sys.stdout.write ("Installing built RPMS and dependencies ...")
+        if do_chroot (config, 'apt-get install -y %s' % output, True) != 0:
+            return False
+        # FIXME: install the SRPM?
         print "Collecting results from %s" % srpm
+        rpms.append (srpm)
         for file in rpms:
             # FIXME: a more python-like solution ?
-            shutil.copy (root + '/' + file, resultdir)
+            shutil.copy2 (root + '/' + file, resultdir)
             # for now, we do, for multiple builds
             do_chroot (config, 'rm ' + file)
         print "Build of %s succeeded." % fullname
@@ -937,6 +956,18 @@ def setup (config, args):
 # give a status of each of the roots
 def status (config, args):
     print "FIXME: write me" 
+
+def urlgrab (url, filename):
+    print "Getting %s ..." % url
+    (t, h) = urllib.urlretrieve(url, filename)
+    d = None
+    try:
+        if h:
+            d = time.mktime(h.getdate("Last-Modified") or h.getdate ("Date"))
+        if d:
+            os.utime(filename, (d, d))
+    except:
+        print "Warning: time stamp not preserved for %s" % filename
 
 # main function
 def main (config, args):

@@ -1,5 +1,16 @@
 2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>
 
+        * patch from Ville applied
+        * Use apt's "rpm-dir" indextype to create a local mini-repo inside the 
+          chroot.  This way, we can install the binary packages and their 
+          dependencies just by doing a "apt-get install foo".
+        * Put all URL retrieval operations into a new urlgrab function, which
+          tries to preserve timestamps of the downloads.
+        * Use shutil.copy2 instead of copy, again for preserving timestamps.
+        * Add --clean to rpmbuild --rebuild.
+
+2003-05-09  Thomas Vander Stichele <thomas at apestaart dot org>
+
         * added ASCII spinner themes
         * add more dists and rework config file for it
         * make each root download in a different packages dir
