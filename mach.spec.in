@@ -18,6 +18,8 @@ Requires:	sed
 Requires:	cpio
 
 BuildRequires:	python
+BuildRequires:	gcc-c++
+BuildRequires:	libselinux-devel
 
 %{!?builduser:  %define builduser  @BUILDUSER@}
 %{!?buildgroup: %define buildgroup @BUILDGROUP@}

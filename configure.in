@@ -83,6 +83,7 @@ AC_MSG_NOTICE(Using build groupname $BUILDGROUP)
 
 dnl default root
 dnl first try to guess the platform
+CHECK_RELEASE(fedora,    "(Stentz)",     defaultroot="fedora-4-i386")
 CHECK_RELEASE(fedora,    "(Heidelberg)", defaultroot="fedora-3-i386")
 CHECK_RELEASE(fedora,    "(Tettnang)",   defaultroot="fedora-2-i386")
 CHECK_RELEASE(fedora,    "(Yarrow)",     defaultroot="fedora-1-i386")
