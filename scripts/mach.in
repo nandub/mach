@@ -58,7 +58,7 @@ Commands:
 # list of allowed commands
 allowed_commands = ('apt-get', 'apt-cache', 'build',
                     'chroot', 'clean', 'rebuild', 'rpm',
-                    'setup', 'status', 'unlock')
+                    'setup', 'status', 'unlock', 'yum')
 
 # read default configuration
 config = {
@@ -80,6 +80,7 @@ config = {
   'apt-cache': '/usr/bin/apt-cache',
   'mknod': '@SBINDIR@/mach-helper mknod',
   'runuser': '/bin/su',
+  'installer': 'yum',
 
   # root_*: commands run inside the build root
   'root_rpmbuild': 'rpmbuild',
@@ -99,6 +100,7 @@ except:
 
 # clear stuff
 aptsources = {}
+yumsources = {}
 packages = {}
 sourceslist = {}
 aliases = {}
@@ -1248,12 +1250,13 @@ class Root:
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
         ensure_dir (os.path.join (self.rootdir, 'dev'))
-        cmd = '%s %s -m 666 c 1 3' % (config['mknod'],
-            os.path.join (self.rootdir, 'dev', 'null'))
-        try:
-            self.do(cmd, progress=False)
-        except Root.ReturnValue, (retval, output):
-            raise Root.Error, "mach-helper could not mknod /dev/null"
+        devnull = os.path.join (self.rootdir, 'dev', 'null')
+        if not os.path.exists (devnull):
+            cmd = '%s %s -m 666 c 1 3' % (config['mknod'], devnull)
+            try:
+                self.do(cmd, progress=False)
+            except Root.ReturnValue, (retval, output):
+                raise Root.Error, "mach-helper could not mknod /dev/null"
 
         ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
@@ -1352,10 +1355,11 @@ Dir {
         self.mount ()
         self._install ('base')
         self.umount ()
-	# ensure if su is installed
+	# ensure su/runuser is installed
         if not os.path.exists (os.path.join (self.rootdir, 
             self.config['runuser'])):
-            raise self.Error ("su/runuser did not get installed properly")
+            raise self.Error ("Could not find %s in %s" % (
+                self.config['runuser'], self.rootdir))
 
     def _check_revert_build (self):
         # see if we need to revert to the build package list

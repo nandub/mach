@@ -1,3 +1,17 @@
+2005-06-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-4-i386:
+	* configure.in:
+	  add fc4
+	* mach.spec.in:
+	  add buildreqs
+	* scripts/mach.in:
+	  add yum as an allowed command
+	  add an installer config var
+	  make /dev/null a little better
+	  differentiate between su and runuser when debugging
+
 2005-01-28  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/mach-helper.c: (do_yum), (main):
