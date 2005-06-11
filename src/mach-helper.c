@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* pull in configure'd defines */
 char *rootsdir = ROOTSDIR;

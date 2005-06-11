@@ -1785,14 +1785,18 @@ def get_state (config, state):
         return statedir + '/' + state
     return
 
-# check if everything is in order to actually do stuff
-def sanity_check (config):
-    # check if we're in the mach group
+# check if the current user is in the right group
+def user_check ():
     if os.getuid () != 0:
         machgid=grp.getgrnam ('mach')[2]
         if not machgid in os.getgroups():
             sys.stderr.write ("error: user is not in group mach, please add !\n")
             sys.exit (1)
+
+
+# check if everything is in order to actually do stuff
+def sanity_check (config):
+    user_check ()
 
     # check if partial dir exists
     partial = config['dirs']['archives'] + '/partial'
@@ -1988,6 +1992,7 @@ if __name__ == '__main__':
     if len (sys.argv) > 1:
         main (config, sys.argv[1:])
     else:
+        user_check ()
         print "starting mach interpreter ..."
         running = True;
         while running:

@@ -13,7 +13,7 @@ Requires:	python
 Requires:	rpm
 Requires:	rpm-build
 Requires:	rpm-python
-Requires:	apt >= 0.5.5cnc2
+Requires:	yum
 Requires:	sed
 Requires:	cpio
 
@@ -26,7 +26,7 @@ BuildRequires:	libselinux-devel
 
 %description
 mach makes a chroot.
-Using apt-get and a suid binary, it manages to install clean chroot
+Using yum or apt-get and a suid binary, it manages to install clean chroot
 environments based on the original packages for that distribution.
 
 The clean root can be used to run jail roots, to create image files, or

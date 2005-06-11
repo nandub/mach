@@ -1,5 +1,15 @@
 2005-06-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* mach.spec.in:
+	  require yum instead of apt
+	* scripts/mach.in:
+	  factor out check_user()
+	  run it before starting interpreter
+	* src/mach-helper.c:
+	  add string.h include
+
+2005-06-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/Makefile.am:
 	* etc/dist.d/fedora-4-i386:
 	* configure.in:
