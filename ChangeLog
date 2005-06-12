@@ -1,5 +1,20 @@
 2005-06-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* etc/dist.d/fedora-3-i386:
+	* etc/location:
+	  add and use fedorayum base location
+	* src/mach-helper.c: (do_chroot), (do_mknod), (main):
+	  allow mknod /dev/zero 
+	* scripts/mach.in:
+	  add support for yum
+	  add 'installer' config option for either yum or apt-get
+	  use a sources dict instead so we can provide the repo.d files
+	  with names
+	  create /dev/zero in the root
+	  enable caching of packages for yum
+
+2005-06-12  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* src/mach-helper.c: (main):
 	  remove env, it's a security problem
 
