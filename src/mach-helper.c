@@ -403,8 +403,6 @@ main (int argc, char *argv[])
     do_yum (argc, argv);
   else if (strncmp ("mknod", argv[1], 5) == 0)
     do_mknod (argc, argv);
-  else if (strncmp ("env", argv[1], 3) == 0)
-    do_command ("/bin/env", &(argv[1]));
   else
   {
     error ("Command %s not recognized !\n", argv[1]);
