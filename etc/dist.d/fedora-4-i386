@@ -26,12 +26,23 @@ aptsources['fedora-4-i386'] = {
     'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
 }
 
-# Fedora Core 3
+yumsources['fedora-4-i386'] = {
+    'core':             fedorayum   + '/core/4/i386/os',
+    'updates':          fedorayum   + '/core/updates/4/i386',
+    'extras':           fedorayum   + '/extras/4/i386',
+    'gstreamer':        gstreamer   + '/fedora/4/i386/yum/gst',
+    'gstreamer-build':  gstreamer   + '/fedora/4/i386/yum/build',
+    'gstreamer-deps':   gstreamer   + '/fedora/4/i386/yum/deps',
+}
+
+# Fedora Core 4
 packages['fedora-4-i386-core'] = {
     'dir':      'fedoracore-4-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-build make gcc tar gzip patch ' +
+    # rpm has /usr/lib/rpm/rpmrc which is needed for rpmbuild,
+    # but there's no explicit dep, or the install fails for some reason
+    'build':    'dev rpm rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-4-i386-core'] = {
@@ -49,7 +60,7 @@ sourceslist['fedora-4-i386-updates'] = {
 config['fedora-4-i386-updates'] = config['fedora-4-i386-core']
 aliases['fedora-4-i386-updates'] = ('f4u', )
 
-# Fedora Core 3 with GStreamer
+# Fedora Core 4 with GStreamer
 packages['fedora-4-i386-gstreamer'] = packages['fedora-4-i386-core']
 sourceslist['fedora-4-i386-gstreamer'] = {
     'fedora-4-i386': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
@@ -67,47 +78,29 @@ sourceslist['fedora-4-i386-gstreamer-deps'] = {
 config['fedora-4-i386-gstreamer-deps'] = config['fedora-4-i386-gstreamer']
 aliases['fedora-4-i386-gstreamer-deps'] = ('f4gd', )
 
-# Fedora Core 3 with fedora.us
-packages['fedora-4-i386-fedora-stable'] = packages['fedora-4-i386-updates'].copy ()
-packages['fedora-4-i386-fedora-stable']['build'] = packages['fedora-4-i386-updates']['build'] # + " fedora-rpmdevtools"
-sourceslist['fedora-4-i386-fedora-stable'] = {
+# Fedora Core 4 with extras
+packages['fedora-4-i386-extras'] = packages['fedora-4-i386-updates'].copy ()
+packages['fedora-4-i386-extras']['build'] = packages['fedora-4-i386-updates']['build'] # + " fedora-rpmdevtools"
+sourceslist['fedora-4-i386-extras'] = {
     'fedora-4-i386':
     sourceslist['fedora-4-i386-updates']['fedora-4-i386'] +
-    ('fedora-stable', )
+    ('extras', )
 }
-config['fedora-4-i386-fedora-stable'] = {
+config['fedora-4-i386-extras'] = {
   'runuser': '/sbin/runuser',
-  'release': '3'
+  'release': 'fc4'
 }
-aliases['fedora-4-i386-fedora-stable'] = ('f4fs', )
+aliases['fedora-4-i386-extras'] = ('f4e', )
 
-packages['fedora-4-i386-fedora-testing'] = packages['fedora-4-i386-fedora-stable']
-sourceslist['fedora-4-i386-fedora-testing'] = {
-    'fedora-4-i386':
-    sourceslist['fedora-4-i386-fedora-stable']['fedora-4-i386'] +
-    ('fedora-testing', )
-}
-config['fedora-4-i386-fedora-testing']  = config['fedora-4-i386-fedora-stable']
-aliases['fedora-4-i386-fedora-testing'] = ('f4ft', )
-
-packages['fedora-4-i386-fedora-unstable'] = packages['fedora-4-i386-fedora-testing']
-sourceslist['fedora-4-i386-fedora-unstable'] = {
-    'fedora-4-i386':
-    sourceslist['fedora-4-i386-fedora-testing']['fedora-4-i386'] +
-    ('fedora-unstable', )
-}
-config['fedora-4-i386-fedora-unstable']  = config['fedora-4-i386-fedora-testing']
-aliases['fedora-4-i386-fedora-unstable'] = ('f4fu', )
-
-# Fedora Core 3 with livna (+ fedora.us)
+# Fedora Core 4 with livna (+ extras)
 packages['fedora-4-i386-livna-stable'] = packages['fedora-4-i386-updates'].copy ()
 packages['fedora-4-i386-livna-stable']['build'] = packages['fedora-4-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-4-i386-livna-stable'] = {
     'fedora-4-i386':
     sourceslist['fedora-4-i386-updates']['fedora-4-i386'] +
-    ('fedora-stable', 'livna-stable', )
+    ('extras', 'livna-stable', )
 }
-config['fedora-4-i386-livna-stable']  = config['fedora-4-i386-fedora-stable']
+config['fedora-4-i386-livna-stable']  = config['fedora-4-i386-extras']
 aliases['fedora-4-i386-livna-stable'] = ('f4ls', )
 
 packages['fedora-4-i386-livna-testing'] = packages['fedora-4-i386-livna-stable']
@@ -128,7 +121,7 @@ sourceslist['fedora-4-i386-livna-unstable'] = {
 config['fedora-4-i386-livna-unstable']  = config['fedora-4-i386-livna-testing']
 aliases['fedora-4-i386-livna-unstable'] = ('f4lu', )
 
-# Fedora Core 3 with freshrpms
+# Fedora Core 4 with freshrpms
 packages['fedora-4-i386-freshrpms'] = packages['fedora-4-i386-core']
 sourceslist['fedora-4-i386-freshrpms'] = {
     'fedora-4-i386': ('core', 'freshrpms', )
@@ -136,7 +129,7 @@ sourceslist['fedora-4-i386-freshrpms'] = {
 config['fedora-4-i386-freshrpms'] = config['fedora-4-i386-core']
 aliases['fedora-4-i386-freshrpms'] = ('f4fr', )
 
-# Fedora Core 3 with JPackage
+# Fedora Core 4 with JPackage
 packages['fedora-4-i386-jpackage'] = packages['fedora-4-i386-updates'].copy()
 packages['fedora-4-i386-jpackage']['base'] = packages['fedora-4-i386-updates']['base'] + ' java-1.4.2-sun'
 packages['fedora-4-i386-jpackage']['build'] = packages['fedora-4-i386-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'

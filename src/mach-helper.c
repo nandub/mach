@@ -149,6 +149,7 @@ do_command (const char *filename, char *const argv[])
   size_t i;
   char *envvar;
   char *ld_preload;
+  struct stat buf;
 
   /* elevate privileges */
   setreuid (geteuid (), geteuid ());
@@ -162,9 +163,10 @@ do_command (const char *filename, char *const argv[])
   printf ("\n");
   */
 
-  /* add LD_PRELOAD for our selinux lib if MACH_LD_PRELOAD is set */
+  /* add LD_PRELOAD for our selinux lib if MACH_LD_PRELOAD is set, or if
+   * /selinux exists */
   envvar = getenv ("MACH_LD_PRELOAD");
-  if (envvar != 0)
+  if (envvar != 0 || stat ("/selinux", &buf) == 0)
   {
     ld_preload = strdup("LD_PRELOAD=" LIBDIR "/libselinux-mach.so");
     env[idx++] = ld_preload;
@@ -378,6 +380,16 @@ do_mknod (int argc, char *argv[])
   do_command ("/bin/mknod", &(argv[1]));
 }
 
+/* allow showing the environment, but nothing else */
+void
+do_env (int argc, char *argv[])
+{
+  /* enough arguments ? mach-helper mknod (name) -m (mode) (type) (major) (minor), 8 */
+  if (argc > 2)
+    error ("too many arguments");
+
+  do_command ("/bin/env", &(argv[1]));
+}
 
 int
 main (int argc, char *argv[])
@@ -403,6 +415,8 @@ main (int argc, char *argv[])
     do_yum (argc, argv);
   else if (strncmp ("mknod", argv[1], 5) == 0)
     do_mknod (argc, argv);
+  else if (strncmp ("env", argv[1], 3) == 0)
+    do_env (argc, argv);
   else
   {
     error ("Command %s not recognized !\n", argv[1]);

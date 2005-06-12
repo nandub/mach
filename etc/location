@@ -36,7 +36,7 @@ davedina    = 'http://download.davedina.org/apt'
 # Add-on locations
 fedoraus    = 'http://download.fedora.us/fedora'
 livna       = 'http://rpm.livna.org'
-gstreamer   = 'http://gstreamer.net/pkg'
+gstreamer   = 'http://gstreamer.freedesktop.org/pkg'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'

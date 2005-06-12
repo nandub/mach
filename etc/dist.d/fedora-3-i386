@@ -28,9 +28,10 @@ yumsources['fedora-3-i386'] = {
     'core':             fedorayum   + '/core/3/i386/os',
     'updates':          fedorayum   + '/core/updates/3/i386',
     'extras':           fedorayum   + '/extras/3/i386',
-    'gstreamer':        'rpm ' + gstreamer   + ' fedora/3/i386 gst',
-    'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/3/i386 build',
-    'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/3/i386 deps',
+    'gstreamer':        gstreamer   + '/fedora/3/i386/yum/gst',
+    'gstreamer-build':  gstreamer   + '/fedora/3/i386/yum/build',
+    'gstreamer-deps':   gstreamer   + '/fedora/3/i386/yum/deps',
+
     'livna-stable':     'rpm ' + livna       + ' fedora/3/i386 stable',
     'livna-testing':    'rpm ' + livna       + ' fedora/3/i386 testing',
     'livna-unstable':   'rpm ' + livna       + ' fedora/3/i386 unstable',
@@ -91,7 +92,7 @@ sourceslist['fedora-3-i386-extras'] = {
 }
 config['fedora-3-i386-extras'] = {
   'runuser': '/sbin/runuser',
-  'release': '3'
+  'release': 'fc3'
 }
 aliases['fedora-3-i386-extras'] = ('f3e', )
 

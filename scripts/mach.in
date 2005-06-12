@@ -344,7 +344,7 @@ class SRPM:
         spectmp = os.path.join (tmpdir, self.specname)
         if not os.path.exists (spectmp):
             raise self.Error, "didn't find spec file in %s" % self.path
-        cmd = "rpm -q --specfile %s" % spectmp
+        cmd = "rpm -q --qf '%s' --specfile %s" % (qfmt, spectmp)
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
         try:
@@ -543,9 +543,11 @@ class Root:
         debug ("installer: args: %r" % args)
         command = "%s -c %s %s %s" % (self.config[self.config['installer']], conf, extras, string.join (args))
         debug ("installer: command %s" % command)
-        # if True: # comment out if you want to see the installer's output
-        if interactive:
-            return os.system (command)
+        if DEBUG or interactive:
+            retval = os.system (command)
+            if retval != 0:
+                raise self.Error, "Could not %s %s" % (self.config['installer'], string.join (args))
+            
         if message: self.stdout (message)
         if progress: self.stdout (' ...')
         (status, output) = do_with_output (command, progress)
@@ -637,16 +639,21 @@ class Root:
             print "Not removing packages from root."
             return
         root = self.rootdir
-        cmd = "rpm --root %s -qa --qf '%s' \
-               | diff - %s > /dev/null 2>&1" % (root, qfmt, listfile)
+        cmd = "%s --root %s -qa --qf '%s' \
+               | diff - %s > /dev/null 2>&1" % (self.config['rpm'], root, qfmt, listfile)
         debug ("running " + cmd)
-        if os.system (cmd) == 0:
+        retval = os.system (cmd)
+        debug ("retval %d for command %s" % (retval, cmd))
+        if retval == 0:
             # no differences
             return True
-        cmd = "rpm --root %s -qa --qf '%s' \
+
+        cmd = "%s --root %s -qa --qf '%s' \
                | grep -v -f %s - \
-               | tr \"\n\" \" \"" % (root, qfmt, listfile)
+               | tr \"\n\" \" \"" % (self.config['rpm'], root, qfmt, listfile)
+        debug ("running " + cmd)
         packages = commands.getoutput (cmd)
+        debug ("packages to remove: %r" % packages)
         # FIXME: how many ? print the number
         if not packages:
            return True
@@ -985,13 +992,17 @@ class Root:
                     srcs = get_sources_dict (self.config)
                     # this ensures that locally built RPMS are already used for apt-get
                     root = get_config_dir (config, 'root')
-                    srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
+                    if config['installer'] == 'yum':
+                        srcs['local'] = 'file://%s/usr/src/rpm/RPMS.mach-local' % root
+                    else:
+                        srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
+                    debug ('creating sources list with dict %r' % srcs)
                     create_sources_list (config, srcs)
 
                     try:
                         self.installer (["update", ])
                     except Root.Error:
-                        raise self.Error, 'could not update apt'
+                        raise self.Error, 'could not update installer'
                     try:
                         # wrap all buildreqs in quotes
                         self.installer ([ '-y install %s' % "'" + "' '".join (buildreqs) + "'", ],
@@ -1147,7 +1158,10 @@ class Root:
             srcs = get_sources_dict (self.config)
             # this ensures that locally built RPMS are already used for apt-get
             root = get_config_dir (self.config, 'root')
-            srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
+            if config['installer'] == 'yum':
+                srcs['local'] = 'file://%s/usr/src/rpm/RPMS.mach-local' % root
+            else:
+                srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
             create_sources_list (self.config, srcs)
             self.installer (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
@@ -1413,10 +1427,10 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         self.mount ()
         # we do kernel and initscripts first, because lots of %pre
         # scripts fail otherwise
-        if not self.get_state ('base'):
-            debug('Installing kernel and initscripts')
-            self.installer (['-y install kernel initscripts', ],
-                "Installing kernel initscripts", True)
+        #if not self.get_state ('base'):
+        #    debug('Installing kernel and initscripts')
+        #    self.installer (['-y install kernel initscripts', ],
+        #        "Installing kernel initscripts", True)
         self._install ('base')
         self.umount ()
 
@@ -1822,16 +1836,20 @@ def create_sources_list (config, list):
     statedir = get_config_dir (config, 'state')
     if config['installer'] == 'yum':
         debug ("Creating files in yum.repos.d")
-        sources = open (statedir + '/yum/yum.repos.d/yum.repo', 'w')
 
         for source in list.keys():
             line = list[source]
+            debug ('writing file for repo %s' % line)
+            sources = open (statedir + '/yum/yum.repos.d/%s.repo' % source, 'w')
             sources.write("[%s]\nname=%s\nbaseurl=%s\nenabled=1\n" % (source, source, line))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
-            if (source == 'local'):
-                rootobj = Root (config)
-                rootobj.do_chroot ('createrepo -x S*/* -x B*/* /usr/src/rpm')+        sources.close ()
+            if source == 'local':
+                cmd = 'createrepo %s/usr/src/rpm/RPMS.mach-local' % root
+                (status, output) = do_with_output (cmd, False)
+                if status != 0:
+                    raise Error, "Could not update local yum repository"
+            sources.close ()
     else:
         debug ("Creating sources.list")
         sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
