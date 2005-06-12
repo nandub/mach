@@ -1,6 +1,27 @@
 2005-06-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-3-i386:
+	* etc/dist.d/fedora-4-i386:
+	  adding yum sources
+	* etc/location:
+	  change gstreamer canonical location
+	* scripts/mach.in:
+	  use queryformat when figuring out build order
+	  give full output of tools, as if interactive, when running with
+	  debug
+	  properly write config for 'local' packages in the yum case
+	* src/mach-helper.c: (do_command), (do_chroot), (do_mknod),
+	(do_env), (main):
+	  add back env (which was used for testing), but only without
+	  arguments
+	* src/selinux-mach.c:
+	  add prototype for another selinux-related function that
+	  might need to be replaced - see
+	  http://savannah.nongnu.org/cgi-bin/viewcvs/util-vserver/util-vserver/src/rpm-fake.c?rev=1.31&content-type=text/vnd.viewcvs-markup
+
+2005-06-12  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-3-i386:
 	* etc/location:
 	  add and use fedorayum base location
 	* src/mach-helper.c: (do_chroot), (do_mknod), (main):

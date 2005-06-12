@@ -12,3 +12,7 @@ extern int lsetfilecon(const char *path, security_context_t con)
 {
   return 0;
 }
+
+int rpm_execcon(unsigned  int  verified,  const  char  *filename,  char
+       *const argv[] , char *const envp[]);
+
