@@ -11,12 +11,26 @@
 aptsources['fedora-3-i386'] = {
     'core':             'rpm ' + fedora      + ' 3/i386 core',
     'updates':          'rpm ' + fedora      + ' 3/i386 updates',
+    'extras':           'rpm ' + fedora      + ' 3/i386 extras',
     'gstreamer':        'rpm ' + gstreamer   + ' fedora/3/i386 gst',
     'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/3/i386 build',
     'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/3/i386 deps',
-    'fedora-stable':    'rpm ' + fedoraus    + ' fedora/3/i386 stable',
-    'fedora-testing':   'rpm ' + fedoraus    + ' fedora/3/i386 testing',
-    'fedora-unstable':  'rpm ' + fedoraus    + ' fedora/3/i386 unstable',
+    'livna-stable':     'rpm ' + livna       + ' fedora/3/i386 stable',
+    'livna-testing':    'rpm ' + livna       + ' fedora/3/i386 testing',
+    'livna-unstable':   'rpm ' + livna       + ' fedora/3/i386 unstable',
+    'freshrpms':        'rpm ' + freshrpmsfd + ' 3/i386 freshrpms',
+    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+    'jpackage-fc3':     'rpm ' + jpackage    + ' fedora-3 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+}
+
+yumsources['fedora-3-i386'] = {
+    'core':             fedorayum   + '/core/3/i386/os',
+    'updates':          fedorayum   + '/core/updates/3/i386',
+    'extras':           fedorayum   + '/extras/3/i386',
+    'gstreamer':        'rpm ' + gstreamer   + ' fedora/3/i386 gst',
+    'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/3/i386 build',
+    'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/3/i386 deps',
     'livna-stable':     'rpm ' + livna       + ' fedora/3/i386 stable',
     'livna-testing':    'rpm ' + livna       + ' fedora/3/i386 testing',
     'livna-unstable':   'rpm ' + livna       + ' fedora/3/i386 unstable',
@@ -67,47 +81,30 @@ sourceslist['fedora-3-i386-gstreamer-deps'] = {
 config['fedora-3-i386-gstreamer-deps'] = config['fedora-3-i386-gstreamer']
 aliases['fedora-3-i386-gstreamer-deps'] = ('f3gd', )
 
-# Fedora Core 3 with fedora.us
-packages['fedora-3-i386-fedora-stable'] = packages['fedora-3-i386-updates'].copy ()
-packages['fedora-3-i386-fedora-stable']['build'] = packages['fedora-3-i386-updates']['build'] # + " fedora-rpmdevtools"
-sourceslist['fedora-3-i386-fedora-stable'] = {
+# Fedora Core 3 with extras
+packages['fedora-3-i386-extras'] = packages['fedora-3-i386-updates'].copy ()
+packages['fedora-3-i386-extras']['build'] = packages['fedora-3-i386-updates']['build'] # + " fedora-rpmdevtools"
+sourceslist['fedora-3-i386-extras'] = {
     'fedora-3-i386':
     sourceslist['fedora-3-i386-updates']['fedora-3-i386'] +
-    ('fedora-stable', )
+    ('extras', )
 }
-config['fedora-3-i386-fedora-stable'] = {
+config['fedora-3-i386-extras'] = {
   'runuser': '/sbin/runuser',
   'release': '3'
 }
-aliases['fedora-3-i386-fedora-stable'] = ('f3fs', )
+aliases['fedora-3-i386-extras'] = ('f3e', )
 
-packages['fedora-3-i386-fedora-testing'] = packages['fedora-3-i386-fedora-stable']
-sourceslist['fedora-3-i386-fedora-testing'] = {
-    'fedora-3-i386':
-    sourceslist['fedora-3-i386-fedora-stable']['fedora-3-i386'] +
-    ('fedora-testing', )
-}
-config['fedora-3-i386-fedora-testing']  = config['fedora-3-i386-fedora-stable']
-aliases['fedora-3-i386-fedora-testing'] = ('f3ft', )
 
-packages['fedora-3-i386-fedora-unstable'] = packages['fedora-3-i386-fedora-testing']
-sourceslist['fedora-3-i386-fedora-unstable'] = {
-    'fedora-3-i386':
-    sourceslist['fedora-3-i386-fedora-testing']['fedora-3-i386'] +
-    ('fedora-unstable', )
-}
-config['fedora-3-i386-fedora-unstable']  = config['fedora-3-i386-fedora-testing']
-aliases['fedora-3-i386-fedora-unstable'] = ('f3fu', )
-
-# Fedora Core 3 with livna (+ fedora.us)
+# Fedora Core 3 with livna (+ extras)
 packages['fedora-3-i386-livna-stable'] = packages['fedora-3-i386-updates'].copy ()
 packages['fedora-3-i386-livna-stable']['build'] = packages['fedora-3-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-3-i386-livna-stable'] = {
     'fedora-3-i386':
     sourceslist['fedora-3-i386-updates']['fedora-3-i386'] +
-    ('fedora-stable', 'livna-stable', )
+    ('extras', 'livna-stable', )
 }
-config['fedora-3-i386-livna-stable']  = config['fedora-3-i386-fedora-stable']
+config['fedora-3-i386-livna-stable']  = config['fedora-3-i386-extras']
 aliases['fedora-3-i386-livna-stable'] = ('f3ls', )
 
 packages['fedora-3-i386-livna-testing'] = packages['fedora-3-i386-livna-stable']

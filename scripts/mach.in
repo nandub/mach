@@ -78,6 +78,7 @@ config = {
   'rm': '@SBINDIR@/mach-helper rm',
   'apt-get': '@SBINDIR@/mach-helper apt-get',
   'apt-cache': '/usr/bin/apt-cache',
+  'yum': '@SBINDIR@/mach-helper yum',
   'mknod': '@SBINDIR@/mach-helper mknod',
   'runuser': '/bin/su',
   'installer': 'yum',
@@ -505,17 +506,44 @@ class Root:
     def splitargsrpms (self, args):
         return self._splitarg ('\.src\.rpm$', args)
 
-    # run apt from outside the root on the root
+    # mach apt-get
+    def aptget (self, args):
+        if self.config['installer'] != 'apt-get':
+            raise self.Error, "Installer is not configured to be apt-get"
+
+        self._setup_prep ()
+
+        self.installer (args, interactive = True)
+
+    # mach yum
+    def yum (self, args):
+        if self.config['installer'] != 'yum':
+            raise self.Error, "Installer is not configured to be yum"
+
+        self._setup_prep ()
+
+        self.installer (args, interactive = True)
+
+    # run the instaler outside the root on the root
     # FIXME: virtualize this
     # if message is specified, it will be printed, and newline-terminated
     # properly
     # if no message specified, then it's up to caller
-    def aptget (self, args, message = None,
+    def installer (self, args, message = None,
                 progress = False, interactive = False):
-        "run apt-get (arg) from outside the root on the root"
-        conf = os.path.join (self.statedir, 'apt.conf')
-        command = "%s -c %s %s" % (self.config['apt-get'], conf, string.join (args))
-        debug ("aptget: command %s" % command)
+        "run apt-get (arg) or yum (arg) from outside the root on the root"
+        if self.config['installer'] == "yum":
+            conf = 'yum.conf'
+            extras = '--installroot=' + self.rootdir + ' '
+        else:
+            conf = 'apt.conf'
+            extras = ''
+
+        conf = os.path.join (self.statedir, conf)
+        debug ("installer: args: %r" % args)
+        command = "%s -c %s %s %s" % (self.config[self.config['installer']], conf, extras, string.join (args))
+        debug ("installer: command %s" % command)
+        # if True: # comment out if you want to see the installer's output
         if interactive:
             return os.system (command)
         if message: self.stdout (message)
@@ -523,13 +551,13 @@ class Root:
         (status, output) = do_with_output (command, progress)
         if message and not progress: self.stdout ('\n')
         if status != 0:
-            raise self.Error, "Could not apt-get %s" % string.join (args)
+            raise self.Error, "Could not %s %s" % (self.config['installer'], string.join (args))
 
     def intaptget (self, args):
         if not self.get_state ('base'):
             self.setup (['base', ])
         self.mount ()
-        self.aptget (args, interactive = True)
+        self.installer (args, interactive = True)
         self.umount ()
 
     def aptcache (self, args, progress = False):
@@ -954,23 +982,23 @@ class Root:
                 debug ("BuildRequires after filtering: %s" % buildreqs)
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
-                    srcs = get_sources_list (self.config)
+                    srcs = get_sources_dict (self.config)
                     # this ensures that locally built RPMS are already used for apt-get
                     root = get_config_dir (config, 'root')
-                    srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
+                    srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
                     create_sources_list (config, srcs)
 
                     try:
-                        self.aptget (["update", ])
+                        self.installer (["update", ])
                     except Root.Error:
                         raise self.Error, 'could not update apt'
                     try:
                         # wrap all buildreqs in quotes
-                        self.aptget ([ 'install -y %s' % "'" + "' '".join (buildreqs) + "'", ],
+                        self.installer ([ '-y install %s' % "'" + "' '".join (buildreqs) + "'", ],
                                      "Installing BuildRequires", self.progress ())
                         # FIXME: build-dep would be nice but only works on a pkg
                         # in the rpm-src tree apparently
-                        #self.aptget ('build-dep -y %s' % pkgs[name]['path'], True)
+                        #self.installer ('build-dep -y %s' % pkgs[name]['path'], True)
                     except Root.Error:
                         raise self.Error, 'could not install buildreqs %s' % buildreqs
                         #continue
@@ -1104,7 +1132,7 @@ class Root:
             # Need to handle packages without Epochs :/
             # output = string.replace (output, '=(none):', '=');
             #sys.stdout.write ("Installing built RPMS and dependencies ...")
-            #self.aptget ("install -y %s" % output, True)
+            #self.installer ("-y install %s" % output, True)
             print "Collecting results of build %s" % srpm
             rpms.append (srpm)
 
@@ -1115,13 +1143,13 @@ class Root:
                 # for now, we do, for multiple builds
                 # self.do_chroot ('rm ' + file)
 
-            # update internal apt repo
-            srcs = get_sources_list (self.config)
+            # update internal apt/yum repo
+            srcs = get_sources_dict (self.config)
             # this ensures that locally built RPMS are already used for apt-get
             root = get_config_dir (self.config, 'root')
-            srcs.insert (0, 'rpm-dir file://%s/usr/src rpm mach-local' % root)
+            srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
             create_sources_list (self.config, srcs)
-            self.aptget (["update", ])
+            self.installer (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
@@ -1246,8 +1274,25 @@ class Root:
             return
 
         print "Preparing root"
+        # apt bits
         ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
+        ensure_dir (os.path.join (self.statedir, 'apt/etc/apt'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
+        ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
+        prifile = os.path.join ('@SYSCONFDIR@', 'apt', 'rpmpriorities')
+        if os.path.exists (prifile):
+            command = ('install -m 664 %s %s/apt/etc/apt/rpmpriorities' % (prifile, self.statedir))
+            debug (command)
+            os.system (command)
+
+        # yum bits
+        ensure_dir (os.path.join (self.rootdir, 'var', 'log'))
+        open (os.path.join (self.rootdir, 'var', 'log', 'yum.log'), 'w')
+        ensure_dir (os.path.join (self.statedir, 'yum/yum.repos.d'))
+        ensure_dir (os.path.join (self.rootdir, 'var/cache/mach/yum'))
+
+        # generic bits
         #FIXME: os.chmod (root + '/var/lib/rpm', g+s)
         ensure_dir (os.path.join (self.rootdir, 'dev'))
         devnull = os.path.join (self.rootdir, 'dev', 'null')
@@ -1258,18 +1303,20 @@ class Root:
             except Root.ReturnValue, (retval, output):
                 raise Root.Error, "mach-helper could not mknod /dev/null"
 
+        devzero = os.path.join (self.rootdir, 'dev', 'zero')
+        if not os.path.exists (devzero):
+            cmd = '%s %s -m 666 c 1 5' % (config['mknod'], devzero)
+            try:
+                self.do(cmd, progress=False)
+            except Root.ReturnValue, (retval, output):
+                raise Root.Error, "mach-helper could not mknod /dev/zero"
+
+
         ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
         open (os.path.join (self.rootdir, 'etc', 'fstab'), 'w')
         ensure_dir (os.path.join (self.rootdir, 'tmp'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'tmp'))
-        ensure_dir (os.path.join (self.statedir, 'apt/etc/apt'))
-        ensure_dir (os.path.join (self.statedir, 'apt/var/cache/apt/archives'))
-        ensure_dir (os.path.join (self.statedir, 'apt/var/state/apt/lists/partial'))
-        command = ('install -m 664 @SYSCONFDIR@/apt/rpmpriorities %s/apt/etc/apt/rpmpriorities' % self.statedir)
-        debug (command)
-        os.system (command)
-
         # check if our rpm understands --promoteepoch
         command = ('rpm --promoteepoch')
         status = os.system (command)
@@ -1330,11 +1377,22 @@ Dir {
 '''
         self.set_state ("apt.conf", conf)
 
-        # create sources.list, run apt-get update
-        srcs = get_sources_list (config)
+        # create a custom yum.conf file
+        # FIXME: the list of double dots going up should be gotten
+        # by calculating the depth of the file tree
+        conf = '''
+[main]
+cachedir = /../../../../..''' + os.path.join ('/', 'var', 'cache', 'mach', 'yum') + '''
+reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
+        self.set_state ("yum.conf", conf)
+
+        # create sources.list
+        srcs = get_sources_dict (config)
         create_sources_list (config, srcs)
-        self.aptget (["update", ], "Updating apt sources",
-                     self.progress ())
+
+        # run installer update
+        self.installer (["update", ], "Updating installer",
+            self.progress ())
 
         self._call_setup_hook ("prep")
         # write state file
@@ -1353,11 +1411,21 @@ Dir {
 
     def _setup_base (self):
         self.mount ()
+        # we do kernel and initscripts first, because lots of %pre
+        # scripts fail otherwise
+        if not self.get_state ('base'):
+            debug('Installing kernel and initscripts')
+            self.installer (['-y install kernel initscripts', ],
+                "Installing kernel initscripts", True)
         self._install ('base')
         self.umount ()
-	# ensure su/runuser is installed
-        if not os.path.exists (os.path.join (self.rootdir, 
-            self.config['runuser'])):
+
+        # ensure su/runuser is installed
+        # don't use os.path.join, since 'runuser' starts with /
+        path = os.path.join (self.rootdir, self.config['runuser'])
+        path = self.rootdir + self.config['runuser']
+        debug('Checking if %s exists' % path)
+        if not os.path.exists (path):
             raise self.Error ("Could not find %s in %s" % (
                 self.config['runuser'], self.rootdir))
 
@@ -1417,7 +1485,7 @@ Dir {
         # this ensures that locally built RPMS are already used for apt-get
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
-        self.aptget (["update", ])
+        self.installer (["update", ])
         self._call_setup_hook ("build")
 
         self.stdout ("Making snapshot ...\n")
@@ -1441,10 +1509,10 @@ Dir {
             # do a two stage install if necessary and gloss over errors
             # from first try
             try:
-                self.aptget (['install -y %s' % rpms, ],
+                self.installer (['-y install %s' % rpms, ],
                              "Installing package set '%s'" % set, True)
             except self.Error:
-                self.aptget (['install -y %s' % rpms, ],
+                self.installer (['-y install %s' % rpms, ],
                              "Retrying installing package set '%s'" % set, True)
 
         else:
@@ -1725,31 +1793,50 @@ def ensure_dir (dir):
             sys.stderr.write ("Could not create %s, make sure you have permissions to do so\n" % dir)
             sys.exit (1)
 
-# get the list of sources.list lines based on the config
+# get the dict of sources.list lines based on the config
 # based on sourceslist dict
-def get_sources_list (config):
-    sourceslist = []
+# returns: a dict of name -> location line
+def get_sources_dict (config):
+    sourcesdict = {}
     root = config['root']
     for platform in config['sourceslist'][root].keys ():
         for source in config['sourceslist'][root][platform]:
+            if config['installer'] == 'yum':
+                sourcestype = 'yumsources'
+            else:
+                sourcestype = 'aptsources'
             try:
-                sourceslist.append (config['aptsources'][platform][source])
+                sourcesdict[source] = config[sourcestype][platform][source]
             except KeyError:
-                sys.stderr.write ("no %s key found in config['aptsources'][%s]\n" % (source, platform))
+                sys.stderr.write ("no %s key found in config['%s']['%s']\n" % (source, sourcestype, platform))
                 sys.exit (1)
 
 
-    debug ("sources.list: " + string.join (sourceslist, "\n"))
-    return sourceslist
+    debug ("sources.list: " + string.join (sourcesdict.values(), "\n"))
+    return sourcesdict
 
-# create sources.list file by putting the given list of lines in it
+# create config files for the installer giving the locations of
+# repositories
 def create_sources_list (config, list):
     root = get_config_dir (config, 'root')
     statedir = get_config_dir (config, 'state')
-    debug ("Creating sources.list")
-    sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
-    sources.write (string.join (list, "\n"))
-    sources.close ()
+    if config['installer'] == 'yum':
+        debug ("Creating files in yum.repos.d")
+        sources = open (statedir + '/yum/yum.repos.d/yum.repo', 'w')
+
+        for source in list.keys():
+            line = list[source]
+            sources.write("[%s]\nname=%s\nbaseurl=%s\nenabled=1\n" % (source, source, line))
+            ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
+            ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
+            if (source == 'local'):
+                rootobj = Root (config)
+                rootobj.do_chroot ('createrepo -x S*/* -x B*/* /usr/src/rpm')+        sources.close ()
+    else:
+        debug ("Creating sources.list")
+        sources = open (statedir + '/apt/etc/apt/sources.list', 'w')
+        sources.write (string.join (list.values(), "\n"))
+        sources.close ()
 
 # lock a given root; creates a lock file in the statedir under root
 def lock (config):
@@ -1906,6 +1993,7 @@ def main (config, args):
         sys.exit (1)
     try:
         config['aptsources'] = aptsources
+        config['yumsources'] = yumsources
         config['sourceslist'] = sourceslist
     except KeyError:
         sys.stderr.write ('No sources information found for %s\n' % root)
@@ -1950,6 +2038,8 @@ def main (config, args):
         # be interactive
         if command == "apt-get": command = "intaptget"
         if command == "apt-cache": command = "aptcache"
+        if command == "yum": command = "yum"
+
         if command == "status":
             status (config)
             return

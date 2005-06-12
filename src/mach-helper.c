@@ -241,7 +241,7 @@ do_chroot (int argc, char *argv[])
 
   /* do we allow this dir ? */
   check_dir_allowed (rootsdir, argv[2]);
- 
+
   do_command ("/usr/sbin/chroot", &(argv[1]));
 }
 
@@ -333,7 +333,7 @@ do_umount (int argc, char *argv[])
   do_command ("/bin/umount", &(argv[1]));
 }
 
-/* make /dev/null device node */
+/* make /dev/null or /dev/zero device node */
 void
 do_mknod (int argc, char *argv[])
 {
@@ -371,7 +371,7 @@ do_mknod (int argc, char *argv[])
     error ("%s: options not allowed", argv[6]);
 
   /* minor */
-  if (strncmp ("3", argv[7], 1) != 0)
+  if (strncmp ("3", argv[7], 1) != 0 && strncmp ("5", argv[7], 1) != 0)
     error ("%s: options not allowed", argv[7]);
 
   /* all checks passed, execute */
@@ -385,7 +385,7 @@ main (int argc, char *argv[])
 
   /* verify input */
   if (argc < 2) usage ();
-  
+
   /* see which command we are trying to run */
   if (strncmp ("chroot", argv[1], 6) == 0)
     do_chroot (argc, argv);

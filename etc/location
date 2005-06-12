@@ -16,6 +16,9 @@ redhat      = 'http://ayo.freshrpms.net/redhat'
 # Fedora Core; this location should contain versioned directions
 fedora      = 'http://ayo.freshrpms.net/fedora/linux'
 #fedora      = 'http://download.fedora.us/fedora/fedora'
+# fedorayum trees should contain their repodata/ dirs in the "official"
+# location, and start in the dir that has "core" and "extras"
+fedorayum   = 'http://download.fedora.redhat.com/pub/fedora/linux'
 
 # Yellow Dog Linux
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
