@@ -46,7 +46,7 @@ packages['fedora-3-i386-core'] = {
     'dir':      'fedoracore-3-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-build make gcc tar gzip patch ' +
+    'build':    'dev redhat-rpm-config rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-3-i386-core'] = {
@@ -64,24 +64,6 @@ sourceslist['fedora-3-i386-updates'] = {
 config['fedora-3-i386-updates'] = config['fedora-3-i386-core']
 aliases['fedora-3-i386-updates'] = ('f3u', )
 
-# Fedora Core 3 with GStreamer
-packages['fedora-3-i386-gstreamer'] = packages['fedora-3-i386-core']
-sourceslist['fedora-3-i386-gstreamer'] = {
-    'fedora-3-i386': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
-}
-config['fedora-3-i386-gstreamer'] = {
-  'runuser': '/sbin/runuser',
-  'release': '3'
-}
-aliases['fedora-3-i386-gstreamer'] = ('f3g', )
-
-packages['fedora-3-i386-gstreamer-deps'] = packages['fedora-3-i386-core']
-sourceslist['fedora-3-i386-gstreamer-deps'] = {
-    'fedora-3-i386': ('core', 'gstreamer-deps')
-}
-config['fedora-3-i386-gstreamer-deps'] = config['fedora-3-i386-gstreamer']
-aliases['fedora-3-i386-gstreamer-deps'] = ('f3gd', )
-
 # Fedora Core 3 with extras
 packages['fedora-3-i386-extras'] = packages['fedora-3-i386-updates'].copy ()
 packages['fedora-3-i386-extras']['build'] = packages['fedora-3-i386-updates']['build'] # + " fedora-rpmdevtools"
@@ -92,9 +74,28 @@ sourceslist['fedora-3-i386-extras'] = {
 }
 config['fedora-3-i386-extras'] = {
   'runuser': '/sbin/runuser',
-  'release': 'fc3'
+  'buildopts': "--define 'dist .fc3'",
 }
 aliases['fedora-3-i386-extras'] = ('f3e', )
+
+
+# Fedora Core 3 with GStreamer
+packages['fedora-3-i386-gstreamer'] = packages['fedora-3-i386-core']
+sourceslist['fedora-3-i386-gstreamer'] = {
+    'fedora-3-i386': ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
+}
+config['fedora-3-i386-gstreamer'] = {
+  'runuser': '/sbin/runuser',
+  'release': '3'
+}
+aliases['fedora-3-i386-gstreamer'] = ('f3g', )
+
+packages['fedora-3-i386-gstreamer-deps'] = packages['fedora-3-i386-core']
+sourceslist['fedora-3-i386-gstreamer-deps'] = {
+    'fedora-3-i386': ('core', 'updates', 'extras', 'gstreamer-deps')
+}
+config['fedora-3-i386-gstreamer-deps'] = config['fedora-3-i386-gstreamer']
+aliases['fedora-3-i386-gstreamer-deps'] = ('f3gd', )
 
 
 # Fedora Core 3 with livna (+ extras)

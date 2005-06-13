@@ -42,7 +42,7 @@ packages['fedora-4-i386-core'] = {
     'base':     'coreutils findutils openssh-server',
     # rpm has /usr/lib/rpm/rpmrc which is needed for rpmbuild,
     # but there's no explicit dep, or the install fails for some reason
-    'build':    'dev rpm rpm-build make gcc tar gzip patch ' +
+    'build':    'dev redhat-rpm-config rpm-build make gcc tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-4-i386-core'] = {
@@ -60,24 +60,6 @@ sourceslist['fedora-4-i386-updates'] = {
 config['fedora-4-i386-updates'] = config['fedora-4-i386-core']
 aliases['fedora-4-i386-updates'] = ('f4u', )
 
-# Fedora Core 4 with GStreamer
-packages['fedora-4-i386-gstreamer'] = packages['fedora-4-i386-core']
-sourceslist['fedora-4-i386-gstreamer'] = {
-    'fedora-4-i386': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
-}
-config['fedora-4-i386-gstreamer'] = {
-  'runuser': '/sbin/runuser',
-  'release': '4'
-}
-aliases['fedora-4-i386-gstreamer'] = ('f4g', )
-
-packages['fedora-4-i386-gstreamer-deps'] = packages['fedora-4-i386-core']
-sourceslist['fedora-4-i386-gstreamer-deps'] = {
-    'fedora-4-i386': ('core', 'gstreamer-deps')
-}
-config['fedora-4-i386-gstreamer-deps'] = config['fedora-4-i386-gstreamer']
-aliases['fedora-4-i386-gstreamer-deps'] = ('f4gd', )
-
 # Fedora Core 4 with extras
 packages['fedora-4-i386-extras'] = packages['fedora-4-i386-updates'].copy ()
 packages['fedora-4-i386-extras']['build'] = packages['fedora-4-i386-updates']['build'] # + " fedora-rpmdevtools"
@@ -88,9 +70,27 @@ sourceslist['fedora-4-i386-extras'] = {
 }
 config['fedora-4-i386-extras'] = {
   'runuser': '/sbin/runuser',
-  'release': 'fc4'
+  'buildopts': "--define 'dist .fc4'",
 }
 aliases['fedora-4-i386-extras'] = ('f4e', )
+
+# Fedora Core 4 with GStreamer
+packages['fedora-4-i386-gstreamer'] = packages['fedora-4-i386-core']
+sourceslist['fedora-4-i386-gstreamer'] = {
+    'fedora-4-i386': ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
+}
+config['fedora-4-i386-gstreamer'] = {
+  'runuser': '/sbin/runuser',
+  'release': '4'
+}
+aliases['fedora-4-i386-gstreamer'] = ('f4g', )
+
+packages['fedora-4-i386-gstreamer-deps'] = packages['fedora-4-i386-core']
+sourceslist['fedora-4-i386-gstreamer-deps'] = {
+    'fedora-4-i386': ('core', 'updates', 'extras', 'gstreamer-deps')
+}
+config['fedora-4-i386-gstreamer-deps'] = config['fedora-4-i386-gstreamer']
+aliases['fedora-4-i386-gstreamer-deps'] = ('f4gd', )
 
 # Fedora Core 4 with livna (+ extras)
 packages['fedora-4-i386-livna-stable'] = packages['fedora-4-i386-updates'].copy ()

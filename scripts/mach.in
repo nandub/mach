@@ -1107,8 +1107,14 @@ class Root:
             # version than the host's rpmbuild understands.
             # this is fine now since we check for met buildrequires before.
 
-            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
-                self.config['runuser'], nrcpus, self.config['root_rpmbuild'],
+            try:
+                config_options = config['buildopts']
+            except:
+                config_options = ''
+            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
+                self.config['runuser'], nrcpus, 
+                self.config['root_rpmbuild'],
+                config_options,
                 join_quoted (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
