@@ -9,7 +9,7 @@
 
 V = '3'      # distro version
 A = 'i386'   # architecture
-AS = '3'     # 'short' version of arch
+AS = ''      # 'short' version of arch
 
 ### Fedora Core flavours
 aptsources['fedora-' + V + '-' + A ] = {
