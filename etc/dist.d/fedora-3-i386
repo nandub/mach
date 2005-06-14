@@ -15,6 +15,7 @@ AS = ''      # 'short' version of arch
 aptsources['fedora-' + V + '-' + A ] = {
   'core':             'rpm ' + fedora      + ' ' + V + '/' + A + ' core',
   'updates':          'rpm ' + fedora      + ' ' + V + '/' + A + ' updates',
+  'extras':           'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' extras',
   'gstreamer':        'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' gst',
   'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' build',
   'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' deps',
