@@ -19,9 +19,7 @@ aptsources['fedora-' + V + '-' + A ] = {
   'gstreamer':        'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' gst',
   'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' build',
   'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' deps',
-  'livna-stable':     'rpm ' + livna       + ' fedora/' + V + '/' + A + ' stable',
-  'livna-testing':    'rpm ' + livna       + ' fedora/' + V + '/' + A + ' testing',
-  'livna-unstable':   'rpm ' + livna       + ' fedora/' + V + '/' + A + ' unstable',
+  'livna':            'rpm ' + livna       + ' fedora/' + V + '/' + A + ' lvn',
   'freshrpms':        'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' freshrpms',
   'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
   'jpackage-fc' + V : 'rpm ' + jpackage    + ' fedora-' + V + ' free',
@@ -36,9 +34,7 @@ yumsources['fedora-' + V + '-' + A ] = {
   'gstreamer-build':  gstreamer   + '/fedora/' + V + '/' + A + '/yum/build',
   'gstreamer-deps':   gstreamer   + '/fedora/' + V + '/' + A + '/yum/deps',
   'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
-  'livna-stable':     livna       + '/fedora/' + V + '/' + A + '/yum/stable/RPMS',
-  'livna-testing':    livna       + '/fedora/' + V + '/' + A + '/yum/testing/RPMS',
-  'livna-unstable':   livna       + '/fedora/' + V + '/' + A + '/yum/unstable/RPMS',
+  'livna':            livna       + '/fedora/' + V + '/' + A + '/RPMS.lvn',
 }
 
 # Fedora Core
@@ -97,33 +93,15 @@ config['fedora-' + V + '-' + A + '-gstreamer-deps'] = config['fedora-' + V + '-'
 aliases['fedora-' + V + '-' + A + '-gstreamer-deps'] = ('f' + V + 'gd' + AS, )
 
 # Fedora Core with livna (+ extras)
-packages['fedora-' + V + '-' + A + '-livna-stable'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
-packages['fedora-' + V + '-' + A + '-livna-stable']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] + " fedora-rpmdevtools"
-sourceslist['fedora-' + V + '-' + A + '-livna-stable'] = {
+packages['fedora-' + V + '-' + A + '-livna'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
+packages['fedora-' + V + '-' + A + '-livna']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['fedora-' + V + '-' + A + '-livna'] = {
   'fedora-' + V + '-' + A :
   sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
-  ('extras', 'livna-stable', )
+  ('extras', 'livna', )
 }
-config['fedora-' + V + '-' + A + '-livna-stable']  = config['fedora-' + V + '-' + A + '-extras']
-aliases['fedora-' + V + '-' + A + '-livna-stable'] = ('f' + V + 'ls' + AS, )
-
-packages['fedora-' + V + '-' + A + '-livna-testing'] = packages['fedora-' + V + '-' + A + '-livna-stable']
-sourceslist['fedora-' + V + '-' + A + '-livna-testing'] = {
-  'fedora-' + V + '-' + A :
-  sourceslist['fedora-' + V + '-' + A + '-livna-stable']['fedora-' + V + '-' + A ] +
-  ('extras', 'livna-testing', )
-}
-config['fedora-' + V + '-' + A + '-livna-testing']  = config['fedora-' + V + '-' + A + '-livna-stable']
-aliases['fedora-' + V + '-' + A + '-livna-testing'] = ('f' + V + 'lt' + AS, )
-
-packages['fedora-' + V + '-' + A + '-livna-unstable'] = packages['fedora-' + V + '-' + A + '-livna-testing']
-sourceslist['fedora-' + V + '-' + A + '-livna-unstable'] = {
-  'fedora-' + V + '-' + A :
-  sourceslist['fedora-' + V + '-' + A + '-livna-testing']['fedora-' + V + '-' + A ] +
-  ('extras', 'livna-unstable', )
-}
-config['fedora-' + V + '-' + A + '-livna-unstable']  = config['fedora-' + V + '-' + A + '-livna-testing']
-aliases['fedora-' + V + '-' + A + '-livna-unstable'] = ('f' + V + 'lu' + AS, )
+config['fedora-' + V + '-' + A + '-livna']  = config['fedora-' + V + '-' + A + '-extras']
+aliases['fedora-' + V + '-' + A + '-livna'] = ('f' + V + 'l' + AS, )
 
 # Fedora Core with freshrpms
 packages['fedora-' + V + '-' + A + '-freshrpms'] = packages['fedora-' + V + '-' + A + '-core']

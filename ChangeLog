@@ -1,3 +1,10 @@
+2005-06-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-4-i386:
+	  fix livna
+	* mach.spec.in:
+	  set default flavor to extras
+
 2005-06-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-3-i386:
