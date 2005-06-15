@@ -43,7 +43,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %configure \
 	--enable-builduser=%{builduser} \
 	--enable-buildgroup=%{buildgroup} \
-	--with-flavor=fedora-stable
+	--with-flavor=extras
 make
 
 %install
