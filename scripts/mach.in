@@ -541,7 +541,7 @@ class Root:
 
         conf = os.path.join (self.statedir, conf)
         debug ("installer: args: %r" % args)
-        command = "%s -c %s %s %s" % (self.config[self.config['installer']], conf, extras, string.join (args))
+        command = "%s -c %s %s -y %s" % (self.config[self.config['installer']], conf, extras, string.join (args))
         debug ("installer: command %s" % command)
         if DEBUG or interactive:
             retval = os.system (command)
