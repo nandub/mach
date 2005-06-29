@@ -1000,7 +1000,8 @@ class Root:
                     create_sources_list (config, srcs)
 
                     try:
-                        self.installer (["update", ])
+                        if config['installer'] != 'yum':
+                            self.installer (["update", ])
                     except Root.Error:
                         raise self.Error, 'could not update installer'
                     try:
@@ -1169,7 +1170,8 @@ class Root:
             else:
                 srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
             create_sources_list (self.config, srcs)
-            self.installer (["update", ])
+            if self.config['installer'] != 'yum':
+                self.installer (["update", ])
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
@@ -1411,8 +1413,9 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         create_sources_list (config, srcs)
 
         # run installer update
-        self.installer (["update", ], "Updating installer",
-            self.progress ())
+        if self.config['installer'] != 'yum':
+            self.installer (["update", ], "Updating installer",
+                self.progress ())
 
         self._call_setup_hook ("prep")
         # write state file
