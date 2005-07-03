@@ -1,3 +1,9 @@
+2005-07-03  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  upgrade packages before taking the build snapshot, this fixes
+	  mach trying to remove the upgraded packages when reverting
+
 2005-06-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-4-i386:

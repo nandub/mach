@@ -1508,7 +1508,15 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         # this ensures that locally built RPMS are already used for apt-get
         for dir in ('RPMS', 'SRPMS'):
             self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
-        self.installer (["update", ])
+        # upgrade packages; that way our snapshot contains the latest versions
+        # available and a revert to snapshot will not try to remove packages
+        # that have been upgraded from the snapshot
+        if config['installer'] == 'yum':
+            self.installer (["-y update", ])
+        else:
+            self.installer (["-y update", ])
+            self.installer (["-y upgrade", ])
+        
         self._call_setup_hook ("build")
 
         self.stdout ("Making snapshot ...\n")
