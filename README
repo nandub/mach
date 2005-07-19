@@ -34,14 +34,19 @@ as well.
 -------------------------------
 Included at this moment is the necessary information to set up :
 
-Red Hat 7.0 and 7.1
-  - standard
+Fedora 4
+  - Core
   - updated
+  - with extras
+  - with rpm.livna.org
   - with FreshRPMS
+  - with JPackage
 
-Red Hat 7.2 and 7.3
-  - standard
+Fedora 1, 2, 3
+  - Core
   - updated
+  - with fedora.us stable, testing and unstable/extras
+  - with rpm.livna.org stable, testing and unstable
   - with FreshRPMS
   - with JPackage
 
@@ -53,13 +58,16 @@ Red Hat 8.0 and 9
   - with FreshRPMS
   - with JPackage
 
-Fedora 1, 2 and 3
-  - Core
+Red Hat 7.2 and 7.3
+  - standard
   - updated
-  - with fedora.us stable, testing and unstable
-  - with rpm.livna.org stable, testing and unstable
   - with FreshRPMS
   - with JPackage
+
+Red Hat 7.0 and 7.1
+  - standard
+  - updated
+  - with FreshRPMS
 
 Dave/Dina
   - fridge
