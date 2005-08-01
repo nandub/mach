@@ -1,3 +1,14 @@
+2005-08-01  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  back to head
+	* etc/dist.d/fedora-2-x86_64:
+	* etc/dist.d/fedora-3-x86_64:
+	* etc/dist.d/fedora-4-x86_64:
+	* etc/dist.d/fedora-development-x86_64:
+
+=== release 0.4.7 ===
+
 2005-07-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
