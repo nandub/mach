@@ -1,4 +1,17 @@
-This is mach, make a chroot, 0.4.5.
+This is mach, make a chroot, 0.4.7.
+
+Changes since 0.4.6:
+        - add yum support (various people)
+        - Work with SELinux enabled (Thomas)
+        - Remove all matches when removing packages (Rudi)
+        - Better config error handling (Ville)
+        - Fix filename munging on collect (Jeff)
+        - add support for FC3 and FC4 (Thomas)
+        - Create /dev/null properly (Rudi)
+        - Add runuser support (Rudi)
+        - support fedora extra's "dist" var (Thomas)
+        - Fix urlgrab exceptions (Ville)
+        - upgrade packages before snapshotting build list (Thomas)
 
 Changes since 0.4.4:
 	- pre-interpreting checks fixed (Thomas)

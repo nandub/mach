@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        0.fdr.@RELEASE@
+Release:        @RELEASE@%{?dist}
 Summary:        make a chroot
 
 Group:          Applications/System
