@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.6 - "Lenrek".
+Announcing the release of mach 0.4.7 - "Long Time No See".
 
 WHAT IS IT
 ----------
@@ -12,37 +12,35 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
-- Red Hat 7.0 (basic, updated, FreshRPMS)
-- Red Hat 7.1 (basic, updated, FreshRPMS)
-- Red Hat 7.2 (basic, updated, FreshRPMS, JPackage)
-- Red Hat 7.3 (basic, updated, FreshRPMS, JPackage)
-- Red Hat 8.0 (basic, updated, www.fedora.us, rpm.livna.org,
-               JPackage, GStreamer, FreshRPMS)
-- Red Hat 9   (basic, updated, www.fedora.us, rpm.livna.org,
-               JPackage, GStreamer, FreshRPMS)
-- Fedora 1    (core, updated, www.fedora.us, rpm.livna.org,
-               JPackage, FreshRPMS, GStreamer)
-- Fedora 2    (core, updated, www.fedora.us, rpm.livna.org,
-               JPackage, FreshRPMS, GStreamer)
+- Fedora 4         (core, updated, extras, rpm.livna.org,
+                    JPackage, FreshRPMS, GStreamer)
+- Fedora 1, 2, 3   (core, updated, www.fedora.us, rpm.livna.org,
+                    JPackage, FreshRPMS, GStreamer)
+- Red Hat 8.0, 9   (basic, updated, www.fedora.us, rpm.livna.org,
+                    JPackage, GStreamer, FreshRPMS)
+- Red Hat 7.2, 7.3 (basic, updated, FreshRPMS, JPackage)
+- Red Hat 7.0, 7.1 (basic, updated, FreshRPMS)
 - SuSE 8.1/8.2/9
 - Connectiva
-- Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
+- Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Dave/Dina 0.0/oven/fridge
 
 Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-	- skip backup files in dist.d (Ville)
-        - avoid hangs by first-time apt druids (Noa)
-	- include dist.d snippets alphabetically (Ville)
-	- fix passwd entries for SuSE 9 (Ville)
-	- only add local apt repo after build stage (Jeff)
-	- rework buildrequire checking (Thomas)
-	- check for errors on URL retrieving (Panu)
-	- fix sed mangling to take care of trailing spaces (Thomas)
-	- added Fedora Core 2 (Thomas)
+	- add yum support (various people)
+	- Work with SELinux enabled (Thomas)
+	- Remove all matches when removing packages (Rudi)
+	- Better config error handling (Ville)
+	- Fix filename munging on collect (Jeff)
+	- add support for FC3 and FC4 (Thomas)
+	- Create /dev/null properly (Rudi)
+	- Add runuser support (Rudi)
+	- support fedora extra's "dist" var (Thomas)
+	- Fix urlgrab exceptions (Ville)
+	- upgrade packages before snapshotting build list (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -62,14 +60,14 @@ http://lists.sourceforge.net/lists/listinfo/mach-devel
 
 QUICKSTART
 ----------
-a) On a Fedora 1 Core system, install the mach rpm from
+a) On a Fedora 4 Core system, install the mach rpm from
    http://thomas.apestaart.org/download/mach
 b) su - mach
 c) mach setup base
 d) mach chroot
    poke around a bit in the fresh root
 e) exit
-f) mach rebuild http://ayo.freshrpms.net/fedora/linux/1/i386/SRPMS.core/vorbis-tools-1.0-7.src.rpm
+f) mach rebuild http://ayo.freshrpms.net/fedora/linux/4/i386/SRPMS.core/vorbis-tools-1.0.1-6.src.rpm
 
 If all goes well, you'll get a nice freshly built vorbis-tools package.
 
@@ -94,10 +92,5 @@ CONTRIBUTORS
 Contributors to this release include
 - Thomas Vander Stichele
 - Ville Skyttä
-- Enrico Scholz
-- Matthias Saou
-- Erik LaBianca
-- Noa Resare
-- Damien Nadé
 - Jeff Pitman
-- Panu Matilainen
+- Rudi Chiarito

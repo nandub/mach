@@ -103,7 +103,7 @@ Some handy features of mach include
 - A Linux kernel that can do bind mounts (>= 2.2.0 if I'm correct)
 - rpm (>= 4.1 + gpg and cpio if you want GPG)
 - python
-- apt >= 0.5.5cnc2
+- apt >= 0.5.5cnc2 or yum
 - sudo
 - lots of disk space
 - good faith
@@ -137,9 +137,19 @@ Some handy features of mach include
   dist contains the list of packages for each distro target, as well
   as download locations for various packages.
   conf contains configuration data, like hosts and resolv.conf files
+
 - It is advised you do not hand-edit these files.  Instead, you can
   override any configuration variable by putting it in
   ~/.machrc
+
+- you can choose between using apt and yum by setting
+  config['installer'] = 'yum'
+  or
+  config['installer'] = 'apt-get'
+  in .machrc.
+
+  Each time you change this, you will have to clean up your roots and
+  repopulate them.
 
 - you can add dist-specific configurations by creating a dict in ~/.machrc
   It is advised that you create at least a files dict containing
@@ -248,9 +258,7 @@ the built directory as a parameter.
   For example, creating an FC2 target on an FC3 host fails when installing
   packages.
   I've added a library that gets preloaded to override selinux, which allows
-  most packages to be installed.  The current blocker is the dev package
-  seeing devfs being mounted through /proc.
-  The library gets preloaded if you have MACH_LD_PRELOAD set in the environment.
+  most packages to be installed.
 
 10. BUGS
 --------
