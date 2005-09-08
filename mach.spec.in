@@ -14,6 +14,7 @@ Requires:	rpm
 Requires:	rpm-build
 Requires:	rpm-python
 Requires:	yum
+Requires:	createrepo
 Requires:	sed
 Requires:	cpio
 

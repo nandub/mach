@@ -1865,7 +1865,7 @@ def create_sources_list (config, list):
                 cmd = 'createrepo %s/usr/src/rpm/RPMS.mach-local' % root
                 (status, output) = do_with_output (cmd, False)
                 if status != 0:
-                    raise Error, "Could not update local yum repository"
+                    raise Exception, "Could not update local yum repository"
             sources.close ()
     else:
         debug ("Creating sources.list")
