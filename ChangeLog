@@ -1,3 +1,10 @@
+2005-09-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* mach.spec.in:
+	  require createrepo
+	* scripts/mach.in:
+	  fix a non-existing exception
+
 2005-08-01  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
