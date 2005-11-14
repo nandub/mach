@@ -1,5 +1,10 @@
 2005-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  use default root from configure.ac
+
+2005-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/fedora-1-i386:
 	* etc/dist.d/fedora-2-i386:
 	* etc/dist.d/fedora-3-i386:
