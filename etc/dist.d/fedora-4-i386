@@ -42,7 +42,7 @@ packages['fedora-' + V + '-' + A + '-core'] = {
   'dir':      'fedoracore-' + V + '-' + A ,
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc tar gzip patch ' +
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
               'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-' + V + '-' + A + '-core'] = {
