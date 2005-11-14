@@ -31,7 +31,7 @@ packages['fedora-1-i386-core'] = {
     'dir':      'fedoracore-1-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-build make gcc tar gzip patch ' +
+    'build':    'dev rpm-build make gcc-c++ tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-1-i386-core'] = {
