@@ -1138,7 +1138,7 @@ class Root:
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
-            (srpm, rpms) = get_rpms_from_log (resultdir + '/rpm.log')
+            (srpm, rpms) = get_rpms_from_log (os.path.join (resultdir, '/rpm.log'))
             # FIXME: install these RPMS based on a boolean ?
             # FIXME: error checks
             hostrpms = map (lambda x: self.rootdir + x, rpms)
@@ -1766,21 +1766,6 @@ def topological_sort (pairlist):
         # there's a cycle
         raise CycleError, (answer, numpreds, successors)
     return answer
-
-# get a header from a path to a local src.rpm; or False if no header
-def get_header (path):
-    debug ("Getting RPM header from %s" % path)
-    # ignore signatures
-    ts = rpm.TransactionSet ("", (rpm._RPMVSF_NOSIGNATURES))
-    fd = os.open (path, os.O_RDONLY)
-    try:
-        h = ts.hdrFromFdno (fd)
-    except:
-        print "a whoopsie occurred."
-    if not h:
-        sys.stderr.write ("ERROR: %s doesn't look like a .src.rpm\n" % path)
-        return False
-    return h
 
 # get all of the written rpms from the log file and return a tuple
 # srpm, list of rpms
