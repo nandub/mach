@@ -14,6 +14,12 @@ import tempfile # for tempdir for spec extraction
 import glob # for globbing paths
 import grp # for finding out the mach gid
 
+# print out debug info if wanted
+# uses DEBUG global
+def debug (string):
+    if DEBUG:
+        print "DEBUG: %s" % string
+
 # make sure True and False constants exist
 
 if not hasattr (__builtins__, 'True'):
@@ -145,6 +151,16 @@ qfmt = '%{name}-%{version}-%{release}\n'
 builduser = '@BUILDUSER@'
 buildgroup = '@BUILDGROUP@'
 
+# uid/gid information
+import grp
+try:
+    mach_gid = grp.getgrnam ('mach')[2]
+except KeyError:
+    sys.stderr.write ("No group 'mach' found")
+    sys.exit (1)
+
+debug ('Using mach gid %r' % mach_gid)
+    
 ### objects
 class Spec:
     class Error(Exception): pass
@@ -746,7 +762,7 @@ class Root:
                 #    line = os.popen (command).readline ()
                 #    if not line == 'application/x-tar       gnu (application/octet-stream)':
                 #        raise self.Error, "file doesn't think %s is a tar.bz2 !" % file
-                shutil.copy2 (file, os.path.join (self.rootdir, 'tmp'))
+                copy_grouped (file, os.path.join (self.rootdir, 'tmp'))
                 self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
                                 os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
@@ -754,7 +770,7 @@ class Root:
             # remove the spec if it existed, then copy
             self.do_chroot ("cd / && rm -f %s" % (
                                 os.path.join ('tmp', os.path.basename (specfile))))
-            shutil.copy2 (specfile, os.path.join (self.rootdir, 'tmp'))
+            copy_grouped (specfile, os.path.join (self.rootdir, 'tmp'))
             self.do_chroot ("cd / && mv %s %s" % (
                             os.path.join ('tmp', os.path.basename (specfile)),
                             os.path.join ('usr', 'src', 'rpm', 'SPECS')))
@@ -777,8 +793,11 @@ class Root:
             srpmfile = os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SRPMS', srpmname)
             if not os.path.exists (srpmfile):
                 raise self.Error, '%s not built' % srpmfile
-            shutil.copy2 (self.rootdir + '/usr/src/rpm/SRPMS/' + srpmname, tmppath)
-            srpms.append (os.path.join (tmppath, srpmname))
+            dest = os.path.join (tmppath, srpmname)
+            if os.path.exists (dest):
+                os.unlink (dest)
+            copy_grouped (self.rootdir + '/usr/src/rpm/SRPMS/' + srpmname, dest)
+            srpms.append (dest)
 
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
@@ -880,11 +899,18 @@ class Root:
         for path in paths:
             # resolve path to basename (without dirs)
             srpmname = os.path.basename (path)
-            newpath = os.path.join (self.rootdir, 'tmp', srpmname)
+            # we use a tmppath including login name because /tmp has the
+            # sticky bit set, thus we can't remove someone else's files
+            tmppath = os.path.join (self.rootdir, 'tmp', os.getlogin())
+            ensure_dir (tmppath)
+            newpath = os.path.join (tmppath, srpmname)
+            if os.path.exists (newpath):
+                os.unlink (newpath)
             try:
                 urlgrab (path, newpath)
             except:
                 raise self.Error, "Can't find %s" % path
+            os.chown (newpath, -1, mach_gid)
             srpm = SRPM (newpath, join_quoted (options))
 
             spec = srpm.specname
@@ -1043,7 +1069,7 @@ class Root:
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
             self.do_chroot (command)
             # copy specfile to resultdir
-            shutil.copy2 (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
+            copy_grouped (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
             # mangle spec file if requested
             if self.config['release']:
                 # first check if it doesn't already comply !
@@ -1121,7 +1147,13 @@ class Root:
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
             if (output):
-                open (resultdir + '/rpm.log', "wb"). write (output)
+                log = os.path.join (resultdir, 'rpm.log')
+                if os.path.exists (log):
+                    os.unlink (log)
+                handle = open (log, 'w')
+                handle.write (output)
+                handle.close ()
+                os.chown (log, -1, mach_gid)
             if status != 0:
                 sys.stderr.write ("ERROR: something went wrong rebuilding the .src.rpm\n")
                 sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
@@ -1138,7 +1170,7 @@ class Root:
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
-            (srpm, rpms) = get_rpms_from_log (os.path.join (resultdir, '/rpm.log'))
+            (srpm, rpms) = get_rpms_from_log (os.path.join (resultdir, 'rpm.log'))
             # FIXME: install these RPMS based on a boolean ?
             # FIXME: error checks
             hostrpms = map (lambda x: self.rootdir + x, rpms)
@@ -1157,7 +1189,7 @@ class Root:
             for file in rpms:
                 path = self.rootdir + file
                 # file already contains starting /
-                shutil.copy2 (path, resultdir)
+                copy_grouped (path, resultdir)
                 # for now, we do, for multiple builds
                 # self.do_chroot ('rm ' + file)
 
@@ -1177,9 +1209,13 @@ class Root:
 
         # md5sum packages and spec file
         for resultdir in resultdirs:
+            md5sumpath = os.path.join (resultdir, 'md5sum')
+            if os.path.exists (md5sumpath):
+                os.unlink (md5sumpath)
             cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
             debug ("running %s" % cmd)
             os.system (cmd)
+            os.chown (md5sumpath, -1, mach_gid)
         # now sign packages if requested
         if self.config['sign']:
             print "Signing built packages ..."
@@ -1464,18 +1500,20 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
     def _setup_build (self):
         "set up a root for rpm building"
-        # first do the stuff that we want to ensure gets done very time,
+        # first do the stuff that we want to ensure gets done every time,
         # for example when config file has changed
 
         # create rpm macros
         debug ("writing macros file")
-        macros = open (self.rootdir + '/tmp/macros', 'w')
+        path = self.rootdir + '/tmp/macros'
+        macros = open (path, 'w')
         macros.write ("%_topdir /usr/src/rpm\n")
         macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
         macros.write ("%_unpackaged_files_terminate_build 1\n")
         macros.write ("%_missing_doc_files_terminate_build 1\n")
         self._write_macros (macros)
         macros.close ()
+        os.chown(path, -1, mach_gid)
         self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
 
         # now check if we're already good
@@ -1486,8 +1524,8 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         # install packages
         self._install ('build')
         #FIXME: add mach user and group
-        self.do_chroot ("echo %s:x:500:500::/usr/src/rpm:/bin/bash >> /etc/passwd" % builduser, fatal = True)
-        self.do_chroot ("echo %s::500:%s >> /etc/group" % (buildgroup, builduser), fatal = True)
+        self.do_chroot ("echo %s:x:500:%d::/usr/src/rpm:/bin/bash >> /etc/passwd" % (builduser, mach_gid), fatal = True)
+        self.do_chroot ("echo %s::%d:%s >> /etc/group" % (buildgroup, mach_gid, builduser), fatal = True)
         self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
         self.do_chroot ("chown -R %s:%s /usr/src/rpm" % (builduser, buildgroup), fatal = True)
         self.do_chroot ("%s -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % (
@@ -1782,11 +1820,6 @@ def get_rpms_from_log (log):
             rpms.append (curr)
     return (srpm, rpms)
 
-# print out debug info if wanted
-# uses DEBUG global
-def debug (string):
-    if DEBUG:
-        print "DEBUG: %s" % string
 
 # return full path to directory based on the root (in config) and which sort
 # of directory to get
@@ -1800,14 +1833,36 @@ def get_packages_dir (config):
     return config['dirs']['packages'] + '/' + config['packages']['dir']
 
 # make sure a dir exists
+# we have to recursively create ourselves so we can change group ownership
 def ensure_dir (dir):
     debug ("ensuring dir %s" % dir)
-    if not os.path.exists (dir):
-        try:
-            os.makedirs (dir)
-        except OSError:
-            sys.stderr.write ("Could not create %s, make sure you have permissions to do so\n" % dir)
-            sys.exit (1)
+    if os.path.exists (dir):
+        return
+
+    pieces = dir.split (os.path.sep)
+    path = os.path.sep
+    for piece in pieces:
+        path = os.path.join (path, piece)
+        if not os.path.exists (path):
+            debug ("creating dir %s" % path)
+            try:
+                os.makedirs (path)
+            except OSError:
+                sys.stderr.write ("Could not create %s, make sure you have permissions to do so\n" % path)
+                sys.exit (1)
+            debug ("changing group owner to %r" % mach_gid)
+            os.chown (path, -1, mach_gid)
+
+def copy_grouped (source, dest):
+    # copy source to destination, making sure dest is owned by the mach group 
+    debug ("copying '%s' to '%s'" % (source, dest))
+    destpath = dest
+    if os.path.isdir (dest):
+        destpath = os.path.join (dest, os.path.basename (source))
+    if os.path.exists (destpath):
+        os.unlink (destpath)
+    shutil.copy2 (source, dest)
+    os.chown (destpath, -1, mach_gid)
 
 # get the dict of sources.list lines based on the config
 # based on sourceslist dict
@@ -1895,7 +1950,7 @@ def get_state (config, state):
 # check if the current user is in the right group
 def user_check ():
     if os.getuid () != 0:
-        machgid=grp.getgrnam ('mach')[2]
+        machgid = grp.getgrnam ('mach')[2]
         if not machgid in os.getgroups():
             sys.stderr.write ("error: user is not in group mach, please add !\n")
             sys.exit (1)
