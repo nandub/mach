@@ -1,6 +1,15 @@
 2005-11-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  two different users in the mach group can now build the same
+	  spec file one after an another.  Looks like multi-user should
+	  now work.  We do this by making sure all files are group-writable
+	  and owned by the "mach" group, which gets the same gid as the host's
+	  mach group.
+
+2005-11-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  remove dead code
 	  use more os.path.join
 
