@@ -399,6 +399,13 @@ class Root:
                                          config['packages']['dir'])
 
     # small helper functions
+    def host_path (self, target_path):
+        "Get a full host path for the given target path."
+        # os.path.join drops everything before an arg starting with os.path.sep
+        if target_path.startswith (os.path.sep):
+            target_path = target_path[1:]
+        return os.path.join (self.rootdir, target_path)
+
     def lock (self):
         "Lock this root for operations"
         ensure_dir (self.statedir)
@@ -901,23 +908,25 @@ class Root:
             srpmname = os.path.basename (path)
             # we use a tmppath including login name because /tmp has the
             # sticky bit set, thus we can't remove someone else's files
-            tmppath = os.path.join (self.rootdir, 'tmp', os.getlogin())
-            ensure_dir (tmppath)
-            newpath = os.path.join (tmppath, srpmname)
-            if os.path.exists (newpath):
-                os.unlink (newpath)
+            targettmppath = os.path.join (os.path.sep, 'tmp', os.getlogin())
+            hosttmppath = self.host_path (targettmppath)
+            ensure_dir (hosttmppath)
+            targetnewpath = os.path.join (targettmppath, srpmname)
+            hostnewpath = os.path.join (hosttmppath, srpmname)
+            if os.path.exists (hostnewpath):
+                os.unlink (hostnewpath)
             try:
-                urlgrab (path, newpath)
+                urlgrab (path, hostnewpath)
             except:
                 raise self.Error, "Can't find %s" % path
-            os.chown (newpath, -1, mach_gid)
-            srpm = SRPM (newpath, join_quoted (options))
+            os.chown (hostnewpath, -1, mach_gid)
+            srpm = SRPM (hostnewpath, join_quoted (options))
 
             spec = srpm.specname
             buildreqs = srpm.BuildRequires ()
             name = srpm.header[rpm.RPMTAG_NAME]
             pkgs[name] = {}
-            pkgs[name]['path'] = newpath
+            pkgs[name]['path'] = targetnewpath
             pkgs[name]['buildreqs'] = buildreqs
             pkgs[name]['srpm'] = srpm
             pkgs[name]['srpmname'] = srpmname
@@ -1062,8 +1071,8 @@ class Root:
 
             # rebuild binary rpm from the src rpm
             # install the src.rpm
-            self.do_chroot ("%s -c 'rpm -Uhv /tmp/%s' %s" %
-                (self.config['runuser'], srpmname, builduser))
+            self.do_chroot ("%s -c 'rpm -Uhv %s' %s" %
+                (self.config['runuser'], pkgs[name]['path'], builduser))
             specfile = pkgs[name]['spec']
 
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
