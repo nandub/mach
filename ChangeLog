@@ -1,6 +1,12 @@
 2005-11-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  Do a dirty little hack for FC3-on-FC4 to make coreutils installs
+	  work.  Mmmm, dirty little hacks.
+
+2005-11-18  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  Fix not correctly using the login'd tempname for src.rpm
 
 2005-11-16  Thomas Vander Stichele  <thomas at apestaart dot org>
