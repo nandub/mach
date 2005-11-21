@@ -1,3 +1,9 @@
+=== release 0.4.8 ===
+
+2005-11-21  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	*  configure.ac: Releasing 0.4.8, "More Than One"
+
 2005-11-18  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
