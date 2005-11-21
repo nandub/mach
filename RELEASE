@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.7 - "Long Time No See".
+Announcing the release of mach 0.4.8 - "More Than One".
 
 WHAT IS IT
 ----------
@@ -30,17 +30,8 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-	- add yum support (various people)
-	- Work with SELinux enabled (Thomas)
-	- Remove all matches when removing packages (Rudi)
-	- Better config error handling (Ville)
-	- Fix filename munging on collect (Jeff)
-	- add support for FC3 and FC4 (Thomas)
-	- Create /dev/null properly (Rudi)
-	- Add runuser support (Rudi)
-	- support fedora extra's "dist" var (Thomas)
-	- Fix urlgrab exceptions (Ville)
-	- upgrade packages before snapshotting build list (Thomas)
+        - multi-user/group-related fixes
+	- fixes for FC3 running on FC4 host
 
 WHY WOULD YOU USE IT
 --------------------
@@ -89,7 +80,7 @@ the failed command with -d (debugging).
 
 CONTRIBUTORS
 ------------
-Contributors to this release include
+Contributors to releases include
 - Thomas Vander Stichele
 - Ville Skyttä
 - Jeff Pitman
