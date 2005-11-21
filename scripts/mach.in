@@ -1354,7 +1354,7 @@ class Root:
         if os.path.exists (os.path.join ('@LIBDIR@', 'libselinux-mach.so')):
             targetlibdir = os.path.join (self.rootdir, 'usr', 'lib')
             ensure_dir (targetlibdir)
-            command = "cp -p @LIBDIR@/libselinux-mach* %s" % targetlibdir
+            command = "cp -a @LIBDIR@/libselinux-mach* %s" % targetlibdir
             debug (command)
             os.system (command)
             
