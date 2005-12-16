@@ -28,7 +28,7 @@ aptsources['fedora-2-i386'] = {
 
 # Fedora Core 2
 packages['fedora-2-i386-core'] = {
-    'dir':      'fedoracore-2-i386',
+    'dir':      'fedora-2-i386',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
     'build':    'dev rpm-build make gcc gcc-c++ tar gzip patch ' +

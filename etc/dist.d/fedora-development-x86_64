@@ -1,4 +1,4 @@
-# mach dist configuration                          -*- python -*-
+# mach dist configuration                                        -*- python -*-
 
 # fedora-development-x86_64: configuration for Fedora development
 
@@ -7,81 +7,47 @@
 # each actual dist has a packages dict for bootstrap packages and
 # a sourceslist dict referencing aptsources lines to use
 
-### Fedora Core Development flavours
-aptsources['fedora-development-x86_64'] = {
-    'core':             'rpm ' + fedora + ' development/x86_64 core',
-    'fedora-stable':    'rpm ' + fedoraus    + ' fedora/latest/x86_64 stable',
-    'fedora-testing':   'rpm ' + fedoraus    + ' fedora/latest/x86_64 testing',
-    'fedora-unstable':  'rpm ' + fedoraus    + ' fedora/latest/x86_64 unstable',
-    'livna-stable':     'rpm ' + livna       + ' fedora/3/x86_64 stable',
-    'livna-testing':    'rpm ' + livna       + ' fedora/3/x86_64 testing',
-    'livna-unstable':   'rpm ' + livna       + ' fedora/3/x86_64 unstable',
+V = 'development'  # distro version
+VS = 'd'           # short distro version
+A = 'x86_64'       # architecture
+AS = '64'          # 'short' version of arch
+
+### Fedora Core flavours
+aptsources['fedora-' + V + '-' + A ] = {
+  'core':             'rpm ' + fedora      + ' ' + V + '/' + A + ' core',
+  'extras':           'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' extras',
 }
 
-# Fedora Core Development
-packages['fedora-development-x86_64-core'] = {
-    'dir':      'fedoracore-development-x86_64',
-    'minimal':  'bash glibc',
-    'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-build make gcc tar gzip patch ' +
-                'unzip bzip2 diffutils cpio elfutils',
+yumsources['fedora-' + V + '-' + A ] = {
+  'core':             fedorayum   + '/core/' + V + '/' + A ,
+  'extras':           fedorayum   + '/extras/' + V + '/' + A ,
 }
-sourceslist['fedora-development-x86_64-core'] = {
-    'fedora-development-x86_64': ('core', )
-}
-config['fedora-development-x86_64-core'] = {}
-aliases['fedora-development-x86_64-core'] = ('fd', 'fcd', )
 
-# Fedora Development with fedora.us
-packages['fedora-development-x86_64-fedora-stable'] = packages['fedora-development-i386-core'].copy ()
-packages['fedora-development-x86_64-fedora-stable']['build'] = packages['fedora-development-i386-core']['build'] + " fedora-rpmdevtools"
-sourceslist['fedora-development-x86_64-fedora-stable'] = {
-    'fedora-development-x86_64': ('core', 'fedora-stable', )
+# Fedora Core
+packages['fedora-' + V + '-' + A + '-core'] = {
+  'dir':      'fedora-' + V + '-' + A ,
+  'minimal':  'bash glibc',
+  'base':     'coreutils findutils openssh-server',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
+              'unzip bzip2 diffutils cpio elfutils',
 }
-config['fedora-development-x86_64-fedora-stable']  = { 'release': '1.91' }
-aliases['fedora-development-x86_64-fedora-stable'] = ('fdfs', )
-                                                                                
-packages['fedora-development-x86_64-fedora-testing'] = packages['fedora-development-i386-fedora-stable']
-sourceslist['fedora-development-x86_64-fedora-testing'] = {
-    'fedora-development-x86_64':
-    sourceslist['fedora-development-x86_64-fedora-stable']['fedora-development-i386'] +
-    ('fedora-testing', )
+sourceslist['fedora-' + V + '-' + A + '-core'] = {
+  'fedora-' + V + '-' + A : ('core', )
 }
-config['fedora-development-x86_64-fedora-testing']  = config['fedora-development-i386-fedora-stable']
-aliases['fedora-development-x86_64-fedora-testing'] = ('fdft', )
-                                                                                
-packages['fedora-development-x86_64-fedora-unstable'] = packages['fedora-development-i386-fedora-testing']
-sourceslist['fedora-development-x86_64-fedora-unstable'] = {
-    'fedora-development-x86_64':
-    sourceslist['fedora-development-x86_64-fedora-testing']['fedora-development-i386'] +
-    ('fedora-unstable', )
+# FC4 roots should use runuser instead of su
+config['fedora-' + V + '-' + A + '-core'] = {'runuser': '/sbin/runuser'}
+aliases['fedora-' + V + '-' + A + '-core'] = ('f' + VS + 'c' + AS, 'fc' + VS + AS, )
+
+# Fedora Core with extras
+packages['fedora-' + V + '-' + A + '-extras'] = packages['fedora-' + V + '-' + A + '-core'].copy ()
+packages['fedora-' + V + '-' + A + '-extras']['build'] = packages['fedora-' + V + '-' + A + '-core']['build'] # + " fedora-rpmdevtools"
+sourceslist['fedora-' + V + '-' + A + '-extras'] = {
+  'fedora-' + V + '-' + A :
+  sourceslist['fedora-' + V + '-' + A + '-core']['fedora-' + V + '-' + A ] +
+  ('extras', )
 }
-config['fedora-development-x86_64-fedora-unstable']  = config['fedora-development-i386-fedora-testing']
-aliases['fedora-development-x86_64-fedora-unstable'] = ('fdfu', )
-                                                                                
-# Fedora Core development with livna (+ fedora.us)
-packages['fedora-development-x86_64-livna-stable'] = packages['fedora-development-i386-core'].copy ()
-packages['fedora-development-x86_64-livna-stable']['build'] = packages['fedora-development-i386-core']['build'] + " fedora-rpmdevtools"
-sourceslist['fedora-development-x86_64-livna-stable'] = {
-    'fedora-development-x86_64': ('core', 'fedora-stable', 'livna-stable', )
+config['fedora-' + V + '-' + A + '-extras'] = {
+  'runuser': '/sbin/runuser',
+  'buildopts': "--define 'dist .fc" + V + "'",
 }
-config['fedora-development-x86_64-livna-stable']  = { 'release': '1.91' }
-aliases['fedora-development-x86_64-livna-stable'] = ('fdls', )
-                                                                                
-packages['fedora-development-x86_64-livna-testing'] = packages['fedora-development-i386-livna-stable']
-sourceslist['fedora-development-x86_64-livna-testing'] = {
-    'fedora-development-x86_64':
-    sourceslist['fedora-development-x86_64-livna-stable']['fedora-development-i386'] +
-    ('fedora-testing', 'livna-testing', )
-}
-config['fedora-development-x86_64-livna-testing']  = config['fedora-development-i386-livna-stable']
-aliases['fedora-development-x86_64-livna-testing'] = ('fdlt', )
-                                                                                
-packages['fedora-development-x86_64-livna-unstable'] = packages['fedora-development-i386-livna-testing']
-sourceslist['fedora-development-x86_64-livna-unstable'] = {
-    'fedora-development-x86_64':
-    sourceslist['fedora-development-x86_64-livna-testing']['fedora-development-i386'] +
-    ('fedora-unstable', 'livna-unstable', )
-}
-config['fedora-development-x86_64-livna-unstable']  = config['fedora-development-i386-livna-testing']
-aliases['fedora-development-x86_64-livna-unstable'] = ('fdlu', )
+aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + VS + 'e' + AS, )

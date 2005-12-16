@@ -43,7 +43,7 @@ yumsources['fedora-' + V + '-' + A ] = {
 
 # Fedora Core
 packages['fedora-' + V + '-' + A + '-core'] = {
-  'dir':      'fedoracore-' + V + '-' + A ,
+  'dir':      'fedora-' + V + '-' + A ,
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
   'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
