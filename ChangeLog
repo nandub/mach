@@ -1,3 +1,22 @@
+2005-12-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-1-i386:
+	* etc/dist.d/fedora-2-i386:
+	* etc/dist.d/fedora-2-x86_64:
+	* etc/dist.d/fedora-3-i386:
+	* etc/dist.d/fedora-3-x86_64:
+	* etc/dist.d/fedora-4-i386:
+	* etc/dist.d/fedora-4-x86_64:
+	* etc/dist.d/fedora-development-i386:
+	* etc/dist.d/fedora-development-x86_64:
+	  update development dist files
+	  dist the 64 bit ones
+	  update the 'dir' parameter
+	* scripts/mach.in:
+	  store the cache of yum/apt in a per-dir place; shared by all
+	  flavors of a base dist
+
 === release 0.4.8 ===
 
 2005-11-21  Thomas Vander Stichele  <thomas at apestaart dot org>
