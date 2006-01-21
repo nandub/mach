@@ -1,3 +1,18 @@
+2006-01-21  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  fix STATESDIR define
+	* mach.spec.in:
+	  small fix
+	* etc/conf.in:
+	  add ['dirs']['cache']
+	* scripts/mach.in:
+	  clean out yum metadata from cache for "local" archive;
+	  fixes builds of packages depending on previously built packages
+	  (yum was not picking up the newly built packages on update)
+	* src/mach-helper.c: (do_rm_cache_file), (do_rm_root_dir), (do_rm):
+	  allow for removing files from LOCALSTATEDIR/cache
+
 2005-12-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/Makefile.am:

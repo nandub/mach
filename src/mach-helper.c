@@ -21,6 +21,7 @@
 char *rootsdir = ROOTSDIR;
 char *statesdir = STATESDIR;
 char *archivesdir = ARCHIVESDIR;
+char *cachedir = LOCALSTATEDIR "/cache";
 
 static char const * const ALLOWED_ENV[] =
 {
@@ -281,14 +282,19 @@ do_mount (int argc, char *argv[])
   do_command ("/bin/mount", &(argv[1]));
 }
 
-/* clean out a chroot dir */
 void
-do_rm (int argc, char *argv[])
+do_rm_cache_file (int argc, char *argv[])
 {
-  /* enough arguments ? mach-helper rm -rfv (rootdir), 4 */
-  if (argc < 4)
-    error ("not enough arguments");
+  /* see if we're doing rm on a file under cachedir */
+  check_file_allowed (cachedir, argv[2]);
 
+  /* all checks passed, execute */
+  do_command ("/bin/rm", &(argv[1]));
+}
+
+void
+do_rm_root_dir (int argc, char *argv[])
+{
   /* see if we're doing rm -rfv */
   if (strncmp ("-rfv", argv[2], 4) != 0)
     error ("%s: options not allowed", argv[2]);
@@ -298,6 +304,23 @@ do_rm (int argc, char *argv[])
 
   /* all checks passed, execute */
   do_command ("/bin/rm", &(argv[1]));
+}
+
+/* clean out a chroot dir, or remove a mach cache file
+ * rm cachedir/mach/somefile
+ * rm -rfv (rootdir)
+ */
+
+
+void
+do_rm (int argc, char *argv[])
+{
+  if (argc == 3)
+    do_rm_cache_file (argc, argv);
+  if (argc == 4)
+    do_rm_root_dir (argc, argv);
+
+    error ("wrong number of parameters");
 }
 
 /* perform rpm commands on root */

@@ -57,10 +57,10 @@ AC_ARG_ENABLE(statesdir,
   AC_HELP_STRING([--enable-statesdir=PATH], [use states in PATH]),
   [ statesdir=$enableval ],
   [ statesdir=$localstatedir/lib/mach/states]
-AC_DEFINE_UNQUOTED(STATESDIR, "$STATESDIR",
-    [Location of root states])
 )
 AS_AC_EXPAND(STATESDIR, $statesdir)
+AC_DEFINE_UNQUOTED(STATESDIR, "$STATESDIR",
+    [Location of root states])
 AC_MSG_NOTICE(Using statesdir $STATESDIR)
 
 dnl builduser

@@ -54,8 +54,7 @@ install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/states
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/roots
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/tmp/mach
-install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/packages
-install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach/archives
+install -d -m 775 $RPM_BUILD_ROOT%{_localstatedir}/cache/mach
 
 find $RPM_BUILD_ROOT -name "*.la" -exec rm {} \;
 
@@ -76,7 +75,6 @@ then
   rm -rf %{_localstatedir}/cache/mach/* > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/lib/mach/states > /dev/null 2>&1 || :
   rmdir %{_localstatedir}/lib/mach/roots > /dev/null 2>&1 || :
-  rmdir %{_localstatedir}/cache/mach > /dev/null 2>&1 || :
   rm -rf %{_localstatedir}/tmp/mach > /dev/null 2>&1 || :
 fi
 
