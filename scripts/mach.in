@@ -1462,7 +1462,7 @@ Dir {
         # by calculating the depth of the file tree
         conf = '''
 [main]
-cachedir = /../../../../..''' + os.path.join ('/', 'var', 'cache', 'mach', packagesdir, 'yum') + '''
+cachedir = /../../../../..''' + os.path.join (state, 'cache', 'mach', packagesdir, 'yum') + '''
 reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         self.set_state ("yum.conf", conf)
 
@@ -1845,6 +1845,8 @@ def get_rpms_from_log (log):
 
 # return full path to directory based on the root (in config) and which sort
 # of directory to get
+
+# FIXME: doing + s is silly
 def get_config_dir (config, which):
 #FIXME: do error checking on key
     return config['dirs'][which + 's'] + '/' + config['root']
@@ -1913,6 +1915,8 @@ def get_sources_dict (config):
 def create_sources_list (config, list):
     root = get_config_dir (config, 'root')
     statedir = get_config_dir (config, 'state')
+    cachedir = config['dirs']['cache']
+
     if config['installer'] == 'yum':
         debug ("Creating files in yum.repos.d")
 
@@ -1924,10 +1928,24 @@ def create_sources_list (config, list):
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
             if source == 'local':
+                debug ('updating local repository')
                 cmd = 'createrepo %s/usr/src/rpm/RPMS.mach-local' % root
                 (status, output) = do_with_output (cmd, False)
                 if status != 0:
                     raise Exception, "Could not update local yum repository"
+                # at some point yum seems to not properly realize the repo is
+                # updated; do the equivalent of yum clean metadata only for
+                # the local repo
+                packagesdir = config['packages']['dir']
+                for file in ['cachecookie', 'primary.xml.gz', 'repomd.xml']:
+                    fullpath = os.path.join (cachedir,
+                        'mach/%s/yum/local' % packagesdir, file)
+                    debug ('checking for removal of %s' % fullpath)
+                    if os.path.exists (fullpath):
+                        cmd = '%s %s' % (config['rm'], fullpath)
+                        (status, output) = do_with_output (cmd, False)
+
+            ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
             sources.close ()
     else:
         debug ("Creating sources.list")
