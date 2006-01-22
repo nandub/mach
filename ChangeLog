@@ -1,6 +1,16 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  - pass 'buildopts' from config to Spec and SRPM init's, so they
+	    also are used when parsing with rpmbuild
+	  - since the locally built repositories are per-flavor, include
+	    the flavor in the name of the repository: local.(flavor)
+	  - factor out code into an update_local_repo () method
+	  - add an error in case 'cache' is not found in config['dirs']
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  rename join_quoted to join_single_quoted
 
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>

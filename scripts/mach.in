@@ -719,10 +719,13 @@ class Root:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
-            optstring = join_single_quoted (options)
-            debug ("build: quoted optstring: %s" % optstring)
+            options_string = join_single_quoted (options)
+            if self.config.has_key('buildopts'):
+                options_string += ' %s' % self.config['buildopts']
+
+            debug ("build: quoted options_string: %s" % options_string)
             try:
-                spec = Spec (specfile, optstring)
+                spec = Spec (specfile, options_string)
             except Spec.Error, message:
                 raise self.Error, message
             (n, v, r) = spec.nvr ()
@@ -790,7 +793,7 @@ class Root:
             try:
                 self.do_chroot ("cd / && %s %s -bs --nodeps %s" \
                                 % (self.config['root_rpmbuild'],
-                                   optstring,
+                                   options_string,
                                    os.path.join ('usr', 'src', 'rpm', 'SPECS',
                                                 os.path.basename (specfile))),
                                 "Creating .src.rpm",
@@ -900,6 +903,12 @@ class Root:
             raise self.Error, 'Please supply .src.rpm files to build'
 
         (options, paths) = self.splitargsrpms (args)
+        # turn the options into a correctly quoted string, and add
+        # buildopts from config, since they also affect parsing
+        options_string = join_single_quoted (options)
+        if self.config.has_key('buildopts'):
+            options_string += ' %s' % self.config['buildopts']
+
         self.setup (['build', ])
         self.lock ()
         # FIXME: we don't need this anymore, do we ?
@@ -923,7 +932,7 @@ class Root:
             except:
                 raise self.Error, "Can't find %s" % path
             os.chown (hostnewpath, -1, mach_gid)
-            srpm = SRPM (hostnewpath, join_single_quoted (options))
+            srpm = SRPM (hostnewpath, options_string)
 
             spec = srpm.specname
             buildreqs = srpm.BuildRequires ()
@@ -1027,21 +1036,7 @@ class Root:
                 debug ("BuildRequires after filtering: %s" % buildreqs)
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
-                    srcs = get_sources_dict (self.config)
-                    # this ensures that locally built RPMS are already used for apt-get
-                    root = get_config_dir (config, 'root')
-                    if config['installer'] == 'yum':
-                        srcs['local'] = 'file://%s/usr/src/rpm/RPMS.mach-local' % root
-                    else:
-                        srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
-                    debug ('creating sources list with dict %r' % srcs)
-                    create_sources_list (config, srcs)
-
-                    try:
-                        if config['installer'] != 'yum':
-                            self.installer (["update", ])
-                    except Root.Error:
-                        raise self.Error, 'could not update installer'
+                    update_local_repo (self.config)
                     try:
                         # wrap all buildreqs in quotes
                         self.installer ([ '-y install %s' % "'" + "' '".join (buildreqs) + "'", ],
@@ -1089,7 +1084,7 @@ class Root:
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
                 try:
-                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), join_single_quoted (options))
+                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), options_string)
                 except Spec.Error, message:
                     raise self.Error, message
                 release = spec.tag ("release")
@@ -1129,7 +1124,7 @@ class Root:
                       "--define '_tmppath %s' " \
                       "--define '__spec_prep_pre exit 0' " \
                       "--define 'setup :' %s" \
-                      % (self.rootdir, join_single_quoted (options),
+                      % (self.rootdir, options_string,
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm'),
                          os.path.join ('/var', 'tmp'),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
@@ -1146,11 +1141,11 @@ class Root:
             # version than the host's rpmbuild understands.
             # this is fine now since we check for met buildrequires before.
 
-            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
+            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
                 self.config['runuser'], nrcpus, 
                 self.config['root_rpmbuild'],
-                self.config.get('buildopts', ''),
-                join_single_quoted (options), specfile, builduser)
+                options_string,
+                specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -1202,16 +1197,7 @@ class Root:
                 # self.do_chroot ('rm ' + file)
 
             # update internal apt/yum repo
-            srcs = get_sources_dict (self.config)
-            # this ensures that locally built RPMS are already used for apt-get
-            root = get_config_dir (self.config, 'root')
-            if config['installer'] == 'yum':
-                srcs['local'] = 'file://%s/usr/src/rpm/RPMS.mach-local' % root
-            else:
-                srcs['local'] = 'rpm-dir file://%s/usr/src rpm mach-local' % root
-            create_sources_list (self.config, srcs)
-            if self.config['installer'] != 'yum':
-                self.installer (["update", ])
+            update_local_repo (self.config)
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
@@ -1402,7 +1388,7 @@ class Root:
         if os.WIFEXITED (status) and os.WEXITSTATUS (status) == 0:
             epochopt = 'Options { "--promoteepoch"; }'
 
-        # create a custom apt.conf file
+        # create a custom apt.conf/yum.conf file
 
         root = self.rootdir
         state = self.statedir
@@ -1461,7 +1447,7 @@ Dir {
         # by calculating the depth of the file tree
         conf = '''
 [main]
-cachedir = /../../../../..''' + os.path.join (state, 'cache', 'mach', packagesdir, 'yum') + '''
+cachedir = /../../../../..''' + os.path.join ('@LOCALSTATEDIR@', 'cache', 'mach', packagesdir, 'yum') + '''
 reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
         # if the distro's config dict contains "excludearch", add an exclude
@@ -1918,25 +1904,55 @@ def get_sources_dict (config):
     debug ("sources.list: " + string.join (sourcesdict.values(), "\n"))
     return sourcesdict
 
+# this ensures that locally built RPMS will be used to
+# install from
+# we append the root name because config for this repo
+# will end up in a dir common to all flavors of a base dist
+def update_local_repo (config):
+    srcs = get_sources_dict (config)
+    root = config['root']
+    rootdir = get_config_dir (config, 'root')
+    if config['installer'] == 'yum':
+        line = 'file://%s/usr/src/rpm/RPMS.mach-local' % rootdir
+    else:
+        line = 'rpm-dir file://%s/usr/src rpm mach-local' % rootdir
+    srcs['local.%s' % root] = line
+    debug ('creating sources list with dict %r' % srcs)
+    create_sources_list (config, srcs)
+
+    try:
+        if config['installer'] != 'yum':
+            self.installer (["update", ])
+    except Root.Error:
+        raise self.Error, 'could not update installer'
+
 # create config files for the installer giving the locations of
 # repositories
 def create_sources_list (config, list):
     root = get_config_dir (config, 'root')
     statedir = get_config_dir (config, 'state')
-    cachedir = config['dirs']['cache']
+    try:
+        cachedir = config['dirs']['cache']
+    except KeyError:
+        sys.stderr.write (
+            "error: mach 0.4.9 added the 'cache' key to config['dirs'],\n"
+            "but it is missing from your config file.  Please add.\n")
+        sys.exit (1)
+        
 
     if config['installer'] == 'yum':
         debug ("Creating files in yum.repos.d")
 
         for source in list.keys():
             line = list[source]
-            debug ('writing file for repo %s' % line)
+            debug ('writing file for repo %s' % source)
+            debug ('repo has URI %s' % line)
             sources = open (statedir + '/yum/yum.repos.d/%s.repo' % source, 'w')
             sources.write("[%s]\nname=%s\nbaseurl=%s\nenabled=1\n" % (source, source, line))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
-            if source == 'local':
-                debug ('updating local repository')
+            if source.startswith('local.'):
+                debug ('updating local repository %s' % source)
                 cmd = 'createrepo %s/usr/src/rpm/RPMS.mach-local' % root
                 (status, output) = do_with_output (cmd, False)
                 if status != 0:
@@ -1946,8 +1962,8 @@ def create_sources_list (config, list):
                 # the local repo
                 packagesdir = config['packages']['dir']
                 for file in ['cachecookie', 'primary.xml.gz', 'repomd.xml']:
-                    fullpath = os.path.join (cachedir,
-                        'mach/%s/yum/local' % packagesdir, file)
+                    fullpath = os.path.join ('@LOCALSTATEDIR@', 'cache',
+                        'mach', packagesdir, 'yum', source, file)
                     debug ('checking for removal of %s' % fullpath)
                     if os.path.exists (fullpath):
                         cmd = '%s %s' % (config['rm'], fullpath)
