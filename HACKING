@@ -1,2 +1,30 @@
 * CVS
   - tags for release are named RELEASE-x_y_z
+
+* directory layout, terms, ...
+  - system directories:
+    - LOCALSTATEDIR:        typically /var
+    - SBINDIR:              typically /usr/sbin
+    - SBINDIR:              typically /usr/sbin
+    - SYSCONFDIR:           typically /etc
+
+  - global directories used by mach:
+    - confdir:              SYSCONFDIR/mach
+      dist.d:               definitions of distributions
+    - cachedir:             LOCALSTATEDIR/cache/mach
+      - archives:           used by apt
+      - packages:           used by apt
+      - (dist):             one dir for each dist (as in confdir)
+        - yum
+          - (repo):         one dir per repo
+          - local.(flavor): one dir per flavor, for locally built packages
+    - rootsdir:             LOCALSTATEDIR/lib/mach/roots
+                            group-owned by mach
+    - statesdir:            LOCALSTATEDIR/lib/mach/states
+                            group-owned by mach
+    - resultsdir:           LOCALSTATEDIR/tmp/mach
+                            group-owned by mach
+      - (flavor):           one dir per flavor
+      - tmp:                temporary files (sources, ...)
+        - (flavor):         one dir per flavor
+
