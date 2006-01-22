@@ -1622,44 +1622,6 @@ def join_single_quoted (args):
     else:
         return "'" + string.join (args, "' '") + "'"
 
-# return path to rpm binary suited to our target root, extracting it if
-# necessary
-# FIXME: this function is not used right now, would it be a good idea to
-# do so in the future ?
-def get_rpm (config):
-    debug ("getting rpm for root %s" % config['root'])
-    tmpdir = get_config_dir (config, 'tmp')
-    binary = os.path.join (tmpdir, 'bin', 'rpm')
-
-    # first check if it exists yet
-    if os.path.exists (binary): return binary
-
-    # it doesn't, so get it
-    packagesdir = get_packages_dir (config)
-    # find rpm package in 'base' set
-    packages = config['packages']['base']
-    matchstr = re.compile ("^rpm-\d")
-    rpm = ""
-    for package in packages:
-        if matchstr.search (package):
-            rpm = package
-    if not rpm:
-        sys.stderr.write ("Could not find rpm in base set !\n")
-        exit (config)
-    print "Found rpm %s" % rpm
-    # check if it exists
-    path = os.path.join (packagesdir, rpm)
-    if not os.path.exists (path):
-        sys.stderr.write ("Could not find file %s !\n" % path)
-        exit (config)
-    # extract rpm binary from it
-    ensure_dir (tmpdir)
-    command = "cd %s && rpm2cpio %s | cpio -id --no-absolute-filenames bin/rpm > /dev/null" % (tmpdir, path)
-    if os.system (command) != 0:
-        sys.stderr.write ("Could not extract rpm binary from package !\n")
-        exit (config)
-    return binary
-
 # grab given url and store it as filename, preserving timestamps
 def urlgrab (url, filename):
     print "Getting %s ..." % url
