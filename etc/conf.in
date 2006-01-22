@@ -18,13 +18,12 @@ config['spinner'] = {
 # Don't change roots, archives, cache and states
 # they're hardcoded into mach-helper.
 config['dirs'] = {
-    'states':   '@STATESDIR@',
-    'roots':    '@ROOTSDIR@',
-    'results':  '@LOCALSTATEDIR@/tmp/mach',
-    'tmps':     '@LOCALSTATEDIR@/tmp/mach/tmp',
-    'packages': '@LOCALSTATEDIR@/cache/mach/packages',
-    'archives': '@ARCHIVESDIR@',
-    'cache':    '@LOCALSTATEDIR@/cache',
+    'states':      '@STATESDIR@',
+    'roots':       '@ROOTSDIR@',
+    'results':     '@LOCALSTATEDIR@/tmp/mach',
+    'tmps':        '@LOCALSTATEDIR@/tmp/mach/tmp',
+    'aptarchives': '@ARCHIVESDIR@',
+    'cache':       '@LOCALSTATEDIR@/cache',
 }
 
 # Default root

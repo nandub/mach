@@ -28,3 +28,8 @@
       - tmp:                temporary files (sources, ...)
         - (flavor):         one dir per flavor
 
+  - root-specific directories:
+    - rootdir:              rootsdir/(rootname)
+    - resultdir:            resultsdir/(rootname)
+    - statedir:             statesdir/(rootname)
+    - tmpdir:               statesdir/tmp/(rootname)

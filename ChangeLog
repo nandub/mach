@@ -1,5 +1,15 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* HACKING:
+	  more updates
+	* etc/conf.in:
+	  remove packages, and rename archives to aptarchives
+	* scripts/mach.in:
+	  small cleanups
+	  use aptarchives where appropriate
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	patch by: Matthias Saou
 
 	* scripts/mach.in:
