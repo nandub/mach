@@ -1,6 +1,12 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  remove unused code that extracted an rpm binary from
+	  an rpm-*.rpm
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  remove code marked for deletion
 
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
