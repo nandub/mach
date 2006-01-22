@@ -1464,6 +1464,15 @@ Dir {
 [main]
 cachedir = /../../../../..''' + os.path.join (state, 'cache', 'mach', packagesdir, 'yum') + '''
 reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
+
+        # if the distro's config dict contains "excludearch", add an exclude
+        # line for each arch
+        if self.config.has_key('excludearch'):
+            words = []
+            for arch in self.config['excludearch'].split():
+                words.append("*.%s" % arch)
+            conf = conf + "\nexclude = %s\n" % " ".join(words)
+
         self.set_state ("yum.conf", conf)
 
         # create sources.list

@@ -35,7 +35,11 @@ sourceslist['fedora-' + V + '-' + A + '-core'] = {
   'fedora-' + V + '-' + A : ('core', )
 }
 # FC4 roots should use runuser instead of su
-config['fedora-' + V + '-' + A + '-core'] = {'runuser': '/sbin/runuser'}
+config['fedora-' + V + '-' + A + '-core'] = {
+  'runuser': '/sbin/runuser',
+  'excludearch': 'i386 i486 i586 i686 athlon',
+}
+aliases['fedora-' + V + '-' + A + '-core'] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
 aliases['fedora-' + V + '-' + A + '-core'] = ('f' + VS + 'c' + AS, 'fc' + VS + AS, )
 
 # Fedora Core with extras
@@ -46,8 +50,8 @@ sourceslist['fedora-' + V + '-' + A + '-extras'] = {
   sourceslist['fedora-' + V + '-' + A + '-core']['fedora-' + V + '-' + A ] +
   ('extras', )
 }
-config['fedora-' + V + '-' + A + '-extras'] = {
-  'runuser': '/sbin/runuser',
+config['fedora-' + V + '-' + A + '-extras'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-extras'].update({
   'buildopts': "--define 'dist .fc" + V + "'",
-}
+})
 aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + VS + 'e' + AS, )

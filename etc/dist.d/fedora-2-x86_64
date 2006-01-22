@@ -37,106 +37,113 @@ packages['fedora-2-x86_64-core'] = {
 sourceslist['fedora-2-x86_64-core'] = {
     'fedora-2-x86_64': ('core', )
 }
-config['fedora-2-x86_64-core'] = {}
+config['fedora-2-x86_64-core'] = {
+  'excludearch': 'i386 i486 i586 i686 athlon',
+}
 aliases['fedora-2-x86_64-core'] = ('f2c', 'fc2', )
 
 # Fedora Core 2 with updates
-packages['fedora-2-x86_64-updates'] = packages['fedora-2-i386-core']
+packages['fedora-2-x86_64-updates'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-updates'] = {
     'fedora-2-x86_64': ('core', 'updates', )
 }
-config['fedora-2-x86_64-updates'] = {}
+config['fedora-2-x86_64-updates'] = config['fedora-2-x86_64-core'].copy()
 aliases['fedora-2-x86_64-updates'] = ('f2u', )
 
 # Fedora Core 2 with GStreamer
-packages['fedora-2-x86_64-gstreamer'] = packages['fedora-2-i386-core']
+packages['fedora-2-x86_64-gstreamer'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-gstreamer'] = {
     'fedora-2-x86_64': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['fedora-2-x86_64-gstreamer'] = { 'release': '2' }
+config['fedora-2-x86_64-gstreamer'] = config['fedora-2-x86_64-core'].copy()
+config['fedora-2-x86_64-gstreamer'].update({
+  'release': '2',
+}
 aliases['fedora-2-x86_64-gstreamer'] = ('f2g', )
 
-packages['fedora-2-x86_64-gstreamer-deps'] = packages['fedora-2-i386-core']
+packages['fedora-2-x86_64-gstreamer-deps'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-gstreamer-deps'] = {
     'fedora-2-x86_64': ('core', 'gstreamer-deps')
 }
-config['fedora-2-x86_64-gstreamer-deps'] = { 'release': '2' }
+config['fedora-2-x86_64-gstreamer-deps'] = config['fedora-2-x86_64-gstreamer'].copy()
 aliases['fedora-2-x86_64-gstreamer-deps'] = ('f2gd', )
 
 # Fedora Core 2 with fedora.us
-packages['fedora-2-x86_64-fedora-stable'] = packages['fedora-2-i386-updates'].copy ()
-packages['fedora-2-x86_64-fedora-stable']['build'] = packages['fedora-2-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-2-x86_64-fedora-stable'] = packages['fedora-2-x86_64-updates'].copy ()
+packages['fedora-2-x86_64-fedora-stable']['build'] = packages['fedora-2-x86_64-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-2-x86_64-fedora-stable'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-updates']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
     ('fedora-stable', )
 }
-config['fedora-2-x86_64-fedora-stable']  = { 'release': '2' }
+config['fedora-2-x86_64-fedora-stable'] = config['fedora-2-x86_64-core'].copy()
+config['fedora-2-x86_64-gstreamer'].update({
+  'release': '2',
 aliases['fedora-2-x86_64-fedora-stable'] = ('f2fs', )
 
-packages['fedora-2-x86_64-fedora-testing'] = packages['fedora-2-i386-fedora-stable']
+packages['fedora-2-x86_64-fedora-testing'] = packages['fedora-2-x86_64-fedora-stable']
 sourceslist['fedora-2-x86_64-fedora-testing'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-fedora-stable']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-fedora-stable']['fedora-2-x86_64'] +
     ('fedora-testing', )
 }
-config['fedora-2-x86_64-fedora-testing']  = config['fedora-2-i386-fedora-stable']
+config['fedora-2-x86_64-fedora-testing']  = config['fedora-2-x86_64-fedora-stable']
 aliases['fedora-2-x86_64-fedora-testing'] = ('f2ft', )
 
-packages['fedora-2-x86_64-fedora-unstable'] = packages['fedora-2-i386-fedora-testing']
+packages['fedora-2-x86_64-fedora-unstable'] = packages['fedora-2-x86_64-fedora-testing']
 sourceslist['fedora-2-x86_64-fedora-unstable'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-fedora-testing']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-fedora-testing']['fedora-2-x86_64'] +
     ('fedora-unstable', )
 }
-config['fedora-2-x86_64-fedora-unstable']  = config['fedora-2-i386-fedora-testing']
+config['fedora-2-x86_64-fedora-unstable']  = config['fedora-2-x86_64-fedora-testing']
 aliases['fedora-2-x86_64-fedora-unstable'] = ('f2fu', )
 
 # Fedora Core 2 with livna (+ fedora.us)
-packages['fedora-2-x86_64-livna-stable'] = packages['fedora-2-i386-updates'].copy ()
-packages['fedora-2-x86_64-livna-stable']['build'] = packages['fedora-2-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-2-x86_64-livna-stable'] = packages['fedora-2-x86_64-updates'].copy ()
+packages['fedora-2-x86_64-livna-stable']['build'] = packages['fedora-2-x86_64-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-2-x86_64-livna-stable'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-updates']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
     ('fedora-stable', 'livna-stable', )
 }
-config['fedora-2-x86_64-livna-stable']  = { 'release': '2' }
+config['fedora-2-x86_64-livna-stable']  = config['fedora-2-x86_64-fedora-stable']
 aliases['fedora-2-x86_64-livna-stable'] = ('f2ls', )
 
-packages['fedora-2-x86_64-livna-testing'] = packages['fedora-2-i386-livna-stable']
+packages['fedora-2-x86_64-livna-testing'] = packages['fedora-2-x86_64-livna-stable']
 sourceslist['fedora-2-x86_64-livna-testing'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-livna-stable']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-livna-stable']['fedora-2-x86_64'] +
     ('fedora-testing', 'livna-testing', )
 }
-config['fedora-2-x86_64-livna-testing']  = config['fedora-2-i386-livna-stable']
+config['fedora-2-x86_64-livna-testing']  = config['fedora-2-x86_64-livna-stable']
 aliases['fedora-2-x86_64-livna-testing'] = ('f2lt', )
 
-packages['fedora-2-x86_64-livna-unstable'] = packages['fedora-2-i386-livna-testing']
+packages['fedora-2-x86_64-livna-unstable'] = packages['fedora-2-x86_64-livna-testing']
 sourceslist['fedora-2-x86_64-livna-unstable'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-livna-testing']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-livna-testing']['fedora-2-x86_64'] +
     ('fedora-unstable', 'livna-unstable', )
 }
-config['fedora-2-x86_64-livna-unstable']  = config['fedora-2-i386-livna-testing']
+config['fedora-2-x86_64-livna-unstable']  = config['fedora-2-x86_64-livna-testing']
 aliases['fedora-2-x86_64-livna-unstable'] = ('f2lu', )
 
 # Fedora Core 2 with freshrpms
-packages['fedora-2-x86_64-freshrpms'] = packages['fedora-2-i386-core']
+packages['fedora-2-x86_64-freshrpms'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-freshrpms'] = {
     'fedora-2-x86_64': ('core', 'freshrpms', )
 }
-config['fedora-2-x86_64-freshrpms'] = {}
+config['fedora-2-x86_64-freshrpms'] = config['fedora-2-x86_64-core'].copy()
 aliases['fedora-2-x86_64-freshrpms'] = ('f2fr', )
 
 # Fedora Core 2 with JPackage
-packages['fedora-2-x86_64-jpackage'] = packages['fedora-2-i386-updates'].copy()
-packages['fedora-2-x86_64-jpackage']['base'] = packages['fedora-2-i386-updates']['base'] + ' java-1.4.2-sun'
-packages['fedora-2-x86_64-jpackage']['build'] = packages['fedora-2-i386-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
+packages['fedora-2-x86_64-jpackage'] = packages['fedora-2-x86_64-updates'].copy()
+packages['fedora-2-x86_64-jpackage']['base'] = packages['fedora-2-x86_64-updates']['base'] + ' java-1.4.2-sun'
+packages['fedora-2-x86_64-jpackage']['build'] = packages['fedora-2-x86_64-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['fedora-2-x86_64-jpackage'] = {
     'fedora-2-x86_64':
-    sourceslist['fedora-2-x86_64-updates']['fedora-2-i386'] +
+    sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
     ('jpackage-generic', 'jpackage-fc2', 'jpackage-nonfree', ),
 }
-config['fedora-2-x86_64-jpackage'] = {}
+config['fedora-2-x86_64-jpackage'] = config['fedora-2-x86_64-core'].copy()
 aliases['fedora-2-x86_64-jpackage'] = ('fc2jpp', )
