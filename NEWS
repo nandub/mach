@@ -1,4 +1,16 @@
-This is mach, make a chroot, 0.4.7.
+This is mach, make a chroot, 0.4.8.2.
+
+Changes since 0.4.8:
+	- add an option for md5summing of results (Matthias)
+        - pass 'buildopts' from a root config to rpmbuild (Thomas)
+        - add 'excludearch' property to root config,
+          fixes yum's semi-random behaviour on x86_64 (Thomas)
+        - store yum cache data per-dist, shared for flavors (Thomas)
+        - clean up yum metadata for local repositories (Thomas)
+
+Changes since 0.4.7:
+        - multi-user/group-related fixes
+        - fixes for FC3 running on FC4 host
 
 Changes since 0.4.6:
         - add yum support (various people)
