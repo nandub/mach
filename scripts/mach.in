@@ -550,7 +550,7 @@ class Root:
 
         self.installer (args, interactive = True)
 
-    # run the instaler outside the root on the root
+    # run the installer outside the root on the root
     # FIXME: virtualize this
     # if message is specified, it will be printed, and newline-terminated
     # properly
@@ -1063,9 +1063,9 @@ class Root:
             else:
                 debug ("Not mangling release tag")
                 fullname = '%s-%s-%s' % (name, version, release)
-            resultdir = os.path.join (self.resultdir, fullname)
-            debug ("Storing result in %s" % resultdir)
-            ensure_dir (resultdir)
+            pkgresultdir = os.path.join (self.resultdir, fullname)
+            debug ("Storing result in %s" % pkgresultdir)
+            ensure_dir (pkgresultdir)
 
             # rebuild binary rpm from the src rpm
             # install the src.rpm
@@ -1076,7 +1076,7 @@ class Root:
             command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
             self.do_chroot (command)
             # copy specfile to resultdir
-            copy_grouped (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
+            copy_grouped (os.path.join (self.rootdir, 'tmp', specfile), pkgresultdir)
             # mangle spec file if requested
             if self.config['release']:
                 # first check if it doesn't already comply !
@@ -1150,7 +1150,7 @@ class Root:
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
             if (output):
-                log = os.path.join (resultdir, 'rpm.log')
+                log = os.path.join (pkgresultdir, 'rpm.log')
                 if os.path.exists (log):
                     os.unlink (log)
                 handle = open (log, 'w')
@@ -1159,7 +1159,7 @@ class Root:
                 os.chown (log, -1, mach_gid)
             if status != 0:
                 sys.stderr.write ("ERROR: something went wrong rebuilding the .src.rpm\n")
-                sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % resultdir)
+                sys.stderr.write ("ERROR: inspect rpm build log %s/rpm.log\n" % pkgresultdir)
                 self.umount ()
                 self.unlock ()
                 raise self.Error, "failed to rebuild SRPMs"
@@ -1173,7 +1173,7 @@ class Root:
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
-            (srpm, rpms) = get_rpms_from_log (os.path.join (resultdir, 'rpm.log'))
+            (srpm, rpms) = get_rpms_from_log (os.path.join (pkgresultdir, 'rpm.log'))
             # FIXME: install these RPMS based on a boolean ?
             # FIXME: error checks
             hostrpms = map (lambda x: self.rootdir + x, rpms)
@@ -1192,14 +1192,14 @@ class Root:
             for file in rpms:
                 path = self.rootdir + file
                 # file already contains starting /
-                copy_grouped (path, resultdir)
+                copy_grouped (path, pkgresultdir)
                 # for now, we do, for multiple builds
                 # self.do_chroot ('rm ' + file)
 
             # update internal apt/yum repo
             update_local_repo (self.config)
-            print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
-            resultdirs.append (resultdir)
+            print "Build of %s succeeded, results in\n%s" % (fullname, pkgresultdir)
+            resultdirs.append (pkgresultdir)
 
         # now sign packages if requested
         if self.config['sign']:
@@ -1207,44 +1207,48 @@ class Root:
             cmd = 'rpm --addsign %s' % string.join (resultdirs, '/*.rpm ') + '/*.rpm'
             debug ("running %s" % cmd)
             os.system (cmd)
-            #FIXME: sadly, we cannot clearsign multiple files ?
-            print "clearsigning md5sums ..."
-            for resultdir in resultdirs:
-                if os.path.exists (os.path.join (resultdir, 'md5sum.asc')):
-                    os.unlink (os.path.join (resultdir, 'md5sum.asc'))
-                cmd = 'cd %s && md5sum *.rpm > md5sum' % resultdir
-                debug ("running %s" % cmd)
-                os.system (cmd)
-                # FIXME: figure out the proper way to use an agent here
-                cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
-                debug ("running %s" % cmd)
-                os.system (cmd)
 
         # md5sum packages and spec file if requested
         if self.config['md5sum']:
-            for resultdir in resultdirs:
-                md5sumpath = os.path.join (resultdir, 'md5sum')
+            for pkgresultdir in resultdirs:
+                md5sumpath = os.path.join (pkgresultdir, 'md5sum')
                 if os.path.exists (md5sumpath):
                     os.unlink (md5sumpath)
-                cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
+                cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % pkgresultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
                 os.chown (md5sumpath, -1, mach_gid)
 
+        # clearsign md5sums if enabled and signing requested
+        if self.config['sign'] and self.config['md5sum']:
+            # FIXME: sadly, we cannot clearsign multiple files ?
+            print "clearsigning md5sums ..."
+            for resultdir in resultdirs:
+                if os.path.exists (os.path.join (pkgresultdir, 'md5sum.asc')):
+                    os.unlink (os.path.join (pkgresultdir, 'md5sum.asc'))
+                cmd = 'cd %s && md5sum *.rpm > md5sum' % pkgresultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+                # FIXME: figure out the proper way to use an agent here
+                cmd = 'gpg --use-agent --clearsign %s/md5sum' % pkgresultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+
         # run success-script if requested
         if self.config['script-success'] and self.config['scripts']:
-            for resultdir in resultdirs:
-                cmd = '%s %s' % (self.config['script-success'], resultdir)
+            for pkgresultdir in resultdirs:
+                cmd = '%s %s' % (self.config['script-success'], pkgresultdir)
                 debug ("running %s" % cmd)
                 os.system (cmd)
 
         # now collect stuff to . if requested
         if self.config['collect']:
-            for resultdir in resultdirs:
-               for x in glob.glob (os.path.join (resultdir, '*.rpm')):
-                   os.system ('mv %s %s' % (x, os.path.basename (x)))
-               for x in glob.glob (os.path.join (resultdir, '*')):
-                   os.system ('mv %s %s.%s' % (x, os.path.basename (resultdir), os.path.basename (x)))
+            for pkgresultdir in resultdirs:
+                for x in glob.glob (os.path.join (pkgresultdir, '*.rpm')):
+                    os.system ('mv %s %s' % (x, os.path.basename (x)))
+                for x in glob.glob (os.path.join (pkgresultdir, '*')):
+                    os.system ('mv %s %s.%s' % (x, os.path.basename (
+                        pkgresultdir), os.path.basename (x)))
 
         print "Build done."
         self.unlock ()
@@ -1986,7 +1990,13 @@ def sanity_check (config):
     user_check ()
 
     # check if partial dir exists
-    partial = os.path.join(config['dirs']['aptarchives'], 'partial')
+    try:
+        aptarchivesdir = config['dirs']['aptarchives']
+    except KeyError:
+        #  before 0.4.9, the key was 'archives'
+        aptarchivesdir = config['dirs']['archives']
+
+    partial = os.path.join(aptarchivesdir, 'partial')
     ensure_dir (partial)
 
     # check if mach-helper is suid
