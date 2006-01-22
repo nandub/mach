@@ -1849,11 +1849,6 @@ def get_config_dir (config, which):
 #FIXME: do error checking on key
     return config['dirs'][which + 's'] + '/' + config['root']
 
-# return full path to directory holding bootstrap packages for this root
-# DELETEME
-def get_packages_dir (config):
-    return config['dirs']['packages'] + '/' + config['packages']['dir']
-
 # make sure a dir exists
 # we have to recursively create ourselves so we can change group ownership
 def ensure_dir (dir):

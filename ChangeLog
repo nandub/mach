@@ -1,5 +1,10 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  remove code marked for deletion
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* HACKING:
 	  more updates
 	* etc/conf.in:
