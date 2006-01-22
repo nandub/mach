@@ -37,6 +37,7 @@ Mach options:
   -f, --force           override root lock
   -k, --keep            do not revert buildroot to initial package list
   -s, --sign            sign packages after build
+  -m, --md5sum          create md5sum of results after build
   -c, --collect         collect packages and relevant files to .
   -q, --quiet           no spinners, minimal output
   --release=(tag)       add given tag to release tag
@@ -71,6 +72,7 @@ config = {
   'force': 0,
   'check': 0,
   'sign': 0,
+  'md5sum': 0,
   'collect': 0,
   'release': 0,
   'quiet': 0,
@@ -1201,15 +1203,6 @@ class Root:
             print "Build of %s succeeded, results in\n%s" % (fullname, resultdir)
             resultdirs.append (resultdir)
 
-        # md5sum packages and spec file
-        for resultdir in resultdirs:
-            md5sumpath = os.path.join (resultdir, 'md5sum')
-            if os.path.exists (md5sumpath):
-                os.unlink (md5sumpath)
-            cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
-            debug ("running %s" % cmd)
-            os.system (cmd)
-            os.chown (md5sumpath, -1, mach_gid)
         # now sign packages if requested
         if self.config['sign']:
             print "Signing built packages ..."
@@ -1228,6 +1221,17 @@ class Root:
                 cmd = 'gpg --use-agent --clearsign %s/md5sum' % resultdir
                 debug ("running %s" % cmd)
                 os.system (cmd)
+
+        # md5sum packages and spec file if requested
+        if self.config['md5sum']:
+            for resultdir in resultdirs:
+                md5sumpath = os.path.join (resultdir, 'md5sum')
+                if os.path.exists (md5sumpath):
+                    os.unlink (md5sumpath)
+                cmd = 'cd %s && md5sum *.rpm *.spec > md5sum' % resultdir
+                debug ("running %s" % cmd)
+                os.system (cmd)
+                os.chown (md5sumpath, -1, mach_gid)
 
         # run success-script if requested
         if self.config['script-success'] and self.config['scripts']:
@@ -2056,10 +2060,11 @@ def main (config, args):
     cli_config = {}
 
     try:
-        opts, args = getopt.getopt (args, 'r:hdfkscqv',
+        opts, args = getopt.getopt (args, 'r:hdfksmcqv',
                                     ['root=', 'help', 'debug', 'force', 'keep',
-                                     'sign', 'collect', 'quiet', 'release=',
-                                     'no-scripts', 'canonify', 'version'])
+                                     'sign', 'md5sum', 'collect', 'quiet',
+                                     'release=', 'no-scripts', 'canonify',
+                                     'version'])
     except getopt.error, exc:
         sys.stderr.write ('error: %s\n' % str (exc))
         sys.exit (1)
@@ -2090,6 +2095,8 @@ def main (config, args):
             cli_config['keep'] = 1
         elif opt in ('-s', '--sign'):
             cli_config['sign'] = 1
+        elif opt in ('-m', '--md5sum'):
+            cli_config['md5sum'] = 1
         elif opt in ('-c', '--collect'):
             cli_config['collect'] = 1
         elif opt in ('-q', '--quiet'):

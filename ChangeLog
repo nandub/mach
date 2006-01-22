@@ -1,5 +1,12 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	patch by: Matthias Saou
+
+	* scripts/mach.in:
+	  only write md5sum when requested with -m or --md5sum
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  - pass 'buildopts' from config to Spec and SRPM init's, so they
 	    also are used when parsing with rpmbuild
