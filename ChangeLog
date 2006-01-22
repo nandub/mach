@@ -1,5 +1,12 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* HACKING:
+	* scripts/mach.in:
+	  do gpg clearsigning of md5sum only if both gpg and md5sum
+	  requested, and after generating the md5sum
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  remove unused code that extracted an rpm binary from
 	  an rpm-*.rpm

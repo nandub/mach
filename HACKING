@@ -28,8 +28,15 @@
       - tmp:                temporary files (sources, ...)
         - (flavor):         one dir per flavor
 
-  - root-specific directories:
+  - root-specific host directories:
     - rootdir:              rootsdir/(rootname)
     - resultdir:            resultsdir/(rootname)
     - statedir:             statesdir/(rootname)
     - tmpdir:               statesdir/tmp/(rootname)
+
+  - directories inside the root, relative to the root's rootdir:
+    - /usr/src/rpm:         where all the builds happen
+      - RPMS.mach-local:    built rpms since the last clean
+      - SRPMS.mach-local:   built srpms since the last clean
+    - /var/cache/yum:       yum's cache dir
+    - /var/cache/apt:       apt's cache dir
