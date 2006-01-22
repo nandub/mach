@@ -1,5 +1,10 @@
 2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  rename join_quoted to join_single_quoted
+
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/fedora-2-x86_64:
 	* etc/dist.d/fedora-3-x86_64:
 	* etc/dist.d/fedora-4-x86_64:

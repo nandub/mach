@@ -165,6 +165,9 @@ debug ('Using mach gid %r' % mach_gid)
 class Spec:
     class Error(Exception): pass
     def __init__ (self, path, options = ""):
+        """
+        Parse the given spec file, using additional options for rpmbuild.
+        """
         self.path = path
         self.content = []
         self.vars = {}
@@ -596,10 +599,10 @@ class Root:
 
     def rpm (self, args, progress = False):
         "run rpm (arg) from outside the root on the root, returns output"
-        command = "%s --root %s %s" % (self.config['rpm'], self.rootdir, join_quoted (args))
+        command = "%s --root %s %s" % (self.config['rpm'], self.rootdir, join_single_quoted (args))
         (status, output) = do_with_output (command, progress)
         if status != 0:
-            raise self.Error, "Could not rpm %s" % join_quoted (args)
+            raise self.Error, "Could not rpm %s" % join_single_quoted (args)
         return output
 
     # main command executer:
@@ -716,7 +719,7 @@ class Root:
             if not os.path.exists (specfile):
                 raise self.Error, "spec %s does not exist !" % specfile
             self.stdout ("Building .src.rpm from %s\n" % os.path.basename (specfile))
-            optstring = join_quoted (options)
+            optstring = join_single_quoted (options)
             debug ("build: quoted optstring: %s" % optstring)
             try:
                 spec = Spec (specfile, optstring)
@@ -851,14 +854,14 @@ class Root:
                                              self.config['runuser'])):
             if args:
                 print "No %s in root, can't execute %s" % (
-                    self.config['runuser'], join_quoted (args))
+                    self.config['runuser'], join_single_quoted (args))
                 return
             else:
-                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, join_quoted (args))
+                cmd = "%s %s %s" % (self.config['chroot'], self.rootdir, join_single_quoted (args))
                 print "Entering %s, type exit to leave." % self.rootdir
         elif args:
             cmd = "%s %s %s - root -c '%s'" % (self.config['chroot'],
-                self.rootdir, self.config['runuser'], join_quoted (args))
+                self.rootdir, self.config['runuser'], join_single_quoted (args))
         else:
             cmd = "%s %s %s - root" % (self.config['chroot'], self.rootdir,
                 self.config['runuser'])
@@ -920,7 +923,7 @@ class Root:
             except:
                 raise self.Error, "Can't find %s" % path
             os.chown (hostnewpath, -1, mach_gid)
-            srpm = SRPM (hostnewpath, join_quoted (options))
+            srpm = SRPM (hostnewpath, join_single_quoted (options))
 
             spec = srpm.specname
             buildreqs = srpm.BuildRequires ()
@@ -1086,7 +1089,7 @@ class Root:
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
                 try:
-                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), join_quoted (options))
+                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), join_single_quoted (options))
                 except Spec.Error, message:
                     raise self.Error, message
                 release = spec.tag ("release")
@@ -1126,7 +1129,7 @@ class Root:
                       "--define '_tmppath %s' " \
                       "--define '__spec_prep_pre exit 0' " \
                       "--define 'setup :' %s" \
-                      % (self.rootdir, join_quoted (options),
+                      % (self.rootdir, join_single_quoted (options),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm'),
                          os.path.join ('/var', 'tmp'),
                          os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
@@ -1143,12 +1146,11 @@ class Root:
             # version than the host's rpmbuild understands.
             # this is fine now since we check for met buildrequires before.
 
-            config_options = config.get('buildopts', '')
             command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
                 self.config['runuser'], nrcpus, 
                 self.config['root_rpmbuild'],
-                config_options,
-                join_quoted (options), specfile, builduser)
+                self.config.get('buildopts', ''),
+                join_single_quoted (options), specfile, builduser)
             (status, output) = self.do_chroot (command,
                                                "Rebuilding source rpm %s" % srpmname,
                                                True)
@@ -1621,10 +1623,10 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 # return an argument string containing all of the arguments of the given list,
 # but each of them surrounded by quotes
 # this is done so that ['define', 'kernel 2.4.22'] returns a string like
-# "define" "kernel 2.4.22"
+# 'define' 'kernel 2.4.22'
 # so that using mach build --define "kernel 2.4.22" passes correct arguments
 # to rpmbuild
-def join_quoted (args):
+def join_single_quoted (args):
     if not args:
         return ""
     else:
