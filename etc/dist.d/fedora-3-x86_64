@@ -54,7 +54,10 @@ sourceslist['fedora-' + V + '-' + A + '-core'] = {
   'fedora-' + V + '-' + A : ('core', )
 }
 # FC3 roots should use runuser instead of su
-config['fedora-' + V + '-' + A + '-core'] = {'runuser': '/sbin/runuser'}
+config['fedora-' + V + '-' + A + '-core'] = {
+  'runuser': '/sbin/runuser',
+  'excludearch': 'i386 i486 i586 i686 athlon',
+}
 aliases['fedora-' + V + '-' + A + '-core'] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
 
 # Fedora Core with updates
@@ -73,10 +76,10 @@ sourceslist['fedora-' + V + '-' + A + '-extras'] = {
   sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
   ('extras', )
 }
-config['fedora-' + V + '-' + A + '-extras'] = {
-  'runuser': '/sbin/runuser',
+config['fedora-' + V + '-' + A + '-extras'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-extras'].update({
   'buildopts': "--define 'dist .fc" + V + "'",
-}
+})
 aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + V + 'e' + AS, )
 
 # Fedora Core with GStreamer
@@ -84,10 +87,10 @@ packages['fedora-' + V + '-' + A + '-gstreamer'] = packages['fedora-' + V + '-' 
 sourceslist['fedora-' + V + '-' + A + '-gstreamer'] = {
   'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['fedora-' + V + '-' + A + '-gstreamer'] = {
-  'runuser': '/sbin/runuser',
+config['fedora-' + V + '-' + A + '-gstreamer'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-gstreamer'].update({
   'release': V,
-}
+})
 aliases['fedora-' + V + '-' + A + '-gstreamer'] = ('f' + V + 'g' + AS, )
 
 packages['fedora-' + V + '-' + A + '-gstreamer-deps'] = packages['fedora-' + V + '-' + A + '-core']

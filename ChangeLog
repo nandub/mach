@@ -1,3 +1,14 @@
+2006-01-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-2-x86_64:
+	* etc/dist.d/fedora-3-x86_64:
+	* etc/dist.d/fedora-4-x86_64:
+	* etc/dist.d/fedora-development-x86_64:
+	* scripts/mach.in:
+	  add an excludearch config property, lists archs to exclude from
+	  yum config; needs a mach clean to be activated
+	  See https://www.redhat.com/archives/fedora-extras-list/2005-May/msg00479.html
+
 2006-01-21  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
