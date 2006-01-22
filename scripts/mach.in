@@ -424,7 +424,7 @@ class Root:
         try:
             lockfile = open (lockpath, 'w')
         except:
-            raise self.Error, "error: can't create lock file for %s !\n" % self.root
+            raise self.Error, "ERROR: can't create lock file for %s !\n" % self.root
         lockfile.close ()
 
     def unlock (self, args = []):
@@ -1752,7 +1752,7 @@ def do_progress (cmd, delta = 0.1, jump = 20):
         retval = os.WEXITSTATUS (status)
     if (retval != 0):
         sys.stdout.write ('\b!\n')
-        sys.stderr.write ('error: %s failed.\n %s\n' % (cmd, string.join (output, "\n")))
+        sys.stderr.write ('ERROR: %s failed.\n %s\n' % (cmd, string.join (output, "\n")))
     else:
         sys.stdout.write ('\b.\n')
     return (retval, string.join (output, '\n'))
@@ -1770,12 +1770,12 @@ def do_with_output (command, progress = False):
         retval = os.WEXITSTATUS (status)
     #if (retval != 0):
     #    sys.stdout.write ('\b!\n')
-        #sys.stderr.write ('error:\n %s' % string.join (output))
+        #sys.stderr.write ('ERROR:\n %s' % string.join (output))
     #else:
     #    sys.stdout.write ('\b.\n')
     #FIXME: hack to return no output, we should change this
     if (retval != 0):
-        sys.stderr.write ("error: %s failed\n" % command)
+        sys.stderr.write ("ERROR: %s failed\n" % command)
     return (retval, output)
 
 # do a topological sort on the given list of pairs
@@ -1939,7 +1939,7 @@ def create_sources_list (config, list):
         cachedir = config['dirs']['cache']
     except KeyError:
         sys.stderr.write (
-            "error: mach 0.4.9 added the 'cache' key to config['dirs'],\n"
+            "ERROR: mach 0.4.9 added the 'cache' key to config['dirs'],\n"
             "but it is missing from your config file.  Please add.\n")
         sys.exit (1)
         
@@ -1988,14 +1988,14 @@ def lock (config):
     lockpath = statedir + '/lock'
     if os.path.exists (lockpath):
         if not config['force']:
-            sys.stderr.write ('error: %s already locked !\n' % config['root'])
+            sys.stderr.write ('ERROR: %s already locked !\n' % config['root'])
             return False
         else:
             print 'warning: overriding lock on root %s' % config['root']
     try:
         lockfile = open (lockpath, 'w')
     except:
-        sys.stderr.write ('error: can''t create lock file for %s !\n' % config['root'])
+        sys.stderr.write ('ERROR: can''t create lock file for %s !\n' % config['root'])
         return False
     lockfile.close ()
     return True
@@ -2020,7 +2020,7 @@ def user_check ():
     if os.getuid () != 0:
         machgid = grp.getgrnam ('mach')[2]
         if not machgid in os.getgroups():
-            sys.stderr.write ("error: user is not in group mach, please add !\n")
+            sys.stderr.write ("ERROR: user is not in group mach, please add !\n")
             sys.exit (1)
 
 
@@ -2034,7 +2034,7 @@ def sanity_check (config):
 
     # check if mach-helper is suid
     if not (os.stat ('@SBINDIR@/mach-helper')[0] & stat.S_ISUID):
-        sys.stderr.write ("error: @SBINDIR@/mach-helper is not setuid !\n")
+        sys.stderr.write ("ERROR: @SBINDIR@/mach-helper is not setuid !\n")
         sys.exit (1)
 
     # we're fine
@@ -2066,7 +2066,7 @@ def main (config, args):
                                      'release=', 'no-scripts', 'canonify',
                                      'version'])
     except getopt.error, exc:
-        sys.stderr.write ('error: %s\n' % str (exc))
+        sys.stderr.write ('ERROR: %s\n' % str (exc))
         sys.exit (1)
 
     # parse environment
