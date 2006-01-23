@@ -404,8 +404,8 @@ class Root:
     # small helper functions
     def host_path (self, target_path):
         "Get a full host path for the given target path."
-        # os.path.join drops everything before an arg starting with os.path.sep
-        if target_path.startswith (os.path.sep):
+        # os.path.join drops everything before an arg starting with os.sep
+        if target_path.startswith (os.sep):
             target_path = target_path[1:]
         return os.path.join (self.rootdir, target_path)
 
@@ -920,7 +920,7 @@ class Root:
             srpmname = os.path.basename (path)
             # we use a tmppath including login name because /tmp has the
             # sticky bit set, thus we can't remove someone else's files
-            targettmppath = os.path.join (os.path.sep, 'tmp', os.getlogin())
+            targettmppath = os.path.join (os.sep, 'tmp', os.getlogin())
             hosttmppath = self.host_path (targettmppath)
             ensure_dir (hosttmppath)
             targetnewpath = os.path.join (targettmppath, srpmname)
@@ -1822,8 +1822,8 @@ def ensure_dir (dir):
     if os.path.exists (dir):
         return
 
-    pieces = dir.split (os.path.sep)
-    path = os.path.sep
+    pieces = dir.split (os.sep)
+    path = os.sep
     for piece in pieces:
         path = os.path.join (path, piece)
         if not os.path.exists (path):
