@@ -849,6 +849,28 @@ class Root:
             # big guns
             self._bruteclean ()
 
+    # this ensures that locally built RPMS will be used to
+    # install from
+    # we append the root name because config for this repo
+    # will end up in a dir common to all flavors of a base dist
+    def update_local_repo (self):
+        srcs = get_sources_dict (self.config)
+        root = self.config['root']
+        rootdir = get_config_dir (self.config, 'root')
+        if self.config['installer'] == 'yum':
+            line = 'file://%s/usr/src/rpm/RPMS.mach-local' % rootdir
+        else:
+            line = 'rpm-dir file://%s/usr/src rpm mach-local' % rootdir
+        srcs['local.%s' % root] = line
+        debug ('creating sources list with dict %r' % srcs)
+        create_sources_list (self.config, srcs)
+
+        try:
+            if self.config['installer'] != 'yum':
+                self.installer (["update", ])
+        except Root.Error:
+            raise self.Error, 'could not update installer'
+
     # chroot into root
     def chroot (self, args):
         self.mount ()
@@ -1036,7 +1058,7 @@ class Root:
                 debug ("BuildRequires after filtering: %s" % buildreqs)
                 # only try to install if filtering left buildreqs
                 if (buildreqs):
-                    update_local_repo (self.config)
+                    self.update_local_repo ()
                     try:
                         # wrap all buildreqs in quotes
                         self.installer ([ '-y install %s' % "'" + "' '".join (buildreqs) + "'", ],
@@ -1197,7 +1219,7 @@ class Root:
                 # self.do_chroot ('rm ' + file)
 
             # update internal apt/yum repo
-            update_local_repo (self.config)
+            self.update_local_repo ()
             print "Build of %s succeeded, results in\n%s" % (fullname, pkgresultdir)
             resultdirs.append (pkgresultdir)
 
@@ -1868,28 +1890,6 @@ def get_sources_dict (config):
 
     debug ("sources.list: " + string.join (sourcesdict.values(), "\n"))
     return sourcesdict
-
-# this ensures that locally built RPMS will be used to
-# install from
-# we append the root name because config for this repo
-# will end up in a dir common to all flavors of a base dist
-def update_local_repo (config):
-    srcs = get_sources_dict (config)
-    root = config['root']
-    rootdir = get_config_dir (config, 'root')
-    if config['installer'] == 'yum':
-        line = 'file://%s/usr/src/rpm/RPMS.mach-local' % rootdir
-    else:
-        line = 'rpm-dir file://%s/usr/src rpm mach-local' % rootdir
-    srcs['local.%s' % root] = line
-    debug ('creating sources list with dict %r' % srcs)
-    create_sources_list (config, srcs)
-
-    try:
-        if config['installer'] != 'yum':
-            self.installer (["update", ])
-    except Root.Error:
-        raise self.Error, 'could not update installer'
 
 # create config files for the installer giving the locations of
 # repositories
