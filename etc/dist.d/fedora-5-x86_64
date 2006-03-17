@@ -1,0 +1,128 @@
+# mach dist configuration                                        -*- python -*-
+
+# fedora-5-x86_64: configuration for Fedora 5
+
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
+
+V = '5'      # distro version
+A = 'x86_64' # architecture
+AS = '64'    # 'short' version of arch
+
+
+### Fedora Core flavours
+aptsources['fedora-' + V + '-' + A ] = {
+  'core':             'rpm ' + fedora      + ' ' + V + '/' + A + ' core',
+  'updates':          'rpm ' + fedora      + ' ' + V + '/' + A + ' updates',
+  'extras':           'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' extras',
+  'gstreamer':        'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' gst',
+  'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' build',
+  'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/' + V + '/' + A + ' deps',
+  'livna':            'rpm ' + livna       + ' fedora/' + V + '/' + A + ' lvn',
+  'freshrpms':        'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' freshrpms',
+  'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
+  'jpackage-fc' + V : 'rpm ' + jpackage    + ' fedora-' + V + ' free',
+  'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+}
+
+yumsources['fedora-' + V + '-' + A ] = {
+  'core':             fedorayum   + '/core/' + V + '/' + A + '/os',
+  'updates':          fedorayum   + '/core/updates/' + V + '/' + A ,
+  'extras':           fedorayum   + '/extras/' + V + '/' + A ,
+  'gstreamer':        gstreamer   + '/fedora/' + V + '/' + A + '/yum/gst',
+  'gstreamer-build':  gstreamer   + '/fedora/' + V + '/' + A + '/yum/build',
+  'gstreamer-deps':   gstreamer   + '/fedora/' + V + '/' + A + '/yum/deps',
+  'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
+  'livna':            livna       + '/fedora/' + V + '/' + A + '/RPMS.lvn',
+}
+
+# Fedora Core
+packages['fedora-' + V + '-' + A + '-core'] = {
+  'dir':      'fedora-' + V + '-' + A ,
+  'minimal':  'bash glibc',
+  'base':     'coreutils findutils openssh-server',
+  'build':    'dev redhat-rpm-config rpm-build make gcc tar gzip patch ' +
+              'unzip bzip2 diffutils cpio elfutils',
+}
+sourceslist['fedora-' + V + '-' + A + '-core'] = {
+  'fedora-' + V + '-' + A : ('core', )
+}
+# FC5 roots should use runuser instead of su
+config['fedora-' + V + '-' + A + '-core'] = {
+  'runuser': '/sbin/runuser',
+  'excludearch': 'i386 i486 i586 i686 athlon',
+}
+aliases['fedora-' + V + '-' + A + '-core'] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
+
+# Fedora Core with updates
+packages['fedora-' + V + '-' + A + '-updates'] = packages['fedora-' + V + '-' + A + '-core']
+sourceslist['fedora-' + V + '-' + A + '-updates'] = {
+  'fedora-' + V + '-' + A : ('core', 'updates', )
+}
+config['fedora-' + V + '-' + A + '-updates'] = config['fedora-' + V + '-' + A + '-core']
+aliases['fedora-' + V + '-' + A + '-updates'] = ('f' + V + 'u'+ AS, )
+
+# Fedora Core with extras
+packages['fedora-' + V + '-' + A + '-extras'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
+packages['fedora-' + V + '-' + A + '-extras']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] # + " fedora-rpmdevtools"
+sourceslist['fedora-' + V + '-' + A + '-extras'] = {
+  'fedora-' + V + '-' + A :
+  sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
+  ('extras', )
+}
+config['fedora-' + V + '-' + A + '-extras'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-extras'].update({
+  'buildopts': "--define 'dist .fc" + V + "'",
+})
+aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + V + 'e' + AS, )
+
+# Fedora Core with GStreamer
+packages['fedora-' + V + '-' + A + '-gstreamer'] = packages['fedora-' + V + '-' + A + '-core']
+sourceslist['fedora-' + V + '-' + A + '-gstreamer'] = {
+  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
+}
+config['fedora-' + V + '-' + A + '-gstreamer'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-gstreamer'].update({
+  'release': V,
+})
+aliases['fedora-' + V + '-' + A + '-gstreamer'] = ('f' + V + 'g' + AS, )
+
+packages['fedora-' + V + '-' + A + '-gstreamer-deps'] = packages['fedora-' + V + '-' + A + '-core']
+sourceslist['fedora-' + V + '-' + A + '-gstreamer-deps'] = {
+  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps')
+}
+config['fedora-' + V + '-' + A + '-gstreamer-deps'] = config['fedora-' + V + '-' + A + '-gstreamer']
+aliases['fedora-' + V + '-' + A + '-gstreamer-deps'] = ('f' + V + 'gd' + AS, )
+
+# Fedora Core with livna (+ extras)
+packages['fedora-' + V + '-' + A + '-livna'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
+packages['fedora-' + V + '-' + A + '-livna']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] + " fedora-rpmdevtools"
+sourceslist['fedora-' + V + '-' + A + '-livna'] = {
+  'fedora-' + V + '-' + A :
+  sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
+  ('extras', 'livna', )
+}
+config['fedora-' + V + '-' + A + '-livna']  = config['fedora-' + V + '-' + A + '-extras']
+aliases['fedora-' + V + '-' + A + '-livna'] = ('f' + V + 'l' + AS, )
+
+# Fedora Core with freshrpms
+packages['fedora-' + V + '-' + A + '-freshrpms'] = packages['fedora-' + V + '-' + A + '-core']
+sourceslist['fedora-' + V + '-' + A + '-freshrpms'] = {
+  'fedora-' + V + '-' + A : ('core', 'freshrpms', )
+}
+config['fedora-' + V + '-' + A + '-freshrpms'] = config['fedora-' + V + '-' + A + '-core']
+aliases['fedora-' + V + '-' + A + '-freshrpms'] = ('f' + V + 'fr' + AS, )
+
+# Fedora Core with JPackage
+packages['fedora-' + V + '-' + A + '-jpackage'] = packages['fedora-' + V + '-' + A + '-updates'].copy()
+packages['fedora-' + V + '-' + A + '-jpackage']['base'] = packages['fedora-' + V + '-' + A + '-updates']['base'] + ' java-1.4.2-sun'
+packages['fedora-' + V + '-' + A + '-jpackage']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
+sourceslist['fedora-' + V + '-' + A + '-jpackage'] = {
+  'fedora-' + V + '-' + A :
+  sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
+  ('jpackage-generic', 'jpackage-fc' + V , 'jpackage-nonfree', ),
+}
+config['fedora-' + V + '-' + A + '-jpackage'] = config['fedora-' + V + '-' + A + '-core']
+aliases['fedora-' + V + '-' + A + '-jpackage'] = ('fc' + V + 'jpp' + AS, )
