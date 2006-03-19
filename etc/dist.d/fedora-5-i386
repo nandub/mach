@@ -70,10 +70,10 @@ sourceslist['fedora-' + V + '-' + A + '-extras'] = {
   sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +
   ('extras', )
 }
-config['fedora-' + V + '-' + A + '-extras'] = {
-  'runuser': '/sbin/runuser',
+config['fedora-' + V + '-' + A + '-extras'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-extras'].update({
   'buildopts': "--define 'dist .fc" + V + "'",
-}
+})
 aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + V + 'e' + AS, )
 
 # Fedora Core with GStreamer
@@ -81,10 +81,10 @@ packages['fedora-' + V + '-' + A + '-gstreamer'] = packages['fedora-' + V + '-' 
 sourceslist['fedora-' + V + '-' + A + '-gstreamer'] = {
   'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
-config['fedora-' + V + '-' + A + '-gstreamer'] = {
-  'runuser': '/sbin/runuser',
+config['fedora-' + V + '-' + A + '-gstreamer'] = config['fedora-' + V + '-' + A + '-core'].copy()
+config['fedora-' + V + '-' + A + '-gstreamer'].update({
   'release': V,
-}
+})
 aliases['fedora-' + V + '-' + A + '-gstreamer'] = ('f' + V + 'g' + AS, )
 
 packages['fedora-' + V + '-' + A + '-gstreamer-deps'] = packages['fedora-' + V + '-' + A + '-core']
