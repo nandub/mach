@@ -31,9 +31,9 @@ yumsources['fedora-' + V + '-' + A ] = {
   'core':             fedorayum   + '/core/' + V + '/' + A + '/os',
   'updates':          fedorayum   + '/core/updates/' + V + '/' + A ,
   'extras':           fedorayum   + '/extras/' + V + '/' + A ,
-  'gstreamer':        gstreamer   + '/fedora/' + V + '/' + A + '/yum/gst',
-  'gstreamer-build':  gstreamer   + '/fedora/' + V + '/' + A + '/yum/build',
-  'gstreamer-deps':   gstreamer   + '/fedora/' + V + '/' + A + '/yum/deps',
+  'gst-0.10-deps':    gstreamer   + '/fedora/' + V + '/0.10/' + A + '/deps',
+  'gst-0.10-gst':     gstreamer   + '/fedora/' + V + '/0.10/' + A + '/gst',
+  'gst-0.10-apps':    gstreamer   + '/fedora/' + V + '/0.10/' + A + '/apps',
   'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
   'livna':            livna       + '/fedora/' + V + '/' + A + '/RPMS.lvn',
 }
@@ -43,8 +43,8 @@ packages['fedora-' + V + '-' + A + '-core'] = {
   'dir':      'fedora-' + V + '-' + A ,
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc tar gzip patch ' +
-              'unzip bzip2 diffutils cpio elfutils',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
+              'patch unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-' + V + '-' + A + '-core'] = {
   'fedora-' + V + '-' + A : ('core', )
@@ -62,7 +62,7 @@ sourceslist['fedora-' + V + '-' + A + '-updates'] = {
   'fedora-' + V + '-' + A : ('core', 'updates', )
 }
 config['fedora-' + V + '-' + A + '-updates'] = config['fedora-' + V + '-' + A + '-core']
-aliases['fedora-' + V + '-' + A + '-updates'] = ('f' + V + 'u'+ AS, )
+aliases['fedora-' + V + '-' + A + '-updates'] = ('f' + V + 'u' + AS, )
 
 # Fedora Core with extras
 packages['fedora-' + V + '-' + A + '-extras'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
@@ -81,7 +81,7 @@ aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + V + 'e' + AS, )
 # Fedora Core with GStreamer
 packages['fedora-' + V + '-' + A + '-gstreamer'] = packages['fedora-' + V + '-' + A + '-core']
 sourceslist['fedora-' + V + '-' + A + '-gstreamer'] = {
-  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
+  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
 config['fedora-' + V + '-' + A + '-gstreamer'] = config['fedora-' + V + '-' + A + '-core'].copy()
 config['fedora-' + V + '-' + A + '-gstreamer'].update({
