@@ -829,25 +829,36 @@ class Root:
     def clean (self, args = []):
         "clean out the root"
         # does the root still exist ?
-        if not os.path.exists (self.rootdir):
+        if not os.path.exists (self.rootdir) and \
+            not os.path.exists (self.statedir):
+            debug ("already clean, returning")
             return
-        self.umount ()
+
+        if os.path.exists (self.rootdir):
+            self.umount ()
+
         # remove all state info
-        debug ("Removing statedir %s" % self.statedir)
-        os.system ("rm -rf %s" % self.statedir)
-        # FIXME: check if the dir isn't already clean yet
-        if not os.path.exists (self.rootdir + '/bin/rm'):
-            self._bruteclean ()
-            return
-        # get a list of files and dirs in the root
-        files = string.join (os.listdir (self.rootdir))
-        self.do_chroot ('cd / && rm -rfv %s' % files, "Cleaning out root", True)
-        try:
-            os.rmdir (self.rootdir)
-        except OSError:
-            # assume we couldn't delete because not empty and bring out the
-            # big guns
-            self._bruteclean ()
+        if os.path.exists (self.statedir):
+            debug ("Removing statedir %s" % self.statedir)
+            os.system ("rm -rf %s" % self.statedir)
+
+        # remove the root
+        if os.path.exists (self.rootdir):
+
+            # do a brute clean if rm is not in the root
+            if not os.path.exists (self.rootdir + '/bin/rm'):
+                self._bruteclean ()
+                return
+            # get a list of files and dirs in the root
+            files = string.join (os.listdir (self.rootdir))
+            self.do_chroot ('cd / && rm -rfv %s' % files,
+                "Cleaning out root", True)
+            try:
+                os.rmdir (self.rootdir)
+            except OSError:
+                # assume we couldn't delete because not empty and bring out the
+                # big guns
+                self._bruteclean ()
 
     # this ensures that locally built RPMS will be used to
     # install from
