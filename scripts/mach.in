@@ -223,13 +223,13 @@ class Spec:
             except TypeError:
                 sys.stderr.write ("Error on searching for tag %s with value %s" % (tag, self.vars[tag]))
             if match:
-                expand = match.expand ("\\2")
-                debug ("Need to expand tag %s inside tag %s (%s)" % (expand, tag, self.vars[tag]))
-                if expand in self.vars.keys ():
-                    debug ("Expanding it to %s" % self.vars[expand])
+                expandee = match.expand ("\\2")
+                debug ("Need to expand tag %s inside tag %s (%s)" % (expandee, tag, self.vars[tag]))
+                if expandee in self.vars.keys ():
+                    debug ("Expanding it to %s" % self.vars[expandee])
                     front = match.expand ("\\1")
                     back = match.expand ("\\3")
-                    self.vars[tag] = front + self.vars[expand] + back
+                    self.vars[tag] = front + self.vars[expandee] + back
                     debug ("Expanded complete line to %s" % self.vars[tag])
 
     def tag (self, which):
@@ -260,19 +260,9 @@ class Spec:
                 result.append (value)
         return result
 
-    # this is done quick and dirty, could be optimized more
-    def expand (self, expression):
-        "expand a line from a spec file using vars from the spec file"
-        for variable in self.vars.keys ():
-            expression = string.replace (expression, "%{" + variable + "}",
-                                         self.vars[variable])
-        #print "DEBUG: expanded to %s" % expression
-        return expression
-
     def nvr (self):
         "return name, version, release triplet"
         return (self.vars['name'], self.vars['version'], self.vars['release'])
-
 
     def _sourcespatches (self, which, args = ""):
         # get a dict of Source and Patch lines, given quoted options to build
