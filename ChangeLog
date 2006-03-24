@@ -1,3 +1,15 @@
+2006-03-24  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  - create global ReturnValue and StatusValue Exceptions
+	  - pass a Root object to a Spec to be evaluated in
+	  - evaluate spec file in root always.  This may cause problems
+	    because the target root's rpm database may not be readable;
+	    but at least the spec gets parsed correctly.  (FIXME: maybe
+	    not yet using the correct user)
+	  - add a rpmbuild_prep_run command to help parse
+	  - pass a Root object to SRPM to be evaluated in
+
 2006-03-23  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
