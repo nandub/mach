@@ -162,18 +162,41 @@ except KeyError:
     sys.exit (1)
 
 debug ('Using mach gid %r' % mach_gid)
-    
+
+### exceptions
+class ReturnValue(Exception):
+    """
+    Raised when a process exits with a non-zero return value.
+    Has the return value and the output as arguments.
+    """
+    pass
+class StatusValue(Exception):
+    """
+    Raised when a process does not exit normally.
+    Has the status value and the output as arguments.
+    """
+    pass
+     
 ### objects
 class Spec:
     class Error(Exception): pass
-    def __init__ (self, path, options = ""):
+    def __init__ (self, path, root, options = ""):
         """
         Parse the given spec file, using additional options for rpmbuild.
+        The spec file is evaluated using a chroot into the given root, after
+        copying it there.
+
+        @type root: L{Root}
         """
         self.path = path
         self.content = []
         self.vars = {}
         self.options = options
+        self.root = root
+
+        # where the copy lives, relative to the root
+        self.rootpath = os.path.join (os.path.sep, 'tmp', os.path.basename (
+            self.path))
 
         debug ("Spec.__init__: opening spec %s" % path)
         # check if the spec file has a %prep section
@@ -183,23 +206,33 @@ class Spec:
             retval = os.WEXITSTATUS (status)
         if (retval != 0):
             raise self.Error, "spec file %s does not have a %%prep section" % self.path
+        # copy the spec file inside the root if not already there
+        # it is already there, for example, after mangling and rebuilding from
+        # it
+        if self.path != self.root.rootdir + self.rootpath:
+            self.root.do_chroot ('rm -f %s' % self.rootpath)
+            copy_grouped (self.path, os.path.join (self.root.rootdir, 'tmp'))
+
         # check for syntax errors in the spec file first
-        command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, path)
+        command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre exit 0' --define 'setup :' %s" % (options, self.rootpath)
         debug ("Spec:__init__: command: %s" % command)
-        (status, output) = commands.getstatusoutput (command)
-        if os.WIFEXITED (status):
-            retval = os.WEXITSTATUS (status)
-        if (retval != 0):
-            raise self.Error, "spec file %s fails to parse:\n%s" % (self.path, output)
+        try:
+            (retval, output) = self.root.do_chroot (command)
+        except ReturnValue, (retval, output):
+            raise self.Error, "Failed parsing spec file '%s' (return value %d).\nOutput follows:\n%s" % (self.path, retval, output)
  
         self.content = open (self.path).readlines ()
         # expand tags using rpmbuild because results can depend on
         # build options
         for which in ['name', 'version', 'release']:
-            command = "rpmbuild -bp --nodeps --force %s --define '__spec_prep_pre echo %%%s; exit 0' --define 'setup :' %s | tail -n 1" % (options, which, path)
-            debug ("Spec:__init__: command: %s" % command)
-            value = commands.getoutput (command)
-            self.vars[which] = value
+            try:
+                output = self.rpmbuild_prep_run (
+                    "echo %%%s; exit 0" % which)
+                last = output.split("\n")[-1]
+                debug ("result for %s: %s" % (which, last))
+                self.vars[which] = last
+            except ReturnValue, (value, output):
+                raise self.Error ("Could not expand %s" % which)
 
         # scan for defines in the spec file
         debug ("scanning spec file for %define's")
@@ -232,6 +265,28 @@ class Spec:
                     self.vars[tag] = front + self.vars[expandee] + back
                     debug ("Expanded complete line to %s" % self.vars[tag])
 
+    def rpmbuild_prep_run (self, script):
+        """
+        Use rpmbuild to evaluate the spec file and run the given 'prepare'
+        script.
+        Executes inside the root.
+
+        Raises ReturnValue (value, output) if a non-zero exit value, or
+        returns the output.
+        """
+        options = self.options
+        path = self.rootpath
+        command = "rpmbuild -bp --nodeps --force %(options)s " \
+            "--define '__spec_prep_pre %(script)s' " \
+            "--define 'setup :' " \
+            "%(path)s" % locals()
+        debug ("Spec:__init__: command: %s" % command)
+        (retval, output) = self.root.do_chroot (command)
+        if (retval != 0):
+            raise ReturnValue, (retval, output)
+
+        return output
+ 
     def tag (self, which):
         "Get the given (unique) tag from the spec file as a string"
         # if we already have it, return it
@@ -264,7 +319,7 @@ class Spec:
         "return name, version, release triplet"
         return (self.vars['name'], self.vars['version'], self.vars['release'])
 
-    def _sourcespatches (self, which, args = ""):
+    def _sourcespatches (self, which):
         # get a dict of Source and Patch lines, given quoted options to build
         # as args
         result = {}
@@ -279,27 +334,39 @@ class Spec:
                 value = match.expand ("\\2")
                 tag = which + number
                 if number == "": number = "0"
-                command = "rpmbuild -bp --nodeps --force --define '__spec_prep_pre echo %%%s%s; exit 0' --define 'setup :' %s %s | tail -n 1" % (macro, number, args, self.path)
-                debug (command)
-                result[tag] = commands.getoutput (command)
+
+                try:
+                    output = self.rpmbuild_prep_run (
+                        "echo %%%s%s; exit 0" % (macro, number))
+                    last = output.split("\n")[-1]
+                    debug ("result for %s: %s" % (which, last))
+                    result[tag] = last
+                except ReturnValue, (value, output):
+                    error ("Could not expand %s" % which)
+
         return result
 
     def sources (self):
            # parse the spec file for all Source: files
-           return self._sourcespatches ("Source", self.options)
+           return self._sourcespatches ("Source")
 
     def patches (self):
            # parse the spec file for all Source: files
-           return self._sourcespatches ("Patch", self.options)
+           return self._sourcespatches ("Patch")
 
 ### abstract object wrapping a src rpm
 class SRPM:
     class Error(Exception): pass
-    def __init__ (self, path, options = ""):
+    def __init__ (self, path, root, options = ""):
+        """
+        @type root: L{Root}
+        """
         self.path = path
+        self.root = root
+        self.options = options
+
         self.header = self._header ()
         self.specname = self._specname ()
-        self.options = options
 
         # ignore signatures
     def _header (self):
@@ -359,7 +426,7 @@ class SRPM:
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
         try:
-            spec = Spec (spectmp, self.options)
+            spec = Spec (spectmp, self.root, self.options)
         except Spec.Error, message:
             os.system (tmp_remove_cmd)
             raise self.Error, message
@@ -379,7 +446,6 @@ class Root:
     # exceptions that can be raised
     class Locked(Exception): pass
     class Error(Exception): pass
-    class ReturnValue(Exception): pass
 
     # read in configuration from disk when creating a root
     def __init__ (self, config):
@@ -611,7 +677,7 @@ class Root:
         if os.WIFEXITED (status):
             retval = os.WEXITSTATUS (status)
         if (retval != 0):
-            raise self.ReturnValue, (retval, output)
+            raise ReturnValue, (retval, output)
         # FIXME: we send back retvals with a raise now, do the same
         # in do_progress
         return (retval, output)
@@ -715,7 +781,7 @@ class Root:
 
             debug ("build: quoted options_string: %s" % options_string)
             try:
-                spec = Spec (specfile, options_string)
+                spec = Spec (specfile, self, options_string)
             except Spec.Error, message:
                 raise self.Error, message
             (n, v, r) = spec.nvr ()
@@ -788,11 +854,11 @@ class Root:
                                                 os.path.basename (specfile))),
                                 "Creating .src.rpm",
                                   True)
-            except self.ReturnValue:
+            except ReturnValue:
                 raise self.Error, 'could not build .src.rpm'
             (n, v, r) = spec.nvr ()
             srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
-            debug ("DEBUG: resulting srpm: %s" % srpmname)
+            debug ("resulting srpm: %s" % srpmname)
             srpmfile = os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SRPMS', srpmname)
             if not os.path.exists (srpmfile):
                 raise self.Error, '%s not built' % srpmfile
@@ -801,6 +867,9 @@ class Root:
                 os.unlink (dest)
             copy_grouped (self.rootdir + '/usr/src/rpm/SRPMS/' + srpmname, dest)
             srpms.append (dest)
+
+            # remove the built src.rpm in the target's /usr/src/rpm
+            os.unlink (srpmfile)
 
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
@@ -955,10 +1024,11 @@ class Root:
             except:
                 raise self.Error, "Can't find %s" % path
             os.chown (hostnewpath, -1, mach_gid)
-            srpm = SRPM (hostnewpath, options_string)
+            srpm = SRPM (hostnewpath, self, options_string)
 
             spec = srpm.specname
             buildreqs = srpm.BuildRequires ()
+            debug ("BuildRequires: %r" % (buildreqs, ))
             name = srpm.header[rpm.RPMTAG_NAME]
             pkgs[name] = {}
             pkgs[name]['path'] = targetnewpath
@@ -1107,7 +1177,7 @@ class Root:
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
                 try:
-                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), options_string)
+                    spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), self, options_string)
                 except Spec.Error, message:
                     raise self.Error, message
                 release = spec.tag ("release")
@@ -1137,24 +1207,29 @@ class Root:
             else:
                nrcpus = os.environ['RPM_BUILD_NCPUS']
 
-            # run an rpmbuild test using the root argument to check for
-            # fulfilled BuildRequires, using the host's rpmbuild
-            # so that it understands the created database
-            # also make the topdir point to the root's rpm tree, so that
-            # it picks up on Sources: and Patches: copied there
-            command = "rpmbuild -bp --root %s %s " \
-                      "--define '_topdir %s' " \
-                      "--define '_tmppath %s' " \
-                      "--define '__spec_prep_pre exit 0' " \
-                      "--define 'setup :' %s" \
-                      % (self.rootdir, options_string,
-                         os.path.join (self.rootdir, 'usr', 'src', 'rpm'),
-                         os.path.join ('/var', 'tmp'),
-                         os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SPECS', specfile))
+            # FIXME: before we used to check for met buildrequires using
+            # the host's rpmbuild accessing the target's rpm database,
+            # because the target's rpm database may be of a different version.
+            # However, this means that any defines that use shell commands
+            # get executed on the host, not the target, so end up giving the
+            # wrong results, causing conditional BuildRequires to fail.
+
+            # We need to revisit the topic of target rpm databases
+
             debug ("Checking buildreqs: %s" % command)
+            command = "%s -c \"RPM_BUILD_NCPUS=%s %s " \
+                      "--define '__spec_prep_pre exit 0' " \
+                      "--define 'setup :' " \
+                      "-bp %s /usr/src/rpm/SPECS/%s\" - %s" % (
+                self.config['runuser'], nrcpus, 
+                self.config['root_rpmbuild'],
+                options_string,
+                specfile, builduser)
             try:
-                (status, output) = self.do (command, False)
-            except self.ReturnValue, (retval, output):
+                (status, output) = self.do_chroot (command,
+                    "Checking BuildRequires for %s\n" % srpmname,
+                    False)
+            except ReturnValue, (retval, output):
                 raise self.Error, "BuildRequires not met:\n%s" % output
 
             # rebuild from spec inside chroot, note: using a login shell
@@ -1395,7 +1470,7 @@ class Root:
             cmd = '%s %s -m 666 c 1 3' % (config['mknod'], devnull)
             try:
                 self.do(cmd, progress=False)
-            except Root.ReturnValue, (retval, output):
+            except ReturnValue, (retval, output):
                 raise Root.Error, "mach-helper could not mknod /dev/null"
 
         devzero = os.path.join (self.rootdir, 'dev', 'zero')
@@ -1403,7 +1478,7 @@ class Root:
             cmd = '%s %s -m 666 c 1 5' % (config['mknod'], devzero)
             try:
                 self.do(cmd, progress=False)
-            except Root.ReturnValue, (retval, output):
+            except ReturnValue, (retval, output):
                 raise Root.Error, "mach-helper could not mknod /dev/zero"
 
 
@@ -2171,8 +2246,9 @@ def main (config, args):
             sys.stderr.write ("ERROR: %s\n" % message)
             root.unlock ()
             sys.exit (1)
-        except Root.ReturnValue, (retval, output):
+        except ReturnValue, (retval, output):
             sys.stderr.write ("Return value: %s\n" % retval)
+            sys.stderr.write (output)
             root.unlock ()
             sys.exit (retval)
         except KeyboardInterrupt:
