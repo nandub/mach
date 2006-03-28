@@ -31,6 +31,7 @@ yumsources['fedora-' + V + '-' + A ] = {
   'updates':          fedorayum   + '/core/updates/' + V + '/' + A ,
   'extras':           fedorayum   + '/extras/' + V + '/' + A ,
   'gstreamer':        gstreamer   + '/fedora/' + V + '/' + A + '/yum/gst',
+  'gstreamer010':     gstreamer   + '/fedora/' + V + '/' + A + '/yum/gst010',
   'gstreamer-build':  gstreamer   + '/fedora/' + V + '/' + A + '/yum/build',
   'gstreamer-deps':   gstreamer   + '/fedora/' + V + '/' + A + '/yum/deps',
   'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
@@ -77,7 +78,7 @@ aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + V + 'e' + AS, )
 # Fedora Core with GStreamer
 packages['fedora-' + V + '-' + A + '-gstreamer'] = packages['fedora-' + V + '-' + A + '-core']
 sourceslist['fedora-' + V + '-' + A + '-gstreamer'] = {
-  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
+  'fedora-' + V + '-' + A : ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer', 'gstreamer010')
 }
 config['fedora-' + V + '-' + A + '-gstreamer'] = {
   'runuser': '/sbin/runuser',
