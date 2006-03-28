@@ -1,3 +1,9 @@
+2006-03-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-4-i386:
+	* etc/dist.d/fedora-4-x86_64:
+	  add gst010 to the fc4 gstreamer root
+
 2006-03-24  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
