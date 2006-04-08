@@ -1,5 +1,11 @@
 2006-04-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* src/Makefile.am:
+	* src/mach-helper.c: (do_command):
+	  compile with -Wall -Werror
+
+2006-04-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  Getting possible results from a spec file was not using
 	  options, resulting in FE rpms getting build ordering wrong,

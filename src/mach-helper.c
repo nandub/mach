@@ -145,7 +145,6 @@ do_command (const char *filename, char *const argv[])
     [1] = "HOME=/root"
   };
   int retval;
-  char **arg;
   size_t idx=2;
   size_t i;
   char *envvar;
@@ -159,6 +158,7 @@ do_command (const char *filename, char *const argv[])
   /* FIXME: for a debug option */
   /*
   printf ("Executing %s ", filename);
+  char **arg;
   for (arg = (char **) &(argv[1]); *arg; ++arg)
     printf ("%s ", *arg);
   printf ("\n");
