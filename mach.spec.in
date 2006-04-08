@@ -80,7 +80,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT RELEASE
+%doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT RELEASE mach.doap
 %dir %{_sysconfdir}/mach
 %config %{_sysconfdir}/mach/conf
 %config(noreplace) %{_sysconfdir}/mach/location
