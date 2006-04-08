@@ -216,6 +216,10 @@
 
 === release 0.4.7 ===
 
+2005-08-01  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in: releasing 0.4.6, "Long Time No See"
+
 2005-07-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
@@ -436,8 +440,7 @@
 
 2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-	* configure.in:
-	  releasing 0.4.6, "Lenrek"
+	* configure.in: releasing 0.4.6, "Lenrek"
 
 2004-07-05  Thomas Vander Stichele  <thomas at apestaart dot org>
 
@@ -907,6 +910,12 @@
 	* etc/dist: Add fedora-rpmdevtools to fedora.us build packages,
 	remove explicit gcc-c++ and redhat-rpm-config.
 
+=== release 0.4.2 ===
+
+2003-10-21  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	*  configure.ac: Releasing 0.4.2, "No More Betas"
+
 2003-10-21  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist: move initialization of config per dist to dist
@@ -916,6 +925,12 @@
 
 	* etc/dist: Make fedora(.us) repos for RH 8.0 and 9 inherit from
 	updates, add gcc-c++ and redhat-rpm-config to build packages.
+
+=== release 0.4.1 ===
+
+2003-10-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	*  configure.ac: Releasing 0.4.1, "Get A Room"
 
 2003-10-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
@@ -953,7 +968,7 @@
 
 2003-09-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
-	* configure.ac: 0.4.0 release
+	* configure.ac: releasing 0.4.0, "Barcelona"
 
 2003-09-07  Thomas Vander Stichele  <thomas at apestaart dot org>
 

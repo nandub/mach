@@ -1233,7 +1233,7 @@ class Root:
                 specfile, builduser)
             try:
                 (status, output) = self.do_chroot (command,
-                    "Checking BuildRequires for %s\n" % srpmname,
+                    "Checking BuildRequires for %s" % srpmname,
                     False)
             except ReturnValue, (retval, output):
                 raise self.Error, "BuildRequires not met:\n%s" % output

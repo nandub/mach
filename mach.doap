@@ -1,0 +1,152 @@
+<Project
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns="http://usefulinc.com/ns/doap#"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:admin="http://webns.net/mvcb/">
+
+ <name>Mach</name>
+ <shortname>mach</shortname>
+ <homepage rdf:resource="http://thomas.apestaart.org/projects/mach/" />
+ <created>2002-06-06</created>
+ <shortdesc xml:lang="en">
+mach makes chroots
+</shortdesc>
+ <description xml:lang="en">
+mach allows you to set up clean roots from scratch for any distribution or
+distribution variation supported.  Currently, this is limited to RPM-based
+distributions.
+
+This clean build root can be used for making clean packages, running
+jailed services, testing builds, or making disk images of clean roots.
+ </description>
+ <category></category>
+ <bug-database rdf:resource="https://apestaart.org/thomas/trac/newticket" />
+ <screenshots></screenshots>
+ <mailing-list rdf:resource="http://lists.sourceforge.net/lists/listinfo/mach-devel/" />
+ <programming-language>python</programming-language>
+ <license rdf:resource="http://usefulinc.com/doap/licenses/gpl" />
+ <download-page rdf:resource="http://thomas.apestaart.org/projects/mach/" />
+
+ <repository>
+   <CVSRepository>
+     <anon-root>:pserver:anonymous@cvs.sourceforge.net:/cvs/mach</anon-root>
+     <module>mach2</module>
+     <browse rdf:resource="http://cvs.sourceforge.net/viewcvs.py/mach/" />
+   </CVSRepository>
+ </repository> 
+
+ <release>
+  <Version>
+   <revision>0.4.8</revision>
+   <branch>2</branch>
+   <name>More Than One</name>
+   <created>2005-11-21</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.8.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.8.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.8-1.fc4.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.7</revision>
+   <branch>2</branch>
+   <name>Long Time No See</name>
+   <created>2005-07-03</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.7.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.7.tar.gz" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.6</revision>
+   <branch>2</branch>
+   <name>Lenrek</name>
+   <created>2005-02-08</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.6.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.6.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.6-0.fdr.1.2.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.5</revision>
+   <branch>2</branch>
+   <name>Snow</name>
+   <created>2004-03-18</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.5.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.5.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.5-0.fdr.1.1.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.4</revision>
+   <branch>2</branch>
+   <name>Madrid</name>
+   <created>2004-03-11</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.4.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.4.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.4-0.fdr.1.1.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.3</revision>
+   <branch>2</branch>
+   <name>Hot Water</name>
+   <created>2003-12-16</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.3.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.3-0.fdr.1.1.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.2</revision>
+   <branch>2</branch>
+   <name>No More Betas</name>
+   <created>2003-10-21</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.2.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.2-0.fdr.1.rh90.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.2-0.fdr.1.rh80.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.1</revision>
+   <branch>2</branch>
+   <name>Get A Room</name>
+   <created>2003-10-10</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.1.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.1-0.fdr.1.rh90.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.1-0.fdr.1.rh80.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
+   <revision>0.4.0</revision>
+   <branch>2</branch>
+   <name>Barcelona</name>
+   <created>2003-09-08</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.0.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.0-0.fdr.1.rh90.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.0-0.fdr.1.rh80.i386.rpm" />
+
+  </Version>
+ </release>
+
+ <maintainer>
+  <foaf:Person>
+     <foaf:name>Thomas Vander Stichele</foaf:name>
+  </foaf:Person>
+ </maintainer>
+
+</Project>
