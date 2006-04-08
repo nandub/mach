@@ -406,7 +406,10 @@ class SRPM:
             return []
 
     def results (self):
-        "returns a list of packages that can be built from this src.rpm"
+        """
+        Returns a list of package names that can be built from this src.rpm,
+        without version and release.
+        """
         # FIXME: this extracts the spec file out of the src.rpm and
         # puts it in a temp dir; is this the cleanest option ?
         debug ("Getting possible result packages from src.rpm %s" % self.path)
@@ -422,7 +425,10 @@ class SRPM:
         spectmp = os.path.join (tmpdir, self.specname)
         if not os.path.exists (spectmp):
             raise self.Error, "didn't find spec file in %s" % self.path
-        cmd = "rpm -q --qf '%s' --specfile %s" % (qfmt, spectmp)
+        # we need to get the results with our options, otherwise the
+        # release tag may be wrong; e.g. for FE it would not include dist
+        cmd = "rpm -q --qf '%s' %s --specfile %s" % (
+            qfmt, self.options, spectmp)
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
         try:
