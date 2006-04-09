@@ -1,3 +1,13 @@
+=== release 0.4.9 ===
+
+2006-04-09  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* RELEASE:
+	* configure.in:
+	* mach.doap:
+	  Releasing 0.4.9, "China"
+
 2006-04-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/Makefile.am:
