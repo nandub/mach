@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.8.2 - prerelease.
+Announcing the release of mach 0.4.9 - China.
 
 WHAT IS IT
 ----------
@@ -12,7 +12,7 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
-- Fedora 4         (core, updated, extras, rpm.livna.org,
+- Fedora 4, 5      (core, updated, extras, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
 - Fedora 1, 2, 3   (core, updated, www.fedora.us, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
@@ -30,9 +30,11 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-	- add an option for md5summing of results (Matthias)
-        - pass 'buildopts' from a root config to rpmbuild (Thomas)
-        - add 'excludearch' property to root config,
+        - added DOAP file (Thomas)
+        - added Fedora Core 5 (Thomas)
+        - fix build ordering when building multiple packages (Thomas)
+        - always evaluate spec file inside the root (Thomas)
+          (which may cause problems due to rpmdb incompatibilities)
           fixes yum's semi-random behaviour on x86_64 (Thomas)
         - store yum cache data per-dist, shared for flavors (Thomas)
         - clean up yum metadata for local repositories (Thomas)
@@ -76,7 +78,7 @@ The list is low-volume.
                                                                                 
 BUGS
 ----
-Please report all bugs to the mailing list mentioned above.
+To file bugs, go to https://apestaart.org/thomas/trac
 
 Always state what platform you are running on, if it's a clean install or
 somehow updated, how I can reproduce the bug, and output of a run of
@@ -89,3 +91,4 @@ Contributors to releases include
 - Ville Skyttä
 - Jeff Pitman
 - Rudi Chiarito
+- Matthias Saou

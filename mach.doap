@@ -38,6 +38,19 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>0.4.9</revision>
+   <branch>2</branch>
+   <name>China</name>
+   <created>2006-04-08</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.9.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.9.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.9-1.fc5.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.4.9-1.fc4.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>0.4.8</revision>
    <branch>2</branch>
    <name>More Than One</name>

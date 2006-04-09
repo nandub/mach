@@ -1,6 +1,10 @@
-This is mach, make a chroot, 0.4.8.2.
+This is mach, make a chroot, 0.4.9.
 
 Changes since 0.4.8:
+        - added DOAP file (Thomas)
+        - added Fedora Core 5 (Thomas)
+        - fix build ordering when building multiple packages (Thomas)
+        - always evaluate spec file inside the root (Thomas)
 	- add an option for md5summing of results (Matthias)
         - pass 'buildopts' from a root config to rpmbuild (Thomas)
         - add 'excludearch' property to root config,
@@ -58,24 +62,20 @@ Changes since 0.4.3:
 	- add pre-build in-root buildrequires verification (Thomas)
 
 Changes since 0.4.2:
-
 	- added support for Fedora 1
 	- moved config files per distro initialization to dist file
 
 Changes since 0.4.1:
-
 	- added support for Fedora Core 0.95 (Severn beta 3)
 	- moved config files per distro initialization to dist file
 
 Changes since 0.4.0:
-
-	- changes since last release:
-		- added Red Hat 7.0, 7.1
-		- added Yellowdog 2.3, 3.0
-		- added Fedora Core 0.94
-		- added FreshRPMS targets
-		- make "mach apt-get" run interactive
-		- implemented "mach status"
-		- fix permissions on copied sources
-		- unlock root on successful build
-		- allow "." in mach-helper
+	- added Red Hat 7.0, 7.1
+	- added Yellowdog 2.3, 3.0
+	- added Fedora Core 0.94
+	- added FreshRPMS targets
+	- make "mach apt-get" run interactive
+	- implemented "mach status"
+	- fix permissions on copied sources
+	- unlock root on successful build
+	- allow "." in mach-helper
