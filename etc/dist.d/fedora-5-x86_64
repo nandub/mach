@@ -34,7 +34,7 @@ yumsources['fedora-' + V + '-' + A ] = {
   'gst-0.10-gst':     gstreamer   + '/fedora/' + V + '/0.10/' + A + '/gst',
   'gst-0.10-apps':    gstreamer   + '/fedora/' + V + '/0.10/' + A + '/apps',
   'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
-  'livna':            livna       + '/fedora/' + V + '/' + A + '/RPMS.lvn',
+  'livna':            livna       + '/fedora/' + V + '/' + A,
 }
 
 # Fedora Core
