@@ -1,6 +1,15 @@
 2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  extract Root._update_packages()
+	  also run it after reverting build package list, to ensure
+	  we are updated and consistent again
+	  Fixes problems where an upgrade of popt got removed, causing
+	  rpm to fail in the root
+
+2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  implement a better "revert to build list" strategy:
 	  - get a difference between installed and manifest through sets
 	  - remove the difference with --nodeps (because rpm -e "big list"
