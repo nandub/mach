@@ -2038,13 +2038,23 @@ def create_sources_list (config, list):
 
     if config['installer'] == 'yum':
         debug ("Creating files in yum.repos.d")
-
         for source in list.keys():
             line = list[source]
             debug ('writing file for repo %s' % source)
             debug ('repo has URI %s' % line)
             sources = open (statedir + '/yum/yum.repos.d/%s.repo' % source, 'w')
             sources.write("[%s]\nname=%s\nbaseurl=%s\nenabled=1\n" % (source, source, line))
+            # we want to set metadata_expire to 0 for local files, so that we
+            # can immediately use results of local builds
+            if line.startswith('file://'):
+                v = yum_version ()
+                debug ('local repository, and yum version %r' % (v, ))
+                if v >= (2, 6, 0):
+                    debug ('adding line to expire_metadata for local repo')
+                    sources.write("metadata_expire=0\n")
+                else:
+                    debug ('yum < 2.6.0, no need to add expire_metadata')
+
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/packages' % source))
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
             if source.startswith('local.'):
@@ -2115,6 +2125,13 @@ def user_check ():
             sys.stderr.write ("ERROR: user is not in group mach, please add !\n")
             sys.exit (1)
 
+# return the yum version as a tuple
+def yum_version ():
+    # my FC5 yum prints "Loading installonlyn" plugin as the first line.  ugh.
+    output = commands.getoutput ('yum --version | tail -n 1')
+    version = output.rstrip ()
+    l = map (int, version.split ("."))
+    return tuple (l)
 
 # check if everything is in order to actually do stuff
 def sanity_check (config):
