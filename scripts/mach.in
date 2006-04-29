@@ -1487,6 +1487,8 @@ class Root:
         ensure_dir (os.path.join (self.statedir,
             'apt', 'var', 'cache', 'apt', 'archives'))
         ensure_dir (os.path.join (self.statedir,
+            'apt', 'var', 'cache', 'apt', 'archives', 'partial'))
+        ensure_dir (os.path.join (self.statedir,
             'apt', 'var', 'state', 'apt', 'lists', 'partial'))
 
         # this bit is really dirty.  But it allows me to set up an FC3 target

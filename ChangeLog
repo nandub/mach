@@ -1,5 +1,11 @@
 2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  make sure /apt/archives/partial in the cachedir exists.
+	  Reported by Jim <quien-sabe@metaorg.com> on 2006-01-23
+
+2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	adapted patch by: Nigel Metheringham
 	<Nigel.Metheringham@dev.intechnology.co.uk>
 
