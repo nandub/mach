@@ -1,5 +1,14 @@
 2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	adapted patch by: Nigel Metheringham
+	<Nigel.Metheringham@dev.intechnology.co.uk>
+
+	* scripts/mach.in:
+	  when using yum 2.6.0 or higher, add expires_metadata=0 to make
+	  sure we always refresh the cache for local repositories
+
+2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  extract Root._update_packages()
 	  also run it after reverting build package list, to ensure
