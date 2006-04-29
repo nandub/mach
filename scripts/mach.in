@@ -726,11 +726,53 @@ class Root:
         if self.config.has_key ('keep'):
             print "Not removing packages from root."
             return
-        root = self.rootdir
-        cmd = "%s --root %s -qa --qf '%s' \
-               | diff - %s > /dev/null 2>&1" % (self.config['rpm'], root, qfmt, listfile)
-        debug ("running " + cmd)
-        retval = os.system (cmd)
+
+        # as long as we succeed in removing packages, reducing the removal
+        # count, we can loop.
+
+        count = -1
+
+        def get_diff (listfile):
+            """
+            Get the list of packages that are installed and not in the listfile.
+            """
+            # get a list of installed packages
+            root = self.rootdir
+            cmd = "%s --root %s -qa --qf '%s'" % (self.config['rpm'], root, qfmt)
+            debug ("running " + cmd)
+            output = commands.getoutput (cmd)
+            installed = set (output.split ("\n"))
+
+            # get the list of packages that should be installed
+            lines = open (listfile).read ()
+            target = set (lines.split ("\n"))
+
+            diff = set.difference (installed, target)
+            return list (diff)
+
+        while True:
+            diff = get_diff (listfile)
+            if count > -1 and count == len (diff):
+                # nothing changed since last loop, so bail
+                raise self.Error, "Could not remove packages %s" % " ".join (diff)
+            count = len (diff)
+            if count == 0:
+                break
+
+            debug ("%d packages to remove" % len (diff))
+
+            # try removing them
+            try:
+                self.rpm (['-ev', '--allmatches', '--nodeps'] + diff, self.progress ())
+            except self.Error:
+                # try harder
+                diff = get_diff (listfile)
+                print "WARNING: could not remove all packages, trying harder"
+                self.rpm (['-ev', '--allmatches', '--nodeps', '--noscripts'] + diff,
+                    self.progress ())
+
+        return True
+        
         debug ("retval %d for command %s" % (retval, cmd))
         if retval == 0:
             # no differences

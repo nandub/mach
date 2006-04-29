@@ -1,3 +1,15 @@
+2006-04-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  implement a better "revert to build list" strategy:
+	  - get a difference between installed and manifest through sets
+	  - remove the difference with --nodeps (because rpm -e "big list"
+	    fails doing anything if any of them fail.  Maybe do this
+	    with an installer that orders removals ?)
+	  - do this in a loop as long as the number of differences decreases
+	  Tested with gstreamer.spec, which triggers packaging errors on
+	  uninstall in various rpms
+
 2006-04-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-5-i386:
