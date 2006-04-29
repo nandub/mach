@@ -771,6 +771,8 @@ class Root:
                 self.rpm (['-ev', '--allmatches', '--nodeps', '--noscripts'] + diff,
                     self.progress ())
 
+        # since we may have removed stuff needed to be consistent, upgrade
+        self._upgrade_packages()
         return True
         
         debug ("retval %d for command %s" % (retval, cmd))
@@ -1668,6 +1670,14 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         for mac in self.config.get ('macros', {}).items ():
             file.write ('%%%-19s %s\n' % (mac))
 
+    def _upgrade_packages (self):
+        # make the installer upgrade everything to the latest version
+        if self.config['installer'] == 'yum':
+            self.installer (["-y update", ])
+        else:
+            self.installer (["-y update", ])
+            self.installer (["-y upgrade", ])
+
     def _setup_build (self):
         "set up a root for rpm building"
         # first do the stuff that we want to ensure gets done every time,
@@ -1719,12 +1729,9 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         # upgrade packages; that way our snapshot contains the latest versions
         # available and a revert to snapshot will not try to remove packages
         # that have been upgraded from the snapshot
-        if config['installer'] == 'yum':
-            self.installer (["-y update", ])
-        else:
-            self.installer (["-y update", ])
-            self.installer (["-y upgrade", ])
-        
+        self._upgrade_packages ()
+
+           
         self._call_setup_hook ("build")
 
         self.stdout ("Making snapshot ...\n")
