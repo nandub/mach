@@ -1,3 +1,9 @@
+2006-05-07  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in:
+	  Fix passing literal double quotes in build options
+	  (eg. --define 'foo ""').
+
 2006-05-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-5-i386:
