@@ -1,3 +1,5 @@
+* EASY:		remove the caches for local built rpms on mach clean
+	        needs mach-helper changes though
 * EASY:		add warning about missing stuff from .rpmmacros for signing
 * EASY:		check for ending spaces in urlgrab, disallow
 * EASY:		sign and collect packages at end of complete build
