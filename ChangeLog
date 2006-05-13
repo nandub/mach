@@ -1,3 +1,12 @@
+2006-05-13  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  check ReturnValue exception when trying to remove the temp spec
+	  file in the root.  Running into this because a libsepol upgrade
+	  from libsepol-1.12.4-1.fc5 (installed in the build package set)
+	  that has a newer upgrade available (1.12.6) triggered removal
+	  of the former, causing things like ls and runuser to break.
+
 2006-05-07  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in:
