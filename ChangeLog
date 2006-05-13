@@ -1,3 +1,16 @@
+2006-05-13  Thomas Vander Stichele  <thomas (at) apestaart (dot) org>
+
+	* scripts/mach.in:
+	  when reverting to the "build" package set, also install
+	  packages that are in the build file but not installed.
+	  This fixes the bug mentioned below.
+	  After that install, an upgrade should update to the newest
+	  version.
+	  One possible future bug could be when the old version is
+	  not present anymore, and thus cannot be installed.
+	  Possible fix is to not remove newer versions of a previous package
+	  in the first step.
+
 2006-05-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
