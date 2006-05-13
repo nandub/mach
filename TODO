@@ -43,6 +43,14 @@
   File "/usr/bin/mach", line 983, in rebuild
     shutil.copy2 (os.path.join (self.rootdir, 'tmp', specfile), resultdir)
 * MEDIUM:	sanity-check conf files passed to mach-helper
+* MEDIUM:       reverting to "build" state gets tricky if the build state
+		has packages that now have upgrades available.  Currently,
+		reverting will try to remove those, since they had older
+		versions, then reinstall the same versions as part of an
+		upgrade.  This may fail when these packages are rpm,
+		glibc, ...
+		Simulate this by setting up an f4c root, then rsyncing it
+		to an f4e root, then upgrading, reverting and reupgrading.
 
 * HARD:		rpm --aid
 
