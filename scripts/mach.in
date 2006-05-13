@@ -167,7 +167,7 @@ debug ('Using mach gid %r' % mach_gid)
 class ReturnValue(Exception):
     """
     Raised when a process exits with a non-zero return value.
-    Has the return value and the output as arguments.
+    Has the return value and output as arguments.
     """
     pass
 class StatusValue(Exception):
@@ -210,7 +210,11 @@ class Spec:
         # it is already there, for example, after mangling and rebuilding from
         # it
         if self.path != self.root.rootdir + self.rootpath:
-            self.root.do_chroot ('rm -f %s' % self.rootpath)
+            try:
+                self.root.do_chroot ('rm -f %s' % self.rootpath)
+            except ReturnValue, (retval, output):
+                raise self.Error, "Failed removing spec file '%s' (return value %d).\nOutput follows:\n%s" % (self.rootpath, retval, output)
+ 
             copy_grouped (self.path, os.path.join (self.root.rootdir, 'tmp'))
 
         # check for syntax errors in the spec file first
