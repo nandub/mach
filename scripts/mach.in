@@ -738,7 +738,9 @@ class Root:
 
         def get_diff (listfile):
             """
-            Get the list of packages that are installed and not in the listfile.
+            Return tuple of two lists:
+            - list of packages installed but not in the given listfile
+            - list of packages in the given listfile but not installed
             """
             # get a list of installed packages
             root = self.rootdir
@@ -751,32 +753,44 @@ class Root:
             lines = open (listfile).read ()
             target = set (lines.split ("\n"))
 
-            diff = set.difference (installed, target)
-            return list (diff)
+            diff1 = set.difference (installed, target)
+            diff2 = set.difference (target, installed)
+            return (list (diff1), list (diff2))
 
         while True:
-            diff = get_diff (listfile)
-            if count > -1 and count == len (diff):
+            (remove, install) = get_diff (listfile)
+            if count > -1 and count == len (remove):
                 # nothing changed since last loop, so bail
-                raise self.Error, "Could not remove packages %s" % " ".join (diff)
-            count = len (diff)
+                raise self.Error, "Could not remove packages %s" % " ".join (remove)
+            count = len (remove)
             if count == 0:
                 break
 
-            debug ("%d packages to remove" % len (diff))
+            debug ("%d packages to remove" % len (remove))
 
             # try removing them
             try:
-                self.rpm (['-ev', '--allmatches', '--nodeps'] + diff, self.progress ())
+                self.rpm (['-ev', '--allmatches', '--nodeps'] + remove, self.progress ())
             except self.Error:
                 # try harder
-                diff = get_diff (listfile)
+                (remove, install) = get_diff (listfile)
                 print "WARNING: could not remove all packages, trying harder"
-                self.rpm (['-ev', '--allmatches', '--nodeps', '--noscripts'] + diff,
+                self.rpm (['-ev', '--allmatches', '--nodeps', '--noscripts'] + remove,
                     self.progress ())
+
+        # now install what's missing
+        if install:
+            debug("%d packages to reinstall" % len (install))
+            self.installer (['-y install %s' % " ".join (install)])
 
         # since we may have removed stuff needed to be consistent, upgrade
         self._upgrade_packages()
+
+        # since we may have upgraded packages from the build set, make a
+        # new snapshot
+        if install:
+            self._make_package_snapshot('build')
+
         return True
         
         debug ("retval %d for command %s" % (retval, cmd))
@@ -1668,6 +1682,7 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
     def _check_revert_build (self):
         # see if we need to revert to the build package list
+        debug('Checking if we need to revert to the build package list')
         statefile = os.path.join (self.statedir, 'build')
         self.check_package_list (statefile)
 
@@ -1737,14 +1752,16 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         # that have been upgraded from the snapshot
         self._upgrade_packages ()
 
-           
         self._call_setup_hook ("build")
+        self._make_package_snapshot('build')
+        self.umount ()
 
+    def _make_package_snapshot (self, statename):
         self.stdout ("Making snapshot ...\n")
         # FIXME: use _with_output for this
         output = self.rpm (['-qa', '--qf', qfmt, ])
-        self.set_state ('build', output)
-        self.umount ()
+        self.set_state (statename, output)
+
 
     def _install (self, set):
         "installs the given set of packages into the root."
