@@ -1,6 +1,12 @@
 2006-05-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
+	  instead of using built-in set (python 2.4), use the sets
+	  module so it works with 2.3 as well.
+
+2006-05-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
 	  recreate repository config files on each run, ensuring changes
 	  to location get picked up
 

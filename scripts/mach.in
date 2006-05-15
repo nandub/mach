@@ -13,6 +13,7 @@ import random # spinner theming madness
 import tempfile # for tempdir for spec extraction
 import glob # for globbing paths
 import grp # for finding out the mach gid
+import sets # to work with python 2.3 as well
 
 # print out debug info if wanted
 # uses DEBUG global
@@ -747,14 +748,14 @@ class Root:
             cmd = "%s --root %s -qa --qf '%s'" % (self.config['rpm'], root, qfmt)
             debug ("running " + cmd)
             output = commands.getoutput (cmd)
-            installed = set (output.split ("\n"))
+            installed = sets.Set (output.split ("\n"))
 
             # get the list of packages that should be installed
             lines = open (listfile).read ()
-            target = set (lines.split ("\n"))
+            target = sets.Set (lines.split ("\n"))
 
-            diff1 = set.difference (installed, target)
-            diff2 = set.difference (target, installed)
+            diff1 = installed.difference (target)
+            diff2 = target.difference (installed)
             return (list (diff1), list (diff2))
 
         while True:
