@@ -1717,6 +1717,11 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         os.chown(path, -1, mach_gid)
         self.do_chroot ('mv /tmp/macros /etc/rpm', fatal = True)
 
+        # create sources.list; we redo this so people can reconfigure
+        # their location file and have it take on the next build
+        srcs = get_sources_dict (config)
+        create_sources_list (config, srcs)
+
         # now check if we're already good
         if self.get_state ('build'):
             self._check_revert_build ()

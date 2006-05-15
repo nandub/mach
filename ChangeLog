@@ -1,3 +1,9 @@
+2006-05-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  recreate repository config files on each run, ensuring changes
+	  to location get picked up
+
 2006-05-13  Thomas Vander Stichele  <thomas (at) apestaart (dot) org>
 
 	* scripts/mach.in:
