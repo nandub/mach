@@ -4,6 +4,9 @@
 	* etc/dist.d/fedora-4-x86_64:
 	  Use non-backwards compat livna.org yum repo URLs.
 
+	* etc/dist.d/fedora-[345]-*:
+	  Add JPackage yum repo configs.
+
 2006-05-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
