@@ -39,6 +39,9 @@ yumsources['fedora-' + V + '-' + A ] = {
   'livna-stable':     livna       + '/fedora/' + V + '/' + A + '/yum/stable/RPMS',
   'livna-testing':    livna       + '/fedora/' + V + '/' + A + '/yum/testing/RPMS',
   'livna-unstable':   livna       + '/fedora/' + V + '/' + A + '/yum/unstable/RPMS',
+  'jpackage-generic': jpackage    + '/generic/free',
+  'jpackage-fc' + V:  jpackage    + '/fedora-' + V + '/free',
+  'jpackage-nonfree': jpackagenf  + '/generic/non-free',
 }
 
 # Fedora Core
