@@ -36,7 +36,7 @@ yumsources['fedora-' + V + '-' + A ] = {
   'gstreamer-build':  gstreamer   + '/fedora/' + V + '/' + A + '/yum/build',
   'gstreamer-deps':   gstreamer   + '/fedora/' + V + '/' + A + '/yum/deps',
   'freshrpms':        freshrpmsfd + '/' + V + '/' + A + '/freshrpms',
-  'livna':            livna       + '/fedora/' + V + '/' + A + '/RPMS.lvn',
+  'livna':            livna       + '/fedora/' + V + '/' + A,
 }
 
 # Fedora Core

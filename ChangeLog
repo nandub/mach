@@ -1,3 +1,9 @@
+2006-05-18  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/fedora-4-i386:
+	* etc/dist.d/fedora-4-x86_64:
+	  Use non-backwards compat livna.org yum repo URLs.
+
 2006-05-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
