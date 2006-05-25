@@ -41,7 +41,7 @@ freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
 
-jpackage    = 'http://dl.sf.net/jpackage/direct_download/1.5'
+jpackage    = 'http://mirrors.dotsrc.org/jpackage/1.6'
 # jpackagenf is the non-free/non-distributable JPackage repository.  You
 # must set up one yourself and point this variable at if before you can use
 # the JPackage configurations.  http://www.jpackage.org/faq.php

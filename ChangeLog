@@ -1,3 +1,8 @@
+2006-05-25  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/location:
+	  Update JPackage base URL.
+
 2006-05-18  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-4-i386:
