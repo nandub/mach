@@ -19,8 +19,8 @@ aptsources['fedora-' + V + '-' + A ] = {
 }
 
 yumsources['fedora-' + V + '-' + A ] = {
-  'core':             fedorayum   + '/core/' + V + '/' + A ,
-  'extras':           fedorayum   + '/extras/' + V + '/' + A ,
+  'core':             fedorayum + '/core/'   + V + '/' + A + '/os',
+  'extras':           fedorayum + '/extras/' + V + '/' + A,
 }
 
 # Fedora Core
