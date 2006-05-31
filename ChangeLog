@@ -1,3 +1,9 @@
+2006-05-31  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/fedora-development-i386:
+	* etc/dist.d/fedora-development-x86_64:
+	  Update Fedora Core development yum sources.
+
 2006-05-25  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/location:
