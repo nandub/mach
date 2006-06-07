@@ -293,6 +293,20 @@ do_rm_cache_file (int argc, char *argv[])
 }
 
 void
+do_rm_cache_dir (int argc, char *argv[])
+{
+  /* see if we're doing rm -rfv */
+  if (strncmp ("-rfv", argv[2], 4) != 0)
+    error ("%s: options not allowed", argv[2]);
+
+  /* see if we're doing -rfv on a dir under rootsdir */
+  check_dir_allowed (cachedir, argv[3]);
+
+  /* all checks passed, execute */
+  do_command ("/bin/rm", &(argv[1]));
+}
+
+void
 do_rm_root_dir (int argc, char *argv[])
 {
   /* see if we're doing rm -rfv */
@@ -308,6 +322,7 @@ do_rm_root_dir (int argc, char *argv[])
 
 /* clean out a chroot dir, or remove a mach cache file
  * rm cachedir/mach/somefile
+ * rm -rfv (cachedir)
  * rm -rfv (rootdir)
  */
 
@@ -315,12 +330,20 @@ do_rm_root_dir (int argc, char *argv[])
 void
 do_rm (int argc, char *argv[])
 {
-  if (argc == 3)
+  if (argc == 3) {
     do_rm_cache_file (argc, argv);
-  if (argc == 4)
-    do_rm_root_dir (argc, argv);
+    return;
+  }
 
-    error ("wrong number of parameters");
+  if (argc != 4)
+      error ("wrong number of parameters");
+
+  if (strncmp (argv[3], rootsdir, strlen (rootsdir)) == 0)
+    do_rm_root_dir (argc, argv);
+  else if (strncmp (argv[3], cachedir, strlen (cachedir)) == 0)
+    do_rm_cache_dir (argc, argv);
+  else
+    error ("%s: not under allowed directories", argv[3]);
 }
 
 /* perform rpm commands on root */

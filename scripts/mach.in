@@ -970,6 +970,15 @@ class Root:
             debug ("Removing statedir %s" % self.statedir)
             os.system ("rm -rf %s" % self.statedir)
 
+        # remove yum cache for the local packages
+        packagesdirname = config['packages']['dir']
+        fullpath = os.path.join ('@LOCALSTATEDIR@', 'cache',
+            'mach', packagesdirname, 'yum', "local.%s" % self.root)
+        debug ('checking for removal of %s' % fullpath)
+        if os.path.exists (fullpath):
+            cmd = '%s -rfv %s' % (config['rm'], fullpath)
+            (status, output) = do_with_output (cmd, False)
+
         # remove the root
         if os.path.exists (self.rootdir):
 
@@ -987,6 +996,7 @@ class Root:
                 # assume we couldn't delete because not empty and bring out the
                 # big guns
                 self._bruteclean ()
+
 
     # this ensures that locally built RPMS will be used to
     # install from
