@@ -1,3 +1,10 @@
+2006-06-07  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	* src/mach-helper.c: (do_rm_cache_dir), (do_rm):
+	  running mach clean now cleans out the yum cache for the locally
+	  built repository for the particular root
+
 2006-05-31  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-development-i386:
