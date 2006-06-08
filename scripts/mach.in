@@ -640,6 +640,7 @@ class Root:
             retval = os.system (command)
             if retval != 0:
                 raise self.Error, "Could not %s %s" % (self.config['installer'], string.join (args))
+            return
             
         if message: self.stdout (message)
         if progress: self.stdout (' ...')
@@ -771,7 +772,10 @@ class Root:
 
             # try removing them
             try:
+                self.stdout ("Reverting to build state")
+                if self.progress (): self.stdout (' ...')
                 self.rpm (['-ev', '--allmatches', '--nodeps'] + remove, self.progress ())
+                if not self.progress (): self.stdout ('\n')
             except self.Error:
                 # try harder
                 (remove, install) = get_diff (listfile)
@@ -1003,6 +1007,7 @@ class Root:
     # we append the root name because config for this repo
     # will end up in a dir common to all flavors of a base dist
     def update_local_repo (self):
+        debug ('update_local_repo()')
         srcs = get_sources_dict (self.config)
         root = self.config['root']
         rootdir = get_config_dir (self.config, 'root')
@@ -1019,6 +1024,7 @@ class Root:
                 self.installer (["update", ])
         except Root.Error:
             raise self.Error, 'could not update installer'
+        debug ('update_local_repo() done')
 
     # chroot into root
     def chroot (self, args):
@@ -1211,6 +1217,7 @@ class Root:
                     self.update_local_repo ()
                     try:
                         # wrap all buildreqs in quotes
+                        debug ('about to install buildreqs %r' % buildreqs)
                         self.installer ([ '-y install %s' % "'" + "' '".join (buildreqs) + "'", ],
                                      "Installing BuildRequires", self.progress ())
                         # FIXME: build-dep would be nice but only works on a pkg
@@ -2363,7 +2370,7 @@ def main (config, args):
             root.unlock ()
             sys.exit (retval)
         except KeyboardInterrupt:
-            sys.stderr.write ("Aborted.\n")
+            sys.stderr.write ("\nAborted.\n")
             root.unlock ()
             sys.exit (1)
         if output and output != True:
