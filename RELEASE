@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.4.9 - China.
+Announcing the release of mach 0.9.0 - Cambria.
 
 WHAT IS IT
 ----------
@@ -30,14 +30,16 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - added DOAP file (Thomas)
-        - added Fedora Core 5 (Thomas)
-        - fix build ordering when building multiple packages (Thomas)
-        - always evaluate spec file inside the root (Thomas)
-          (which may cause problems due to rpmdb incompatibilities)
-          fixes yum's semi-random behaviour on x86_64 (Thomas)
-        - store yum cache data per-dist, shared for flavors (Thomas)
-        - clean up yum metadata for local repositories (Thomas)
+        - Fix livna.org and rawhide URL's (Ville)
+        - Fix "revert to build list" such that it can deal with
+          upgraded versions of the build packages, as well as
+          deal with packages with broken post/postun scripts (Thomas)
+        - make sure we refresh local repository cache with
+          yum >= 2.6.0 (Nigel)
+        - always recreate repository config files, so that changes
+          to "location" are effective immediately (Thomas)
+        - Add JPackage URL's for FC3, 4, 5 (Ville)
+        - mach clean also cleans out the local repo (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -75,7 +77,7 @@ MAILING LIST
 A mailing list has been set up for discussion of mach use and development.
 Check http://lists.sourceforge.net/lists/listinfo/mach-devel for information.
 The list is low-volume.
-                                                                                
+
 BUGS
 ----
 To file bugs, go to https://apestaart.org/thomas/trac

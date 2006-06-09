@@ -1,3 +1,14 @@
+=== release 0.9.0 ===
+
+2006-06-09  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* RELEASE:
+	* TODO:
+	* configure.in:
+	* mach.doap:
+	  releasing 0.9.0, "Cambria"
+
 2006-06-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
