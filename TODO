@@ -57,6 +57,7 @@
 		would simplify things for people wanting to build both x86 and
 		x86_64 packages on an x86_64 host
 * HARD:		rpm --aid
+* MEDIUM:       default to a 64 bit root on a 64 bit machine
 
 0) Create an /8.0/i386 mount point with all the packages for Red Hat 8.0.
 You can use anything you want, I use /8.0/i386.
