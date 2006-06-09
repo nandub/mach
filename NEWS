@@ -1,4 +1,16 @@
-This is mach, make a chroot, 0.4.9.
+This is mach, make a chroot, 0.9.0.
+
+Changes since 0.4.9:
+        - Fix livna.org and rawhide URL's (Ville)
+        - Fix "revert to build list" such that it can deal with
+          upgraded versions of the build packages, as well as
+          deal with packages with broken post/postun scripts (Thomas)
+        - make sure we refresh local repository cache with
+          yum >= 2.6.0 (Nigel)
+        - always recreate repository config files, so that changes
+          to "location" are effective immediately (Thomas)
+        - Add JPackage URL's for FC3, 4, 5 (Ville)
+        - mach clean also cleans out the local repo (Thomas)
 
 Changes since 0.4.8:
         - added DOAP file (Thomas)

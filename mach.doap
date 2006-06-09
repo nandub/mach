@@ -38,6 +38,19 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>0.9.0</revision>
+   <branch>2</branch>
+   <name>Cambria</name>
+   <created>2006-06-09</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.0.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.0.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.0-1.fc5.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.0-1.fc4.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>0.4.9</revision>
    <branch>2</branch>
    <name>China</name>
