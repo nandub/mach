@@ -1,3 +1,10 @@
+2006-06-17  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* TODO:
+	  add note about x86_64
+	* scripts/mach.in:
+	  run rpmlint by default, use --no-lint to turn off
+
 2006-06-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:

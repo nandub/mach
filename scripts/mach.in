@@ -42,6 +42,7 @@ Mach options:
   -c, --collect         collect packages and relevant files to .
   -q, --quiet           no spinners, minimal output
   --release=(tag)       add given tag to release tag
+  --no-lint             don\'t run rpmlint at the end
   --no-scripts          don\'t run post build scripts
   --canonify            just output the canonical root name and exit
 
@@ -77,6 +78,7 @@ config = {
   'collect': 0,
   'release': 0,
   'quiet': 0,
+  'lint': 1,
   'scripts': 1,
   'defaultroot': '@DEFAULTROOT@',
 
@@ -1385,6 +1387,14 @@ class Root:
             print "Build of %s succeeded, results in\n%s" % (fullname, pkgresultdir)
             resultdirs.append (pkgresultdir)
 
+        # if we have rpmlint, and it was not turned off, rpmlint the packages
+        if self.config['lint']:
+            (status, output) = commands.getstatusoutput(
+                'rpmlint %s' % os.path.join (pkgresultdir, "*.rpm"))
+            if os.WEXITSTATUS(status) != 127:
+                # looks like rpmlint existed, so show the output
+                print output
+
         # now sign packages if requested
         if self.config['sign']:
             print "Signing built packages ..."
@@ -2224,7 +2234,8 @@ def main (config, args):
         opts, args = getopt.getopt (args, 'r:hdfksmcqv',
                                     ['root=', 'help', 'debug', 'force', 'keep',
                                      'sign', 'md5sum', 'collect', 'quiet',
-                                     'release=', 'no-scripts', 'canonify',
+                                     'release=', 'no-lint',
+                                     'no-scripts', 'canonify',
                                      'version'])
     except getopt.error, exc:
         sys.stderr.write ('ERROR: %s\n' % str (exc))
@@ -2264,6 +2275,8 @@ def main (config, args):
             cli_config['quiet'] = 1
         elif opt == '--release':
             cli_config['release'] = arg
+        elif opt == '--no-lint':
+            cli_config['lint'] = 0
         elif opt == '--no-scripts':
             cli_config['scripts'] = 0
         elif opt == '--canonify':
