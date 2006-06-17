@@ -47,6 +47,10 @@
 		glibc, ...
 		Simulate this by setting up an f4c root, then rsyncing it
 		to an f4e root, then upgrading, reverting and reupgrading.
+* MEDIUM:       mach -r f5e64 setup on a 64-bit machine in 32-bit mode
+	        fails because yum doesn't see any packages - the arch doesn't
+	        match I assume.  On 32 bit however, setting up a 64-bit
+		root does seem to work.  check excludearch stuff ?
 * EASY:         when you have an x86_64 host, you can build both x86 and x86_64
 		packages but by default the roots detect the host as x86_64, so
 		you get errors because rpm uses -m64 for gcc etc. which fails
