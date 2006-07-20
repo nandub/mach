@@ -110,7 +110,7 @@ sourceslist['fedora-%s-%s-livna-stable' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna-stable', )
 }
-config['fedora-%s-%s-livna-stable' % (V, A)]  = config['fedora-%s-%s-extras' % (V, A)]
+config['fedora-%s-%s-livna-stable' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)]
 aliases['fedora-%s-%s-livna-stable' % (V, A)] = ('f' + V + 'ls' + AS, )
 
 packages['fedora-%s-%s-livna-testing' % (V, A)] = packages['fedora-%s-%s-livna-stable' % (V, A)]
@@ -119,7 +119,7 @@ sourceslist['fedora-%s-%s-livna-testing' % (V, A)] = {
   sourceslist['fedora-%s-%s-livna-stable' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna-testing', )
 }
-config['fedora-%s-%s-livna-testing' % (V, A)]  = config['fedora-%s-%s-livna-stable' % (V, A)]
+config['fedora-%s-%s-livna-testing' % (V, A)] = config['fedora-%s-%s-livna-stable' % (V, A)]
 aliases['fedora-%s-%s-livna-testing' % (V, A)] = ('f' + V + 'lt' + AS, )
 
 packages['fedora-%s-%s-livna-unstable' % (V, A)] = packages['fedora-%s-%s-livna-testing' % (V, A)]
@@ -128,7 +128,7 @@ sourceslist['fedora-%s-%s-livna-unstable' % (V, A)] = {
   sourceslist['fedora-%s-%s-livna-testing' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna-unstable', )
 }
-config['fedora-%s-%s-livna-unstable' % (V, A)]  = config['fedora-%s-%s-livna-testing' % (V, A)]
+config['fedora-%s-%s-livna-unstable' % (V, A)] = config['fedora-%s-%s-livna-testing' % (V, A)]
 aliases['fedora-%s-%s-livna-unstable' % (V, A)] = ('f' + V + 'lu' + AS, )
 
 # Fedora Core with freshrpms
