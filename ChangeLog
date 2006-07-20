@@ -3,7 +3,7 @@
 	* TODO:
 	  add note about /dev/random and /dev/urandom
 	* etc/dist.d/{fedora,redhat}-*:
-	  eliminate some redundant definitions
+	  mass cleanup, eliminate some redundant definitions
 	* etc/dist.d/fedora-*:
 	  include fedora-rpmdevtools in all Fedora Extras and dependent
 	  build setups
