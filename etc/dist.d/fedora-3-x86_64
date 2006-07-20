@@ -79,7 +79,7 @@ sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', )
 }
-config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-core' % (V, A)].copy()
+config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-updates' % (V, A)].copy()
 config['fedora-%s-%s-extras' % (V, A)].update({
   'buildopts': "--define 'dist .fc" + V + "'",
 })
