@@ -131,7 +131,7 @@ aliases['fedora-2-i386-freshrpms'] = ('f2fr', )
 # Fedora Core 2 with JPackage
 packages['fedora-2-i386-jpackage'] = packages['fedora-2-i386-updates'].copy()
 packages['fedora-2-i386-jpackage']['base'] = packages['fedora-2-i386-updates']['base'] + ' java-1.4.2-sun'
-packages['fedora-2-i386-jpackage']['build'] = packages['fedora-2-i386-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
+packages['fedora-2-i386-jpackage']['build'] = packages['fedora-2-i386-updates']['build'] + ' redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['fedora-2-i386-jpackage'] = {
     'fedora-2-i386':
     sourceslist['fedora-2-i386-updates']['fedora-2-i386'] +

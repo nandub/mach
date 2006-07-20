@@ -14,13 +14,13 @@ AS = '64'          # 'short' version of arch
 
 ### Fedora Core flavours
 aptsources['fedora-%s-%s' % (V, A)] = {
-  'core':             'rpm ' + fedora      + ' ' + V + '/' + A + ' core',
-  'extras':           'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' extras',
+  'core':             'rpm ' + fedora      + ' %s/%s core'            % (V, A),
+  'extras':           'rpm ' + freshrpmsfd + ' %s/%s extras'          % (V, A),
 }
 
 yumsources['fedora-%s-%s' % (V, A)] = {
-  'core':             fedorayum + '/core/'   + V + '/' + A + '/os',
-  'extras':           fedorayum + '/extras/' + V + '/' + A,
+  'core':             fedorayum + '/core/%s/%s/os'                    % (V, A),
+  'extras':           fedorayum + '/extras/%s/%s'                     % (V, A),
 }
 
 # Fedora Core
@@ -28,8 +28,8 @@ packages['fedora-%s-%s-core' % (V, A)] = {
   'dir':      'fedora-%s-%s' % (V, A),
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
-              'unzip bzip2 diffutils cpio elfutils',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
+              'patch unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-%s-%s-core' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', )

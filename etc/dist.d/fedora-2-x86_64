@@ -31,7 +31,7 @@ packages['fedora-2-x86_64-core'] = {
     'dir':      'fedora-2-x86_64',
     'minimal':  'bash glibc',
     'base':     'coreutils findutils openssh-server',
-    'build':    'dev rpm-build make gcc tar gzip patch ' +
+    'build':    'dev rpm-build make gcc gcc-c++ tar gzip patch ' +
                 'unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-2-x86_64-core'] = {

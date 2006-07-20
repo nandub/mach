@@ -46,8 +46,8 @@ packages['fedora-%s-%s-core' % (V, A)] = {
   'dir':      'fedora-%s-%s' % (V, A),
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
-              'unzip bzip2 diffutils cpio elfutils',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
+              'patch unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-%s-%s-core' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', )
@@ -117,7 +117,7 @@ aliases['fedora-%s-%s-freshrpms' % (V, A)] = ('f' + V + 'fr' + AS, )
 # Fedora Core with JPackage
 packages['fedora-%s-%s-jpackage' % (V, A)] = packages['fedora-%s-%s-updates' % (V, A)].copy()
 packages['fedora-%s-%s-jpackage' % (V, A)]['base'] = packages['fedora-%s-%s-updates' % (V, A)]['base'] + ' java-1.4.2-sun'
-packages['fedora-%s-%s-jpackage' % (V, A)]['build'] = packages['fedora-%s-%s-updates' % (V, A)]['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
+packages['fedora-%s-%s-jpackage' % (V, A)]['build'] = packages['fedora-%s-%s-updates' % (V, A)]['build'] + ' java-1.4.2-sun-devel'
 sourceslist['fedora-%s-%s-jpackage' % (V, A)] = {
   'fedora-%s-%s' % (V, A):
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +

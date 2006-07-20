@@ -28,8 +28,8 @@ packages['fedora-%s-%s-core' % (V, A)] = {
   'dir':      'fedora-%s-%s' % (V, A),
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
-              'unzip bzip2 diffutils cpio elfutils',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
+              'patch unzip bzip2 diffutils cpio elfutils',
 }
 sourceslist['fedora-%s-%s-core' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', )
