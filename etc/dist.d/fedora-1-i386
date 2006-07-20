@@ -64,14 +64,14 @@ config['fedora-1-i386-gstreamer-deps'] = { 'release': '1' }
 aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', )
 
 # Fedora Core 1 with fedora.us
-packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy ()
+packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy()
 packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-1-i386-fedora-stable'] = {
     'fedora-1-i386':
     sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
     ('fedora-stable', )
 }
-config['fedora-1-i386-fedora-stable']  = { 'release': '1' }
+config['fedora-1-i386-fedora-stable'] = { 'release': '1' }
 aliases['fedora-1-i386-fedora-stable'] = ('f1fs', )
 
 packages['fedora-1-i386-fedora-testing'] = packages['fedora-1-i386-fedora-stable']
@@ -80,7 +80,7 @@ sourceslist['fedora-1-i386-fedora-testing'] = {
     sourceslist['fedora-1-i386-fedora-stable']['fedora-1-i386'] +
     ('fedora-testing', )
 }
-config['fedora-1-i386-fedora-testing']  = config['fedora-1-i386-fedora-stable']
+config['fedora-1-i386-fedora-testing'] = config['fedora-1-i386-fedora-stable']
 aliases['fedora-1-i386-fedora-testing'] = ('f1ft', )
 
 packages['fedora-1-i386-fedora-unstable'] = packages['fedora-1-i386-fedora-testing']
@@ -89,7 +89,7 @@ sourceslist['fedora-1-i386-fedora-unstable'] = {
     sourceslist['fedora-1-i386-fedora-testing']['fedora-1-i386'] +
     ('fedora-unstable', )
 }
-config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing']
+config['fedora-1-i386-fedora-unstable'] = config['fedora-1-i386-fedora-testing']
 aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
 
 # Fedora Core 1 with livna (+ fedora.us)
@@ -99,7 +99,7 @@ sourceslist['fedora-1-i386-livna-stable'] = {
     sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
     ('fedora-stable', 'livna-stable', )
 }
-config['fedora-1-i386-livna-stable']  = { 'release': '1' }
+config['fedora-1-i386-livna-stable'] = { 'release': '1' }
 aliases['fedora-1-i386-livna-stable'] = ('f1ls', )
 
 packages['fedora-1-i386-livna-testing'] = packages['fedora-1-i386-livna-stable']
@@ -108,7 +108,7 @@ sourceslist['fedora-1-i386-livna-testing'] = {
     sourceslist['fedora-1-i386-livna-stable']['fedora-1-i386'] +
     ('fedora-testing', 'livna-testing', )
 }
-config['fedora-1-i386-livna-testing']  = config['fedora-1-i386-livna-stable']
+config['fedora-1-i386-livna-testing'] = config['fedora-1-i386-livna-stable']
 aliases['fedora-1-i386-livna-testing'] = ('f1lt', )
 
 packages['fedora-1-i386-livna-unstable'] = packages['fedora-1-i386-livna-testing']
@@ -117,7 +117,7 @@ sourceslist['fedora-1-i386-livna-unstable'] = {
     sourceslist['fedora-1-i386-livna-testing']['fedora-1-i386'] +
     ('fedora-unstable', 'livna-unstable', )
 }
-config['fedora-1-i386-livna-unstable']  = config['fedora-1-i386-livna-testing']
+config['fedora-1-i386-livna-unstable'] = config['fedora-1-i386-livna-testing']
 aliases['fedora-1-i386-livna-unstable'] = ('f1lu', )
 
 # Fedora Core 1 with freshrpms

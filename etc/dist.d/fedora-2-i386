@@ -64,14 +64,14 @@ config['fedora-2-i386-gstreamer-deps'] = { 'release': '2' }
 aliases['fedora-2-i386-gstreamer-deps'] = ('f2gd', )
 
 # Fedora Core 2 with fedora.us
-packages['fedora-2-i386-fedora-stable'] = packages['fedora-2-i386-updates'].copy ()
+packages['fedora-2-i386-fedora-stable'] = packages['fedora-2-i386-updates'].copy()
 packages['fedora-2-i386-fedora-stable']['build'] = packages['fedora-2-i386-updates']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-2-i386-fedora-stable'] = {
     'fedora-2-i386':
     sourceslist['fedora-2-i386-updates']['fedora-2-i386'] +
     ('fedora-stable', )
 }
-config['fedora-2-i386-fedora-stable']  = { 'release': '2' }
+config['fedora-2-i386-fedora-stable'] = { 'release': '2' }
 aliases['fedora-2-i386-fedora-stable'] = ('f2fs', )
 
 packages['fedora-2-i386-fedora-testing'] = packages['fedora-2-i386-fedora-stable']
@@ -80,7 +80,7 @@ sourceslist['fedora-2-i386-fedora-testing'] = {
     sourceslist['fedora-2-i386-fedora-stable']['fedora-2-i386'] +
     ('fedora-testing', )
 }
-config['fedora-2-i386-fedora-testing']  = config['fedora-2-i386-fedora-stable']
+config['fedora-2-i386-fedora-testing'] = config['fedora-2-i386-fedora-stable']
 aliases['fedora-2-i386-fedora-testing'] = ('f2ft', )
 
 packages['fedora-2-i386-fedora-unstable'] = packages['fedora-2-i386-fedora-testing']
@@ -89,7 +89,7 @@ sourceslist['fedora-2-i386-fedora-unstable'] = {
     sourceslist['fedora-2-i386-fedora-testing']['fedora-2-i386'] +
     ('fedora-unstable', )
 }
-config['fedora-2-i386-fedora-unstable']  = config['fedora-2-i386-fedora-testing']
+config['fedora-2-i386-fedora-unstable'] = config['fedora-2-i386-fedora-testing']
 aliases['fedora-2-i386-fedora-unstable'] = ('f2fu', )
 
 # Fedora Core 2 with livna (+ fedora.us)
@@ -99,7 +99,7 @@ sourceslist['fedora-2-i386-livna-stable'] = {
     sourceslist['fedora-2-i386-updates']['fedora-2-i386'] +
     ('fedora-stable', 'livna-stable', )
 }
-config['fedora-2-i386-livna-stable']  = { 'release': '2' }
+config['fedora-2-i386-livna-stable'] = { 'release': '2' }
 aliases['fedora-2-i386-livna-stable'] = ('f2ls', )
 
 packages['fedora-2-i386-livna-testing'] = packages['fedora-2-i386-livna-stable']
@@ -108,7 +108,7 @@ sourceslist['fedora-2-i386-livna-testing'] = {
     sourceslist['fedora-2-i386-livna-stable']['fedora-2-i386'] +
     ('fedora-testing', 'livna-testing', )
 }
-config['fedora-2-i386-livna-testing']  = config['fedora-2-i386-livna-stable']
+config['fedora-2-i386-livna-testing'] = config['fedora-2-i386-livna-stable']
 aliases['fedora-2-i386-livna-testing'] = ('f2lt', )
 
 packages['fedora-2-i386-livna-unstable'] = packages['fedora-2-i386-livna-testing']
@@ -117,7 +117,7 @@ sourceslist['fedora-2-i386-livna-unstable'] = {
     sourceslist['fedora-2-i386-livna-testing']['fedora-2-i386'] +
     ('fedora-unstable', 'livna-unstable', )
 }
-config['fedora-2-i386-livna-unstable']  = config['fedora-2-i386-livna-testing']
+config['fedora-2-i386-livna-unstable'] = config['fedora-2-i386-livna-testing']
 aliases['fedora-2-i386-livna-unstable'] = ('f2lu', )
 
 # Fedora Core 2 with freshrpms

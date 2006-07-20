@@ -107,7 +107,7 @@ sourceslist['fedora-%s-%s-livna' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna', )
 }
-config['fedora-%s-%s-livna' % (V, A)]  = config['fedora-%s-%s-extras' % (V, A)]
+config['fedora-%s-%s-livna' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)]
 aliases['fedora-%s-%s-livna' % (V, A)] = ('f' + V + 'l' + AS, )
 
 # Fedora Core with freshrpms
