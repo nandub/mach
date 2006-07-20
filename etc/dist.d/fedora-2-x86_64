@@ -58,7 +58,7 @@ sourceslist['fedora-2-x86_64-gstreamer'] = {
 config['fedora-2-x86_64-gstreamer'] = config['fedora-2-x86_64-core'].copy()
 config['fedora-2-x86_64-gstreamer'].update({
   'release': '2',
-}
+})
 aliases['fedora-2-x86_64-gstreamer'] = ('f2g', )
 
 packages['fedora-2-x86_64-gstreamer-deps'] = packages['fedora-2-x86_64-core']
@@ -79,6 +79,7 @@ sourceslist['fedora-2-x86_64-fedora-stable'] = {
 config['fedora-2-x86_64-fedora-stable'] = config['fedora-2-x86_64-core'].copy()
 config['fedora-2-x86_64-gstreamer'].update({
   'release': '2',
+})
 aliases['fedora-2-x86_64-fedora-stable'] = ('f2fs', )
 
 packages['fedora-2-x86_64-fedora-testing'] = packages['fedora-2-x86_64-fedora-stable']
