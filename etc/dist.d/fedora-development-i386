@@ -13,41 +13,41 @@ A = 'i386'         # architecture
 AS = ''            # 'short' version of arch
 
 ### Fedora Core flavours
-aptsources['fedora-' + V + '-' + A ] = {
-  'core':             'rpm ' + fedora      + ' ' + V + '/' + A + ' core',
-  'extras':           'rpm ' + freshrpmsfd + ' ' + V + '/' + A + ' extras',
+aptsources['fedora-%s-%s' % (V, A)] = {
+  'core':             'rpm ' + fedora      + ' %s/%s core'            % (V, A),
+  'extras':           'rpm ' + freshrpmsfd + ' %s/%s extras'          % (V, A),
 }
 
-yumsources['fedora-' + V + '-' + A ] = {
-  'core':             fedorayum + '/core/'   + V + '/' + A + '/os',
-  'extras':           fedorayum + '/extras/' + V + '/' + A,
+yumsources['fedora-%s-%s' % (V, A)] = {
+  'core':             fedorayum + '/core/%s/%s/os'                    % (V, A),
+  'extras':           fedorayum + '/extras/%s/%s'                     % (V, A),
 }
 
 # Fedora Core
-packages['fedora-' + V + '-' + A + '-core'] = {
-  'dir':      'fedora-' + V + '-' + A ,
+packages['fedora-%s-%s-core' % (V, A)] = {
+  'dir':      'fedora-%s-%s' % (V, A),
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
   'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip patch ' +
               'unzip bzip2 diffutils cpio elfutils',
 }
-sourceslist['fedora-' + V + '-' + A + '-core'] = {
-  'fedora-' + V + '-' + A : ('core', )
+sourceslist['fedora-%s-%s-core' % (V, A)] = {
+  'fedora-%s-%s' % (V, A): ('core', )
 }
 # FC4 roots should use runuser instead of su
-config['fedora-' + V + '-' + A + '-core'] = {'runuser': '/sbin/runuser'}
-aliases['fedora-' + V + '-' + A + '-core'] = ('f' + VS + 'c' + AS, 'fc' + VS + AS, )
+config['fedora-%s-%s-core' % (V, A)] = {'runuser': '/sbin/runuser'}
+aliases['fedora-%s-%s-core' % (V, A)] = ('f' + VS + 'c' + AS, 'fc' + VS + AS, )
 
 # Fedora Core with extras
-packages['fedora-' + V + '-' + A + '-extras'] = packages['fedora-' + V + '-' + A + '-core'].copy ()
-packages['fedora-' + V + '-' + A + '-extras']['build'] = packages['fedora-' + V + '-' + A + '-core']['build'] + " fedora-rpmdevtools"
-sourceslist['fedora-' + V + '-' + A + '-extras'] = {
-  'fedora-' + V + '-' + A :
-  sourceslist['fedora-' + V + '-' + A + '-core']['fedora-' + V + '-' + A ] +
+packages['fedora-%s-%s-extras' % (V, A)] = packages['fedora-%s-%s-core' % (V, A)].copy()
+packages['fedora-%s-%s-extras' % (V, A)]['build'] = packages['fedora-%s-%s-core' % (V, A)]['build'] + " fedora-rpmdevtools"
+sourceslist['fedora-%s-%s-extras' % (V, A)] = {
+  'fedora-%s-%s' % (V, A):
+  sourceslist['fedora-%s-%s-core' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', )
 }
-config['fedora-' + V + '-' + A + '-extras'] = {
+config['fedora-%s-%s-extras' % (V, A)] = {
   'runuser': '/sbin/runuser',
   'buildopts': "--define 'dist .fc" + V + "'",
 }
-aliases['fedora-' + V + '-' + A + '-extras'] = ('f' + VS + 'e' + AS, )
+aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + VS + 'e' + AS, )
