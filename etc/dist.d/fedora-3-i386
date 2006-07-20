@@ -75,10 +75,12 @@ sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', )
 }
-config['fedora-%s-%s-extras' % (V, A)] = {
-  'runuser': '/sbin/runuser',
-  'buildopts': "--define 'dist .fc" + V + "'",
-}
+config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-updates' % (V, A)].copy()
+if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
+  config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
+config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
+  'dist': '.fc%s' % V,
+})
 aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + V + 'e' + AS, )
 
 # Fedora Core with GStreamer
@@ -106,7 +108,8 @@ sourceslist['fedora-%s-%s-livna-stable' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna-stable', )
 }
-config['fedora-%s-%s-livna-stable' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)]
+config['fedora-%s-%s-livna-stable' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)].copy()
+del config['fedora-%s-%s-livna-stable' % (V, A)]['macros']['dist']
 aliases['fedora-%s-%s-livna-stable' % (V, A)] = ('f' + V + 'ls' + AS, )
 
 packages['fedora-%s-%s-livna-testing' % (V, A)] = packages['fedora-%s-%s-livna-stable' % (V, A)]
