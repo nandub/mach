@@ -101,8 +101,7 @@ config['fedora-' + V + '-' + A + '-gstreamer-deps'] = config['fedora-' + V + '-'
 aliases['fedora-' + V + '-' + A + '-gstreamer-deps'] = ('f' + V + 'gd' + AS, )
 
 # Fedora Core with livna (+ extras)
-packages['fedora-' + V + '-' + A + '-livna'] = packages['fedora-' + V + '-' + A + '-updates'].copy ()
-packages['fedora-' + V + '-' + A + '-livna']['build'] = packages['fedora-' + V + '-' + A + '-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-' + V + '-' + A + '-livna'] = packages['fedora-' + V + '-' + A + '-extras']
 sourceslist['fedora-' + V + '-' + A + '-livna'] = {
   'fedora-' + V + '-' + A :
   sourceslist['fedora-' + V + '-' + A + '-updates']['fedora-' + V + '-' + A ] +

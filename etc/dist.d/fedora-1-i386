@@ -93,8 +93,7 @@ config['fedora-1-i386-fedora-unstable']  = config['fedora-1-i386-fedora-testing'
 aliases['fedora-1-i386-fedora-unstable'] = ('f1fu', )
 
 # Fedora Core 1 with livna (+ fedora.us)
-packages['fedora-1-i386-livna-stable'] = packages['fedora-1-i386-updates'].copy ()
-packages['fedora-1-i386-livna-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-1-i386-livna-stable'] = packages['fedora-1-i386-fedora-stable']
 sourceslist['fedora-1-i386-livna-stable'] = {
     'fedora-1-i386':
     sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +

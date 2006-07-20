@@ -93,8 +93,7 @@ config['redhat-9-i386-fedora-unstable']  = config['redhat-9-i386-fedora-testing'
 aliases['redhat-9-i386-fedora-unstable'] = ('rh9fu', 'rh90fu')
 
 # Red Hat Linux 9 with livna (+ fedora.us)
-packages['redhat-9-i386-livna-stable'] = packages['redhat-9-i386-updates'].copy ()
-packages['redhat-9-i386-livna-stable']['build'] = packages['redhat-9-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['redhat-9-i386-livna-stable'] = packages['redhat-9-i386-fedora-stable']
 sourceslist['redhat-9-i386-livna-stable'] = {
     'redhat-9-i386':
     sourceslist['redhat-9-i386-updates']['redhat-9-i386'] +

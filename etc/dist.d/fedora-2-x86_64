@@ -100,8 +100,7 @@ config['fedora-2-x86_64-fedora-unstable']  = config['fedora-2-x86_64-fedora-test
 aliases['fedora-2-x86_64-fedora-unstable'] = ('f2fu', )
 
 # Fedora Core 2 with livna (+ fedora.us)
-packages['fedora-2-x86_64-livna-stable'] = packages['fedora-2-x86_64-updates'].copy ()
-packages['fedora-2-x86_64-livna-stable']['build'] = packages['fedora-2-x86_64-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-2-x86_64-livna-stable'] = packages['fedora-2-x86_64-fedora-stable']
 sourceslist['fedora-2-x86_64-livna-stable'] = {
     'fedora-2-x86_64':
     sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
