@@ -1,3 +1,8 @@
+2006-07-20  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* TODO:
+	  add note about /dev/random and /dev/urandom
+
 2006-06-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* TODO:
