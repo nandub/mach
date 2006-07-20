@@ -93,8 +93,7 @@ config['redhat-80-i386-fedora-unstable']   = config['redhat-80-i386-fedora-testi
 aliases['redhat-80-i386-fedora-unstable']  = ('rh8fu', 'rh80fu')
 
 # Red Hat Linux 8.0 with livna (+ fedora.us)
-packages['redhat-80-i386-livna-stable'] = packages['redhat-80-i386-updates'].copy ()
-packages['redhat-80-i386-livna-stable']['build'] = packages['redhat-80-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['redhat-80-i386-livna-stable'] = packages['redhat-80-i386-fedora-stable']
 sourceslist['redhat-80-i386-livna-stable'] = {
     'redhat-80-i386':
     sourceslist['redhat-80-i386-updates']['redhat-80-i386'] +
