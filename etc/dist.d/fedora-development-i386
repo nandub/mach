@@ -40,7 +40,7 @@ aliases['fedora-' + V + '-' + A + '-core'] = ('f' + VS + 'c' + AS, 'fc' + VS + A
 
 # Fedora Core with extras
 packages['fedora-' + V + '-' + A + '-extras'] = packages['fedora-' + V + '-' + A + '-core'].copy ()
-packages['fedora-' + V + '-' + A + '-extras']['build'] = packages['fedora-' + V + '-' + A + '-core']['build'] # + " fedora-rpmdevtools"
+packages['fedora-' + V + '-' + A + '-extras']['build'] = packages['fedora-' + V + '-' + A + '-core']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-' + V + '-' + A + '-extras'] = {
   'fedora-' + V + '-' + A :
   sourceslist['fedora-' + V + '-' + A + '-core']['fedora-' + V + '-' + A ] +

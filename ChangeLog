@@ -4,6 +4,9 @@
 	  add note about /dev/random and /dev/urandom
 	* etc/dist.d/{fedora,redhat}-*:
 	  eliminate some redundant definitions
+	* etc/dist.d/fedora-*:
+	  include fedora-rpmdevtools in all Fedora Extras and dependent
+	  build setups
 
 2006-06-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
