@@ -7,6 +7,8 @@
 	* etc/dist.d/fedora-*:
 	  include fedora-rpmdevtools in all Fedora Extras and dependent
 	  build setups
+	* etc/dist.d/fedora-*:
+	  define %{dist} using macros instead of build options
 
 2006-06-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 

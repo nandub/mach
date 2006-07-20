@@ -74,8 +74,10 @@ sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   ('extras', )
 }
 config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-updates' % (V, A)].copy()
-config['fedora-%s-%s-extras' % (V, A)].update({
-  'buildopts': "--define 'dist .fc" + V + "'",
+if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
+  config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
+config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
+  'dist': '.fc%s' % V,
 })
 aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + V + 'e' + AS, )
 
@@ -104,7 +106,10 @@ sourceslist['fedora-%s-%s-livna' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna', )
 }
-config['fedora-%s-%s-livna' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)]
+config['fedora-%s-%s-livna' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)].copy()
+config['fedora-%s-%s-livna' % (V, A)]['macros'].update({
+  'dist': '.lvn%s' % V,
+})
 aliases['fedora-%s-%s-livna' % (V, A)] = ('f' + V + 'l' + AS, )
 
 # Fedora Core with freshrpms
