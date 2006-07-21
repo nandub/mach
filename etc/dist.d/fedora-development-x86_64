@@ -51,7 +51,9 @@ sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   ('extras', )
 }
 config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-core' % (V, A)].copy()
-config['fedora-%s-%s-extras' % (V, A)].update({
-  'buildopts': "--define 'dist .fc" + V + "'",
+if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
+  config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
+config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
+  '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })
 aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + VS + 'e' + AS, )

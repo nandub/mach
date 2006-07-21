@@ -78,6 +78,7 @@ if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
   config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
 config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
   'dist': '.fc%s' % V,
+  '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })
 aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + V + 'e' + AS, )
 
