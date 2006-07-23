@@ -16,11 +16,13 @@ AS = ''            # 'short' version of arch
 aptsources['fedora-%s-%s' % (V, A)] = {
   'core':             'rpm ' + fedora      + ' %s/%s core'            % (V, A),
   'extras':           'rpm ' + freshrpmsfd + ' %s/%s extras'          % (V, A),
+  'livna':            'rpm ' + livna       + ' fedora/%s/%s lvn'      % (V, A),
 }
 
 yumsources['fedora-%s-%s' % (V, A)] = {
   'core':             fedorayum + '/core/%s/%s/os'                    % (V, A),
   'extras':           fedorayum + '/extras/%s/%s'                     % (V, A),
+  'livna':            livna     + '/fedora/%s/%s'                     % (V, A),
 }
 
 # Fedora Core
@@ -53,3 +55,13 @@ config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })
 aliases['fedora-%s-%s-extras' % (V, A)] = ('f' + VS + 'e' + AS, )
+
+# Fedora Core with livna (+ extras)
+packages['fedora-%s-%s-livna' % (V, A)] = packages['fedora-%s-%s-extras' % (V, A)]
+sourceslist['fedora-%s-%s-livna' % (V, A)] = {
+  'fedora-%s-%s' % (V, A):
+  sourceslist['fedora-%s-%s-core' % (V, A)]['fedora-%s-%s' % (V, A)] +
+  ('extras', 'livna', )
+}
+config['fedora-%s-%s-livna' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)]
+aliases['fedora-%s-%s-livna' % (V, A)] = ('f' + VS + 'l' + AS, )
