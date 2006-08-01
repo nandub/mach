@@ -1,3 +1,8 @@
+2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	  update list of supported Fedora releases
+
 2006-07-23  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-development-*:

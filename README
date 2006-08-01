@@ -34,10 +34,15 @@ as well.
 -------------------------------
 Included at this moment is the necessary information to set up :
 
-Fedora 4
+Fedora development
+  - Core
+  - with Extras
+  - with rpm.livna.org
+
+Fedora 4, 5
   - Core
   - updated
-  - with extras
+  - with Extras
   - with rpm.livna.org
   - with FreshRPMS
   - with JPackage
