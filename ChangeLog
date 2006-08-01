@@ -1,6 +1,11 @@
 2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
-	* README, configure.in, etc/location, etc/dist.d/centos-4-*:
+	* README:
+	* configure.in:
+	* etc/location:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/centos-4-i386:
+	* etc/dist.d/centos-4-x86_64:
 	  add CentOS 4 configs
 
 	* README:
