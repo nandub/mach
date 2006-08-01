@@ -20,6 +20,10 @@ fedora      = 'http://ayo.freshrpms.net/fedora/linux'
 # location, and start in the dir that has "core" and "extras"
 fedorayum   = 'http://download.fedora.redhat.com/pub/fedora/linux'
 
+# CentOS
+centos      = 'http://mirror.centos.org/centos'
+centosfe    = 'http://centos.karan.org/'
+
 # Yellow Dog Linux
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 

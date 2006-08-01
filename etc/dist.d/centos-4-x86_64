@@ -1,0 +1,113 @@
+# mach dist configuration                                        -*- python -*-
+
+# centos-4-x86_64: configuration for CentOS 4
+
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
+
+V = '4'      # distro version
+A = 'x86_64' # architecture
+AS = '64'    # 'short' version of arch
+
+### CentOS flavours
+aptsources['centos-%s-%s' % (V, A)] = {
+  'os':               'rpm ' + centos + ' %s/apt/%s os'               % (V, A),
+  'updates':          'rpm ' + centos + ' %s/apt/%s updates'          % (V, A),
+  'addons':           'rpm ' + centos + ' %s/apt/%s addons'           % (V, A),
+  'contrib':          'rpm ' + centos + ' %s/apt/%s contrib'          % (V, A),
+  'csgfs':            'rpm ' + centos + ' %s/apt/%s csgfs'            % (V, A),
+  'extras':           'rpm ' + centos + ' %s/apt/%s extras'           % (V, A),
+  'plus':             'rpm ' + centos + ' %s/apt/%s centosplus'       % (V, A),
+}
+
+yumsources['centos-%s-%s' % (V, A)] = {
+  'os':               centos + '/%s/os/%s'                            % (V, A),
+  'updates':          centos + '/%s/updates/%s'                       % (V, A),
+  'addons':           centos + '/%s/addons/%s'                        % (V, A),
+  'contrib':          centos + '/%s/contrib/%s'                       % (V, A),
+  'csgfs':            centos + '/%s/csgfs/%s'                         % (V, A),
+  'extras':           centos + '/%s/extras/%s'                        % (V, A),
+  'plus':             centos + '/%s/centosplus/%s'                    % (V, A),
+  'fextras':          centosfe + '/el%s/extras/stable/%s/RPMS'        % (V, A),
+}
+
+# CentOS
+packages['centos-%s-%s-os' % (V, A)] = {
+  'dir':      'centos-%s-%s' % (V, A),
+  'minimal':  'bash glibc',
+  'base':     'coreutils findutils openssh-server',
+  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
+              'patch unzip bzip2 diffutils cpio elfutils',
+}
+sourceslist['centos-%s-%s-os' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', )
+}
+config['centos-%s-%s-os' % (V, A)] = {
+  'runuser': '/sbin/runuser',
+  'macros':  { 'dist': '.centos' + V, },
+}
+aliases['centos-%s-%s-os' % (V, A)] = ('c' + V + 'o' + AS, 'c' + V + AS, )
+
+# CentOS with updates
+packages['centos-%s-%s-updates' % (V, A)] = packages['centos-%s-%s-os' % (V, A)]
+sourceslist['centos-%s-%s-updates' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', )
+}
+config['centos-%s-%s-updates' % (V, A)] = config['centos-%s-%s-os' % (V, A)]
+aliases['centos-%s-%s-updates' % (V, A)] = ('c' + V + 'u' + AS, )
+
+# CentOS with addons
+packages['centos-%s-%s-addons' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)]
+sourceslist['centos-%s-%s-addons' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'addons', )
+}
+config['centos-%s-%s-addons' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
+aliases['centos-%s-%s-addons' % (V, A)] = ('c' + V + 'a' + AS, )
+
+# CentOS with contrib
+packages['centos-%s-%s-contrib' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)]
+sourceslist['centos-%s-%s-contrib' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'contrib', )
+}
+config['centos-%s-%s-contrib' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
+aliases['centos-%s-%s-contrib' % (V, A)] = ('c' + V + 'c' + AS, )
+
+# CentOS with csgfs
+packages['centos-%s-%s-csgfs' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)]
+sourceslist['centos-%s-%s-csgfs' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'csgfs', )
+}
+config['centos-%s-%s-csgfs' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
+aliases['centos-%s-%s-csgfs' % (V, A)] = ('c' + V + 'g' + AS, )
+
+# CentOS with extras
+packages['centos-%s-%s-extras' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)]
+sourceslist['centos-%s-%s-extras' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'extras', )
+}
+config['centos-%s-%s-extras' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
+aliases['centos-%s-%s-extras' % (V, A)] = ('c' + V + 'e' + AS, )
+
+# CentOS with centosplus
+packages['centos-%s-%s-plus' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)]
+sourceslist['centos-%s-%s-plus' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'plus', )
+}
+config['centos-%s-%s-plus' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
+aliases['centos-%s-%s-plus' % (V, A)] = ('c' + V + 'p' + AS, )
+
+# CentOS with Fedora Extras rebuilds
+packages['centos-%s-%s-fextras' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)].copy()
+packages['centos-%s-%s-fextras' % (V, A)]['build'] = packages['centos-%s-%s-updates' % (V, A)]['build'] + " fedora-rpmdevtools"
+sourceslist['centos-%s-%s-fextras' % (V, A)] = {
+  'centos-%s-%s' % (V, A): ('os', 'updates', 'fextras', )
+}
+config['centos-%s-%s-fextras' % (V, A)] = config['centos-%s-%s-updates' % (V, A)].copy()
+if not config['centos-%s-%s-fextras' % (V, A)].has_key('macros'):
+  config['centos-%s-%s-fextras' % (V, A)]['macros'] = {}
+config['centos-%s-%s-fextras' % (V, A)]['macros'].update({
+  '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
+})
+aliases['centos-%s-%s-fextras' % (V, A)] = ('c' + V + 'f' + AS, )

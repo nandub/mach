@@ -1,5 +1,8 @@
 2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* README, configure.in, etc/location, etc/dist.d/centos-4-*:
+	  add CentOS 4 configs
+
 	* README:
 	  update list of supported Fedora releases
 

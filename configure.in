@@ -96,6 +96,8 @@ CHECK_RELEASE(redhat,    "(Valhalla)",   defaultroot="redhat-73-i386")
 CHECK_RELEASE(redhat,    "(Psyche)",     defaultroot="redhat-80-i386")
 CHECK_RELEASE(redhat,    "(Shrike)",     defaultroot="redhat-9-i386")
 
+CHECK_RELEASE(redhat, "CentOS release 4",defaultroot="centos-4-i386")
+
 CHECK_RELEASE(yellowdog, "(Sirius)",     defaultroot="yellowdog-30-ppc")
 
 dnl now append a modifier if asked for
