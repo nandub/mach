@@ -74,6 +74,16 @@ Red Hat 7.0 and 7.1
   - updated
   - with FreshRPMS
 
+CentOS 4
+  - standard
+  - updated
+  - with addons
+  - with contrib
+  - with csgfs
+  - with extras
+  - with centosplus
+  - with Fedora Extras rebuilds
+
 Dave/Dina
   - fridge
   - oven
