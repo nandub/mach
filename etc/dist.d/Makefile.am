@@ -15,6 +15,8 @@ dists = \
 	fedora-5-x86_64 \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
+	centos-4-i386 \
+	centos-4-x86_64 \
 	cnc-9-i386 \
 	suse-81-i386 \
 	suse-82-i386 \
