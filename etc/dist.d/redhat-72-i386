@@ -29,7 +29,9 @@ packages['redhat-72-i386'] = {
 sourceslist['redhat-72-i386'] = {
     'redhat-72-i386': ('os', )
 }
-config['redhat-72-i386'] = {}
+config['redhat-72-i386'] = {
+  'macros': {},
+}
 aliases['redhat-72-i386'] = ('rh72', )
 
 # Red Hat Linux 7.2, updates (rpm 4.0.4)
@@ -37,7 +39,7 @@ packages['redhat-72-i386-updates'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-updates'] = {
     'redhat-72-i386': ('os', 'updates', )
 }
-config['redhat-72-i386-updates'] = {}
+config['redhat-72-i386-updates'] = config['redhat-72-i386']
 aliases['redhat-72-i386-updates'] = ('rh72u', )
 
 # Red Hat Linux 7.2, FreshRPMS
@@ -45,7 +47,7 @@ packages['redhat-72-i386-freshrpms'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-freshrpms'] = {
     'redhat-72-i386': ('os', 'freshrpms', )
 }
-config['redhat-72-i386-freshrpms'] = {}
+config['redhat-72-i386-freshrpms'] = config['redhat-72-i386']
 aliases['redhat-72-i386-freshrpms'] = ('rh72fr', )
 
 # Red Hat Linux 7.2, updates + FreshRPMS
@@ -53,17 +55,17 @@ packages['redhat-72-i386-updates-freshrpms'] = packages['redhat-72-i386']
 sourceslist['redhat-72-i386-updates-freshrpms'] = {
     'redhat-72-i386': ('os', 'updates', 'freshrpms', )
 }
-config['redhat-72-i386-updates-freshrpms'] = {}
+config['redhat-72-i386-updates-freshrpms'] = config['redhat-72-i386-updates']
 aliases['redhat-72-i386-updates-freshrpms'] = ('rh72ufr', )
 
 # Red Hat Linux 7.2 with JPackage
-packages['redhat-72-i386-jpackage'] = packages['redhat-72-i386-updates'].copy()
-packages['redhat-72-i386-jpackage']['base'] = packages['redhat-72-i386-updates']['base'] + ' java-1.4.2-sun'
-packages['redhat-72-i386-jpackage']['build'] = packages['redhat-72-i386-updates']['build'] + ' gcc-c++ java-1.4.2-sun-devel'
+packages['redhat-72-i386-jpackage'] = deepcopy(packages['redhat-72-i386-updates'])
+packages['redhat-72-i386-jpackage']['base'] = packages['redhat-72-i386-jpacakge']['base'] + ' java-1.4.2-sun'
+packages['redhat-72-i386-jpackage']['build'] = packages['redhat-72-i386-jpackage']['build'] + ' gcc-c++ java-1.4.2-sun-devel'
 sourceslist['redhat-72-i386-jpackage'] = {
     'redhat-72-i386':
     sourceslist['redhat-72-i386-updates']['redhat-72-i386'] +
     ('jpackage-generic', 'jpackage-rh72', 'jpackage-nonfree', ),
 }
-config['redhat-72-i386-jpackage'] = {}
+config['redhat-72-i386-jpackage'] = config['redhat-72-i386-updates']
 aliases['redhat-72-i386-jpackage'] = ('rh72jpp', )

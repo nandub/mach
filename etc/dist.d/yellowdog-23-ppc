@@ -25,7 +25,9 @@ packages['yellowdog-23-ppc'] = {
 sourceslist['yellowdog-23-ppc'] = {
     'yellowdog-23-ppc': ('os', )
 }
-config['yellowdog-23-ppc'] = {}
+config['yellowdog-23-ppc'] = {
+  'macros': {},
+}
 aliases['yellowdog-23-ppc'] = ('yd23', )
 
 # Yellow Dog Linux 2.3 with updates
@@ -33,7 +35,7 @@ packages['yellowdog-23-ppc-updates'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-updates'] = {
     'yellowdog-23-ppc': ('os', 'updates', )
 }
-config['yellowdog-23-ppc-updates'] = {}
+config['yellowdog-23-ppc-updates'] = config['yellowdog-23-ppc']
 aliases['yellowdog-23-ppc-updates'] = ('yd23u', )
 
 # Yellow Dog Linux 2.3, FreshRPMS
@@ -41,7 +43,7 @@ packages['yellowdog-23-ppc-freshrpms'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-freshrpms'] = {
     'yellowdog-23-ppc': ('os', 'freshrpms', )
 }
-config['yellowdog-23-ppc-freshrpms'] = {}
+config['yellowdog-23-ppc-freshrpms'] = config['yellowdog-23-ppc']
 aliases['yellowdog-23-ppc-freshrpms'] = ('yd23fr', )
 
 # Yellow Dog Linux 2.3, updates + FreshRPMS
@@ -49,5 +51,5 @@ packages['yellowdog-23-ppc-updates-freshrpms'] = packages['yellowdog-23-ppc']
 sourceslist['yellowdog-23-ppc-updates-freshrpms'] = {
     'yellowdog-23-ppc': ('os', 'updates', 'freshrpms', )
 }
-config['yellowdog-23-ppc-updates-freshrpms'] = {}
+config['yellowdog-23-ppc-updates-freshrpms'] = config['yellowdog-23-ppc-updates']
 aliases['yellowdog-23-ppc-updates-freshrpms'] = ('yd23ufr', )

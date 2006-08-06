@@ -9,6 +9,10 @@
 	* scripts/mach.in:
 	  import deepcopy for dist.d snippets
 
+	* etc/dist.d/*:
+	  improved inheritance and maintainability, avoid trumping
+	  configs of parent flavours in derived configs
+
 2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
