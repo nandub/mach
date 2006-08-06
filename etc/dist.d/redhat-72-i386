@@ -60,7 +60,7 @@ aliases['redhat-72-i386-updates-freshrpms'] = ('rh72ufr', )
 
 # Red Hat Linux 7.2 with JPackage
 packages['redhat-72-i386-jpackage'] = deepcopy(packages['redhat-72-i386-updates'])
-packages['redhat-72-i386-jpackage']['base'] = packages['redhat-72-i386-jpacakge']['base'] + ' java-1.4.2-sun'
+packages['redhat-72-i386-jpackage']['base'] = packages['redhat-72-i386-jpackage']['base'] + ' java-1.4.2-sun'
 packages['redhat-72-i386-jpackage']['build'] = packages['redhat-72-i386-jpackage']['build'] + ' gcc-c++ java-1.4.2-sun-devel'
 sourceslist['redhat-72-i386-jpackage'] = {
     'redhat-72-i386':
