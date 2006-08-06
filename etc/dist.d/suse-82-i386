@@ -25,7 +25,10 @@ packages['suse-82-i386'] = {
 sourceslist['suse-82-i386'] = {
     'suse-82-i386': ('base', )
 }
-config['suse-82-i386'] = { 'root_rpmbuild': 'rpm', }
+config['suse-82-i386'] = {
+  'root_rpmbuild': 'rpm',
+  'macros': {},
+}
 aliases['suse-82-i386'] = ('suse82', )
 
 # SuSE Linux 8.2, updates

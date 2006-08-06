@@ -37,7 +37,9 @@ packages['fedora-1-i386-core'] = {
 sourceslist['fedora-1-i386-core'] = {
     'fedora-1-i386': ('core', )
 }
-config['fedora-1-i386-core'] = {}
+config['fedora-1-i386-core'] = {
+  'macros': {},
+}
 aliases['fedora-1-i386-core'] = ('f1c', 'fc1', )
 
 # Fedora Core 1 with updates
@@ -45,7 +47,7 @@ packages['fedora-1-i386-updates'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-updates'] = {
     'fedora-1-i386': ('core', 'updates', )
 }
-config['fedora-1-i386-updates'] = {}
+config['fedora-1-i386-updates'] = config['fedora-1-i386-core']
 aliases['fedora-1-i386-updates'] = ('f1u', )
 
 # Fedora Core 1 with GStreamer
@@ -64,8 +66,8 @@ config['fedora-1-i386-gstreamer-deps'] = { 'release': '1' }
 aliases['fedora-1-i386-gstreamer-deps'] = ('f1gd', )
 
 # Fedora Core 1 with fedora.us
-packages['fedora-1-i386-fedora-stable'] = packages['fedora-1-i386-updates'].copy()
-packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-1-i386-fedora-stable'] = deepcopy(packages['fedora-1-i386-updates'])
+packages['fedora-1-i386-fedora-stable']['build'] = packages['fedora-1-i386-fedora-stable']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-1-i386-fedora-stable'] = {
     'fedora-1-i386':
     sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
@@ -125,17 +127,17 @@ packages['fedora-1-i386-freshrpms'] = packages['fedora-1-i386-core']
 sourceslist['fedora-1-i386-freshrpms'] = {
     'fedora-1-i386': ('core', 'freshrpms', )
 }
-config['fedora-1-i386-freshrpms'] = {}
+config['fedora-1-i386-freshrpms'] = config['fedora-1-i386-core']
 aliases['fedora-1-i386-freshrpms'] = ('f1fr', )
 
 # Fedora Core 1 with JPackage
-packages['fedora-1-i386-jpackage'] = packages['fedora-1-i386-updates'].copy()
-packages['fedora-1-i386-jpackage']['base'] = packages['fedora-1-i386-updates']['base'] + ' java-1.4.2-sun'
-packages['fedora-1-i386-jpackage']['build'] = packages['fedora-1-i386-updates']['build'] + ' redhat-rpm-config java-1.4.2-sun-devel'
+packages['fedora-1-i386-jpackage'] = deepcopy(packages['fedora-1-i386-updates'])
+packages['fedora-1-i386-jpackage']['base'] = packages['fedora-1-i386-jpackage']['base'] + ' java-1.4.2-sun'
+packages['fedora-1-i386-jpackage']['build'] = packages['fedora-1-i386-jpackage']['build'] + ' redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['fedora-1-i386-jpackage'] = {
     'fedora-1-i386':
     sourceslist['fedora-1-i386-updates']['fedora-1-i386'] +
     ('jpackage-generic', 'jpackage-fc1', 'jpackage-nonfree', ),
 }
-config['fedora-1-i386-jpackage'] = {}
+config['fedora-1-i386-jpackage'] = config['fedora-1-i386-updates']
 aliases['fedora-1-i386-jpackage'] = ('fc1jpp', )

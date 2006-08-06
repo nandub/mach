@@ -27,7 +27,9 @@ packages['redhat-71-i386'] = {
 sourceslist['redhat-71-i386'] = {
     'redhat-71-i386': ('os', )
 }
-config['redhat-71-i386'] = {}
+config['redhat-71-i386'] = {
+  'macros': {},
+}
 aliases['redhat-71-i386'] = ('rh71', )
 
 # Red Hat Linux 7.1, updates (rpm 4.0.4)
@@ -35,7 +37,7 @@ packages['redhat-71-i386-updates'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-updates'] = {
     'redhat-71-i386': ('os', 'updates', )
 }
-config['redhat-71-i386-updates'] = {}
+config['redhat-71-i386-updates'] = config['redhat-71-i386']
 aliases['redhat-71-i386-updates'] = ('rh71u', )
 
 # Red Hat Linux 7.1, FreshRPMS
@@ -43,7 +45,7 @@ packages['redhat-71-i386-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-freshrpms'] = {
     'redhat-71-i386': ('os', 'freshrpms', )
 }
-config['redhat-71-i386-freshrpms'] = {}
+config['redhat-71-i386-freshrpms'] = config['redhat-71-i386']
 aliases['redhat-71-i386-freshrpms'] = ('rh71fr', )
 
 # Red Hat Linux 7.1, updates + FreshRPMS
@@ -51,5 +53,5 @@ packages['redhat-71-i386-updates-freshrpms'] = packages['redhat-71-i386']
 sourceslist['redhat-71-i386-updates-freshrpms'] = {
     'redhat-71-i386': ('os', 'updates', 'freshrpms', )
 }
-config['redhat-71-i386-updates-freshrpms'] = {}
+config['redhat-71-i386-updates-freshrpms'] = config['redhat-71-i386-updates']
 aliases['redhat-71-i386-updates-freshrpms'] = ('rh71ufr', )

@@ -100,14 +100,12 @@ config['centos-%s-%s-plus' % (V, A)] = config['centos-%s-%s-updates' % (V, A)]
 aliases['centos-%s-%s-plus' % (V, A)] = ('c' + V + 'p' + AS, )
 
 # CentOS with Fedora Extras rebuilds
-packages['centos-%s-%s-fextras' % (V, A)] = packages['centos-%s-%s-updates' % (V, A)].copy()
-packages['centos-%s-%s-fextras' % (V, A)]['build'] = packages['centos-%s-%s-updates' % (V, A)]['build'] + " fedora-rpmdevtools"
+packages['centos-%s-%s-fextras' % (V, A)] = deepcopy(packages['centos-%s-%s-updates' % (V, A)])
+packages['centos-%s-%s-fextras' % (V, A)]['build'] = packages['centos-%s-%s-fextras' % (V, A)]['build'] + " fedora-rpmdevtools"
 sourceslist['centos-%s-%s-fextras' % (V, A)] = {
   'centos-%s-%s' % (V, A): ('os', 'updates', 'fextras', )
 }
-config['centos-%s-%s-fextras' % (V, A)] = config['centos-%s-%s-updates' % (V, A)].copy()
-if not config['centos-%s-%s-fextras' % (V, A)].has_key('macros'):
-  config['centos-%s-%s-fextras' % (V, A)]['macros'] = {}
+config['centos-%s-%s-fextras' % (V, A)] = deepcopy(config['centos-%s-%s-updates' % (V, A)])
 config['centos-%s-%s-fextras' % (V, A)]['macros'].update({
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })

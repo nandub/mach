@@ -24,7 +24,9 @@ packages['cnc-9-i386'] = {
 sourceslist['cnc-9-i386'] = {
     'cnc-9-i386': ('all', )
 }
-config['cnc-9-i386'] = {}
+config['cnc-9-i386'] = {
+  'macros': {},
+}
 aliases['cnc-9-i386'] = ('cnc9', )
 
 # Conectiva Linux 9, updates
@@ -32,5 +34,5 @@ packages['cnc-9-i386-updates'] = packages['cnc-9-i386']
 sourceslist['cnc-9-i386-updates'] = {
     'cnc-9-i386': ('all', 'updates', )
 }
-config['cnc-9-i386-updates'] = {}
+config['cnc-9-i386-updates'] = config['cnc-9-i386']
 aliases['cnc-9-i386-updates'] = ('cnc9u', )

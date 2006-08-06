@@ -39,6 +39,7 @@ sourceslist['fedora-2-x86_64-core'] = {
 }
 config['fedora-2-x86_64-core'] = {
   'excludearch': 'i386 i486 i586 i686 athlon',
+  'macros': {},
 }
 aliases['fedora-2-x86_64-core'] = ('f2c', 'fc2', )
 
@@ -47,7 +48,7 @@ packages['fedora-2-x86_64-updates'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-updates'] = {
     'fedora-2-x86_64': ('core', 'updates', )
 }
-config['fedora-2-x86_64-updates'] = config['fedora-2-x86_64-core'].copy()
+config['fedora-2-x86_64-updates'] = config['fedora-2-x86_64-core']
 aliases['fedora-2-x86_64-updates'] = ('f2u', )
 
 # Fedora Core 2 with GStreamer
@@ -55,31 +56,28 @@ packages['fedora-2-x86_64-gstreamer'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-gstreamer'] = {
     'fedora-2-x86_64': ('core', 'gstreamer-deps', 'gstreamer-build', 'gstreamer')
 }
-config['fedora-2-x86_64-gstreamer'] = config['fedora-2-x86_64-core'].copy()
-config['fedora-2-x86_64-gstreamer'].update({
-  'release': '2',
-})
+config['fedora-2-x86_64-gstreamer'] = deepcopy(config['fedora-2-x86_64-core'])
+config['fedora-2-x86_64-gstreamer'].update({ 'release': '2', })
 aliases['fedora-2-x86_64-gstreamer'] = ('f2g', )
 
 packages['fedora-2-x86_64-gstreamer-deps'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-gstreamer-deps'] = {
     'fedora-2-x86_64': ('core', 'gstreamer-deps')
 }
-config['fedora-2-x86_64-gstreamer-deps'] = config['fedora-2-x86_64-gstreamer'].copy()
+config['fedora-2-x86_64-gstreamer-deps'] = deepcopy(config['fedora-2-x86_64-core'])
+config['fedora-2-x86_64-gstreamer-deps'].update({ 'release': '2', })
 aliases['fedora-2-x86_64-gstreamer-deps'] = ('f2gd', )
 
 # Fedora Core 2 with fedora.us
-packages['fedora-2-x86_64-fedora-stable'] = packages['fedora-2-x86_64-updates'].copy()
-packages['fedora-2-x86_64-fedora-stable']['build'] = packages['fedora-2-x86_64-updates']['build'] + " fedora-rpmdevtools"
+packages['fedora-2-x86_64-fedora-stable'] = deepcopy(packages['fedora-2-x86_64-updates'])
+packages['fedora-2-x86_64-fedora-stable']['build'] = packages['fedora-2-x86_64-fedora-stable']['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-2-x86_64-fedora-stable'] = {
     'fedora-2-x86_64':
     sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
     ('fedora-stable', )
 }
-config['fedora-2-x86_64-fedora-stable'] = config['fedora-2-x86_64-core'].copy()
-config['fedora-2-x86_64-gstreamer'].update({
-  'release': '2',
-})
+config['fedora-2-x86_64-fedora-stable'] = deepcopy(config['fedora-2-x86_64-core'])
+config['fedora-2-x86_64-fedora-stable'].update({ 'release': '2', })
 aliases['fedora-2-x86_64-fedora-stable'] = ('f2fs', )
 
 packages['fedora-2-x86_64-fedora-testing'] = packages['fedora-2-x86_64-fedora-stable']
@@ -133,17 +131,17 @@ packages['fedora-2-x86_64-freshrpms'] = packages['fedora-2-x86_64-core']
 sourceslist['fedora-2-x86_64-freshrpms'] = {
     'fedora-2-x86_64': ('core', 'freshrpms', )
 }
-config['fedora-2-x86_64-freshrpms'] = config['fedora-2-x86_64-core'].copy()
+config['fedora-2-x86_64-freshrpms'] = config['fedora-2-x86_64-core']
 aliases['fedora-2-x86_64-freshrpms'] = ('f2fr', )
 
 # Fedora Core 2 with JPackage
-packages['fedora-2-x86_64-jpackage'] = packages['fedora-2-x86_64-updates'].copy()
-packages['fedora-2-x86_64-jpackage']['base'] = packages['fedora-2-x86_64-updates']['base'] + ' java-1.4.2-sun'
-packages['fedora-2-x86_64-jpackage']['build'] = packages['fedora-2-x86_64-updates']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
+packages['fedora-2-x86_64-jpackage'] = deepcopy(packages['fedora-2-x86_64-updates'])
+packages['fedora-2-x86_64-jpackage']['base'] = packages['fedora-2-x86_64-jpackage']['base'] + ' java-1.4.2-sun'
+packages['fedora-2-x86_64-jpackage']['build'] = packages['fedora-2-x86_64-jpackage']['build'] + ' gcc-c++ redhat-rpm-config java-1.4.2-sun-devel'
 sourceslist['fedora-2-x86_64-jpackage'] = {
     'fedora-2-x86_64':
     sourceslist['fedora-2-x86_64-updates']['fedora-2-x86_64'] +
     ('jpackage-generic', 'jpackage-fc2', 'jpackage-nonfree', ),
 }
-config['fedora-2-x86_64-jpackage'] = config['fedora-2-x86_64-core'].copy()
+config['fedora-2-x86_64-jpackage'] = config['fedora-2-x86_64-core']
 aliases['fedora-2-x86_64-jpackage'] = ('fc2jpp', )

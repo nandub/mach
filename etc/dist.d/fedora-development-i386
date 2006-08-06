@@ -36,21 +36,21 @@ packages['fedora-%s-%s-core' % (V, A)] = {
 sourceslist['fedora-%s-%s-core' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', )
 }
-# FC4 roots should use runuser instead of su
-config['fedora-%s-%s-core' % (V, A)] = {'runuser': '/sbin/runuser'}
+config['fedora-%s-%s-core' % (V, A)] = {
+  'runuser': '/sbin/runuser',
+  'macros': {},
+}
 aliases['fedora-%s-%s-core' % (V, A)] = ('f' + VS + 'c' + AS, 'fc' + VS + AS, )
 
 # Fedora Core with extras
-packages['fedora-%s-%s-extras' % (V, A)] = packages['fedora-%s-%s-core' % (V, A)].copy()
-packages['fedora-%s-%s-extras' % (V, A)]['build'] = packages['fedora-%s-%s-core' % (V, A)]['build'] + " fedora-rpmdevtools"
+packages['fedora-%s-%s-extras' % (V, A)] = deepcopy(packages['fedora-%s-%s-core' % (V, A)])
+packages['fedora-%s-%s-extras' % (V, A)]['build'] = packages['fedora-%s-%s-extras' % (V, A)]['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   'fedora-%s-%s' % (V, A):
   sourceslist['fedora-%s-%s-core' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', )
 }
-config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-core' % (V, A)].copy()
-if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
-  config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
+config['fedora-%s-%s-extras' % (V, A)] = deepcopy(config['fedora-%s-%s-core' % (V, A)])
 config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })

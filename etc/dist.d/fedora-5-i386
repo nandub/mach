@@ -51,9 +51,9 @@ packages['fedora-%s-%s-core' % (V, A)] = {
 sourceslist['fedora-%s-%s-core' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', )
 }
-# FC5 roots should use runuser instead of su
 config['fedora-%s-%s-core' % (V, A)] = {
   'runuser': '/sbin/runuser',
+  'macros': {},
 }
 aliases['fedora-%s-%s-core' % (V, A)] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
 
@@ -66,16 +66,14 @@ config['fedora-%s-%s-updates' % (V, A)] = config['fedora-%s-%s-core' % (V, A)]
 aliases['fedora-%s-%s-updates' % (V, A)] = ('f' + V + 'u' + AS, )
 
 # Fedora Core with extras
-packages['fedora-%s-%s-extras' % (V, A)] = packages['fedora-%s-%s-updates' % (V, A)].copy()
-packages['fedora-%s-%s-extras' % (V, A)]['build'] = packages['fedora-%s-%s-updates' % (V, A)]['build'] + " fedora-rpmdevtools"
+packages['fedora-%s-%s-extras' % (V, A)] = deepcopy(packages['fedora-%s-%s-updates' % (V, A)])
+packages['fedora-%s-%s-extras' % (V, A)]['build'] = packages['fedora-%s-%s-extras' % (V, A)]['build'] + " fedora-rpmdevtools"
 sourceslist['fedora-%s-%s-extras' % (V, A)] = {
   'fedora-%s-%s' % (V, A):
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', )
 }
-config['fedora-%s-%s-extras' % (V, A)] = config['fedora-%s-%s-updates' % (V, A)].copy()
-if not config['fedora-%s-%s-extras' % (V, A)].has_key('macros'):
-  config['fedora-%s-%s-extras' % (V, A)]['macros'] = {}
+config['fedora-%s-%s-extras' % (V, A)] = deepcopy(config['fedora-%s-%s-updates' % (V, A)])
 config['fedora-%s-%s-extras' % (V, A)]['macros'].update({
   'dist': '.fc%s' % V,
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
@@ -87,7 +85,7 @@ packages['fedora-%s-%s-gstreamer' % (V, A)] = packages['fedora-%s-%s-core' % (V,
 sourceslist['fedora-%s-%s-gstreamer' % (V, A)] = {
   'fedora-%s-%s' % (V, A): ('core', 'updates', 'extras', 'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
-config['fedora-%s-%s-gstreamer' % (V, A)] = config['fedora-%s-%s-core' % (V, A)].copy()
+config['fedora-%s-%s-gstreamer' % (V, A)] = deepcopy(config['fedora-%s-%s-core' % (V, A)])
 config['fedora-%s-%s-gstreamer' % (V, A)].update({
   'release': V,
 })
@@ -107,7 +105,7 @@ sourceslist['fedora-%s-%s-livna' % (V, A)] = {
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +
   ('extras', 'livna', )
 }
-config['fedora-%s-%s-livna' % (V, A)] = config['fedora-%s-%s-extras' % (V, A)].copy()
+config['fedora-%s-%s-livna' % (V, A)] = deepcopy(config['fedora-%s-%s-extras' % (V, A)])
 config['fedora-%s-%s-livna' % (V, A)]['macros'].update({
   'dist': '.lvn%s' % V,
 })
@@ -122,9 +120,9 @@ config['fedora-%s-%s-freshrpms' % (V, A)] = config['fedora-%s-%s-core' % (V, A)]
 aliases['fedora-%s-%s-freshrpms' % (V, A)] = ('f' + V + 'fr' + AS, )
 
 # Fedora Core with JPackage
-packages['fedora-%s-%s-jpackage' % (V, A)] = packages['fedora-%s-%s-updates' % (V, A)].copy()
-packages['fedora-%s-%s-jpackage' % (V, A)]['base'] = packages['fedora-%s-%s-updates' % (V, A)]['base'] + ' java-1.4.2-sun'
-packages['fedora-%s-%s-jpackage' % (V, A)]['build'] = packages['fedora-%s-%s-updates' % (V, A)]['build'] + ' java-1.4.2-sun-devel'
+packages['fedora-%s-%s-jpackage' % (V, A)] = deepcopy(packages['fedora-%s-%s-updates' % (V, A)])
+packages['fedora-%s-%s-jpackage' % (V, A)]['base'] = packages['fedora-%s-%s-jpackage' % (V, A)]['base'] + ' java-1.4.2-sun'
+packages['fedora-%s-%s-jpackage' % (V, A)]['build'] = packages['fedora-%s-%s-jpackage' % (V, A)]['build'] + ' java-1.4.2-sun-devel'
 sourceslist['fedora-%s-%s-jpackage' % (V, A)] = {
   'fedora-%s-%s' % (V, A):
   sourceslist['fedora-%s-%s-updates' % (V, A)]['fedora-%s-%s' % (V, A)] +

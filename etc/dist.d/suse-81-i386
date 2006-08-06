@@ -24,7 +24,10 @@ packages['suse-81-i386'] = {
 sourceslist['suse-81-i386'] = {
     'suse-81-i386': ('base',)
 }
-config['suse-81-i386'] = { 'root_rpmbuild': 'rpm', }
+config['suse-81-i386'] = {
+  'root_rpmbuild': 'rpm',
+  'macros': {},
+}
 aliases['suse-81-i386'] = ('suse81', )
 
 # SuSE Linux 8.1, updates
