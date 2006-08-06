@@ -55,6 +55,7 @@ Commands:
   clean             totally cleans the root
   rebuild           rebuild a (set of) .src.rpm(s)
                                 (passes options given to rpmbuild)
+  rpm               run host\'s rpm on target root
   setup             sets up the root for a particular purpose
         prep                         preparation before package install
         minimal                      minimal set of rpms (bash, glibc)
@@ -62,6 +63,7 @@ Commands:
         build                        everything to build rpms
   status            show status of mach roots
   unlock            override root lock
+  yum               run host\'s yum on target root
 '''
 
 # list of allowed commands
