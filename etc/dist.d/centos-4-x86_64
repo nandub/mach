@@ -46,6 +46,7 @@ sourceslist['centos-%s-%s-os' % (V, A)] = {
 }
 config['centos-%s-%s-os' % (V, A)] = {
   'runuser': '/sbin/runuser',
+  'excludearch': 'i386 i486 i586 i686 athlon',
   'macros':  { 'dist': '.centos' + V, },
 }
 aliases['centos-%s-%s-os' % (V, A)] = ('c' + V + 'o' + AS, 'c' + V + AS, )

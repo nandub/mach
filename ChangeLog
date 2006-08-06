@@ -3,6 +3,9 @@
 	* scripts/mach.in:
 	  document "rpm" and "yum" in --help commands list
 
+	* etc/dist.d/centos-4-x86_64:
+	  add excludearchs
+
 2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
