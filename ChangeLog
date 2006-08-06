@@ -6,6 +6,9 @@
 	* etc/dist.d/centos-4-x86_64:
 	  add excludearchs
 
+	* scripts/mach.in:
+	  import deepcopy for dist.d snippets
+
 2006-08-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
