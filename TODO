@@ -62,8 +62,7 @@
 		x86_64 packages on an x86_64 host
 * HARD:		rpm --aid
 * MEDIUM:	default to a 64 bit root on a 64 bit machine
-* EASY/TBD:	create /dev/random and /dev/urandom in chroots.
-		TBD: any security issues with this?
+* EASY/TBD:	TBD: any security issues with having added dev/[u]random ?
 
 0) Create an /8.0/i386 mount point with all the packages for Red Hat 8.0.
 You can use anything you want, I use /8.0/i386.

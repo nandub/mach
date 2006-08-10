@@ -1582,6 +1582,22 @@ class Root:
             except ReturnValue, (retval, output):
                 raise Root.Error, "mach-helper could not mknod /dev/zero"
 
+        devrandom = os.path.join (self.rootdir, 'dev', 'random')
+        if not os.path.exists (devrandom):
+            cmd = '%s %s -m 666 c 1 8' % (config['mknod'], devrandom)
+            try:
+                self.do(cmd, progress=False)
+            except ReturnValue, (retval, output):
+                raise Root.Error, "mach-helper could not mknod /dev/random"
+
+        devurandom = os.path.join (self.rootdir, 'dev', 'urandom')
+        if not os.path.exists (devurandom):
+            cmd = '%s %s -m 666 c 1 9' % (config['mknod'], devurandom)
+            try:
+                self.do(cmd, progress=False)
+            except ReturnValue, (retval, output):
+                raise Root.Error, "mach-helper could not mknod /dev/urandom"
+
 
         ensure_dir (os.path.join (self.rootdir, 'etc', 'rpm'))
         open (os.path.join (self.rootdir, 'etc', 'mtab'), 'w')
