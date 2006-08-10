@@ -11,7 +11,7 @@ AC_DEFUN([CHECK_RELEASE],
   if test -f /etc/$DIST-release
   then
     AC_MSG_CHECKING(/etc/$DIST-release for $NAME)
-    if grep $NAME /etc/$DIST-release > /dev/null; then
+    if grep "$NAME" /etc/$DIST-release > /dev/null; then
       AC_MSG_RESULT(found)
       ifelse([$3], , :, [$3])
     else
