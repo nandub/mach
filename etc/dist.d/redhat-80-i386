@@ -21,9 +21,9 @@ aptsources['redhat-80-i386'] = {
     'livna-testing':    'rpm ' + livna       + ' redhat/8.0/i386 testing',
     'livna-unstable':   'rpm ' + livna       + ' redhat/8.0/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 8.0/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
-    'jpackage-rh80':    'rpm ' + jpackage    + ' redhat-8.0 free',
-    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+    'jpackage-generic': 'rpm ' + jpackage    + '/1.6 generic free',
+    'jpackage-rh80':    'rpm ' + jpackage    + '/1.6 redhat-8.0 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + '/1.6 generic non-free',
 }
 
 # Red Hat Linux 8.0

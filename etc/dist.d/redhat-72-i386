@@ -12,9 +12,9 @@ aptsources['redhat-72-i386'] = {
     'os':               'rpm ' + redhat      + ' 7.2/i386 os',
     'updates':          'rpm ' + redhat      + ' 7.2/i386 updates',
     'freshrpms':        'rpm ' + freshrpmsrh + ' 7.2/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
-    'jpackage-rh72':    'rpm ' + jpackage    + ' redhat-7.2 free',
-    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+    'jpackage-generic': 'rpm ' + jpackage    + '/1.6 generic free',
+    'jpackage-rh72':    'rpm ' + jpackage    + '/1.6 redhat-7.2 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + '/1.6 generic non-free',
 }
 
 # Red Hat Linux 7.2

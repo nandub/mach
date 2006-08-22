@@ -22,9 +22,9 @@ aptsources[DIST] = {
   'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/%s/%s deps'     % (V, A),
   'livna':            'rpm ' + livna       + ' fedora/%s/%s lvn'      % (V, A),
   'freshrpms':        'rpm ' + freshrpmsfd + ' %s/%s freshrpms'       % (V, A),
-  'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
-  'jpackage-fc' + V : 'rpm ' + jpackage    + ' fedora-%s free'        % V,
-  'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+  'jpackage-generic': 'rpm ' + jpackage    + '/1.7 generic free',
+  'jpackage-fc' + V : 'rpm ' + jpackage    + '/1.7 fedora-%s free'    % V,
+  'jpackage-nonfree': 'rpm ' + jpackagenf  + '/1.7 generic non-free',
 }
 
 yumsources[DIST] = {
@@ -37,9 +37,9 @@ yumsources[DIST] = {
   'gstreamer-deps':   gstreamer   + '/fedora/%s/%s/yum/deps'          % (V, A),
   'freshrpms':        freshrpmsfd + '/%s/%s/freshrpms'                % (V, A),
   'livna':            livna       + '/fedora/%s/%s'                   % (V, A),
-  'jpackage-generic': jpackage    + '/generic/free',
-  'jpackage-fc' + V:  jpackage    + '/fedora-%s/free'                 % V,
-  'jpackage-nonfree': jpackagenf  + '/generic/non-free',
+  'jpackage-generic': jpackage    + '/1.7/generic/free',
+  'jpackage-fc' + V:  jpackage    + '/1.7/fedora-%s/free'             % V,
+  'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
 }
 
 # Fedora Core
