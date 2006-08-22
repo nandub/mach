@@ -33,6 +33,9 @@ yumsources[DIST] = {
   'extras':           centos + '/%s/extras/%s'                        % (V, A),
   'plus':             centos + '/%s/centosplus/%s'                    % (V, A),
   'fextras':          centosfe + '/el%s/extras/stable/%s/RPMS'        % (V, A),
+  'jpackage-generic': jpackage    + '/1.7/generic/free',
+  'jpackage-centos' + V: jpackage + '/1.7/redhat-el-4.0/free',
+  'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
 }
 
 # CentOS
@@ -111,3 +114,14 @@ config['%s-fextras' % DIST]['macros'].update({
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })
 aliases['%s-fextras' % DIST] = ('c' + V + 'f' + AS, )
+
+# CentOS with JPackage
+packages['%s-jpackage' % DIST] = deepcopy(packages['%s-updates' % DIST])
+packages['%s-jpackage' % DIST]['base'] = packages['%s-jpackage' % DIST]['base'] + ' java-1.4.2-sun'
+packages['%s-jpackage' % DIST]['build'] = packages['%s-jpackage' % DIST]['build'] + ' java-1.4.2-sun-devel'
+sourceslist['%s-jpackage' % DIST] = {
+  DIST: sourceslist['%s-updates' % DIST][DIST] +
+  ('jpackage-generic', 'jpackage-centos' + V , 'jpackage-nonfree', ),
+}
+config['%s-jpackage' % DIST] = config['%s-updates' % DIST]
+aliases['%s-jpackage' % DIST] = ('c' + V + 'jpp' + AS, )
