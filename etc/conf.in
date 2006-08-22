@@ -1,4 +1,5 @@
 # mach system configuration file                                 -*- python -*-
+# -*- coding: utf-8 -*-
 
 # These configuration options can be overridden on per-root basis in
 # @SYSCONFDIR@/mach/dist
