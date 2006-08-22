@@ -24,9 +24,9 @@ aptsources[DIST] = {
   'livna-testing':    'rpm ' + livna       + ' fedora/%s/%s testing'  % (V, A),
   'livna-unstable':   'rpm ' + livna       + ' fedora/%s/%s unstable' % (V, A),
   'freshrpms':        'rpm ' + freshrpmsfd + ' %s/%s freshrpms'       % (V, A),
-  'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
-  'jpackage-fc' + V : 'rpm ' + jpackage    + ' fedora-%s free'        % V,
-  'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+  'jpackage-generic': 'rpm ' + jpackage    + '/1.6 generic free',
+  'jpackage-fc' + V : 'rpm ' + jpackage    + '/1.6 fedora-%s free'    % V,
+  'jpackage-nonfree': 'rpm ' + jpackagenf  + '/1.6 generic non-free',
 }
 
 yumsources[DIST] = {
@@ -40,9 +40,9 @@ yumsources[DIST] = {
   'livna-stable':     livna       + '/fedora/%s/%s/yum/stable/RPMS'   % (V, A),
   'livna-testing':    livna       + '/fedora/%s/%s/yum/testing/RPMS'  % (V, A),
   'livna-unstable':   livna       + '/fedora/%s/%s/yum/unstable/RPMS' % (V, A),
-  'jpackage-generic': jpackage    + '/generic/free',
-  'jpackage-fc' + V:  jpackage    + '/fedora-%s/free'                 % V,
-  'jpackage-nonfree': jpackagenf  + '/generic/non-free',
+  'jpackage-generic': jpackage    + '/1.6/generic/free',
+  'jpackage-fc' + V:  jpackage    + '/1.6/fedora-%s/free'             % V,
+  'jpackage-nonfree': jpackagenf  + '/1.6/generic/non-free',
 }
 
 # Fedora Core

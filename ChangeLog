@@ -1,3 +1,12 @@
+2006-08-22  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/location:
+	  Make JPackage base URL unversioned.
+
+	* etc/dist.d/redhat-*:
+	* etc/dist.d/fedora-*:
+	  Update FC >= 4 JPackage configs to 1.7.
+
 2006-08-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/mach-helper.c: (do_mknod):

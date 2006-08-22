@@ -21,9 +21,9 @@ aptsources['fedora-2-i386'] = {
     'livna-testing':    'rpm ' + livna       + ' fedora/2/i386 testing',
     'livna-unstable':   'rpm ' + livna       + ' fedora/2/i386 unstable',
     'freshrpms':        'rpm ' + freshrpmsfd + ' 2/i386 freshrpms',
-    'jpackage-generic': 'rpm ' + jpackage    + ' generic free',
-    'jpackage-fc2':     'rpm ' + jpackage    + ' fedora-2 free',
-    'jpackage-nonfree': 'rpm ' + jpackagenf  + ' generic non-free',
+    'jpackage-generic': 'rpm ' + jpackage    + '/1.6 generic free',
+    'jpackage-fc2':     'rpm ' + jpackage    + '/1.6 fedora-2 free',
+    'jpackage-nonfree': 'rpm ' + jpackagenf  + '/1.6 generic non-free',
 }
 
 # Fedora Core 2
