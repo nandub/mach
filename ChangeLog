@@ -7,6 +7,10 @@
 	* etc/dist.d/fedora-*:
 	  Update FC >= 4 JPackage configs to 1.7.
 
+	* etc/conf.in:
+	* etc/dist.d/*:
+	  Add UTF-8 coding cookies.
+
 2006-08-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/mach-helper.c: (do_mknod):

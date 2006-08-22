@@ -1,4 +1,5 @@
 # mach dist configuration                                        -*- python -*-
+# -*- coding: utf-8 -*-
 
 # centos-4-x86_64: configuration for CentOS 4
 
