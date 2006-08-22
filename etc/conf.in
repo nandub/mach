@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # These configuration options can be overridden on per-root basis in
-# @SYSCONFDIR@/mach/dist
+# @SYSCONFDIR@/mach/dist.d
 
 # Spinner theme
 config['spinner'] = {
