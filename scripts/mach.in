@@ -2345,8 +2345,13 @@ def main (config, args):
 
     if config.has_key (root):
         for key in config[root].keys ():
-            debug ("setting config['%s'] to %s" % (key, config[root][key]))
-            config[key] = config[root][key]
+            # Merge dicts, assign others
+            if config.has_key (key) and hasattr (config[key], 'update'):
+                debug ("updating config['%s'] with %s" % (key, config[root][key]))
+                config[key].update(config[root][key])
+            else:
+                debug ("setting config['%s'] to %s" % (key, config[root][key]))
+                config[key] = config[root][key]
 
     for key in cli_config.keys():
         debug ("setting config['%s'] to %s from CLI" % (key, cli_config[key]))

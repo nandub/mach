@@ -1,5 +1,9 @@
 2006-08-22  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in: (main):
+	  Merge dict type config keys instead of assigning, fixes per-dist
+	  macros nuking global ones from etc/conf.
+
 	* scripts/mach.in:
 	  Add empty macros to default config.
 
