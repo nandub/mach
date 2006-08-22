@@ -7,6 +7,10 @@
 	* etc/dist.d/fedora-*:
 	  Update FC >= 4 JPackage configs to 1.7.
 
+	* README:
+	* etc/dist.d/centos-*:
+	  Add JPackage 1.7 configs.
+	
 	* etc/conf.in:
 	* etc/dist.d/*:
 	  Add UTF-8 coding cookies.
