@@ -1,5 +1,8 @@
 2006-08-22  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* scripts/mach.in:
+	  Add empty macros to default config.
+
 	* etc/location:
 	  Make JPackage base URL unversioned.
 
