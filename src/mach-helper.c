@@ -422,7 +422,7 @@ do_mknod (int argc, char *argv[])
   if (strlen(argv[7]) != 1)
     error ("%s: options not allowed", argv[7]);
 
-  if (*argv[7] != 3 && *argv[7] != 5 && *argv[7] != 8 && *argv[7] != 9)
+  if (*argv[7] != '3' && *argv[7] != '5' && *argv[7] != '8' && *argv[7] != '9')
     error ("%s: options not allowed", argv[7]);
 
   /* all checks passed, execute */
