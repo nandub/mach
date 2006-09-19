@@ -1,3 +1,10 @@
+2006-09-19  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-6-*:
+	  Add Fedora 6 configs.
+
 2006-08-22  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in: (main):
