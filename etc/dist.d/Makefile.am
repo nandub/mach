@@ -13,6 +13,8 @@ dists = \
 	fedora-4-x86_64 \
 	fedora-5-i386 \
 	fedora-5-x86_64 \
+	fedora-6-i386 \
+	fedora-6-x86_64 \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	centos-4-i386 \
