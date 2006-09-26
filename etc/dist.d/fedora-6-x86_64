@@ -70,7 +70,7 @@ aliases['%s-updates' % DIST] = ('f' + V + 'u' + AS, )
 
 # Fedora Core with extras
 packages['%s-extras' % DIST] = deepcopy(packages['%s-updates' % DIST])
-packages['%s-extras' % DIST]['build'] = packages['%s-extras' % DIST]['build'] + " fedora-rpmdevtools"
+packages['%s-extras' % DIST]['build'] = packages['%s-extras' % DIST]['build'] + " rpmdevtools"
 sourceslist['%s-extras' % DIST] = {
   DIST: sourceslist['%s-updates' % DIST][DIST] + ('extras', )
 }

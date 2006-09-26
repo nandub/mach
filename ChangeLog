@@ -1,3 +1,10 @@
+2006-09-26  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/fedora-5-*:
+	* etc/dist.d/fedora-6-*:
+	* etc/dist.d/fedora-development-*:
+	  Use new "canonical" name for rpmdevtools in FC5+.
+
 2006-09-19  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
