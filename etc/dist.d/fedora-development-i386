@@ -32,8 +32,8 @@ packages['%s-core' % DIST] = {
   'dir':      DIST,
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
-  'build':    'dev redhat-rpm-config rpm-build make gcc gcc-c++ tar gzip ' +
-              'patch unzip bzip2 diffutils cpio elfutils',
+  'build':    'bzip2 cpio diffutils fedora-release gcc gcc-c++ gzip make ' +
+              'patch perl redhat-rpm-config rpm-build sed tar unzip which',
 }
 sourceslist['%s-core' % DIST] = {
   DIST: ('core', )
