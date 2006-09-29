@@ -1,3 +1,9 @@
+2006-09-29  Ville Skyttä  <scop@xemacs.org>
+
+	* etc/dist.d/fedora-*:
+	  Sync FC >= 3 build package sets with upstream,
+	  http://buildsys.fedoraproject.org/buildgroups/
+
 2006-09-26  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-5-*:
