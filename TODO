@@ -64,6 +64,8 @@
 * MEDIUM:	default to a 64 bit root on a 64 bit machine
 * EASY/TBD:	TBD: any security issues with having added dev/[u]random ?
 
+* MEDIUM:       a quick mach thing : I just updated my build machine to RHEL4u4, and apparently an update (probably rpm) broke my mach setup... it was unable to create the /var/lib/mach/roots/fedora-development-x86_64-freshrpms/var/lock/rpm/transaction file, and all I needed to do is add an ensure_dir line for the var/log/rpm dir in mach to fix it
+
 0) Create an /8.0/i386 mount point with all the packages for Red Hat 8.0.
 You can use anything you want, I use /8.0/i386.
 
