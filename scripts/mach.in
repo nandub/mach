@@ -1098,14 +1098,20 @@ class Root:
         #self.config_recreate ('/usr/bin/apt-sigchecker')
         # get pkgs and collect info
         pkgs = {}
+        # we use a tmppath including login name because /tmp has the
+        # sticky bit set, thus we can't remove someone else's files
+        whoami = None
+        try:
+            whoami = os.getlogin()
+        except OSError:
+            import pwd
+            whoami = pwd.getpwuid(os.geteuid())[0]
+        targettmppath = os.path.join (os.sep, 'tmp', whoami)
+        hosttmppath = self.host_path (targettmppath)
+        ensure_dir (hosttmppath)
         for path in paths:
             # resolve path to basename (without dirs)
             srpmname = os.path.basename (path)
-            # we use a tmppath including login name because /tmp has the
-            # sticky bit set, thus we can't remove someone else's files
-            targettmppath = os.path.join (os.sep, 'tmp', os.getlogin())
-            hosttmppath = self.host_path (targettmppath)
-            ensure_dir (hosttmppath)
             targetnewpath = os.path.join (targettmppath, srpmname)
             hostnewpath = os.path.join (hosttmppath, srpmname)
             if os.path.exists (hostnewpath):
