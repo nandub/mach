@@ -1536,6 +1536,10 @@ class Root:
             return
 
         print "Preparing root"
+        # rpm transaction lock directories - can be either of these
+        ensure_dir (os.path.join (self.rootdir, 'var', 'lock', 'run'))
+        ensure_dir (os.path.join (self.rootdir, 'var', 'lock', 'rpm'))
+
         # apt bits
         ensure_dir (os.path.join (self.rootdir, 'etc', 'apt'))
         ensure_dir (os.path.join (self.rootdir, 'var', 'lib', 'rpm'))
