@@ -128,11 +128,11 @@ config['%s-livna-unstable' % DIST] = config['%s-livna-testing' % DIST]
 aliases['%s-livna-unstable' % DIST] = ('f' + V + 'lu' + AS, )
 
 # Fedora Core with freshrpms
-packages['%s-freshrpms' % DIST] = packages['%s-core' % DIST]
+packages['%s-freshrpms' % DIST] = packages['%s-extras' % DIST]
 sourceslist['%s-freshrpms' % DIST] = {
-  DIST: ('core', 'freshrpms', )
+  DIST: sourceslist['%s-extras' % DIST][DIST] + ('freshrpms', )
 }
-config['%s-freshrpms' % DIST] = config['%s-core' % DIST]
+config['%s-freshrpms' % DIST] = config['%s-extras' % DIST]
 aliases['%s-freshrpms' % DIST] = ('f' + V + 'fr' + AS, )
 
 # Fedora Core with JPackage

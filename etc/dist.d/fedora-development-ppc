@@ -1,7 +1,7 @@
 # mach dist configuration                                        -*- python -*-
 # -*- coding: utf-8 -*-
 
-# fedora-development-i386: configuration for Fedora development
+# fedora-development-ppc: configuration for Fedora development
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from
@@ -10,7 +10,7 @@
 
 V = 'development'  # distro version
 VS = 'd'           # short distro version
-A = 'i386'         # architecture
+A = 'ppc'          # architecture
 AS = ''            # 'short' version of arch
 DIST = 'fedora-%s-%s' % (V, A)
 

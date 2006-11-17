@@ -1,5 +1,26 @@
 2006-11-17  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	patch by: Matthias Saou
+
+	* etc/dist.d/fedora-3-i386:
+	* etc/dist.d/fedora-3-x86_64:
+	* etc/dist.d/fedora-4-i386:
+	* etc/dist.d/fedora-4-ppc:
+	* etc/dist.d/fedora-4-x86_64:
+	* etc/dist.d/fedora-5-i386:
+	* etc/dist.d/fedora-5-ppc:
+	* etc/dist.d/fedora-5-x86_64:
+	* etc/dist.d/fedora-6-i386:
+	* etc/dist.d/fedora-6-ppc:
+	* etc/dist.d/fedora-6-x86_64:
+	* etc/dist.d/fedora-development-i386:
+	* etc/dist.d/fedora-development-ppc:
+	* etc/dist.d/fedora-development-x86_64:
+	  add fedora ppc files
+	  fix freshrpms config
+
+2006-11-17  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	patch by: Nigel Metheringham <Nigel.Metheringham@dev.intechnology.co.uk>
 
 	* scripts/mach.in:

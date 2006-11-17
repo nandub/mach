@@ -18,12 +18,15 @@ DIST = 'fedora-%s-%s' % (V, A)
 aptsources[DIST] = {
   'core':             'rpm ' + fedora      + ' %s/%s core'            % (V, A),
   'extras':           'rpm ' + freshrpmsfd + ' %s/%s extras'          % (V, A),
-  'livna':            'rpm ' + livna       + ' fedora/%s/%s lvn'      % (V, A),}
+  'livna':            'rpm ' + livna       + ' fedora/%s/%s lvn'      % (V, A),
+  'freshrpms':        'rpm ' + freshrpmsfd + ' %s/%s freshrpms'       % (V, A),
+}
 
 yumsources[DIST] = {
-  'core':             fedorayum + '/core/%s/%s/os'                    % (V, A),
-  'extras':           fedorayum + '/extras/%s/%s'                     % (V, A),
-  'livna':            livna     + '/fedora/%s/%s'                     % (V, A),
+  'core':             fedorayum   + '/core/%s/%s/os'                  % (V, A),
+  'extras':           fedorayum   + '/extras/%s/%s'                   % (V, A),
+  'freshrpms':        freshrpmsfd + '/%s/%s/freshrpms'                % (V, A),
+  'livna':            livna       + '/fedora/%s/%s'                   % (V, A),
 }
 
 # Fedora Core
@@ -64,3 +67,11 @@ sourceslist['%s-livna' % DIST] = {
 }
 config['%s-livna' % DIST] = config['%s-extras' % DIST]
 aliases['%s-livna' % DIST] = ('f' + VS + 'l' + AS, )
+
+# Fedora Core with freshrpms
+packages['%s-freshrpms' % DIST] = packages['%s-extras' % DIST]
+sourceslist['%s-freshrpms' % DIST] = {
+  DIST: sourceslist['%s-extras' % DIST][DIST] + ('freshrpms', )
+}
+config['%s-freshrpms' % DIST] = config['%s-extras' % DIST]
+aliases['%s-freshrpms' % DIST] = ('f' + V + 'fr' + AS, )
