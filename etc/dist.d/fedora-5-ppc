@@ -1,16 +1,16 @@
 # mach dist configuration                                        -*- python -*-
 # -*- coding: utf-8 -*-
 
-# fedora-6-x86_64: configuration for Fedora 6
+# fedora-5-ppc: configuration for Fedora 5
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from
 # each actual dist has a packages dict for bootstrap packages and
 # a sourceslist dict referencing aptsources lines to use
 
-V = '6'      # distro version
-A = 'x86_64' # architecture
-AS = '64'    # 'short' version of arch
+V = '5'      # distro version
+A = 'ppc'    # architecture
+AS = ''      # 'short' version of arch
 DIST = 'fedora-%s-%s' % (V, A)
 
 ### Fedora Core flavours
@@ -55,7 +55,6 @@ sourceslist['%s-core' % DIST] = {
 }
 config['%s-core' % DIST] = {
   'runuser': '/sbin/runuser',
-  'excludearch': 'i386 i486 i586 i686 athlon',
   'macros': {},
 }
 aliases['%s-core' % DIST] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
