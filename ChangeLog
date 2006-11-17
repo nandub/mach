@@ -1,3 +1,9 @@
+2006-10-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  add Zod
+	  pre-release
+
 2006-10-29  Ville Skyttä  <scop@xemacs.org>
 
 	* scripts/mach.in:
