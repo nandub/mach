@@ -1,3 +1,10 @@
+2006-11-17  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	patch by: Nigel Metheringham <Nigel.Metheringham@dev.intechnology.co.uk>
+
+	* scripts/mach.in:
+	  create rpm transaction lock directories when setting up root
+
 2006-10-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
