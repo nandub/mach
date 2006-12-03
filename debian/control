@@ -1,0 +1,17 @@
+Source: mach
+Section: unknown
+Priority: optional
+Maintainer: Jan Schmidt <thaytan@noraisin.net>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: mach
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, rpm, sed, cpio, python-urlgrabber, python-rpm
+Recommends: yum
+Description: mach makes a chroot
+ Using yum or apt-get and a suid binary, it manages to install clean chroot
+ environments based on the original packages for that distribution.
+ .
+ The clean root can be used to run jail roots, to create image files, or
+ to build clean packages.

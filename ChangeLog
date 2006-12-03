@@ -1,5 +1,23 @@
 2006-12-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	patch by: Jan Schmidt (thaytan at noraisin dot net)
+
+	* debian/changelog:
+	* debian/compat:
+	* debian/control:
+	* debian/copyright:
+	* debian/dirs:
+	* debian/docs:
+	* debian/postinst:
+	* debian/postrm:
+	* debian/preinst:
+	* debian/rules:
+	  add debian package directory
+	* src/mach-helper.c: (do_rpm):
+	  allow /usr/bin/rpm as well
+
+2006-12-03  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/fedora-4-i386:
 	* etc/dist.d/fedora-4-x86_64:
 	* etc/dist.d/fedora-5-i386:

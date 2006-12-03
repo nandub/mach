@@ -1,0 +1,7 @@
+usr/bin
+usr/sbin
+/var/lib/mach
+/var/lib/mach/states
+/var/lib/mach/roots
+/var/tmp/mach
+/var/cache/mach

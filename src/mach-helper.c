@@ -350,6 +350,9 @@ do_rm (int argc, char *argv[])
 void
 do_rpm (int argc, char *argv[])
 {
+  const char *rpm_bin = NULL;
+  struct stat buf;
+
   /* enough arguments ? mach-helper rpm --root (rootdir) ... , 4 */
   if (argc < 4)
     error ("not enough arguments");
@@ -358,11 +361,19 @@ do_rpm (int argc, char *argv[])
   if (strncmp ("--root", argv[2], 6) != 0)
     error ("%s: options not allowed", argv[2]);
 
+  /* Find our rpm binary */
+  if (stat ("/bin/rpm", &buf) == 0)
+    rpm_bin = "/bin/rpm";
+  else if (stat ("/usr/bin/rpm", &buf) == 0)
+    rpm_bin = "/usr/bin/rpm";
+  else
+    error ("Could not locate rpm binary in /bin or /usr/bin");
+
   /* check given dir */
   check_dir_allowed (rootsdir, argv[3]);
 
   /* all checks passed, execute */
-  do_command ("/bin/rpm", &(argv[1]));
+  do_command (rpm_bin, &(argv[1]));
 }
 
 

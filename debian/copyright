@@ -1,0 +1,14 @@
+This package was debianized by Jan Schmidt <thaytan@noraisin.net> on
+Thu, 16 Nov 2006 16:16:52 +0100.
+
+It was downloaded from http://thomas.apestaart.org/download/mach/mach-0.9.0.tar.gz
+
+Upstream Author: Thomas Vander Stichele <thomas (at) apestaart (dot) org>
+
+Copyright: 2006 Thomas Vander Stichele <thomas (at) apestaart (dot) org>
+
+License: GPL
+
+The Debian packaging is (C) 2006, Jan Schmidt <thaytan@noraisin.net> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
