@@ -1,3 +1,8 @@
+2006-12-03  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in:
+	  use FancyURLopener when downloading for better redirect support
+
 2006-12-03  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	patch by: Jan Schmidt (thaytan at noraisin dot net)
@@ -60,12 +65,12 @@
 	  add Zod
 	  pre-release
 
-2006-10-29  Ville Skyttä  <scop@xemacs.org>
+2006-10-29  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in:
 	  Try not to abort even if os.getlogin() fails.
 
-2006-09-29  Ville Skyttä  <scop@xemacs.org>
+2006-09-29  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-*:
 	  Sync FC >= 3 build package sets with upstream,

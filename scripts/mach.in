@@ -1868,7 +1868,7 @@ def join_single_quoted (args):
 # grab given url and store it as filename, preserving timestamps
 def urlgrab (url, filename):
     print "Getting %s ..." % url
-    opener = urllib.URLopener ()
+    opener = urllib.FancyURLopener ()
     try:
         (t, h) = opener.retrieve (url, filename)
     except IOError, e:
