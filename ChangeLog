@@ -1,3 +1,11 @@
+2007-01-05  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  only do the libselinux-mach.so copy if the target is fedora-3;
+	  For other targets it may get in the way.
+	  For example, setting up an FC5 target on an FC6 host with this copy
+	  fails in the glibc_post_upgrade pre script because of it.
+
 2006-12-03  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in:

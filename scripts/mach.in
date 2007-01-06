@@ -1554,14 +1554,19 @@ class Root:
         # this bit is really dirty.  But it allows me to set up an FC3 target
         # on an FC4 host, allowing runuser to be installed instead of having
         # post scripts failing
-        if os.path.exists (os.path.join ('@LIBDIR@', 'libselinux-mach.so')):
-            # FIXME: what about 64 bit ?
-            targetlibdir = os.path.join (self.rootdir, 'usr', 'lib')
-            ensure_dir (targetlibdir)
-            command = "cp -a @LIBDIR@/libselinux-mach* %s" % targetlibdir
-            debug (command)
-            os.system (command)
-            
+        # ideally we should also check for what the host version is, but too
+        # lazy to add that now
+        if self.root.startswith ('fedora-3'):
+            debug ("Setting up a Fedora Core 3 root")
+            if os.path.exists (os.path.join ('@LIBDIR@', 'libselinux-mach.so')):
+                debug ('copying in custom libselinux-mach.so')
+                # FIXME: what about 64 bit ?
+                targetlibdir = os.path.join (self.rootdir, 'usr', 'lib')
+                ensure_dir (targetlibdir)
+                command = "cp -a @LIBDIR@/libselinux-mach* %s" % targetlibdir
+                debug (command)
+                os.system (command)
+                
         prifile = os.path.join ('@SYSCONFDIR@', 'apt', 'rpmpriorities')
         if os.path.exists (prifile):
             command = ('install -m 664 %s %s/apt/etc/apt/rpmpriorities' % (prifile, self.statedir))
