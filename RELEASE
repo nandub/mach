@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.0 - Cambria.
+Announcing the release of mach 0.9.1 - Australia.
 
 WHAT IS IT
 ----------
@@ -12,14 +12,15 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
-- Fedora 4, 5      (core, updated, extras, rpm.livna.org,
-                    JPackage, FreshRPMS, GStreamer)
+- Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
+         devel      JPackage, FreshRPMS, GStreamer)
 - Fedora 1, 2, 3   (core, updated, www.fedora.us, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
 - Red Hat 8.0, 9   (basic, updated, www.fedora.us, rpm.livna.org,
                     JPackage, GStreamer, FreshRPMS)
 - Red Hat 7.2, 7.3 (basic, updated, FreshRPMS, JPackage)
 - Red Hat 7.0, 7.1 (basic, updated, FreshRPMS)
+- CentOS 4
 - SuSE 8.1/8.2/9
 - Connectiva
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
@@ -30,16 +31,15 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Fix livna.org and rawhide URL's (Ville)
-        - Fix "revert to build list" such that it can deal with
-          upgraded versions of the build packages, as well as
-          deal with packages with broken post/postun scripts (Thomas)
-        - make sure we refresh local repository cache with
-          yum >= 2.6.0 (Nigel)
-        - always recreate repository config files, so that changes
-          to "location" are effective immediately (Thomas)
-        - Add JPackage URL's for FC3, 4, 5 (Ville)
-        - mach clean also cleans out the local repo (Thomas)
+        - Add FC6, CentOS 4 and JPackage 1.7 configs (Ville)
+        - Run rpmlint by default (Thomas)
+        - Cleanup of dist files (Ville)
+        - Enable buildroot and rpath checks in FE roots (Ville)
+        - Add /dev/(u)random to the root (Thomas)
+        - Sync FC build package sets with Fedora guidelines (Ville)
+        - Create RPM transaction lock directories during prep (Nigel)
+        - Add Fedora PPC configs (Matthias)
+        - Add debian build files (Jan)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -95,3 +95,4 @@ Contributors to releases include
 - Rudi Chiarito
 - Matthias Saou
 - Nigel Metheringham
+- Jan Schmidt
