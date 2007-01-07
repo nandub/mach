@@ -1,5 +1,16 @@
 This is mach, make a chroot, 0.9.0.
 
+Changes since 0.9.0:
+        - Add FC6, CentOS 4 and JPackage 1.7 configs (Ville)
+        - Run rpmlint by default (Thomas)
+        - Cleanup of dist files (Ville)
+        - Enable buildroot and rpath checks in FE roots (Ville)
+	- Add /dev/(u)random to the root (Thomas)
+	- Sync FC build package sets with Fedora guidelines (Ville)
+        - Create RPM transaction lock directories during prep (Nigel)
+	- Add Fedora PPC configs (Matthias)
+        - Add debian build files (Jan)
+
 Changes since 0.4.9:
         - Fix livna.org and rawhide URL's (Ville)
         - Fix "revert to build list" such that it can deal with
