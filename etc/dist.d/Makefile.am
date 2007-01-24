@@ -11,12 +11,16 @@ dists = \
 	fedora-3-x86_64 \
 	fedora-4-i386 \
 	fedora-4-x86_64 \
+	fedora-4-ppc \
 	fedora-5-i386 \
 	fedora-5-x86_64 \
+	fedora-5-ppc \
 	fedora-6-i386 \
 	fedora-6-x86_64 \
+	fedora-6-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
+	fedora-development-ppc \
 	centos-4-i386 \
 	centos-4-x86_64 \
 	cnc-9-i386 \
