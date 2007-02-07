@@ -11,7 +11,7 @@
 V = 'development'  # distro version
 VS = 'd'           # short distro version
 A = 'ppc'          # architecture
-AS = ''            # 'short' version of arch
+AS = 'p'           # 'short' version of arch
 DIST = 'fedora-%s-%s' % (V, A)
 
 ### Fedora Core flavours

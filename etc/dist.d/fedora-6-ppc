@@ -10,7 +10,7 @@
 
 V = '6'      # distro version
 A = 'ppc'    # architecture
-AS = ''      # 'short' version of arch
+AS = 'p'     # 'short' version of arch
 DIST = 'fedora-%s-%s' % (V, A)
 
 ### Fedora Core flavours
@@ -83,7 +83,8 @@ aliases['%s-extras' % DIST] = ('f' + V + 'e' + AS, )
 # Fedora Core with GStreamer
 packages['%s-gstreamer' % DIST] = packages['%s-core' % DIST]
 sourceslist['%s-gstreamer' % DIST] = {
-  DIST: ('core', 'updates', 'extras', 'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
+  DIST: ('core', 'updates', 'extras', 'livna',
+         'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
 config['%s-gstreamer' % DIST] = deepcopy(config['%s-core' % DIST])
 config['%s-gstreamer' % DIST].update({
