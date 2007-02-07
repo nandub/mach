@@ -9,8 +9,8 @@
 # a sourceslist dict referencing aptsources lines to use
 
 V = '4'      # distro version
-A = 'ppc'   # architecture
-AS = ''      # 'short' version of arch
+A = 'ppc'    # architecture
+AS = 'p'     # 'short' version of arch
 DIST = 'fedora-%s-%s' % (V, A)
 
 ### Fedora Core flavours
@@ -85,7 +85,8 @@ aliases['%s-extras' % DIST] = ('f' + V + 'e' + AS, )
 # Fedora Core with GStreamer
 packages['%s-gstreamer' % DIST] = packages['%s-core' % DIST]
 sourceslist['%s-gstreamer' % DIST] = {
-  DIST: ('core', 'updates', 'extras', 'gstreamer-deps', 'gstreamer-build', 'gstreamer', 'gstreamer010')
+  DIST: ('core', 'updates', 'extras', 'livna',
+         'gstreamer-deps', 'gstreamer-build', 'gstreamer', 'gstreamer010')
 }
 config['%s-gstreamer' % DIST] = {
   'runuser': '/sbin/runuser',
