@@ -886,6 +886,7 @@ class Root:
                             self.stdout ("Using %s\n" % filepath)
                             files.append (filepath)
                             found = 1
+                            break
                     if not found:
                         filepath = os.path.join (tmppath, filename)
                         try:
