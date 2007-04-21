@@ -23,6 +23,8 @@ dists = \
 	fedora-development-ppc \
 	centos-4-i386 \
 	centos-4-x86_64 \
+	centos-5-i386 \
+	centos-5-x86_64 \
 	cnc-9-i386 \
 	suse-81-i386 \
 	suse-82-i386 \

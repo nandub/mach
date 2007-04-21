@@ -23,6 +23,7 @@ fedorayum   = 'http://download.fedora.redhat.com/pub/fedora/linux'
 # CentOS
 centos      = 'http://mirror.centos.org/centos'
 centosfe    = 'http://centos.karan.org/'
+epel        = 'http://download.fedora.redhat.com/pub/epel'
 
 # Yellow Dog Linux
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
