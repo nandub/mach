@@ -7,6 +7,9 @@
 	* etc/location:
 	  Add CentOS 5 configs and EPEL for CentOS 4.
 
+	* etc/location:
+	  Point fedora.us to mirrors.kernel.org.
+
 2007-02-26  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (build):
