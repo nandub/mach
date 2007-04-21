@@ -11,19 +11,17 @@
 
 # Red Hat Linux base; this location should contain versioned directories
 redhat      = 'http://ayo.freshrpms.net/redhat'
-#redhat      = 'http://download.fedora.us/fedora/redhat'
+#redhat      = 'http://mirrors.kernel.org/fedora.us/fedora/redhat'
 
 # Fedora Core; this location should contain versioned directions
 fedora      = 'http://ayo.freshrpms.net/fedora/linux'
-#fedora      = 'http://download.fedora.us/fedora/fedora'
+#fedora      = 'http://mirrors.kernel.org/fedora.us/fedora/fedora'
 # fedorayum trees should contain their repodata/ dirs in the "official"
 # location, and start in the dir that has "core" and "extras"
 fedorayum   = 'http://download.fedora.redhat.com/pub/fedora/linux'
 
 # CentOS
 centos      = 'http://mirror.centos.org/centos'
-centosfe    = 'http://centos.karan.org/'
-epel        = 'http://download.fedora.redhat.com/pub/epel'
 
 # Yellow Dog Linux
 yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
@@ -39,12 +37,14 @@ conectiva   = 'ftp://ftp.tiscali.nl/pub/mirrors/conectiva'
 davedina    = 'http://download.davedina.org/apt'
 
 # Add-on locations
-fedoraus    = 'http://download.fedora.us/fedora'
+fedoraus    = 'http://mirrors.kernel.org/fedora.us/fedora'
 livna       = 'http://rpm.livna.org'
 gstreamer   = 'http://gstreamer.freedesktop.org/pkg'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
+epel        = 'http://download.fedora.redhat.com/pub/epel'
+centosfe    = 'http://centos.karan.org/'
 
 jpackage    = 'http://mirrors.dotsrc.org/jpackage'
 # jpackagenf is the non-free/non-distributable JPackage repository.  You
