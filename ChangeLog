@@ -1,3 +1,12 @@
+2007-04-21  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/centos-*:
+	* etc/location:
+	  Add CentOS 5 configs and EPEL for CentOS 4.
+
 2007-02-26  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in (build):
