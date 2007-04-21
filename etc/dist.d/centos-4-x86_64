@@ -33,6 +33,7 @@ yumsources[DIST] = {
   'extras':           centos + '/%s/extras/%s'                        % (V, A),
   'plus':             centos + '/%s/centosplus/%s'                    % (V, A),
   'fextras':          centosfe + '/el%s/extras/stable/%s/RPMS'        % (V, A),
+  'epel':             epel + '/%s/%s'                                 % (V, A),
   'jpackage-generic': jpackage    + '/1.7/generic/free',
   'jpackage-centos' + V: jpackage + '/1.7/redhat-el-4.0/free',
   'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
@@ -115,6 +116,14 @@ config['%s-fextras' % DIST]['macros'].update({
   '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
 })
 aliases['%s-fextras' % DIST] = ('c' + V + 'f' + AS, )
+
+# CentOS with EPEL
+packages['%s-epel' % DIST] = packages['%s-updates' % DIST]
+sourceslist['%s-epel' % DIST] = {
+  DIST: ('os', 'updates', 'epel', )
+}
+config['%s-epel' % DIST] = config['%s-updates' % DIST]
+aliases['%s-epel' % DIST] = ('c' + V + 'l' + AS, )
 
 # CentOS with JPackage
 packages['%s-jpackage' % DIST] = deepcopy(packages['%s-updates' % DIST])
