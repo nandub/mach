@@ -28,6 +28,7 @@ yumsources[DIST] = {
   'addons':           centos + '/%s/addons/%s'                        % (V, A),
   'extras':           centos + '/%s/extras/%s'                        % (V, A),
   'plus':             centos + '/%s/centosplus/%s'                    % (V, A),
+  'fextras':          centosfe + '/el%s/extras/stable/%s/RPMS'        % (V, A),
   'epel':             epel + '/%s/%s'                                 % (V, A),
   'jpackage-generic': jpackage    + '/1.7/generic/free',
   'jpackage-centos' + V: jpackage + '/1.7/redhat-el-5.0/free',
@@ -82,6 +83,18 @@ sourceslist['%s-plus' % DIST] = {
 }
 config['%s-plus' % DIST] = config['%s-updates' % DIST]
 aliases['%s-plus' % DIST] = ('c' + V + 'p' + AS, )
+
+# CentOS with Fedora Extras rebuilds
+packages['%s-fextras' % DIST] = deepcopy(packages['%s-updates' % DIST])
+packages['%s-fextras' % DIST]['build'] = packages['%s-fextras' % DIST]['build'] + " fedora-rpmdevtools"
+sourceslist['%s-fextras' % DIST] = {
+  DIST: ('os', 'updates', 'fextras', )
+}
+config['%s-fextras' % DIST] = deepcopy(config['%s-updates' % DIST])
+config['%s-fextras' % DIST]['macros'].update({
+  '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
+})
+aliases['%s-fextras' % DIST] = ('c' + V + 'f' + AS, )
 
 # CentOS with EPEL
 packages['%s-epel' % DIST] = packages['%s-updates' % DIST]

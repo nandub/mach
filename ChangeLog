@@ -1,3 +1,9 @@
+2007-05-18  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	* etc/dist.d/centos-5-*:
+	  Add Fedora Extras rebuilds config for CentOS 5.
+
 2007-04-21  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
