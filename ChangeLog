@@ -1,3 +1,8 @@
+2007-05-26  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* scripts/mach.in:
+	  Run rpmlint on all result dirs.
+
 2007-05-18  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:

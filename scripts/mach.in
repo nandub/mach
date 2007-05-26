@@ -1400,11 +1400,12 @@ class Root:
 
         # if we have rpmlint, and it was not turned off, rpmlint the packages
         if self.config['lint']:
-            (status, output) = commands.getstatusoutput(
-                'rpmlint %s' % os.path.join (pkgresultdir, "*.rpm"))
-            if os.WEXITSTATUS(status) != 127:
-                # looks like rpmlint existed, so show the output
-                print output
+            for pkgresultdir in resultdirs:
+                (status, output) = commands.getstatusoutput(
+                    'rpmlint %s' % os.path.join (pkgresultdir, "*.rpm"))
+                if os.WEXITSTATUS(status) != 127:
+                    # looks like rpmlint existed, so show the output
+                    print output
 
         # now sign packages if requested
         if self.config['sign']:
