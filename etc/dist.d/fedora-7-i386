@@ -116,4 +116,4 @@ sourceslist['%s-jpackage' % DIST] = {
   ('jpackage-generic', 'jpackage-fc' + V , 'jpackage-nonfree', ),
 }
 config['%s-jpackage' % DIST] = config['%s-core' % DIST]
-aliases['%s-jpackage' % DIST] = ('fc' + V + 'jpp' + AS, )
+aliases['%s-jpackage' % DIST] = ('f' + V + 'jpp' + AS, )
