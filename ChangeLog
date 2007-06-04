@@ -1,3 +1,10 @@
+2007-06-04  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-7-*:
+	  Add Fedora 7 configs.
+
 2007-06-02  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-development-*:
