@@ -410,8 +410,11 @@ class SRPM:
         buildreqs = self.header[rpm.RPMTAG_REQUIRENAME]
         debug ("BuildRequires from header: %s" % buildreqs)
         # remove non-packagey things from buildreqs, like autodeps
-        # currently removes everything containing  / and all rpmlib() deps
         if buildreqs:
+            # for yum, we filter rpmlib() deps
+            if self.root.config['installer'] == 'yum':
+                return filter (lambda x: not x.startswith("rpmlib("), buildreqs)
+            # ...and for others, that and everything containing /
             return filter (lambda x: not (re.search("[/]", x) or re.search("rpmlib", x)), buildreqs)
         else:
             return []
