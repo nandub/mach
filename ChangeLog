@@ -1,3 +1,9 @@
+2007-07-08  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/fedora-development-*:
+	  Remove rpmdevtools from the build package set, check-* scripts
+	  are included in rpm-build >= 4.4.2.1.
+
 2007-06-17  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* scripts/mach.in:
