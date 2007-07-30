@@ -1,3 +1,8 @@
+2007-07-30  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  Complain if no specs are given.
+
 2007-07-08  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/fedora-development-*:
