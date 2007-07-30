@@ -850,6 +850,9 @@ class Root:
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
         (options, specs) = self.splitargspecs (args)
+        if not specs:
+            raise self.Error, 'Please supply .spec files to build'
+
         debug ("Build options to %s: %s" %
                (self.config['root_rpmbuild'], options))
         # check if the spec files exist and if we can parse the files necessary
