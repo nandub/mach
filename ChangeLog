@@ -1,6 +1,12 @@
 2007-08-10  Ville Skyttä  <ville dot skytta at iki dot fi>
 
-	* COPYING: Sync with latest GPLv2+ text from gnu.org.
+	* COPYING:
+	  Sync with latest GPLv2+ text from gnu.org.
+
+	* scripts/mach.in:
+	* src/mach-helper.c:
+	* src/selinux-mach.c:
+	  Add copyright notice.
 
 2007-07-30  Thomas Vander Stichele  <thomas at apestaart dot org>
 
