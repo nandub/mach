@@ -1,3 +1,8 @@
+2007-08-16  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* configure.in:
+	  Add Fedora 7 and Rawhide detection.
+
 2007-08-10  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* COPYING:
