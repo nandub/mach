@@ -1,5 +1,8 @@
 2007-08-16  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* mach.spec.in:
+	  Clarify license.
+
 	* README:
 	* configure.in:
 	* etc/dist.d/Makefile.am:

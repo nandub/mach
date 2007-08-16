@@ -4,7 +4,7 @@ Release:        @RELEASE@%{?dist}
 Summary:        make a chroot
 
 Group:          Applications/System
-License:	GPL
+License:	GPLv2+
 URL:            http://thomas.apestaart.org/projects/mach/
 Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
