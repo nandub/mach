@@ -74,17 +74,17 @@ Red Hat 7.0 and 7.1
   - updated
   - with FreshRPMS
 
-CentOS 4 and 5
+CentOS 3, 4 and 5
   - standard
   - updated
   - with addons
-  - with contrib (4 only)
-  - with csgfs (4 only)
+  - with contrib (3, 4 only)
+  - with csgfs (3, 4 only)
   - with extras
   - with centosplus
-  - with Fedora Extras rebuilds
-  - with EPEL
-  - with JPackage
+  - with Fedora Extras rebuilds (4, 5 only)
+  - with EPEL (4, 5 only)
+  - with JPackage (4, 5 only)
 
 Dave/Dina
   - fridge

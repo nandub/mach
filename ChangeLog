@@ -1,5 +1,11 @@
 2007-08-16  Ville Skyttä  <ville dot skytta at iki dot fi>
 
+	* README:
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/centos-3-*:
+	  Add CentOS 3 configs.
+
 	* configure.in:
 	  Add Fedora 7 and Rawhide detection.
 

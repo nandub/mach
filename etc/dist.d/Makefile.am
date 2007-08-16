@@ -24,6 +24,8 @@ dists = \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \
+	centos-3-i386 \
+	centos-3-x86_64 \
 	centos-4-i386 \
 	centos-4-x86_64 \
 	centos-5-i386 \
