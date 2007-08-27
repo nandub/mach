@@ -176,6 +176,9 @@ qfmt = '%{name}-%{version}-%{release}\n'
 builduser = '@BUILDUSER@'
 buildgroup = '@BUILDGROUP@'
 
+# directories
+PKGDIR = '@PKGDIR@'
+
 # uid/gid information
 import grp
 try:
@@ -936,7 +939,7 @@ class Root:
                 copy_grouped (file, os.path.join (self.rootdir, 'tmp'))
                 self.do_chroot ("cd / && mv %s %s" % (
                                 os.path.join ('tmp', os.path.basename (file)),
-                                os.path.join ('usr', 'src', 'rpm', 'SOURCES')))
+                                os.path.join ('usr', 'src', PKGDIR, 'SOURCES')))
 
             # remove the spec if it existed, then copy
             self.do_chroot ("cd / && rm -f %s" % (
@@ -944,15 +947,15 @@ class Root:
             copy_grouped (specfile, os.path.join (self.rootdir, 'tmp'))
             self.do_chroot ("cd / && mv %s %s" % (
                             os.path.join ('tmp', os.path.basename (specfile)),
-                            os.path.join ('usr', 'src', 'rpm', 'SPECS')))
+                            os.path.join ('usr', 'src', PKGDIR, 'SPECS')))
             # fix ownership on all of these
-            self.do_chroot ("cd /usr/src/rpm && chown -R %s:%s *" %
+            self.do_chroot ("cd /usr/src/@PKGDIR@ && chown -R %s:%s *" %
                             (builduser, buildgroup))
             try:
                 self.do_chroot ("cd / && %s %s -bs --nodeps %s" \
                                 % (self.config['root_rpmbuild'],
                                    options_string,
-                                   os.path.join ('usr', 'src', 'rpm', 'SPECS',
+                                   os.path.join ('usr', 'src', PKGDIR, 'SPECS',
                                                 os.path.basename (specfile))),
                                 "Creating .src.rpm",
                                   True)
@@ -961,16 +964,17 @@ class Root:
             (n, v, r) = spec.nvr ()
             srpmname = "%s-%s-%s.src.rpm" % (n, v, r)
             debug ("resulting srpm: %s" % srpmname)
-            srpmfile = os.path.join (self.rootdir, 'usr', 'src', 'rpm', 'SRPMS', srpmname)
+            srpmfile = os.path.join (self.rootdir, 'usr', 'src', PKGDIR,
+                'SRPMS', srpmname)
             if not os.path.exists (srpmfile):
                 raise self.Error, '%s not built' % srpmfile
             dest = os.path.join (tmppath, srpmname)
             if os.path.exists (dest):
                 os.unlink (dest)
-            copy_grouped (self.rootdir + '/usr/src/rpm/SRPMS/' + srpmname, dest)
+            copy_grouped (self.rootdir + '/usr/src/@PKGDIR@/SRPMS/' + srpmname, dest)
             srpms.append (dest)
 
-            # remove the built src.rpm in the target's /usr/src/rpm
+            # remove the built src.rpm in the target's /usr/src/@PKGDIR@
             os.unlink (srpmfile)
 
         # ready to build them all
@@ -1041,7 +1045,7 @@ class Root:
         root = self.config['root']
         rootdir = get_config_dir (self.config, 'root')
         if self.config['installer'] == 'yum':
-            line = 'file://%s/usr/src/rpm/RPMS.mach-local' % rootdir
+            line = 'file://%s/usr/src/@PKGDIR@/RPMS.mach-local' % rootdir
         else:
             line = 'rpm-dir file://%s/usr/src rpm mach-local' % rootdir
         srcs['local.%s' % root] = line
@@ -1287,7 +1291,7 @@ class Root:
                 (self.config['runuser'], pkgs[name]['path'], builduser))
             specfile = pkgs[name]['spec']
 
-            command = 'cp /usr/src/rpm/SPECS/%s /tmp/%s' % (specfile, specfile)
+            command = 'cp /usr/src/@PKGDIR@/SPECS/%s /tmp/%s' % (specfile, specfile)
             self.do_chroot (command)
             # copy specfile to resultdir
             copy_grouped (os.path.join (self.rootdir, 'tmp', specfile), pkgresultdir)
@@ -1308,10 +1312,10 @@ class Root:
                     # we quote sed with ' because we quote shell -c with ""
                     # we use [:space:] and ^[:space:], most portable
                     # don't use \s, doesn't work correctly on RH9
-                    command = "sed -e 's,^\\\\(Release[[:space:]]*:[[:space:]]*[^[:space:]]*\\\\)[[:space:]]*$,\\\\1.%s,i' /tmp/%s > /usr/src/rpm/SPECS/%s" % (self.config['release'], specfile, specfile)
+                    command = "sed -e 's,^\\\\(Release[[:space:]]*:[[:space:]]*[^[:space:]]*\\\\)[[:space:]]*$,\\\\1.%s,i' /tmp/%s > /usr/src/@PKGDIR@/SPECS/%s" % (self.config['release'], specfile, specfile)
                     debug ("mangling with %s" % command)
                     self.do_chroot (command)
-                    command = "grep Release: /usr/src/rpm/SPECS/%s" % specfile
+                    command = "grep Release: /usr/src/@PKGDIR@/SPECS/%s" % specfile
                     (ret, output) = self.do_chroot (command)
                     debug ("Mangled to: %s" % output)
                 else:
@@ -1341,7 +1345,7 @@ class Root:
             command = "%s -c \"RPM_BUILD_NCPUS=%s %s " \
                       "--define '__spec_prep_pre exit 0' " \
                       "--define 'setup :' " \
-                      "-bp %s /usr/src/rpm/SPECS/%s\" - %s" % (
+                      "-bp %s /usr/src/@PKGDIR@/SPECS/%s\" - %s" % (
                 self.config['runuser'], nrcpus, 
                 self.config['root_rpmbuild'],
                 options_string.replace('"', '\\"'),
@@ -1360,7 +1364,7 @@ class Root:
             # version than the host's rpmbuild understands.
             # this is fine now since we check for met buildrequires before.
 
-            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/rpm/SPECS/%s 2>&1\" - %s" % (
+            command = "%s -c \"RPM_BUILD_NCPUS=%s %s --nodeps -ba %s /usr/src/@PKGDIR@/SPECS/%s 2>&1\" - %s" % (
                 self.config['runuser'], nrcpus, 
                 self.config['root_rpmbuild'],
                 options_string.replace('"', '\\"'),
@@ -1388,7 +1392,7 @@ class Root:
             #do_chroot (config, "%s -c 'rpm -Uhv /tmp/%s > /dev/null 2>&1' %s" % (self.config['runuser'], srpm, builduser))
             #self.rpm ('-Uhv /tmp/%s > /dev/null 2>&1' % srpm)
             #(status, output) = do_chroot_with_output (config,
-            # "%s -c '%s -bs --nodeps /usr/src/rpm/SPECS/%s 2>&1' %s" % (self.config['runuser'], self.config['root_rpmbuild'], spec, builduser),
+            # "%s -c '%s -bs --nodeps /usr/src/@PKGDIR@/SPECS/%s 2>&1' %s" % (self.config['runuser'], self.config['root_rpmbuild'], spec, builduser),
             #    True)
 
             # analyze log file and move all of the rpms listed as Wrote:
@@ -1795,7 +1799,7 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         debug ("writing macros file")
         path = self.rootdir + '/tmp/macros'
         macros = open (path, 'w')
-        macros.write ("%_topdir /usr/src/rpm\n")
+        macros.write ("%_topdir /usr/src/@PKGDIR@\n")
         macros.write ("%_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
         macros.write ("%_unpackaged_files_terminate_build 1\n")
         macros.write ("%_missing_doc_files_terminate_build 1\n")
@@ -1817,11 +1821,11 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         # install packages
         self._install ('build')
         #FIXME: add mach user and group
-        self.do_chroot ("echo %s:x:500:%d::/usr/src/rpm:/bin/bash >> /etc/passwd" % (builduser, mach_gid), fatal = True)
+        self.do_chroot ("echo %s:x:500:%d::/usr/src/@PKGDIR@:/bin/bash >> /etc/passwd" % (builduser, mach_gid), fatal = True)
         self.do_chroot ("echo %s::%d:%s >> /etc/group" % (buildgroup, mach_gid, builduser), fatal = True)
-        self.do_chroot ("mkdir -p /usr/src/rpm", fatal = True)
-        self.do_chroot ("chown -R %s:%s /usr/src/rpm" % (builduser, buildgroup), fatal = True)
-        self.do_chroot ("%s -c 'cp -p /etc/skel/.bashrc /usr/src/rpm/.bashrc || cp -p /etc/bashrc /usr/src/rpm/.bashrc || :' %s" % (
+        self.do_chroot ("mkdir -p /usr/src/@PKGDIR@", fatal = True)
+        self.do_chroot ("chown -R %s:%s /usr/src/@PKGDIR@" % (builduser, buildgroup), fatal = True)
+        self.do_chroot ("%s -c 'cp -p /etc/skel/.bashrc /usr/src/@PKGDIR@/.bashrc || cp -p /etc/bashrc /usr/src/@PKGDIR@/.bashrc || :' %s" % (
             self.config['runuser'], builduser), fatal = True)
 
         # create /boot/kernel.h with a warning
@@ -1833,12 +1837,12 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
         # create dir structure
         for dir in ('RPMS', 'SRPMS', 'SOURCES', 'SPECS', 'BUILD'):
-            self.do_chroot ("%s -c 'mkdir -p /usr/src/rpm/%s' %s" %
+            self.do_chroot ("%s -c 'mkdir -p /usr/src/@PKGDIR@/%s' %s" %
                             (self.config['runuser'], dir, builduser), fatal = True)
 
         # this ensures that locally built RPMS are already used for apt-get
         for dir in ('RPMS', 'SRPMS'):
-            self.do_chroot ('ln -sf %s /usr/src/rpm/%s.mach-local' % (dir, dir), fatal = True)
+            self.do_chroot ('ln -sf %s /usr/src/@PKGDIR@/%s.mach-local' % (dir, dir), fatal = True)
         # upgrade packages; that way our snapshot contains the latest versions
         # available and a revert to snapshot will not try to remove packages
         # that have been upgraded from the snapshot
@@ -2174,7 +2178,7 @@ def create_sources_list (config, list):
             ensure_dir (os.path.join (root, 'var/cache/mach/yum/%s/headers' % source))
             if source.startswith('local.'):
                 debug ('updating local repository %s' % source)
-                cmd = 'createrepo %s/usr/src/rpm/RPMS.mach-local' % root
+                cmd = 'createrepo %s/usr/src/@PKGDIR@/RPMS.mach-local' % root
                 (status, output) = do_with_output (cmd, False)
                 if status != 0:
                     raise Exception, "Could not update local yum repository"

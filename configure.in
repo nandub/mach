@@ -145,6 +145,20 @@ AM_CONDITIONAL(SELINUX_ENABLED, test "x$enable_selinux" = "xyes")
 AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
 AC_MSG_NOTICE(Using default root $DEFAULTROOT)
 
+AC_ARG_WITH(pkgdir,
+  AC_HELP_STRING([--with-pkgdir=PKGDIR], [set usrsrc distro dir to PKGDIR]),
+  [ pkgdir="${withval}" ],
+  [ pkgdir=]
+)
+if test "x$pkgdir" != "x"
+then
+  pkgdir="$pkgdir"
+else
+  pkgdir="rpm"
+fi
+
+AS_AC_EXPAND(PKGDIR, $pkgdir)
+AC_MSG_NOTICE(Using packagedir $pkgdir)
 
 AS_AC_EXPAND(SBINDIR, $sbindir)
 AC_MSG_NOTICE(Placing mach-helper in $SBINDIR)
