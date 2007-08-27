@@ -1,3 +1,11 @@
+2007-08-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	patch by: Tobias Gerschner <tobias.gerschner@gmail.com>
+
+	* configure.in:
+	* scripts/mach.in:
+	  Allow overriding the pkg dir under /usr/src in which to operate.
+
 2007-08-16  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* mach.spec.in:
