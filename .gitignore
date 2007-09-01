@@ -44,3 +44,4 @@ stamp-h1
 *.gz
 *.bz2
 libtool
+ltmain.sh
