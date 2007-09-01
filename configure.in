@@ -3,6 +3,8 @@ AC_INIT(README)
 AS_VERSION(mach, MACH, 0, 9, 1, 1)
 AC_SUBST(RELEASE, $MACH_RELEASE)
 
+AC_CANONICAL_SYSTEM
+
 AM_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
@@ -81,28 +83,35 @@ AC_ARG_ENABLE(buildgroup,
 AC_SUBST(BUILDGROUP)
 AC_MSG_NOTICE(Using build groupname $BUILDGROUP)
 
+dnl arch
+arch=i386
+case "$target" in
+    i?86-*|athlon-*)   arch=i386 ;;
+    x86_64-*)          arch=x86_64 ;;
+    powerpc*)          arch=ppc ;;
+esac
+
 dnl default root
 dnl first try to guess the platform
-dnl FIXME: try to guess arch too
-CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-i386")
-CHECK_RELEASE(fedora,    "(Moonshine)",  defaultroot="fedora-7-i386")
-CHECK_RELEASE(fedora,    "(Zod)",        defaultroot="fedora-6-i386")
-CHECK_RELEASE(fedora,    "(Bordeaux)",   defaultroot="fedora-5-i386")
-CHECK_RELEASE(fedora,    "(Stentz)",     defaultroot="fedora-4-i386")
-CHECK_RELEASE(fedora,    "(Heidelberg)", defaultroot="fedora-3-i386")
-CHECK_RELEASE(fedora,    "(Tettnang)",   defaultroot="fedora-2-i386")
-CHECK_RELEASE(fedora,    "(Yarrow)",     defaultroot="fedora-1-i386")
+CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-$arch")
+CHECK_RELEASE(fedora,    "(Moonshine)",  defaultroot="fedora-7-$arch")
+CHECK_RELEASE(fedora,    "(Zod)",        defaultroot="fedora-6-$arch")
+CHECK_RELEASE(fedora,    "(Bordeaux)",   defaultroot="fedora-5-$arch")
+CHECK_RELEASE(fedora,    "(Stentz)",     defaultroot="fedora-4-$arch")
+CHECK_RELEASE(fedora,    "(Heidelberg)", defaultroot="fedora-3-$arch")
+CHECK_RELEASE(fedora,    "(Tettnang)",   defaultroot="fedora-2-$arch")
+CHECK_RELEASE(fedora,    "(Yarrow)",     defaultroot="fedora-1-$arch")
 
-CHECK_RELEASE(redhat,    "(Guinness)",   defaultroot="redhat-70-i386")
-CHECK_RELEASE(redhat,    "(Seawolf)",    defaultroot="redhat-71-i386")
-CHECK_RELEASE(redhat,    "(Enigma)",     defaultroot="redhat-72-i386")
-CHECK_RELEASE(redhat,    "(Valhalla)",   defaultroot="redhat-73-i386")
-CHECK_RELEASE(redhat,    "(Psyche)",     defaultroot="redhat-80-i386")
-CHECK_RELEASE(redhat,    "(Shrike)",     defaultroot="redhat-9-i386")
+CHECK_RELEASE(redhat,    "(Guinness)",   defaultroot="redhat-70-$arch")
+CHECK_RELEASE(redhat,    "(Seawolf)",    defaultroot="redhat-71-$arch")
+CHECK_RELEASE(redhat,    "(Enigma)",     defaultroot="redhat-72-$arch")
+CHECK_RELEASE(redhat,    "(Valhalla)",   defaultroot="redhat-73-$arch")
+CHECK_RELEASE(redhat,    "(Psyche)",     defaultroot="redhat-80-$arch")
+CHECK_RELEASE(redhat,    "(Shrike)",     defaultroot="redhat-9-$arch")
 
-CHECK_RELEASE(redhat, "CentOS release 3",defaultroot="centos-3-i386")
-CHECK_RELEASE(redhat, "CentOS release 4",defaultroot="centos-4-i386")
-CHECK_RELEASE(redhat, "CentOS release 5",defaultroot="centos-5-i386")
+CHECK_RELEASE(redhat, "CentOS release 3",defaultroot="centos-3-$arch")
+CHECK_RELEASE(redhat, "CentOS release 4",defaultroot="centos-4-$arch")
+CHECK_RELEASE(redhat, "CentOS release 5",defaultroot="centos-5-$arch")
 
 CHECK_RELEASE(yellowdog, "(Sirius)",     defaultroot="yellowdog-30-ppc")
 
