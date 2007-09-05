@@ -1,3 +1,9 @@
+2007-09-05  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/centos-[45]-*:
+	  Add EPEL testing, and rpmdevtools and its additional checks
+	  to EPEL build roots.
+
 2007-09-01  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* configure.in:
