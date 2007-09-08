@@ -33,15 +33,11 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Add FC6, CentOS 4 and JPackage 1.7 configs (Ville)
-        - Run rpmlint by default (Thomas)
-        - Cleanup of dist files (Ville)
-        - Enable buildroot and rpath checks in FE roots (Ville)
-        - Add /dev/(u)random to the root (Thomas)
-        - Sync FC build package sets with Fedora guidelines (Ville)
-        - Create RPM transaction lock directories during prep (Nigel)
-        - Add Fedora PPC configs (Matthias)
-        - Add debian build files (Jan)
+        - Add FC7, CentOS EPEL, CentOS 3 configs (Ville)
+        - Allow overriding the pkg dir under /usr/src (Tobias)
+        - Clarify GPLv2+ license (Ville)
+        - Run rpmlint on all result dirs (Ville)
+        - Actually include ppc files (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
