@@ -1,3 +1,8 @@
+2007-09-08  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* etc/dist.d/fedora-*:
+	  Sync 'build' package set with Fedora packaging guidelines.
+
 2007-09-05  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* etc/dist.d/centos-[45]-*:
