@@ -1,4 +1,11 @@
-This is mach, make a chroot, 0.9.0.
+This is mach, make a chroot, 0.9.2.
+
+Changes since 0.9.1:
+        - Add FC7, CentOS EPEL, CentOS 3 configs (Ville)
+	- Allow overriding the pkg dir under /usr/src (Tobias)
+	- Clarify GPLv2+ license (Ville)
+	- Run rpmlint on all result dirs (Ville)
+	- Actually include ppc files (Thomas)
 
 Changes since 0.9.0:
         - Add FC6, CentOS 4 and JPackage 1.7 configs (Ville)

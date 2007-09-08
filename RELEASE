@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.1 - Australia.
+Announcing the release of mach 0.9.2 - Thomson Boy.
 
 WHAT IS IT
 ----------
@@ -12,8 +12,10 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
-- Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
+- Fedora 7         (core, updated, rpm.livna.org,
          devel      JPackage, FreshRPMS, GStreamer)
+- Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
+                    JPackage, FreshRPMS, GStreamer)
 - Fedora 1, 2, 3   (core, updated, www.fedora.us, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
 - Red Hat 8.0, 9   (basic, updated, www.fedora.us, rpm.livna.org,
