@@ -38,6 +38,19 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>0.9.2</revision>
+   <branch>2</branch>
+   <name>Thomson Boy</name>
+   <created>2007-09-08</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.2.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.2.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.2-1.fc7.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.2-1.fc7.x86_64.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>0.9.1</revision>
    <branch>2</branch>
    <name>Australia</name>
