@@ -3,6 +3,12 @@
 	* configure.in:
 	  Default to CentOS configs when built on RHEL.
 
+	* etc/dist.d/cnc-9-i386:
+	* etc/dist.d/Makefile.am:
+	* etc/location:
+	* README:
+	  Remove dead Conectiva 9 config.
+
 2007-09-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* back to HEAD
