@@ -1,3 +1,8 @@
+2007-09-13  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* configure.in:
+	  Default to CentOS configs when built on RHEL.
+
 2007-09-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* back to HEAD
