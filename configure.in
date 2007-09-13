@@ -110,8 +110,11 @@ CHECK_RELEASE(redhat,    "(Psyche)",     defaultroot="redhat-80-$arch")
 CHECK_RELEASE(redhat,    "(Shrike)",     defaultroot="redhat-9-$arch")
 
 CHECK_RELEASE(redhat, "CentOS release 3",defaultroot="centos-3-$arch")
+CHECK_RELEASE(redhat,    "(Taroon)",     defaultroot="centos-3-$arch")
 CHECK_RELEASE(redhat, "CentOS release 4",defaultroot="centos-4-$arch")
+CHECK_RELEASE(redhat,    "(Nahant)",     defaultroot="centos-4-$arch")
 CHECK_RELEASE(redhat, "CentOS release 5",defaultroot="centos-5-$arch")
+CHECK_RELEASE(redhat,    "(Tikanga)",    defaultroot="centos-5-$arch")
 
 CHECK_RELEASE(yellowdog, "(Sirius)",     defaultroot="yellowdog-30-ppc")
 
