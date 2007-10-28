@@ -38,10 +38,10 @@ Fedora development
   - Core
   - with rpm.livna.org
 
-Fedora 4, 5, 6, 7
+Fedora 4, 5, 6, 7, 8
   - Core
   - updated
-  - with Extras
+  - with Extras (4, 5, 6 only)
   - with rpm.livna.org
   - with FreshRPMS
   - with JPackage

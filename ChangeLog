@@ -1,3 +1,11 @@
+2007-10-28  Ville Skyttä  <ville dot skytta at iki dot fi>
+
+	* README:
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-8-*:
+	  Add Fedora 8 configs.
+
 2007-09-13  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* configure.in:
