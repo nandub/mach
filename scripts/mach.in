@@ -2349,12 +2349,16 @@ def main (config, args):
     seen_aliases = []
     for name in aliases.keys ():
         if name in seen_aliases:
-            sys.stderr.write ('Root "%s" is ambiguous\n' % al)
+            sys.stderr.write ('Internal config error: '
+                'root alias "%s" in "%s" is already defined.\n' % (
+                    al, name))
             sys.exit (1)
         seen_aliases.append (name)
         for al in aliases[name]:
             if al in seen_aliases:
-                sys.stderr.write ('Root "%s" is ambiguous\n' % al)
+                sys.stderr.write ('Internal config error: '
+                    'root alias "%s" in "%s" is already defined.\n' % (
+                        al, name))
                 sys.exit (1)
             if al == root: root = name
             seen_aliases.append (al)
