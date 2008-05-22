@@ -24,6 +24,9 @@ dists = \
 	fedora-8-i386 \
 	fedora-8-x86_64 \
 	fedora-8-ppc \
+	fedora-9-i386 \
+	fedora-9-x86_64 \
+	fedora-9-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \
