@@ -1,5 +1,18 @@
 2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-9-i386:
+	* etc/dist.d/fedora-9-ppc:
+	* etc/dist.d/fedora-9-x86_64:
+	  Adding Fedora 9 dist configs.
+	  This stops using 'core', and now has:
+	  - f9 for fedora (just the Fedora repo)
+	  - f9e for Everything
+	  - f9u for updated (Everything + updates)
+
+2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  Show a nicer error message when the internal config is wrong.
 
