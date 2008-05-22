@@ -82,7 +82,7 @@ aliases['%s-updates' % DIST] = ('f' + V + 'u' + AS, )
 # Fedora with GStreamer
 packages['%s-gstreamer' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-gstreamer' % DIST] = {
-  DIST: ('core', 'updates', 'livna',
+  DIST: ('everything', 'updates', 'livna',
          'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
 config['%s-gstreamer' % DIST] = deepcopy(config['%s-fedora' % DIST])
@@ -93,7 +93,7 @@ aliases['%s-gstreamer' % DIST] = ('f' + V + 'g' + AS, )
 
 packages['%s-gstreamer-deps' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-gstreamer-deps' % DIST] = {
-  DIST: ('core', 'updates', 'gstreamer-deps')
+  DIST: ('everything', 'updates', 'gstreamer-deps')
 }
 config['%s-gstreamer-deps' % DIST] = config['%s-gstreamer' % DIST]
 aliases['%s-gstreamer-deps' % DIST] = ('f' + V + 'gd' + AS, )
