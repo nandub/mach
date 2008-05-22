@@ -1,3 +1,13 @@
+=== release 0.9.3 ===
+
+2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* RELEASE:
+	* configure.in:
+	* mach.doap:
+	  releasing 0.9.3, "Niger"
+
 2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-7-i386:

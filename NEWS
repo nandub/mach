@@ -1,4 +1,9 @@
-This is mach, make a chroot, 0.9.2.
+This is mach, make a chroot, 0.9.3.
+
+Changes since 0.9.2:
+        - Add F8 and F9 repositories and reorganize repositories (Thomas, Ville)
+        - Default to CentOS configs when built on RHEL (Ville)
+	- Remove Connectiva 9 (Ville)
 
 Changes since 0.9.1:
         - Add FC7, CentOS EPEL, CentOS 3 configs (Ville)

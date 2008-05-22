@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.2 - Thomson Boy.
+Announcing the release of mach 0.9.3 - Niger.
 
 WHAT IS IT
 ----------
@@ -12,7 +12,7 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
-- Fedora 7         (core, updated, rpm.livna.org,
+- Fedora 7, 8, 9   (Fedora, Everything, updated, rpm.livna.org,
          devel      JPackage, FreshRPMS, GStreamer)
 - Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
@@ -22,9 +22,8 @@ mach can currently set up roots for the following distributions:
                     JPackage, GStreamer, FreshRPMS)
 - Red Hat 7.2, 7.3 (basic, updated, FreshRPMS, JPackage)
 - Red Hat 7.0, 7.1 (basic, updated, FreshRPMS)
-- CentOS 4
+- CentOS 4, 5
 - SuSE 8.1/8.2/9
-- Connectiva
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
 - Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Dave/Dina 0.0/oven/fridge
@@ -33,11 +32,9 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Add FC7, CentOS EPEL, CentOS 3 configs (Ville)
-        - Allow overriding the pkg dir under /usr/src (Tobias)
-        - Clarify GPLv2+ license (Ville)
-        - Run rpmlint on all result dirs (Ville)
-        - Actually include ppc files (Thomas)
+        - Add F8 and F9 repositories and reorganize repositories (Thomas, Ville)
+        - Default to CentOS configs when built on RHEL (Ville)
+        - Remove Connectiva 9 (Ville)
 
 WHY WOULD YOU USE IT
 --------------------
