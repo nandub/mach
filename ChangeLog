@@ -1,5 +1,15 @@
 2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* etc/dist.d/fedora-7-i386:
+	* etc/dist.d/fedora-7-ppc:
+	* etc/dist.d/fedora-7-x86_64:
+	* etc/dist.d/fedora-8-i386:
+	* etc/dist.d/fedora-8-ppc:
+	* etc/dist.d/fedora-8-x86_64:
+	  Apply same repo changes to F8 and F7
+
+2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.in:
 	* etc/dist.d/Makefile.am:
 	* etc/dist.d/fedora-9-i386:
