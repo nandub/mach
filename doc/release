@@ -1,0 +1,35 @@
+release procedure for mach
+--------------------------
+
+- Update configure.ac
+- Pick a release name
+- Update .doap file
+- Add list of new features to NEWS
+- Update README and home page with relevant new features
+- Update RELEASE, changing:
+  - name and version
+  - new distros
+  - CHANGES section
+- Run moap cl prep and add comment about release
+- Update ChangeLog; add === release x.y.z === line
+- make distcheck
+- build rpm
+- sign the packages
+- commit to HEAD
+- create release tag:
+           cvs tag RELEASE-0_9_3
+- copy tarballs and packages to web upload area:
+  cp mach-0.9.3.tar.* /home/thomas/www/thomas.apestaart.org/data/download/mach/
+  cp /var/tmp/mach/fedora-9-i386-updates/mach-0.9.3-1.fc9/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
+- put packages in tao repository
+  cp -pr /var/tmp/mach/fedora-9-i386-updates/mach-0.9.3-1.fc9 www/thomas.apestaart.org/data/download/pkg/fedora-9-i386-updates/
+  (symlink, repo and push)
+- announce to freshmeat:
+  moap doap -v 0.9.3 freshmeat -b Default
+- send out release mails:
+  moap doap -v 0.9.3 mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
+- bump configure.ac and commit
+- why don't you blog about it ?
+
+
+
