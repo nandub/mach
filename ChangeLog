@@ -1,3 +1,8 @@
+2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  Show a nicer error message when the internal config is wrong.
+
 2007-10-28  Ville Skyttä  <ville dot skytta at iki dot fi>
 
 	* README:
