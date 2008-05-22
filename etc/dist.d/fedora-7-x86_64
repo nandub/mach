@@ -28,7 +28,8 @@ aptsources[DIST] = {
 }
 
 yumsources[DIST] = {
-  'core':             fedorayum   + '/releases/%s/Everything/%s/os'   % (V, A),
+  'fedora':           fedorayum   + '/releases/%s/Fedora/%s/os'       % (V, A),
+  'everything':       fedorayum   + '/releases/%s/Everything/%s/os'   % (V, A),
   'updates':          fedorayum   + '/updates/%s/%s'                  % (V, A),
   'gst-0.10-deps':    gstreamer   + '/fedora/%s/0.10/%s/deps'         % (V, A),
   'gst-0.10-gst':     gstreamer   + '/fedora/%s/0.10/%s/gst'          % (V, A),
@@ -40,8 +41,8 @@ yumsources[DIST] = {
   'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
 }
 
-# Fedora
-packages['%s-core' % DIST] = {
+# Fedora (only the Fedora repository, ie the "base" DVD)
+packages['%s-fedora' % DIST] = {
   'dir':      DIST,
   'minimal':  'bash glibc',
   'base':     'coreutils findutils openssh-server',
@@ -49,10 +50,10 @@ packages['%s-core' % DIST] = {
               'gzip info make patch redhat-rpm-config rpm-build sed tar ' +
               'unzip util-linux which rpmdevtools',
 }
-sourceslist['%s-core' % DIST] = {
-  DIST: ('core', )
+sourceslist['%s-fedora' % DIST] = {
+  DIST: ('fedora', )
 }
-config['%s-core' % DIST] = {
+config['%s-fedora' % DIST] = {
   'runuser': '/sbin/runuser',
   'excludearch': 'i386 i486 i586 i686 athlon',
   'macros': {
@@ -60,29 +61,37 @@ config['%s-core' % DIST] = {
     '__arch_install_post': '/usr/lib/rpm/check-rpaths \\\n  /usr/lib/rpm/check-buildroot',
   },
 }
-aliases['%s-core' % DIST] = ('f' + V + 'c' + AS, 'fc' + V + AS, )
+aliases['%s-fedora' % DIST] = ('f' + V + AS, )
+
+# Fedora with Everything
+packages['%s-everything' % DIST] = packages['%s-fedora' % DIST]
+sourceslist['%s-everything' % DIST] = {
+  DIST: ('everything', )
+}
+config['%s-everything' % DIST] = config['%s-fedora' % DIST]
+aliases['%s-everything' % DIST] = ('f' + V + 'e' + AS, )
 
 # Fedora with updates
-packages['%s-updates' % DIST] = packages['%s-core' % DIST]
+packages['%s-updates' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-updates' % DIST] = {
-  DIST: ('core', 'updates', )
+  DIST: ('everything', 'updates', )
 }
-config['%s-updates' % DIST] = config['%s-core' % DIST]
-aliases['%s-updates' % DIST] = ('f' + V + 'u' + AS, 'f' + V + 'e' + AS, )
+config['%s-updates' % DIST] = config['%s-fedora' % DIST]
+aliases['%s-updates' % DIST] = ('f' + V + 'u' + AS, )
 
 # Fedora with GStreamer
-packages['%s-gstreamer' % DIST] = packages['%s-core' % DIST]
+packages['%s-gstreamer' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-gstreamer' % DIST] = {
   DIST: ('core', 'updates', 'livna',
          'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
-config['%s-gstreamer' % DIST] = deepcopy(config['%s-core' % DIST])
+config['%s-gstreamer' % DIST] = deepcopy(config['%s-fedora' % DIST])
 config['%s-gstreamer' % DIST].update({
   'release': V,
 })
 aliases['%s-gstreamer' % DIST] = ('f' + V + 'g' + AS, )
 
-packages['%s-gstreamer-deps' % DIST] = packages['%s-core' % DIST]
+packages['%s-gstreamer-deps' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-gstreamer-deps' % DIST] = {
   DIST: ('core', 'updates', 'gstreamer-deps')
 }
@@ -116,5 +125,5 @@ sourceslist['%s-jpackage' % DIST] = {
   DIST: sourceslist['%s-updates' % DIST][DIST] +
   ('jpackage-generic', 'jpackage-fc' + V , 'jpackage-nonfree', ),
 }
-config['%s-jpackage' % DIST] = config['%s-core' % DIST]
+config['%s-jpackage' % DIST] = config['%s-fedora' % DIST]
 aliases['%s-jpackage' % DIST] = ('f' + V + 'jpp' + AS, )
