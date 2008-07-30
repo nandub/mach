@@ -1,0 +1,43 @@
+# mach dist configuration                                        -*- python -*-
+# -*- coding: utf-8 -*-
+
+# opensuse-11-i386: configuration for OpenSuse 11
+
+# each distro flavour has an aptsources line describing where to get each
+# kind of package from
+# each actual dist has a packages dict for bootstrap packages and
+# a sourceslist dict referencing aptsources lines to use
+
+V = '110'      # distro version
+A = 'i386'   # architecture
+AS = ''      # 'short' version of arch
+DIST = 'opensuse-%s-%s' % (V, A)
+
+### OpenSuse flavours
+yumsources[DIST] = {
+  'opensuse':  opensuse   + '/distribution/11.0/repo/oss/suse',
+  'updates':   opensuse   + '/update/11.0',
+}
+
+# OpenSuse (only the OpenSuse repository, ie the "base" DVD)
+packages['%s-core' % DIST] = {
+  'dir':      DIST,
+  'minimal':  'bash glibc',
+  'base':     'aaa_base coreutils findutils openssh pam pam-modules',
+  'build':    'bzip2 cpio diffutils gawk gcc gcc-c++ grep build rpm ' +
+              'gzip info make patch sed tar unzip util-linux',
+}
+
+sourceslist['%s-core' % DIST] = {
+  DIST: ('opensuse', )
+}
+config['%s-core' % DIST] = {
+  'macros': {},
+}
+
+# OpenSuse with updates
+packages['%s-updates' % DIST] = packages['%s-core' % DIST]
+sourceslist['%s-updates' % DIST] = {
+  DIST: ('opensuse', 'updates', )
+}
+config['%s-updates' % DIST] = config['%s-core' % DIST]

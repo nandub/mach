@@ -29,6 +29,9 @@ yellowdog   = 'http://ayo.freshrpms.net/yellowdog'
 # SuSE Linux: http://apt4rpm.sourceforge.net/repos.html
 suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
 
+# OpenSuse
+opensuse    = 'http://download.opensuse.org'
+
 # Dave/Dina: http://www.davedina.org
 davedina    = 'http://download.davedina.org/apt'
 

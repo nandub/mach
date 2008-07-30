@@ -1,3 +1,12 @@
+2008-07-30  Julien Moutte  <julien@fluendo.com>
+
+	* etc/dist.d/opensuse-102-i386:
+	* etc/dist.d/opensuse-103-i386:
+	* etc/dist.d/opensuse-110-i386: Add OpenSuse versions.
+	* etc/location: Add OpenSuse Yum location
+	* scripts/mach.in: Make sure permissions are set correctly.
+	This makes mach work on Ubuntu.
+
 2008-05-22  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
