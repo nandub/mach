@@ -1,3 +1,9 @@
+2008-08-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  Account for yum's FC9 change in version reporting - it now dumps
+	  a whole lot of extra lines about installed packages.
+
 2008-07-30  Julien Moutte  <julien@fluendo.com>
 
 	* etc/dist.d/opensuse-102-i386:
