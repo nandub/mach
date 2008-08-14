@@ -2251,7 +2251,9 @@ def user_check ():
 # return the yum version as a tuple
 def yum_version ():
     # my FC5 yum prints "Loading installonlyn" plugin as the first line.  ugh.
-    output = commands.getoutput ('yum --version 2>/dev/null | tail -n 1')
+    # my FC9 yum prints a whole bunch of crap about installed rpms after the
+    # first line.  ugh+
+    output = commands.getoutput ('yum --version 2>/dev/null | grep -v "Loading installonlyn" | head -n 1')
     version = output.rstrip ()
     l = map (int, version.split ("."))
     return tuple (l)
