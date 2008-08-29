@@ -38,13 +38,15 @@ Fedora development
   - Core
   - with rpm.livna.org
 
-Fedora 4, 5, 6, 7, 8
+Fedora 4, 5, 6, 7, 8, 9
   - Core
   - updated
   - with Extras (4, 5, 6 only)
   - with rpm.livna.org
   - with FreshRPMS
   - with JPackage
+
+OpenSuse 10.2, 10.3, 11.0
 
 Fedora 1, 2, 3
   - Core

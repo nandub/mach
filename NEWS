@@ -1,4 +1,9 @@
-This is mach, make a chroot, 0.9.3.
+This is mach, make a chroot, 0.9.4.
+
+Changes since 0.9.3:
+	- Add fix for yum's new --version output breaking mach (Thomas)
+	- Fix permission problems for additional users (Julien)
+	- Add OpenSuse 10.2, 10.3, 11.0 build files (Julien)
 
 Changes since 0.9.2:
         - Add F8 and F9 repositories and reorganize repositories (Thomas, Ville)

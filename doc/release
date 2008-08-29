@@ -10,6 +10,7 @@ release procedure for mach
   - name and version
   - new distros
   - CHANGES section
+  - new contributors
 - Run moap cl prep and add comment about release
 - Update ChangeLog; add === release x.y.z === line
 - make distcheck
