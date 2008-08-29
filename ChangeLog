@@ -1,3 +1,10 @@
+2008-08-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  Fix F-9 detection.
+	* mach.spec.in:
+	  Default to updates since extras is gone.
+
 2008-08-14  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
