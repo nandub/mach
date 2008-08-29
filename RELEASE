@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.3 - Niger.
+Announcing the release of mach 0.9.4 - Maroc.
 
 WHAT IS IT
 ----------
@@ -24,6 +24,7 @@ mach can currently set up roots for the following distributions:
 - Red Hat 7.0, 7.1 (basic, updated, FreshRPMS)
 - CentOS 4, 5
 - SuSE 8.1/8.2/9
+- OpenSuSE 10.2/10.3/11.0
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
 - Yellowdog Linux 2.3 (basic, updated, FreshRPMS)
 - Dave/Dina 0.0/oven/fridge
@@ -32,9 +33,9 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Add F8 and F9 repositories and reorganize repositories (Thomas, Ville)
-        - Default to CentOS configs when built on RHEL (Ville)
-        - Remove Connectiva 9 (Ville)
+        - Add fix for yum's new --version output breaking mach (Thomas)
+        - Fix permission problems for additional users (Julien)
+        - Add OpenSuse 10.2, 10.3, 11.0 build files (Julien)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -91,3 +92,4 @@ Contributors to releases include
 - Matthias Saou
 - Nigel Metheringham
 - Jan Schmidt
+- Julien Moutte

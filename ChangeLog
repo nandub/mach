@@ -1,3 +1,15 @@
+=== release 0.9.4 ===
+
+2008-08-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* README:
+	* RELEASE:
+	* configure.in:
+	* doc/release:
+	* mach.doap:
+	  releasing 0.9.4, "Maroc"
+
 2008-08-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
