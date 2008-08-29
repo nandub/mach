@@ -44,7 +44,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %configure \
 	--enable-builduser=%{builduser} \
 	--enable-buildgroup=%{buildgroup} \
-	--with-flavor=extras
+	--with-flavor=updates
 make
 
 %install
@@ -95,6 +95,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Fri Aug 29 2008 Thomas Vander Stichele <thomas at apestaart dot org>
+- change flavour to updates, since extras is gone.
+
 * Mon Aug  9 2004 Ville Skyttä <ville.skytta at iki.fi>
 - Create only the "mach" group, and do not remove it on erase.  The
   "mach" user is not really needed for anything.
