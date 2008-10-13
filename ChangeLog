@@ -1,3 +1,19 @@
+2008-10-13  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-3-i386:
+	* etc/dist.d/fedora-3-x86_64:
+	* etc/dist.d/fedora-4-i386:
+	* etc/dist.d/fedora-4-ppc:
+	* etc/dist.d/fedora-4-x86_64:
+	* etc/dist.d/fedora-5-i386:
+	* etc/dist.d/fedora-5-ppc:
+	* etc/dist.d/fedora-5-x86_64:
+	* etc/dist.d/fedora-6-i386:
+	* etc/dist.d/fedora-6-ppc:
+	* etc/dist.d/fedora-6-x86_64:
+	* etc/location:
+	  Fedora moved all FC6 and older repos to archive.fedoraproject.org
+
 2008-08-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
