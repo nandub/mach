@@ -1,3 +1,13 @@
+2008-10-26  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  Instead of setting g+s on /usr/src/(rpmdir), which then gets
+	  inherited by all subdirs, and triggers rpmlint errors like
+		python-pygments.noarch: E: non-standard-dir-perm
+		/usr/share/doc/python-pygments-0.11.1/docs 02755
+	  set it recursively to g+w instead in a few strategic places.
+	  Improves on Julien's patch for 0.9.4
+
 2008-10-13  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-3-i386:

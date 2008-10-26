@@ -867,6 +867,7 @@ class Root:
         if not self.get_state ('build'):
             self.setup (['build', ])
 
+        self._ensure_machbuild_permissions ()
         self.lock ()
 
         srpms = [] # resulting set of srpms
@@ -1115,6 +1116,7 @@ class Root:
         if not args:
             raise self.Error, 'Please supply .src.rpm files to build'
 
+        self._ensure_machbuild_permissions ()
         (options, paths) = self.splitargsrpms (args)
         # turn the options into a correctly quoted string, and add
         # buildopts from config, since they also affect parsing
@@ -1426,6 +1428,7 @@ class Root:
             self.update_local_repo ()
             print "Build of %s succeeded, results in\n%s" % (fullname, pkgresultdir)
             resultdirs.append (pkgresultdir)
+            self._ensure_machbuild_permissions ()
 
         # if we have rpmlint, and it was not turned off, rpmlint the packages
         if self.config['lint']:
@@ -1793,6 +1796,11 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
             self.installer (["-y update", ])
             self.installer (["-y upgrade", ])
 
+    def _ensure_machbuild_permissions (self):
+        # make sure all files in /usr/src/@PKGDIR@ are writable by the group
+        self.do_chroot ("%s -c 'chmod -R g+w /usr/src/@PKGDIR@' %s" %
+            (self.config['runuser'], builduser), fatal = True)
+
     def _setup_build (self):
         "set up a root for rpm building"
         # first do the stuff that we want to ensure gets done every time,
@@ -1826,7 +1834,12 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
         #FIXME: add mach user and group
         self.do_chroot ("echo %s:x:500:%d::/usr/src/@PKGDIR@:/bin/bash >> /etc/passwd" % (builduser, mach_gid), fatal = True)
         self.do_chroot ("echo %s::%d:%s >> /etc/group" % (buildgroup, mach_gid, builduser), fatal = True)
-        self.do_chroot ("mkdir -m=u+rwx,g+rwxs,a+rx -p /usr/src/@PKGDIR@",
+        # all subdirectories should be writable by group, since multiple
+        # users can be in the mach group
+        # we can't set g+s here though, because that gets inherited by all
+        # subdirectories, so leads to
+        # E: non-standard-dir-perm /usr/share/doc/... 02755
+        self.do_chroot ("mkdir -m=u+rwx,g+rwx,a+rx -p /usr/src/@PKGDIR@",
             fatal = True)
         self.do_chroot ("chown -R %s:%s /usr/src/@PKGDIR@" % (builduser, buildgroup), fatal = True)
         self.do_chroot ("%s -c 'cp -p /etc/skel/.bashrc /usr/src/@PKGDIR@/.bashrc || cp -p /etc/bashrc /usr/src/@PKGDIR@/.bashrc || :' %s" % (
