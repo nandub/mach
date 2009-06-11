@@ -1,3 +1,16 @@
+2009-06-11  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	  Add detection of F10 and F11.
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-10-i386:
+	* etc/dist.d/fedora-10-ppc:
+	* etc/dist.d/fedora-10-x86_64:
+	* etc/dist.d/fedora-11-i386:
+	* etc/dist.d/fedora-11-ppc:
+	* etc/dist.d/fedora-11-x86_64:
+	  Add configs for F10 and F11.
+
 2008-10-26  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
