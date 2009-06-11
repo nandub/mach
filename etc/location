@@ -20,9 +20,6 @@ fedora      = 'http://ayo.freshrpms.net/fedora/linux'
 # location, and start in the dir that has "core" and "extras"
 fedorayum   = 'http://download.fedora.redhat.com/pub/fedora/linux'
 
-# archived Fedora Core versions; up to FC6
-fedorayuma  = 'http://archives.fedoraproject.org/pub/archive/fedora/linux'
-
 # CentOS
 centos      = 'http://mirror.centos.org/centos'
 

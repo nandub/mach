@@ -1,6 +1,6 @@
 AC_INIT(README)
 
-AS_VERSION(mach, MACH, 0, 9, 4, 1)
+AS_VERSION(mach, MACH, 0, 9, 4)
 AC_SUBST(RELEASE, $MACH_RELEASE)
 
 AC_CANONICAL_SYSTEM
@@ -94,8 +94,6 @@ esac
 dnl default root
 dnl first try to guess the platform
 CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-$arch")
-CHECK_RELEASE(fedora,    "(Leonidas)",   defaultroot="fedora-11-$arch")
-CHECK_RELEASE(fedora,    "(Cambridge)",  defaultroot="fedora-10-$arch")
 CHECK_RELEASE(fedora,    "(Sulphur)",    defaultroot="fedora-9-$arch")
 CHECK_RELEASE(fedora,    "(Werewolf)",   defaultroot="fedora-8-$arch")
 CHECK_RELEASE(fedora,    "(Moonshine)",  defaultroot="fedora-7-$arch")

@@ -29,9 +29,9 @@ aptsources[DIST] = {
 }
 
 yumsources[DIST] = {
-  'core':             fedorayuma  + '/core/%s/%s/os'                  % (V, A),
-  'updates':          fedorayuma  + '/core/updates/%s/%s'             % (V, A),
-  'extras':           fedorayuma  + '/extras/%s/%s'                   % (V, A),
+  'core':             fedorayum   + '/core/%s/%s/os'                  % (V, A),
+  'updates':          fedorayum   + '/core/updates/%s/%s'             % (V, A),
+  'extras':           fedorayum   + '/extras/%s/%s'                   % (V, A),
   'gstreamer':        gstreamer   + '/fedora/%s/%s/yum/gst'           % (V, A),
   'gstreamer010':     gstreamer   + '/fedora/%s/%s/yum/gst010'        % (V, A),
   'gstreamer-build':  gstreamer   + '/fedora/%s/%s/yum/build'         % (V, A),

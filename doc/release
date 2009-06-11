@@ -20,18 +20,16 @@ release procedure for mach
 - create release tag:
            cvs tag RELEASE-0_9_3
 - copy tarballs and packages to web upload area:
-  export RELEASE=0.9.4
-  cp mach-$RELEASE.tar.* /home/thomas/www/thomas.apestaart.org/data/download/mach/
-  cp /var/tmp/mach/fedora-9-i386-updates/mach-$RELEASE-1.fc9/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
+  cp mach-0.9.3.tar.* /home/thomas/www/thomas.apestaart.org/data/download/mach/
+  cp /var/tmp/mach/fedora-9-i386-updates/mach-0.9.3-1.fc9/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
 - put packages in tao repository
-  cp -pr /var/tmp/mach/fedora-9-i386-updates/mach-$RELEASE-1.fc9 $HOME/www/thomas.apestaart.org/data/download/pkg/fedora-9-i386-updates/
+  cp -pr /var/tmp/mach/fedora-9-i386-updates/mach-0.9.3-1.fc9 www/thomas.apestaart.org/data/download/pkg/fedora-9-i386-updates/
   (symlink, repo and push)
 - announce to freshmeat:
-  moap doap -v $RELEASE freshmeat -b Default
+  moap doap -v 0.9.3 freshmeat -b Default
 - send out release mails:
-  moap doap -v $RELEASE mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
+  moap doap -v 0.9.3 mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
 - bump configure.ac and commit
-- rebuild in fedora repos
 - why don't you blog about it ?
 
 
