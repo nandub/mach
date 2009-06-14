@@ -192,6 +192,15 @@ the built directory as a parameter.
 
 7. USING IT
 -----------
+
+- If you or your users want to have a private own personal root, then insert
+  these lines into the .machrc file:
+
+    config['dirs']['states'] += "/%s" % os.environ.get("USER")
+    config['dirs']['roots'] += "/%s" % os.environ.get("USER")
+    config['dirs']['results'] += "/%s" % os.environ.get("USER")
+    config['dirs']['tmps'] += "/%s" % os.environ.get("USER")
+
 - run mach --help for a list of commands you can use.
 - Now for the actual work.  If everything is configured properly, you can now
   do

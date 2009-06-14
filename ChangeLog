@@ -1,3 +1,10 @@
+2009-06-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	patch by: Sam Liddicott <sam at liddicot dot com>
+
+	* README:
+	  Add note on how to personalize roots and friends.
+
 2009-06-11  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:
