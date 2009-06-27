@@ -2,6 +2,7 @@ release procedure for mach
 --------------------------
 
 - Update configure.in
+  export RELEASE=0.9.4
 - Pick a release name
 - Update .doap file
 - Add list of new features to NEWS
@@ -17,20 +18,24 @@ release procedure for mach
 - build rpm
 - sign the packages
 - commit to HEAD
+  cvs commit -m "releasing $RELEASE"
 - create release tag:
-           cvs tag RELEASE-0_9_3
+           cvs tag RELEASE-0_9_4
 - copy tarballs and packages to web upload area:
-  export RELEASE=0.9.4
   cp mach-$RELEASE.tar.* /home/thomas/www/thomas.apestaart.org/data/download/mach/
-  cp /var/tmp/mach/fedora-9-i386-updates/mach-$RELEASE-1.fc9/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
+  cp /var/tmp/mach/fedora-*-updates/mach-$RELEASE-1.*/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
 - put packages in tao repository
-  cp -pr /var/tmp/mach/fedora-9-i386-updates/mach-$RELEASE-1.fc9 $HOME/www/thomas.apestaart.org/data/download/pkg/fedora-9-i386-updates/
-  (symlink, repo and push)
+  for dir in /var/tmp/mach/fedora-*-updates/mach-$RELEASE-1.f*; do dirname=`cd $dir/..; pwd`; basename=`basename $dirname`; targetdir=$HOME/www/thomas.apestaart.org/data/download/pkg/$basename; mkdir -p $targetdir; cp -prv $dir $targetdir; done
+  cd $HOME/www/thomas.apestaart.org/data/pkg
+  bin/pkg-symlink
+  bin/yum-rep
+  tao-put
+  
 - announce to freshmeat:
   moap doap -v $RELEASE freshmeat -b Default
 - send out release mails:
   moap doap -v $RELEASE mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
-- bump configure.ac and commit
+- bump configure.in and commit
 - rebuild in fedora repos
 - why don't you blog about it ?
 
