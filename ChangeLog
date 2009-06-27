@@ -1,3 +1,14 @@
+=== release 0.9.5 ===
+
+2009-06-27  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* README:
+	* RELEASE:
+	* configure.in:
+	* mach.doap:
+	  Releasing mach 0.9.5, 'MMM...'
+
 2009-06-27  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:

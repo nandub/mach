@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.4 - Maroc.
+Announcing the release of mach 0.9.5 - MMM...
 
 WHAT IS IT
 ----------
@@ -13,7 +13,8 @@ or build clean packages.
 
 mach can currently set up roots for the following distributions:
 - Fedora 7, 8, 9   (Fedora, Everything, updated, rpm.livna.org,
-         devel      JPackage, FreshRPMS, GStreamer)
+         10, 11     JPackage, FreshRPMS, GStreamer)
+         devel
 - Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
 - Fedora 1, 2, 3   (core, updated, www.fedora.us, rpm.livna.org,
@@ -33,9 +34,10 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Add fix for yum's new --version output breaking mach (Thomas)
-        - Fix permission problems for additional users (Julien)
-        - Add OpenSuse 10.2, 10.3, 11.0 build files (Julien)
+        - Added Fedora 10 and 11 (Thomas)
+	- Changed archived Fedora configuration (Thomas)
+	- Documented setup for separating roots per user (Sam Liddicott)
+	- Fixes for Python 2.6 (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
@@ -93,3 +95,4 @@ Contributors to releases include
 - Nigel Metheringham
 - Jan Schmidt
 - Julien Moutte
+- Sam Liddicott

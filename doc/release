@@ -1,7 +1,7 @@
 release procedure for mach
 --------------------------
 
-- Update configure.ac
+- Update configure.in
 - Pick a release name
 - Update .doap file
 - Add list of new features to NEWS
@@ -10,7 +10,7 @@ release procedure for mach
   - name and version
   - new distros
   - CHANGES section
-  - new contributors
+  - new contributors: moap cl cont
 - Run moap cl prep and add comment about release
 - Update ChangeLog; add === release x.y.z === line
 - make distcheck

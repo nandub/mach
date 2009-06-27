@@ -1,4 +1,10 @@
-This is mach, make a chroot, 0.9.4.
+This is mach, make a chroot, 0.9.5.
+
+Changes since 0.9.4:
+	- Added Fedora 10 and 11
+	- Change to use archived Fedora versions.
+	- Fix for more users in mach group.
+        - Fixes for python 2.6
 
 Changes since 0.9.3:
 	- Add fix for yum's new --version output breaking mach (Thomas)
