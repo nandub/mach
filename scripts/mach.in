@@ -29,7 +29,12 @@ import random # spinner theming madness
 import tempfile # for tempdir for spec extraction
 import glob # for globbing paths
 import grp # for finding out the mach gid
-import sets # to work with python 2.3 as well
+# to work with python 2.3 as well; sets was deprecated in 2.6
+try:
+    set
+except NameError:
+    from sets import Set as set
+
 from copy import deepcopy # for stuff in dist.d files
 
 # print out debug info if wanted
@@ -780,11 +785,11 @@ class Root:
             cmd = "%s --root %s -qa --qf '%s'" % (self.config['rpm'], root, qfmt)
             debug ("running " + cmd)
             output = commands.getoutput (cmd)
-            installed = sets.Set (output.split ("\n"))
+            installed = set (output.split ("\n"))
 
             # get the list of packages that should be installed
             lines = open (listfile).read ()
-            target = sets.Set (lines.split ("\n"))
+            target = set (lines.split ("\n"))
 
             diff1 = installed.difference (target)
             diff2 = target.difference (installed)
