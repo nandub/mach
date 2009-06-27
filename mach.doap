@@ -38,13 +38,26 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>0.9.5</revision>
+   <branch>2</branch>
+   <name>MMM...</name>
+   <created>2009-06-27</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.5.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.5.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.5-1.fc11.i386.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>0.9.4</revision>
    <branch>2</branch>
    <name>Maroc</name>
    <created>2008-08-29</created>
    <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.4.tar.bz2" />
    <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.4.tar.gz" />
-   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.4-1.fc9.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.4-1.fc11.i586.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.4-1.fc11.x86_64.rpm" />
   </Version>
  </release>
 
