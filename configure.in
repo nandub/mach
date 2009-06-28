@@ -194,6 +194,7 @@ Makefile
 etc/Makefile
 etc/conf
 etc/dist.d/Makefile
+doc/Makefile
 m4/Makefile
 mach.spec
 scripts/Makefile
