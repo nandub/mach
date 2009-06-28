@@ -1,3 +1,11 @@
+2009-06-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* Makefile.am:
+	* configure.in:
+	* doc/mach.ics:
+	* doc/mach.rss2:
+	  Add ics and rss2 release information generation.
+
 2009-06-27  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:

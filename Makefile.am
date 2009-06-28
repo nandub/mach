@@ -4,4 +4,4 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = ChangeLog README TODO BUGS AUTHORS NEWS COPYING INSTALL \
   FORGETMENOT RELEASE mach.doap mach.spec
 
-SUBDIRS = scripts etc src m4
+SUBDIRS = scripts etc src m4 doc
