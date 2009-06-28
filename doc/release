@@ -34,6 +34,7 @@ release procedure for mach
 - announce to freshmeat:
   moap doap -v $RELEASE freshmeat -b Default
 - send out release mails:
+  moap doap -v $RELEASE mail -f thomas@apestaart.org thomas@apestaart.org
   moap doap -v $RELEASE mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
 - bump configure.in and commit
 - rebuild in fedora repos
