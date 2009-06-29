@@ -2263,7 +2263,10 @@ def user_check ():
     if os.getuid () != 0:
         machgid = grp.getgrnam ('mach')[2]
         if not machgid in os.getgroups():
-            sys.stderr.write ("ERROR: user is not in group mach, please add !\n")
+            sys.stderr.write (
+                "ERROR: user is not in group mach, please add !\n"
+                "You can do this by running as root:\n"
+                "usermod --append -G mach %s\n" % os.getlogin())
             sys.exit (1)
 
 # return the yum version as a tuple
