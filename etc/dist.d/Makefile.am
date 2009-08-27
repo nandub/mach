@@ -45,6 +45,9 @@ dists = \
 	suse-81-i386 \
 	suse-82-i386 \
 	suse-90-i386 \
+	opensuse-102-i386 \
+	opensuse-103-i386 \
+	opensuse-110-i386 \
 	yellowdog-23-ppc \
 	yellowdog-30-ppc \
 	davedina
