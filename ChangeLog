@@ -1,3 +1,8 @@
+2009-08-27  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/Makefile.am:
+	  Actually add opensuse files to the dist.
+
 2009-06-28  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* Makefile.am:
