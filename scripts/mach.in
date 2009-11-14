@@ -1603,8 +1603,8 @@ class Root:
         # lazy to add that now
         if self.root.startswith ('fedora-3'):
             debug ("Setting up a Fedora Core 3 root")
-            if os.path.exists (os.path.join ('@LIBDIR@', 'libselinux-mach.so')):
-                debug ('copying in custom libselinux-mach.so')
+            if os.path.exists (os.path.join ('@LIBDIR@', 'libselinux-mach.so.0')):
+                debug ('copying in custom libselinux-mach.so.0')
                 # FIXME: what about 64 bit ?
                 targetlibdir = os.path.join (self.rootdir, 'usr', 'lib')
                 ensure_dir (targetlibdir)
