@@ -195,6 +195,17 @@ DNS.
 Also, after a successful build it will run the mach-collect script with
 the built directory as a parameter.
 
+Here is an example of a mach-collect script:
+
+#!/bin/bash
+pwd
+ls $1
+mkdir -p RPMS
+cp $1/*.rpm RPMS
+
+This script creates an RPMS dir in the current directory, and copies all .rpm
+files there.
+
 7. USING IT
 -----------
 
