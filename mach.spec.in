@@ -1,26 +1,26 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
 Release:        @RELEASE@%{?dist}
-Summary:        make a chroot
+Summary:        Make a chroot
 
 Group:          Applications/System
-License:	GPLv2+
+License:        GPLv2+
 URL:            http://thomas.apestaart.org/projects/mach/
 Source:         http://thomas.apestaart.org/download/mach/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
-Requires:	python
-Requires:	rpm
-Requires:	rpm-build
-Requires:	rpm-python
-Requires:	yum
-Requires:	createrepo
-Requires:	sed
-Requires:	cpio
+Requires:       python
+Requires:       rpm
+Requires:       rpm-build
+Requires:       rpm-python
+Requires:       yum
+Requires:       createrepo
+Requires:       sed
+Requires:       cpio
 
-BuildRequires:	python
-BuildRequires:	gcc-c++
-BuildRequires:	libselinux-devel
+BuildRequires:  python
+BuildRequires:  gcc-c++
+BuildRequires:  libselinux-devel
 
 %{!?builduser:  %define builduser  @BUILDUSER@}
 %{!?buildgroup: %define buildgroup @BUILDGROUP@}
@@ -42,14 +42,18 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 
 %build
 %configure \
-	--enable-builduser=%{builduser} \
-	--enable-buildgroup=%{buildgroup} \
-	--with-flavor=updates
+        --enable-builduser=%{builduser} \
+        --enable-buildgroup=%{buildgroup} \
+        --with-flavor=updates
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+
+# no dev package
+rm $RPM_BUILD_ROOT%{_libdir}/*.so
+
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/states
 install -d -m 2775 $RPM_BUILD_ROOT%{_localstatedir}/lib/mach/roots
@@ -63,6 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 groupadd -r mach >/dev/null 2>&1 || :
+/sbin/ldconfig
 
 %preun
 if [ "$1" == 0 ];
@@ -77,14 +82,15 @@ then
   rmdir %{_localstatedir}/lib/mach/roots > /dev/null 2>&1 || :
   rm -rf %{_localstatedir}/tmp/mach > /dev/null 2>&1 || :
 fi
+/sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog COPYING README AUTHORS BUGS TODO FORGETMENOT RELEASE mach.doap
+%doc ChangeLog COPYING README AUTHORS TODO FORGETMENOT RELEASE mach.doap
 %dir %{_sysconfdir}/mach
-%config %{_sysconfdir}/mach/conf
+%config(noreplace) %{_sysconfdir}/mach/conf
 %config(noreplace) %{_sysconfdir}/mach/location
-%config %{_sysconfdir}/mach/dist.d
+%config(noreplace) %{_sysconfdir}/mach/dist.d
 %attr(2775,root,mach) %dir %{_localstatedir}/lib/mach
 %attr(2775,root,mach) %dir %{_localstatedir}/lib/mach/states
 %attr(2775,root,mach) %dir %{_localstatedir}/lib/mach/roots
