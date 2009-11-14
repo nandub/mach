@@ -1,5 +1,10 @@
 2009-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* mach.spec.in:
+	  rpmlint spec fixes.
+
+2009-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  More permission fixes based on feedback from Fredrik Unger.
 
