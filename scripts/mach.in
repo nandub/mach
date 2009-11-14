@@ -1059,7 +1059,13 @@ class Root:
             line = 'rpm-dir file://%s/usr/src rpm mach-local' % rootdir
         srcs['local.%s' % root] = line
         debug ('creating sources list with dict %r' % srcs)
+        
+        # This avoids getting errors like
+        # chmod: changing permissions of `/usr/src/rpm/RPMS/repodata': Operation
+        # not permitted
+        self.do_chroot ("chown -R %d:%d /usr/src/rpm/RPMS" % (os.getuid (), os.getgid ()), fatal = True)
         create_sources_list (self.config, srcs)
+        self.do_chroot ("chown -R %s:%s /usr/src/rpm/RPMS" % (builduser, buildgroup), fatal = True)
 
         try:
             if self.config['installer'] != 'yum':
@@ -1803,6 +1809,8 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
     def _ensure_machbuild_permissions (self):
         # make sure all files in /usr/src/@PKGDIR@ are writable by the group
+        self.do_chroot ("chown -R :%s /usr/src/@PKGDIR@" % buildgroup,
+            fatal = True)
         self.do_chroot ("%s -c 'chmod -R g+w /usr/src/@PKGDIR@' %s" %
             (self.config['runuser'], builduser), fatal = True)
 

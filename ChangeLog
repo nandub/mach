@@ -1,3 +1,8 @@
+2009-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  More permission fixes based on feedback from Fredrik Unger.
+
 2009-08-27  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/Makefile.am:
