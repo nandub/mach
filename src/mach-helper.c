@@ -265,8 +265,9 @@ do_chroot (int argc, char *argv[])
 }
 
 /*
- * allow bind mounts of the archives dir:
+ * allow bind mounts of the archives or selinux dir:
  * mount -o bind (archivesdir) (root)/var/cache/apt/archives
+ * mount -o bind /selinux (root)/selinux
  * allow proc mounts:
  * mount -t proc proc (root)/proc
  */
@@ -280,9 +281,12 @@ do_mount (int argc, char *argv[])
   /* see if it's -o bind or -t proc */
   if ((strncmp ("-o", argv[2], 2) == 0) && (strncmp ("bind", argv[3], 4) == 0))
   {
-    /* see if it's the archivesdir */
-    if (strncmp (archivesdir, argv[4], strlen (archivesdir)) != 0)
+    /* see if it's the archivesdir or selinux */
+    if ((strncmp (archivesdir, argv[4], strlen (archivesdir)) != 0) &&
+        (strncmp ("/selinux", argv[4], strlen ("/selinux")) != 0))
+    {
       error ("%s: mount not allowed", argv[4]);
+    }
   }
   else if ((strncmp ("-t", argv[2], 2) == 0) &&
            (strncmp ("proc", argv[3], 4) == 0))
