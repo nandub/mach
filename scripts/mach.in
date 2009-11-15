@@ -502,6 +502,7 @@ class Root:
         self.rootdir = get_config_dir (config, 'root')
         self.resultdir = get_config_dir (config, 'result')
         self.statedir = get_config_dir (self.config, 'state')
+        # where downloads are stored
         self.tmpdir = get_config_dir (self.config, 'tmp')
 
     # small helper functions
@@ -569,7 +570,7 @@ class Root:
         sys.stdout.flush ()
 
     def mount (self):
-        "mount proc into chroot"
+        "mount proc and optionally selinux into chroot"
         # FIXME: the next three lines are workaround code for when not having
         # proc
         # FIXME: rh 72's mount needs /proc/mounts file, let's give it one
@@ -578,12 +579,22 @@ class Root:
         ensure_dir (os.path.join (self.rootdir, 'proc'))
         # first umount for completeness; you never know
         self.umount ()
+
         debug ("mounting proc")
         file = open (os.path.join (self.statedir, 'mount'), "a+")
         command = '%s -t proc proc %s/proc' % (self.config['mount'], self.rootdir)
         debug (command)
         os.system (command)
         file.write ('%s/proc\n' % self.rootdir)
+
+        if os.path.exists ('/selinux'):
+            ensure_dir (os.path.join (self.rootdir, 'selinux'))
+            debug ("mounting selinux")
+            command = '%s -o bind /selinux %s/selinux' % (self.config['mount'], self.rootdir)
+            debug (command)
+            os.system (command)
+            file.write ('%s/selinux\n' % self.rootdir)
+
         file.close ()
 
     # umount all mounted paths
@@ -1008,8 +1019,17 @@ class Root:
             debug ("already clean, returning")
             return
 
+        # clean up yum cache
+        if self.config['installer'] == 'yum':
+            self.installer (["clean", "all", ])
+        
         if os.path.exists (self.rootdir):
             self.umount ()
+
+        # remove temporary files; to clean up e.g. broken downloads
+        if os.path.exists (self.tmpdir):
+            debug ("Removing tmpdir %s" % self.tmpdir)
+            os.system ("rm -rf %s" % self.tmpdir)
 
         # remove all state info
         if os.path.exists (self.statedir):

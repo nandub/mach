@@ -1,3 +1,12 @@
+2009-11-15  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* src/mach-helper.c:
+	  Allow bind mount of /selinux.
+	* scripts/mach.in:
+	  Mount and unmount /selinux as well if it exists.  This fixes
+	  the build of Flumotion failing because Xvfb does not start up
+	  without it.
+
 2009-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
