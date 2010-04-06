@@ -33,6 +33,9 @@ dists = \
 	fedora-11-i386 \
 	fedora-11-x86_64 \
 	fedora-11-ppc \
+	fedora-12-i386 \
+	fedora-12-x86_64 \
+	fedora-12-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \

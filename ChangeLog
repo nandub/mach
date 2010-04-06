@@ -1,3 +1,14 @@
+2010-04-06  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* Makefile.am:
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-12-i386:
+	* etc/dist.d/fedora-12-ppc:
+	* etc/dist.d/fedora-12-x86_64:
+	  Adding Fedora 12.
+	  Remove doc temporarily until I can commit it.
+
 2009-11-15  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* src/mach-helper.c:

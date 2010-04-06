@@ -94,6 +94,7 @@ esac
 dnl default root
 dnl first try to guess the platform
 CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-$arch")
+CHECK_RELEASE(fedora,    "(Constantine)",defaultroot="fedora-12-$arch")
 CHECK_RELEASE(fedora,    "(Leonidas)",   defaultroot="fedora-11-$arch")
 CHECK_RELEASE(fedora,    "(Cambridge)",  defaultroot="fedora-10-$arch")
 CHECK_RELEASE(fedora,    "(Sulphur)",    defaultroot="fedora-9-$arch")
@@ -194,7 +195,6 @@ Makefile
 etc/Makefile
 etc/conf
 etc/dist.d/Makefile
-doc/Makefile
 m4/Makefile
 mach.spec
 scripts/Makefile
