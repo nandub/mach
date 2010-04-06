@@ -2,6 +2,13 @@
 
 	* Makefile.am:
 	* configure.in:
+	* doc/Makefile.am:
+	  Add docs.
+
+2010-04-06  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* Makefile.am:
+	* configure.in:
 	* etc/dist.d/Makefile.am:
 	* etc/dist.d/fedora-12-i386:
 	* etc/dist.d/fedora-12-ppc:
