@@ -1,3 +1,17 @@
+2010-04-09  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-7-i386:
+	* etc/dist.d/fedora-7-ppc:
+	* etc/dist.d/fedora-7-x86_64:
+	* etc/dist.d/fedora-8-i386:
+	* etc/dist.d/fedora-8-ppc:
+	* etc/dist.d/fedora-8-x86_64:
+	* etc/dist.d/fedora-9-i386:
+	* etc/dist.d/fedora-9-ppc:
+	* etc/dist.d/fedora-9-x86_64:
+	* etc/location:
+	  All up to F-9 are now archived.
+
 2010-04-06  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* Makefile.am:
