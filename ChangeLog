@@ -1,3 +1,15 @@
+2010-11-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-13-i386:
+	* etc/dist.d/fedora-13-ppc:
+	* etc/dist.d/fedora-13-x86_64:
+	* etc/dist.d/fedora-14-i386:
+	* etc/dist.d/fedora-14-ppc:
+	* etc/dist.d/fedora-14-x86_64:
+	  Add Fedora 13 and 14.
+
 2010-04-27  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-10-i386:
