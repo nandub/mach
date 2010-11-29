@@ -1,5 +1,10 @@
 2010-11-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* mach.doap:
+	  Add dc:description for 0.9.6 release.
+
+2010-11-29  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.in:
 	  back to TRUNK
 
