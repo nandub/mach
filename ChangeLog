@@ -1,3 +1,16 @@
+=== release 0.9.6 ===
+
+2010-11-28  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* NEWS:
+	* README:
+	* RELEASE:
+	* configure.in:
+	* doc/mach.ics:
+	* doc/mach.rss2:
+	* mach.doap:
+	  Releasing 0.9.6, "Carrot Cake"
+
 2010-11-28  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:

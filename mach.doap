@@ -38,6 +38,19 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>0.9.6</revision>
+   <branch>2</branch>
+   <name>Carrot Cake</name>
+   <created>2010-11-28</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6-1.fc14.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6-1.fc14.x86_64.rpm" />
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>0.9.5</revision>
    <branch>2</branch>
    <name>MMM...</name>

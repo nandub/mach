@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 0.9.5 - MMM...
+Announcing the release of mach 0.9.6 - Carrot Cake
 
 WHAT IS IT
 ----------
@@ -13,7 +13,9 @@ or build clean packages.
 
 mach can currently set up roots for the following distributions:
 - Fedora 7, 8, 9   (Fedora, Everything, updated, rpm.livna.org,
-         10, 11     JPackage, FreshRPMS, GStreamer)
+         10, 11,    JPackage, FreshRPMS, GStreamer)
+         12, 13,
+         14
          devel
 - Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
@@ -34,10 +36,7 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Added Fedora 10 and 11 (Thomas)
-	- Changed archived Fedora configuration (Thomas)
-	- Documented setup for separating roots per user (Sam Liddicott)
-	- Fixes for Python 2.6 (Thomas)
+        - Added Fedora 12, 13, 14 (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------

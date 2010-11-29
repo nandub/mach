@@ -1,4 +1,7 @@
-This is mach, make a chroot, 0.9.5.
+This is mach, make a chroot, 0.9.6.
+
+Changes since 0.9.5:
+	- Added Fedora 12, 13, 14
 
 Changes since 0.9.4:
 	- Added Fedora 10 and 11
