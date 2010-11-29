@@ -1,6 +1,7 @@
 <Project
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns="http://usefulinc.com/ns/doap#"
   xmlns:foaf="http://xmlns.com/foaf/0.1/"
   xmlns:admin="http://webns.net/mvcb/">
@@ -46,6 +47,9 @@ jailed services, testing builds, or making disk images of clean roots.
    <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6.tar.gz" />
    <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6-1.fc14.i386.rpm" />
    <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-0.9.6-1.fc14.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 12, 13, 14.
+   </dc:description>
   </Version>
  </release>
 
