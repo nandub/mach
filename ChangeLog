@@ -1,5 +1,14 @@
 2011-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-15-i386:
+	* etc/dist.d/fedora-15-ppc:
+	* etc/dist.d/fedora-15-x86_64:
+	  Add Fedora 15.
+
+2011-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* src/mach-helper.c:
 	  Remove a set but unused variable.
 
