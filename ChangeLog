@@ -1,5 +1,11 @@
 2011-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  Fix a bug not setting user on /usr/src/rpm directories which
+	  broke on FC15.
+
+2011-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.in:
 	* etc/dist.d/Makefile.am:
 	* etc/dist.d/fedora-15-i386:
