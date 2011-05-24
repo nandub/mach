@@ -1,3 +1,8 @@
+2011-05-24  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* src/mach-helper.c:
+	  Remove a set but unused variable.
+
 2010-11-29  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* mach.doap:

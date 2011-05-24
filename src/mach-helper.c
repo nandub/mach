@@ -160,7 +160,6 @@ do_command (const char *filename, char *const argv[])
     [0] = "PATH=/bin:/usr/bin:/usr/sbin",
     [1] = "HOME=/root"
   };
-  int retval;
   size_t idx=2;
   size_t i;
   char *envvar;
@@ -197,7 +196,7 @@ do_command (const char *filename, char *const argv[])
     env[idx++] = ptr;
   }
 
-  retval = execve (filename, argv, env);
+  execve (filename, argv, env);
   error ("executing %s: %s", filename, strerror (errno));
 }
 
