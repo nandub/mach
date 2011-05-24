@@ -1829,7 +1829,7 @@ reposdir = /../../../../..''' + os.path.join (state, 'yum', 'yum.repos.d')
 
     def _ensure_machbuild_permissions (self):
         # make sure all files in /usr/src/@PKGDIR@ are writable by the group
-        self.do_chroot ("chown -R :%s /usr/src/@PKGDIR@" % buildgroup,
+        self.do_chroot ("chown -R %s:%s /usr/src/@PKGDIR@" % (builduser, buildgroup),
             fatal = True)
         self.do_chroot ("%s -c 'chmod -R g+w /usr/src/@PKGDIR@' %s" %
             (self.config['runuser'], builduser), fatal = True)
