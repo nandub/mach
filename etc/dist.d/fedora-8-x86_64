@@ -39,6 +39,10 @@ yumsources[DIST] = {
   'jpackage-generic': jpackage    + '/1.7/generic/free',
   'jpackage-fc' + V:  jpackage    + '/1.7/fedora-%s/free'             % V,
   'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
+  'rpmfusion-free':   rpmfusion   +
+                      '/free/fedora/releases/%s/Everything/%s/os'     % (V, A),
+  'rpmfusion-nonfree':rpmfusion   +
+                      '/nonfree/fedora/releases/%s/Everything/%s/os'  % (V, A),
 }
 
 # Fedora (only the Fedora repository, ie the "base" DVD)
@@ -127,3 +131,22 @@ sourceslist['%s-jpackage' % DIST] = {
 }
 config['%s-jpackage' % DIST] = config['%s-fedora' % DIST]
 aliases['%s-jpackage' % DIST] = ('f' + V + 'jpp' + AS, )
+
+# Fedora with rpmfusion-free
+packages['%s-rpmfusion-free' % DIST] = packages['%s-updates' % DIST]
+sourceslist['%s-rpmfusion-free' % DIST] = {
+  DIST: sourceslist['%s-updates' % DIST][DIST] + ('rpmfusion-free', )
+}
+config['%s-rpmfusion-free' % DIST] = deepcopy(config['%s-updates' % DIST])
+aliases['%s-rpmfusion-free' % DIST] = ('f' + V + 'rf' + AS, )
+
+# Fedora with rpmfusion-nonfree
+packages['%s-rpmfusion-nonfree' % DIST] = packages['%s-updates' % DIST]
+sourceslist['%s-rpmfusion-nonfree' % DIST] = {
+  DIST: sourceslist['%s-updates' % DIST][DIST] + ('rpmfusion-free',
+                                                  'rpmfusion-nonfree')
+}
+config['%s-rpmfusion-nonfree' % DIST] = deepcopy(config['%s-updates' % DIST])
+aliases['%s-rpmfusion-nonfree' % DIST] = ('f' + V + 'rn' + AS, )
+
+
