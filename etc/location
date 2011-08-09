@@ -53,3 +53,7 @@ jpackage    = 'http://mirrors.dotsrc.org/jpackage'
 # must set up one yourself and point this variable at if before you can use
 # the JPackage configurations.  http://www.jpackage.org/faq.php
 jpackagenf  = ''
+
+# rpmfusion.org
+rpmfusion = 'http://download1.rpmfusion.org/'
+
