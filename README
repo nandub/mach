@@ -37,7 +37,7 @@ Included at this moment is the necessary information to set up :
 Fedora development
   - with rpm.livna.org
 
-Fedora 8-15
+Fedora 8-16
   - base
   - updated
   - with rpm.livna.org
@@ -88,7 +88,7 @@ Red Hat 7.0 and 7.1
   - updated
   - with FreshRPMS
 
-CentOS 3, 4 and 5
+CentOS 3, 4 and 5, 6
   - standard
   - updated
   - with addons
@@ -96,9 +96,9 @@ CentOS 3, 4 and 5
   - with csgfs (3, 4 only)
   - with extras
   - with centosplus
-  - with Fedora Extras rebuilds (4, 5 only)
-  - with EPEL (4, 5 only)
-  - with JPackage (4, 5 only)
+  - with Fedora Extras rebuilds (4 and higher only)
+  - with EPEL (4 and higher only)
+  - with JPackage (4 and higher only)
 
 Dave/Dina
   - fridge

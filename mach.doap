@@ -35,9 +35,25 @@ jailed services, testing builds, or making disk images of clean roots.
      <module>mach2</module>
      <browse rdf:resource="http://cvs.sourceforge.net/viewcvs.py/mach/" />
    </CVSRepository>
- </repository> 
+ </repository>
 
  <release>
+  <Version>
+   <revision>1.0.0</revision>
+   <branch>2</branch>
+   <name>Madera</name>
+   <created>2011-11-09</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.0.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.0.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.0-1.fc16.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.0-1.fc16.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 15, 16.
+   Updated for CentOS 6.
+   </dc:description>
+  </Version>
+ </release>
+
   <Version>
    <revision>0.9.6</revision>
    <branch>2</branch>
