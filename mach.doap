@@ -54,6 +54,7 @@ jailed services, testing builds, or making disk images of clean roots.
   </Version>
  </release>
 
+ <release>
   <Version>
    <revision>0.9.6</revision>
    <branch>2</branch>
