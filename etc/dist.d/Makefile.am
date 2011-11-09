@@ -45,6 +45,9 @@ dists = \
 	fedora-15-i386 \
 	fedora-15-x86_64 \
 	fedora-15-ppc \
+	fedora-16-i386 \
+	fedora-16-x86_64 \
+	fedora-16-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \
@@ -54,6 +57,8 @@ dists = \
 	centos-4-x86_64 \
 	centos-5-i386 \
 	centos-5-x86_64 \
+	centos-6-i386 \
+	centos-6-x86_64 \
 	suse-81-i386 \
 	suse-82-i386 \
 	suse-90-i386 \

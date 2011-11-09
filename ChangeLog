@@ -1,3 +1,13 @@
+2011-11-09  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-16-i386:
+	* etc/dist.d/fedora-16-ppc:
+	* etc/dist.d/fedora-16-x86_64:
+	* mach.spec.in:
+	  Add Fedora 16, Verne.
+
 2011-08-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/location:

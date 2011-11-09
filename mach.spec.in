@@ -44,6 +44,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %configure \
         --enable-builduser=%{builduser} \
         --enable-buildgroup=%{buildgroup} \
+        --enable-selinux \
         --with-flavor=updates
 make
 
