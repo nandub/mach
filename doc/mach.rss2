@@ -1,0 +1,174 @@
+<rss version="2.0">
+  <channel>
+    <title>Release feed for Mach</title>
+    <description>Release feed for Mach</description>
+    <link>http://thomas.apestaart.org/projects/mach/</link>
+    <language>en</language>
+    <item>
+      <title>Mach 1.0.0 'Madera' released</title>
+      <guid isPermaLink="false">release-mach-1.0.0</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Wed, 09 Nov 2011 00:00:00 +0000</pubDate>
+      <description>
+   Updated for Fedora 15, 16.
+   Updated for CentOS 6.
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.6 'Carrot Cake' released</title>
+      <guid isPermaLink="false">release-mach-0.9.6</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sun, 28 Nov 2010 00:00:00 +0000</pubDate>
+      <description>
+   Updated for Fedora 12, 13, 14.
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.5 'MMM...' released</title>
+      <guid isPermaLink="false">release-mach-0.9.5</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sat, 27 Jun 2009 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.4 'Maroc' released</title>
+      <guid isPermaLink="false">release-mach-0.9.4</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Fri, 29 Aug 2008 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.3 'Niger' released</title>
+      <guid isPermaLink="false">release-mach-0.9.3</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Thu, 22 May 2008 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.2 'Thomson Boy' released</title>
+      <guid isPermaLink="false">release-mach-0.9.2</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sat, 08 Sep 2007 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.1 'Australia' released</title>
+      <guid isPermaLink="false">release-mach-0.9.1</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sun, 07 Jan 2007 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.9.0 'Cambria' released</title>
+      <guid isPermaLink="false">release-mach-0.9.0</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Fri, 09 Jun 2006 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.9 'China' released</title>
+      <guid isPermaLink="false">release-mach-0.4.9</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sat, 08 Apr 2006 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.8 'More Than One' released</title>
+      <guid isPermaLink="false">release-mach-0.4.8</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Mon, 21 Nov 2005 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.7 'Long Time No See' released</title>
+      <guid isPermaLink="false">release-mach-0.4.7</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sun, 03 Jul 2005 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.6 'Lenrek' released</title>
+      <guid isPermaLink="false">release-mach-0.4.6</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Tue, 08 Feb 2005 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.5 'Snow' released</title>
+      <guid isPermaLink="false">release-mach-0.4.5</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Thu, 18 Mar 2004 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.4 'Madrid' released</title>
+      <guid isPermaLink="false">release-mach-0.4.4</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Thu, 11 Mar 2004 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.3 'Hot Water' released</title>
+      <guid isPermaLink="false">release-mach-0.4.3</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Tue, 16 Dec 2003 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.2 'No More Betas' released</title>
+      <guid isPermaLink="false">release-mach-0.4.2</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Tue, 21 Oct 2003 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.1 'Get A Room' released</title>
+      <guid isPermaLink="false">release-mach-0.4.1</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Fri, 10 Oct 2003 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
+      <title>Mach 0.4.0 'Barcelona' released</title>
+      <guid isPermaLink="false">release-mach-0.4.0</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Mon, 08 Sep 2003 00:00:00 +0000</pubDate>
+      <description>
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item>
+  </channel>
+</rss>
