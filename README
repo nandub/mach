@@ -37,7 +37,15 @@ Included at this moment is the necessary information to set up :
 Fedora development
   - with rpm.livna.org
 
-Fedora 7-14
+Fedora 8-15
+  - base
+  - updated
+  - with rpm.livna.org
+  - with FreshRPMS
+  - with JPackage
+  - with rpmfusion.org
+
+Fedora 7
   - base
   - updated
   - with rpm.livna.org
