@@ -5,6 +5,7 @@ release procedure for mach
   export RELEASE=0.9.4
 - Pick a release name
 - Update .doap file
+- moap doap show
 - Add list of new features to NEWS
 - Update README and home page with relevant new features
 - Update RELEASE, changing:
