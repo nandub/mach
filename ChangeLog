@@ -1,3 +1,9 @@
+2011-11-14  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.in:
+	* doc/release:
+	  Fail if selinux.h is not found but asked to be enabled.
+
 2011-11-09  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* configure.in:

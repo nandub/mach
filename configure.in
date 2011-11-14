@@ -160,6 +160,7 @@ else
 fi
 AC_MSG_RESULT($detect_selinux)
 
+
 AC_ARG_ENABLE(selinux,
   AC_HELP_STRING([--enable-selinux], [enable support for selinux hosts]),
     enable_selinux=$enableval,enable_selinux=$detect_selinux
@@ -167,6 +168,13 @@ AC_ARG_ENABLE(selinux,
 AC_MSG_NOTICE(Compiling with SELinux support: $enable_selinux)
 
 AM_CONDITIONAL(SELINUX_ENABLED, test "x$enable_selinux" = "xyes")
+AC_CHECK_HEADERS([selinux/selinux.h], HAVE_SELINUX_H=yes)
+
+if test "x${enable_selinux}" = "xyes" -a "x${HAVE_SELINUX_H}" != "xyes";
+then
+  AC_MSG_ERROR([To compile SELinux support, you need selinux/selinux.h])
+fi
+
 
 AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
 AC_MSG_NOTICE(Using default root $DEFAULTROOT)
