@@ -31,7 +31,7 @@ release procedure for mach
   bin/pkg-symlink
   bin/yum-rep
   tao-put
-  
+
 - announce to freshmeat:
   moap doap -v $RELEASE freshmeat -b Default
 - send out release mails:
@@ -40,6 +40,3 @@ release procedure for mach
 - bump configure.in and commit
 - rebuild in fedora repos
 - why don't you blog about it ?
-
-
-
