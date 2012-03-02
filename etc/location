@@ -45,7 +45,7 @@ gstreamer   = 'http://gstreamer.freedesktop.org/pkg'
 freshrpmsrh = 'http://ayo.freshrpms.net/redhat'
 freshrpmsfd = 'http://ayo.freshrpms.net/fedora/linux'
 freshrpmsyd = 'http://ayo.freshrpms.net/yellowdog'
-epel        = 'http://download.fedora.redhat.com/pub/epel'
+epel        = 'http://dl.fedoraproject.org/pub/epel/'
 centosfe    = 'http://centos.karan.org/'
 
 jpackage    = 'http://mirrors.dotsrc.org/jpackage'
