@@ -1147,6 +1147,10 @@ class Root:
         if not args:
             raise self.Error, 'Please supply .src.rpm files to build'
 
+        # check if we can build here yet
+        if not self.get_state ('build'):
+            self.setup (['build', ])
+
         self._ensure_machbuild_permissions ()
         (options, paths) = self.splitargsrpms (args)
         # turn the options into a correctly quoted string, and add
