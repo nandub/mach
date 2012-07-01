@@ -1,3 +1,8 @@
+2012-07-01  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* scripts/mach.in:
+	  Set up build in case we rebuild a src.rpm too.
+
 2012-03-02  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/location:
