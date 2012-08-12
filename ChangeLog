@@ -1,3 +1,10 @@
+2012-08-12  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* etc/dist.d/fedora-17-i386:
+	* etc/dist.d/fedora-17-ppc:
+	* etc/dist.d/fedora-17-x86_64:
+	  Adding Fedora 17.
+
 2012-07-01  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* scripts/mach.in:
