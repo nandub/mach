@@ -22,7 +22,7 @@ aptsources[DIST] = {
 }
 
 yumsources[DIST] = {
-  'core':             fedorayum   + '/%s/%s/os'                       % (V, A),
+  'fedora':           fedorayum   + '/%s/rawhide/%s/os'               % (V, A),
   'freshrpms':        freshrpmsfd + '/%s/%s/freshrpms'                % (V, A),
   'livna':            livna       + '/fedora/%s/%s'                   % (V, A),
 }
@@ -37,7 +37,7 @@ packages['%s-core' % DIST] = {
               'unzip util-linux-ng which',
 }
 sourceslist['%s-core' % DIST] = {
-  DIST: ('core', )
+  DIST: ('fedora', )
 }
 config['%s-core' % DIST] = {
   'runuser': '/sbin/runuser',

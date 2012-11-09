@@ -1,5 +1,11 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* etc/dist.d/fedora-development-i386:
+	* etc/dist.d/fedora-development-x86_64:
+	  Fix repo list.
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  Keep cleaning out root even if yum fails doing so.
 
