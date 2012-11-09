@@ -1,3 +1,8 @@
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* src/mach-helper.c:
+	  Handle return value of setreuid.
+
 2012-08-12  Thomas Vander Stichele  <thomas at apestaart dot org>
 
 	* etc/dist.d/fedora-17-i386:

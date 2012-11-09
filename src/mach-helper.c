@@ -167,7 +167,8 @@ do_command (const char *filename, char *const argv[])
   struct stat buf;
 
   /* elevate privileges */
-  setreuid (geteuid (), geteuid ());
+  if (setreuid (geteuid (), geteuid ()) != 0)
+    error ("setreuid: %s", strerror (errno));
   //printf ("DEBUG: First argument: %s\n", *argv);
   //printf ("DEBUG: Executing %s\n", filename);
   /* FIXME: for a debug option */
