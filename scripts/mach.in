@@ -1021,8 +1021,11 @@ class Root:
 
         # clean up yum cache
         if self.config['installer'] == 'yum':
-            self.installer (["clean", "all", ])
-        
+            try:
+                self.installer (["clean", "all", ])
+            except Exception, e:
+                debug ("could not clean with installer: %r" % e)
+
         if os.path.exists (self.rootdir):
             self.umount ()
 

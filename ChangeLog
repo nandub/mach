@@ -1,5 +1,10 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  Keep cleaning out root even if yum fails doing so.
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* src/mach-helper.c:
 	  Handle return value of setreuid.
 
