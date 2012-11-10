@@ -319,7 +319,9 @@ class Spec:
             "--define 'setup :' " \
             "%(path)s" % locals()
         debug ("Spec:__init__: command: %s" % command)
+        self.root.mount ()
         (retval, output) = self.root.do_chroot (command)
+        self.root.umount ()
         if (retval != 0):
             raise ReturnValue, (retval, output)
 
@@ -472,11 +474,14 @@ class SRPM:
             qfmt, self.options, spectmp)
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
+        self.mount ()
         try:
             spec = Spec (spectmp, self.root, self.options)
         except Spec.Error, message:
+            self.umount ()
             os.system (tmp_remove_cmd)
             raise self.Error, message
+        self.umount ()
             
         (n, v, r) = spec.nvr ()
         # strip v and r off of output
@@ -1179,31 +1184,37 @@ class Root:
         targettmppath = os.path.join (os.sep, 'tmp', whoami)
         hosttmppath = self.host_path (targettmppath)
         ensure_dir (hosttmppath)
-        for path in paths:
-            # resolve path to basename (without dirs)
-            srpmname = os.path.basename (path)
-            targetnewpath = os.path.join (targettmppath, srpmname)
-            hostnewpath = os.path.join (hosttmppath, srpmname)
-            if os.path.exists (hostnewpath):
-                os.unlink (hostnewpath)
-            try:
-                urlgrab (path, hostnewpath)
-            except:
-                raise self.Error, "Can't find %s" % path
-            os.chown (hostnewpath, -1, mach_gid)
-            srpm = SRPM (hostnewpath, self, options_string)
 
-            spec = srpm.specname
-            buildreqs = srpm.BuildRequires ()
-            debug ("BuildRequires: %r" % (buildreqs, ))
-            name = srpm.header[rpm.RPMTAG_NAME]
-            pkgs[name] = {}
-            pkgs[name]['path'] = targetnewpath
-            pkgs[name]['buildreqs'] = buildreqs
-            pkgs[name]['srpm'] = srpm
-            pkgs[name]['srpmname'] = srpmname
-            pkgs[name]['header'] = srpm.header
-            pkgs[name]['spec'] = spec
+        self.mount ()
+        try:
+            for path in paths:
+                # resolve path to basename (without dirs)
+                srpmname = os.path.basename (path)
+                targetnewpath = os.path.join (targettmppath, srpmname)
+                hostnewpath = os.path.join (hosttmppath, srpmname)
+                if os.path.exists (hostnewpath):
+                    os.unlink (hostnewpath)
+                try:
+                    urlgrab (path, hostnewpath)
+                except:
+                    raise self.Error, "Can't find %s" % path
+                os.chown (hostnewpath, -1, mach_gid)
+                srpm = SRPM (hostnewpath, self, options_string)
+
+                spec = srpm.specname
+                buildreqs = srpm.BuildRequires ()
+                debug ("BuildRequires: %r" % (buildreqs, ))
+                name = srpm.header[rpm.RPMTAG_NAME]
+                pkgs[name] = {}
+                pkgs[name]['path'] = targetnewpath
+                pkgs[name]['buildreqs'] = buildreqs
+                pkgs[name]['srpm'] = srpm
+                pkgs[name]['srpmname'] = srpmname
+                pkgs[name]['header'] = srpm.header
+                pkgs[name]['spec'] = spec
+        except:
+            self.umount ()
+            raise
 
         # now figure out build order based on buildrequires of each pkg
         if len(pkgs) > 1:
@@ -1258,7 +1269,6 @@ class Root:
             order = pkgs
 
         # now build
-        self.mount ()
 
         resultdirs = [] # will contain each of the resultdir's for this build
         # loop over all package names
@@ -1344,10 +1354,13 @@ class Root:
                 # FIXME: since fedora.us now uses .1 as a disttag,
                 # this checking breaks, so we disable it for now
                 #debug ("self.rootdir: %s" % self.rootdir)
+                self.mount ()
                 try:
                     spec = Spec (os.path.join (self.rootdir, 'tmp', specfile), self, options_string)
                 except Spec.Error, message:
+                    self.umount ()
                     raise self.Error, message
+                self.umount ()
                 release = spec.tag ("release")
                 debug ("Release of spec file to mangle is %s" % release)
                 #if not release.endswith ('.' + self.config['release']):
@@ -1394,11 +1407,14 @@ class Root:
                 options_string.replace('"', '\\"'),
                 specfile, builduser)
             try:
+                self.mount ()
                 (status, output) = self.do_chroot (command,
                     "Checking BuildRequires for %s" % srpmname,
                     False)
             except ReturnValue, (retval, output):
+                self.umount ()
                 raise self.Error, "BuildRequires not met:\n%s" % output
+            self.umount ()
 
             # rebuild from spec inside chroot, note: using a login shell
             # in order to get a vanilla default environment
