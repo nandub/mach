@@ -891,6 +891,11 @@ class Root:
         self._ensure_machbuild_permissions ()
         self.lock ()
 
+        # in Fedora 17, evaluating specs inside the root needs /proc
+        # otherwise we get Failed to read auxiliary vector, /proc not mounted?
+
+        self.mount ()
+
         srpms = [] # resulting set of srpms
         # separate options to rpmbuild from specfiles
         (options, specs) = self.splitargspecs (args)
@@ -1004,6 +1009,7 @@ class Root:
 
         # ready to build them all
         print "Rebuilding generated .src.rpm's: \n- %s" % string.join (srpms, "\n- ")
+        self.umount ()
         self.unlock ()
         self.rebuild (options + srpms)
 
