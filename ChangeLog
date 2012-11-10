@@ -1,5 +1,13 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* NEWS:
+	* README:
+	* RELEASE:
+	* mach.doap:
+	  Releasing 1.0.1, 'Concussion'.
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  Mount proc for build too.
 
