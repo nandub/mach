@@ -1,5 +1,10 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  Mount proc for build too.
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.in:
 	* etc/dist.d/Makefile.am:
 	  Add Fedora 17.
