@@ -1,5 +1,12 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  In Fedora 17, evaluting specs inside the root needs /proc mounted.
+	  Otherwise we get
+	  "Failed to read auxiliary vector, /proc not mounted?"
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/fedora-development-i386:
 	* etc/dist.d/fedora-development-x86_64:
 	  Fix repo list.
