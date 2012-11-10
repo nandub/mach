@@ -1,5 +1,11 @@
 2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* configure.in:
+	* etc/dist.d/Makefile.am:
+	  Add Fedora 17.
+
+2012-11-10  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* scripts/mach.in:
 	  In Fedora 17, evaluting specs inside the root needs /proc mounted.
 	  Otherwise we get
