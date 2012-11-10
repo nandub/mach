@@ -39,6 +39,23 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>1.0.1</revision>
+   <branch>2</branch>
+   <name>Concussion</name>
+   <created>2012-11-10</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.1.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.1.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.1-1.fc17.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.1-1.fc17.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 17 and development.
+   Set up build in case we rebuild a src.rpm too.
+   </dc:description>
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>1.0.0</revision>
    <branch>2</branch>
    <name>Madera</name>

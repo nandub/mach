@@ -37,7 +37,7 @@ Included at this moment is the necessary information to set up :
 Fedora development
   - with rpm.livna.org
 
-Fedora 8-16
+Fedora 8-17
   - base
   - updated
   - with rpm.livna.org
@@ -58,6 +58,8 @@ Fedora 4, 5, 6
   - with rpm.livna.org
   - with FreshRPMS
   - with JPackage
+
+Fedora Development/Rawhide
 
 OpenSuse 10.2, 10.3, 11.0
 
