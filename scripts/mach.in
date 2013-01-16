@@ -474,14 +474,14 @@ class SRPM:
             qfmt, self.options, spectmp)
         output = commands.getoutput (cmd)
         debug ("output of rpm -q --specfile: \n%s" % output)
-        self.mount ()
+        self.root.mount ()
         try:
             spec = Spec (spectmp, self.root, self.options)
         except Spec.Error, message:
             self.umount ()
             os.system (tmp_remove_cmd)
             raise self.Error, message
-        self.umount ()
+        self.root.umount ()
             
         (n, v, r) = spec.nvr ()
         # strip v and r off of output
