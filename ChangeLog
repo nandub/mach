@@ -1,5 +1,10 @@
 2013-01-16  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* scripts/mach.in:
+	  Fix locking the root on rebuild.
+
+2013-01-16  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* configure.in:
 	* etc/dist.d/Makefile.am:
 	* etc/dist.d/fedora-18-i386:
