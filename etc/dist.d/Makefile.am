@@ -51,6 +51,9 @@ dists = \
 	fedora-17-i386 \
 	fedora-17-x86_64 \
 	fedora-17-ppc \
+	fedora-18-i386 \
+	fedora-18-x86_64 \
+	fedora-18-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \
