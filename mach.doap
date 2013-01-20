@@ -39,6 +39,24 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>1.0.2</revision>
+   <branch>2</branch>
+   <name>eyes</name>
+   <created>2012-11-10</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.2.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.2.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.2-1.fc18.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.2-1.fc18.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 18 and development.
+   Set up build in case we rebuild a src.rpm too.
+   </dc:description>
+  </Version>
+ </release>
+
+
+ <release>
+  <Version>
    <revision>1.0.1</revision>
    <branch>2</branch>
    <name>Concussion</name>
