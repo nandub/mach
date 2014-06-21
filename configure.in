@@ -94,6 +94,7 @@ esac
 dnl default root
 dnl first try to guess the platform
 CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-$arch")
+CHECK_RELEASE(fedora,    "(Schrödinger’s Cat)", defaultroot="fedora-19-$arch")
 CHECK_RELEASE(fedora,    "(Spherical Cow)", defaultroot="fedora-18-$arch")
 CHECK_RELEASE(fedora,    "(Beefy Miracle)", defaultroot="fedora-17-$arch")
 CHECK_RELEASE(fedora,    "(Verne)",      defaultroot="fedora-16-$arch")
