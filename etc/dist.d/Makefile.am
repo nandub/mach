@@ -57,6 +57,9 @@ dists = \
 	fedora-19-i386 \
 	fedora-19-x86_64 \
 	fedora-19-ppc \
+	fedora-20-i386 \
+	fedora-20-x86_64 \
+	fedora-20-ppc \
 	fedora-development-i386 \
 	fedora-development-x86_64 \
 	fedora-development-ppc \
