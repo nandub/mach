@@ -1,7 +1,7 @@
 release procedure for mach
 --------------------------
 
-- Update configure.in
+- Update configure.ac
   export RELEASE=0.9.4
 - Pick a release name
 - Update .doap file
