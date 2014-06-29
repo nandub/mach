@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 1.0.2 - ears
+Announcing the release of mach 1.0.3 - moved
 
 WHAT IS IT
 ----------
@@ -15,7 +15,7 @@ mach can currently set up roots for the following distributions:
 - Fedora 7, 8, 9   (Fedora, Everything, updated, rpm.livna.org,
          10, 11,    JPackage, FreshRPMS, GStreamer)
          12, 13,
-         14, 15, 16, 17, 18
+         14, 15, 16, 17, 18, 19, 20
          devel
 - Fedora 4, 5, 6   (core, updated, extras, rpm.livna.org,
                     JPackage, FreshRPMS, GStreamer)
@@ -36,8 +36,7 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Added Fedora 17 (Thomas)
-	- Fixed 'build' bug (Thomas)
+        - Added Fedora 19, 20 (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
