@@ -39,6 +39,22 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>1.0.3</revision>
+   <branch>2</branch>
+   <name>moved</name>
+   <created>2014-06-21</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.3.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.3.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.3-1.fc20.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.3-1.fc20.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 19 and 20.
+   </dc:description>
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>1.0.2</revision>
    <branch>2</branch>
    <name>eyes</name>
