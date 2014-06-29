@@ -39,4 +39,15 @@ release procedure for mach
   moap doap -v $RELEASE mail -f thomas@apestaart.org fedora-devel-list@redhat.com rpm-list@redhat.com
 - bump configure.ac and commit
 - rebuild in fedora repos
+    cp mach-$RELEASE.tar.* $HOME/dev/ext/fedora.git/mach
+    cd $HOME/dev/ext/fedora.git/mach
+    git fetch -a
+    git checkout f19
+    git pull
+    vim mach.spec
+    fedpkg new-sources mach-$RELEASE.tar.*
+    git commit -a -m 'update to $RELEASE'
+    git push
+    fedpkg build
+
 - why don't you blog about it ?
