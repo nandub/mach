@@ -41,7 +41,7 @@ Thomas Vander Stichele (thomas (at) apestaart (dot) org)
 %setup -q
 
 %build
-%configure \
+PATH=/usr/bin:/bin:\$PATH %configure \
         --enable-builduser=%{builduser} \
         --enable-buildgroup=%{buildgroup} \
         --enable-selinux \
@@ -102,6 +102,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Thu Jul 24 2014 Thomas Vander Stichele <thomas at apestaart dot org>
+- add a hack to pick up /usr/bin/python in the binaries
+
 * Fri Aug 29 2008 Thomas Vander Stichele <thomas at apestaart dot org>
 - change flavour to updates, since extras is gone.
 
