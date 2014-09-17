@@ -71,6 +71,8 @@ dists = \
 	centos-5-x86_64 \
 	centos-6-i386 \
 	centos-6-x86_64 \
+	centos-7-i386 \
+	centos-7-x86_64 \
 	suse-81-i386 \
 	suse-82-i386 \
 	suse-90-i386 \
