@@ -1,5 +1,13 @@
 2015-03-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* mach.doap:
+	  Releasing 1.0.4, "born"
+
+2015-03-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* README:
 	  Update docs.
 	* etc/dist.d/fedora-21-i386:

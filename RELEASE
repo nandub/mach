@@ -1,7 +1,7 @@
 mach - make a chroot - RELEASE NOTES
 ------------------------------------
 
-Announcing the release of mach 1.0.3 - moved
+Announcing the release of mach 1.0.4 - born
 
 WHAT IS IT
 ----------
@@ -12,6 +12,9 @@ This clean build root can be used to run jailed services, create disk images,
 or build clean packages.
 
 mach can currently set up roots for the following distributions:
+- Fedora 21 (Fedora, Everything, Cloud, Docker, Server, Workstation,
+             JPackage, FreshRPMS, RPMFusion, GStreamer)
+
 - Fedora 7, 8, 9   (Fedora, Everything, updated, rpm.livna.org,
          10, 11,    JPackage, FreshRPMS, GStreamer)
          12, 13,
@@ -25,7 +28,7 @@ mach can currently set up roots for the following distributions:
                     JPackage, GStreamer, FreshRPMS)
 - Red Hat 7.2, 7.3 (basic, updated, FreshRPMS, JPackage)
 - Red Hat 7.0, 7.1 (basic, updated, FreshRPMS)
-- CentOS 4, 5, 6
+- CentOS 4, 5, 6, 7
 - SuSE 8.1/8.2/9
 - OpenSuSE 10.2/10.3/11.0
 - Yellowdog Linux 3.0 (basic, updated, FreshRPMS)
@@ -36,7 +39,7 @@ Read the README included in the distribution for a better overview.
 
 CHANGES
 -------
-        - Added Fedora 19, 20 (Thomas)
+        - Added Fedora 21 and CentOS 7 (Thomas)
 
 WHY WOULD YOU USE IT
 --------------------
