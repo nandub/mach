@@ -37,6 +37,17 @@ Included at this moment is the necessary information to set up :
 Fedora development
   - with rpm.livna.org
 
+Fedora 21
+  - everything
+  - updates
+  - cloud
+  - docker
+  - server
+  - workstation
+  - with FreshRPMS
+  - with JPackage
+  - with rpmfusion.org
+
 Fedora 8-20
   - base
   - updated
@@ -90,7 +101,7 @@ Red Hat 7.0 and 7.1
   - updated
   - with FreshRPMS
 
-CentOS 3, 4 and 5, 6
+CentOS 3, 4, 5, 6, 7
   - standard
   - updated
   - with addons
