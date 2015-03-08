@@ -20,7 +20,6 @@ aptsources[DIST] = {
   'gstreamer':        'rpm ' + gstreamer   + ' fedora/%s/%s gst'      % (V, A),
   'gstreamer-build':  'rpm ' + gstreamer   + ' fedora/%s/%s build'    % (V, A),
   'gstreamer-deps':   'rpm ' + gstreamer   + ' fedora/%s/%s deps'     % (V, A),
-  'livna':            'rpm ' + livna       + ' fedora/%s/%s lvn'      % (V, A),
   'freshrpms':        'rpm ' + freshrpmsfd + ' %s/%s freshrpms'       % (V, A),
   'jpackage-generic': 'rpm ' + jpackage    + '/1.7 generic free',
   'jpackage-fc' + V : 'rpm ' + jpackage    + '/1.7 fedora-%s free'    % V,
@@ -39,7 +38,6 @@ yumsources[DIST] = {
   'gst-0.10-gst':     gstreamer   + '/fedora/%s/0.10/%s/gst'          % (V, A),
   'gst-0.10-apps':    gstreamer   + '/fedora/%s/0.10/%s/apps'         % (V, A),
   'freshrpms':        freshrpmsfd + '/%s/%s/freshrpms'                % (V, A),
-  'livna':            livna       + '/fedora/%s/%s'                   % (V, A),
   'jpackage-generic': jpackage    + '/1.7/generic/free',
   'jpackage-fc' + V:  jpackage    + '/1.7/fedora-%s/free'             % V,
   'jpackage-nonfree': jpackagenf  + '/1.7/generic/non-free',
@@ -122,7 +120,7 @@ aliases['%s-workstation' % DIST] = ('f' + V + 'w' + AS, )
 # Fedora with GStreamer
 packages['%s-gstreamer' % DIST] = packages['%s-fedora' % DIST]
 sourceslist['%s-gstreamer' % DIST] = {
-  DIST: ('everything', 'updates', 'livna',
+  DIST: ('everything', 'updates', 'rpmfusion-nonfree',
          'gst-0.10-deps', 'gst-0.10-gst', 'gst-0.10-apps')
 }
 config['%s-gstreamer' % DIST] = deepcopy(config['%s-fedora' % DIST])
@@ -137,17 +135,6 @@ sourceslist['%s-gstreamer-deps' % DIST] = {
 }
 config['%s-gstreamer-deps' % DIST] = config['%s-gstreamer' % DIST]
 aliases['%s-gstreamer-deps' % DIST] = ('f' + V + 'gd' + AS, )
-
-# Fedora with livna
-packages['%s-livna' % DIST] = packages['%s-updates' % DIST]
-sourceslist['%s-livna' % DIST] = {
-  DIST: sourceslist['%s-updates' % DIST][DIST] + ('livna', )
-}
-config['%s-livna' % DIST] = deepcopy(config['%s-updates' % DIST])
-config['%s-livna' % DIST]['macros'].update({
-  'dist': '.lvn%s' % V,
-})
-aliases['%s-livna' % DIST] = ('f' + V + 'l' + AS, )
 
 # Fedora with freshrpms
 packages['%s-freshrpms' % DIST] = packages['%s-updates' % DIST]
