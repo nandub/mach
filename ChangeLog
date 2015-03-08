@@ -1,5 +1,14 @@
 2015-03-08  Thomas Vander Stichele  <thomas at apestaart dot org>
 
+	* configure.ac:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-21-i386:
+	* etc/dist.d/fedora-21-ppc:
+	* etc/dist.d/fedora-21-x86_64:
+	  Add support for Fedora 21, including cloud/docker/server/workstation
+
+2015-03-08  Thomas Vander Stichele  <thomas at apestaart dot org>
+
 	* etc/dist.d/centos-7-i386:
 	* etc/dist.d/centos-7-x86_64:
 	  Actually add the dist files
