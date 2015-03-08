@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "config.h"
 #include <selinux/selinux.h>
 
 extern int is_selinux_enabled(void)
@@ -26,7 +27,11 @@ extern int is_selinux_enabled(void)
 
 /* this function gives failures when installing basic rpms in the root;
  * so we fake it out as well */
+#if HAVE_LSETFILECON_TYPED
 extern int lsetfilecon(const char *path, security_context_t con)
+#else
+extern int lsetfilecon(const char *path, const char *con)
+#endif
 {
   return 0;
 }

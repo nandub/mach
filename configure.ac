@@ -181,6 +181,28 @@ then
   AC_MSG_ERROR([To compile SELinux support, you need selinux/selinux.h])
 fi
 
+if test "x${enable_selinux}" = "xyes";
+then
+  # detect prototype of lsetfilecon
+  AC_MSG_CHECKING([for lsetfilecon prototype with security_context_t])
+  AC_COMPILE_IFELSE(
+    [
+      AC_LANG_PROGRAM(
+        [[#include <selinux/selinux.h>]],
+        [[extern int lsetfilecon (const char * path, security_context_t con);]]
+    )],
+    [
+      AC_MSG_RESULT([yes])
+      AC_DEFINE_UNQUOTED([HAVE_LSETFILECON_TYPED], 1,
+        [Define to 1 if lsetfilecon takes security_context_t as second arg.])
+    ],
+    [
+      AC_MSG_RESULT([no])
+      AC_DEFINE_UNQUOTED([HAVE_LSETFILECON_TYPED], 0,
+        [Define to 1 if lsetfilecon takes security_context_t as second arg.])
+    ]
+  )
+fi
 
 AS_AC_EXPAND(DEFAULTROOT, $defaultroot)
 AC_MSG_NOTICE(Using default root $DEFAULTROOT)
