@@ -39,6 +39,22 @@ jailed services, testing builds, or making disk images of clean roots.
 
  <release>
   <Version>
+   <revision>1.0.4</revision>
+   <branch>2</branch>
+   <name>born</name>
+   <created>2015-03-08</created>
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.4.tar.bz2" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.4.tar.gz" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.4-1.fc21.i386.rpm" />
+   <file-release rdf:resource="http://thomas.apestaart.org/download/mach/mach-1.0.3-1.fc21.x86_64.rpm" />
+   <dc:description>
+   Updated for Fedora 21 and CentOS 7.
+   </dc:description>
+  </Version>
+ </release>
+
+ <release>
+  <Version>
    <revision>1.0.3</revision>
    <branch>2</branch>
    <name>moved</name>
