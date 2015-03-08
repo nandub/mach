@@ -95,6 +95,7 @@ dnl default root
 dnl first try to guess the platform
 CHECK_RELEASE(fedora,    "(Rawhide)",    defaultroot="fedora-development-$arch")
 
+CHECK_RELEASE(fedora,    "(Twenty One)",        defaultroot="fedora-21-$arch")
 CHECK_RELEASE(fedora,    "(Heisenbug)",         defaultroot="fedora-20-$arch")
 CHECK_RELEASE(fedora,    "(Schrödinger’s Cat)", defaultroot="fedora-19-$arch")
 CHECK_RELEASE(fedora,    "(Spherical Cow)",     defaultroot="fedora-18-$arch")
