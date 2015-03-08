@@ -5,6 +5,16 @@
     <link>http://thomas.apestaart.org/projects/mach/</link>
     <language>en</language>
     <item>
+      <title>Mach 1.0.4 'born' released</title>
+      <guid isPermaLink="false">release-mach-1.0.4</guid>
+      <link>http://thomas.apestaart.org/projects/mach/</link>
+      <pubDate>Sun, 08 Mar 2015 00:00:00 +0000</pubDate>
+      <description>
+   Updated for Fedora 21 and CentOS 7.
+For more information, visit
+&lt;A HREF="http://thomas.apestaart.org/projects/mach/"&gt;the project homepage&lt;/A&gt;
+      </description>
+    </item><item>
       <title>Mach 1.0.3 'moved' released</title>
       <guid isPermaLink="false">release-mach-1.0.3</guid>
       <link>http://thomas.apestaart.org/projects/mach/</link>
