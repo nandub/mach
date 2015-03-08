@@ -27,10 +27,11 @@ release procedure for mach
   cp /var/tmp/mach/fedora-*-updates/mach-$RELEASE-1.*/*rpm /home/thomas/www/thomas.apestaart.org/data/download/mach/
 - put packages in tao repository
   for dir in /var/tmp/mach/fedora-*-updates/mach-$RELEASE-1.f*; do dirname=`cd $dir/..; pwd`; basename=`basename $dirname`; targetdir=$HOME/www/thomas.apestaart.org/data/download/pkg/$basename; mkdir -p $targetdir; cp -prv $dir $targetdir; done
-  cd $HOME/www/thomas.apestaart.org/data/pkg
+  pushd $HOME/www/thomas.apestaart.org/data/pkg
   bin/pkg-symlink
   bin/yum-rep
   tao-put
+  popd
 
 - announce to freshmeat:
   moap doap -v $RELEASE freshmeat -b Default
@@ -40,7 +41,7 @@ release procedure for mach
 - bump configure.ac and commit
 - rebuild in fedora repos
     cp mach-$RELEASE.tar.* $HOME/dev/ext/fedora.git/mach
-    cd $HOME/dev/ext/fedora.git/mach
+    pushd $HOME/dev/ext/fedora.git/mach
     git fetch -a
     git checkout f19
     git pull
@@ -49,5 +50,10 @@ release procedure for mach
     git commit -a -m 'update to $RELEASE'
     git push
     fedpkg build
+    fedpkg update
+
+    then, when package has gone through testing:
+
+    bodhi -R stable 
 
 - why don't you blog about it ?
