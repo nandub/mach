@@ -1,3 +1,12 @@
+2015-06-27  Thomas Vander Stichele  <thomas at apestaart dot org>
+
+	* configure.ac:
+	* etc/dist.d/Makefile.am:
+	* etc/dist.d/fedora-22-i386:
+	* etc/dist.d/fedora-22-ppc:
+	* etc/dist.d/fedora-22-x86_64:
+	  Adding Fedora 22.
+
 === release 1.0.4 ===
 
 2015-03-08  Thomas Vander Stichele  <thomas at apestaart dot org>
