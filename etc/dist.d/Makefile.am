@@ -83,8 +83,35 @@ dists = \
 	suse-82-i386 \
 	suse-90-i386 \
 	opensuse-102-i386 \
+	opensuse-102-x86_64 \
 	opensuse-103-i386 \
+	opensuse-103-x86_64 \
 	opensuse-110-i386 \
+	opensuse-110-x86_64 \
+	opensuse-111-i386 \
+	opensuse-111-x86_64 \
+	opensuse-112-i386 \
+	opensuse-112-x86_64 \
+	opensuse-113-i386 \
+	opensuse-113-x86_64 \
+	opensuse-114-i386 \
+	opensuse-114-x86_64 \
+	opensuse-121-i386 \
+	opensuse-121-x86_64 \
+	opensuse-122-i386 \
+	opensuse-122-x86_64 \
+	opensuse-131-i386 \
+	opensuse-131-x86_64 \
+	opensuse-132-i386 \
+	opensuse-132-x86_64 \
+	opensuse-421-i386 \
+	opensuse-421-x86_64 \
+	opensuse-422-i386 \
+	opensuse-422-x86_64 \
+	opensuse-423-i386 \
+	opensuse-423-x86_64 \
+	opensuse-tumbleweed-i386 \
+	opensuse-tumbleweed-x86_64 \
 	yellowdog-23-ppc \
 	yellowdog-30-ppc \
 	davedina
