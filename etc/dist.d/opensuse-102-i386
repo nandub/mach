@@ -1,7 +1,7 @@
 # mach dist configuration                                        -*- python -*-
 # -*- coding: utf-8 -*-
 
-# opensuse-11-i386: configuration for OpenSuse 11
+# opensuse-102-i386: configuration for OpenSuse 10.2
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from
@@ -15,8 +15,8 @@ DIST = 'opensuse-%s-%s' % (V, A)
 
 ### OpenSuse flavours
 yumsources[DIST] = {
-  'opensuse':  opensuse   + '/distribution/10.2/repo/oss/suse',
-  'updates':   opensuse   + '/update/10.2',
+  'opensuse':  opensusea   + '/distribution/10.2/repo/oss/suse',
+  'updates':   opensusea   + '/update/10.2',
 }
 
 # OpenSuse (only the OpenSuse repository, ie the "base" DVD)

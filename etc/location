@@ -35,6 +35,9 @@ suse        = 'ftp://mirrors.mathematik.uni-bielefeld.de/pub/linux/suse/apt'
 # OpenSuse
 opensuse    = 'http://download.opensuse.org'
 
+# OpenSuse Discontinued
+opensusea   = "http://ftp5.gwdg.de/pub/opensuse/discontinued"
+
 # Dave/Dina: http://www.davedina.org
 davedina    = 'http://download.davedina.org/apt'
 

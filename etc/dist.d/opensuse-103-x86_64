@@ -1,7 +1,7 @@
 # mach dist configuration                                        -*- python -*-
 # -*- coding: utf-8 -*-
 
-# opensuse-103-i386: configuration for OpenSuse 10.3
+# opensuse-103-x86_64: configuration for OpenSuse 10.3
 
 # each distro flavour has an aptsources line describing where to get each
 # kind of package from
@@ -9,7 +9,7 @@
 # a sourceslist dict referencing aptsources lines to use
 
 V = '103'      # distro version
-A = 'i386'   # architecture
+A = 'x86_64'   # architecture
 AS = ''      # 'short' version of arch
 DIST = 'opensuse-%s-%s' % (V, A)
 
