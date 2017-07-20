@@ -15,7 +15,8 @@ DIST = 'opensuse-%s-%s' % (V, A)
 
 ### OpenSuse flavours
 yumsources[DIST] = {
-  'opensuse':  opensuse   + '/tumbleweed/repo/oss/suse'
+  'opensuse':  opensuse   + '/tumbleweed/repo/oss/suse',
+  'updates':   opensuse   + '/update/tumbleweed', 
 }
 
 # OpenSuse (only the OpenSuse repository, ie the "base" DVD)
@@ -37,6 +38,6 @@ config['%s-core' % DIST] = {
 # OpenSuse with updates
 packages['%s-updates' % DIST] = packages['%s-core' % DIST]
 sourceslist['%s-updates' % DIST] = {
-  DIST: ('opensuse', )
+  DIST: ('opensuse', 'updates', )
 }
 config['%s-updates' % DIST] = config['%s-core' % DIST]
